@@ -595,6 +595,22 @@ const FIPS_TO_STATE = {
 const STATE_AGG = {"AK":{"fsi":0.118,"om":0.4519},"AL":{"fsi":0.2688,"om":0.7206},"AR":{"fsi":0.2341,"om":0.6987},"AZ":{"fsi":0.4847,"om":0.8809},"CA":{"fsi":0.3826,"om":0.7418},"CO":{"fsi":0.2885,"om":0.6981},"CT":{"fsi":0.2003,"om":0.5224},"DC":{"fsi":0.2669,"om":0.7071},"DE":{"fsi":0.2666,"om":0.6837},"FL":{"fsi":0.158,"om":0.7102},"GA":{"fsi":0.2893,"om":0.7556},"HI":{"fsi":0.213,"om":0.6637},"IA":{"fsi":0.3044,"om":0.6047},"ID":{"fsi":0.2842,"om":0.6401},"IL":{"fsi":0.2996,"om":0.6188},"IN":{"fsi":0.303,"om":0.6198},"KS":{"fsi":0.2808,"om":0.7221},"KY":{"fsi":0.3019,"om":0.6487},"LA":{"fsi":0.2271,"om":0.6592},"MA":{"fsi":0.1488,"om":0.5033},"MD":{"fsi":0.2648,"om":0.673},"ME":{"fsi":0.0982,"om":0.4514},"MI":{"fsi":0.1643,"om":0.595},"MN":{"fsi":0.2513,"om":0.547},"MO":{"fsi":0.2013,"om":0.6257},"MS":{"fsi":0.2815,"om":0.6902},"MT":{"fsi":0.2319,"om":0.641},"NC":{"fsi":0.2945,"om":0.6679},"ND":{"fsi":0.2574,"om":0.5943},"NE":{"fsi":0.2925,"om":0.7102},"NH":{"fsi":0.1564,"om":0.4923},"NJ":{"fsi":0.218,"om":0.6195},"NM":{"fsi":0.3949,"om":0.8035},"NV":{"fsi":0.5013,"om":0.787},"NY":{"fsi":0.1794,"om":0.4606},"OH":{"fsi":0.2674,"om":0.6126},"OK":{"fsi":0.2398,"om":0.7986},"OR":{"fsi":0.2196,"om":0.6188},"PA":{"fsi":0.254,"om":0.582},"RI":{"fsi":0.1725,"om":0.522},"SC":{"fsi":0.3233,"om":0.7353},"SD":{"fsi":0.2609,"om":0.6208},"TN":{"fsi":0.2396,"om":0.6696},"TX":{"fsi":0.2847,"om":0.8333},"UT":{"fsi":0.3886,"om":0.7121},"VA":{"fsi":0.328,"om":0.7034},"VT":{"fsi":0.1735,"om":0.4749},"WA":{"fsi":0.1725,"om":0.6453},"WI":{"fsi":0.2358,"om":0.5939},"WV":{"fsi":0.232,"om":0.6272},"WY":{"fsi":0.3139,"om":0.7}};
 
 // ── STORIES CONFIG ──────────────────────────────────────────────────────
+// ── NO-DATA HANDLING ───────────────────────────────────────────────────
+// A county only has usable FSI/OM if it carries county-level values or its
+// state has an aggregate. When neither exists, return null so the computed
+// stories paint a neutral "Not rated" fill instead of fabricating a value
+// from hardcoded defaults (which made empty counties read as real data —
+// e.g. a no-data county showing as "highly resilient" or top ecological).
+const NO_DATA_COLOR='#1a1a30';
+function countyFsiOm(f){
+  const fsi=+f.properties.fsi_avg||0, om=+f.properties.om_avg||0;
+  if(fsi&&om) return {fsi,om};
+  const st=FIPS_TO_STATE[(f.properties.fips||'').slice(0,2)];
+  const d=st?STATE_AGG[st]:null;
+  if(d&&d.fsi&&d.om) return {fsi:d.fsi,om:d.om};
+  return null; // no underlying data
+}
+
 const STORIES = {
   fragile:{
     title:'Fragile Soil Index',
@@ -683,14 +699,9 @@ const STORIES = {
     legTitle:'Soil Resilience (1 − Compound Risk) — County-Level',
     prop:'_resilience',
     colorFn: f=>{
-      const fsi=f.properties.fsi_avg||0;
-      const om=f.properties.om_avg||0;
-      const raw=fsi&&om ? fsi*0.5+om*0.5 : (()=>{
-        const st=FIPS_TO_STATE[(f.properties.fips||'').slice(0,2)];
-        const d=st?STATE_AGG[st]:null;
-        return d?d.fsi*0.5+d.om*0.5:0.5;
-      })();
-      const v=1-raw;
+      const d=countyFsiOm(f);
+      if(!d)return NO_DATA_COLOR;
+      const v=1-(d.fsi*0.5+d.om*0.5);
       if(v>0.62)return'#005a32';
       if(v>0.55)return'#238b45';
       if(v>0.50)return'#41ae76';
@@ -714,10 +725,9 @@ const STORIES = {
     legTitle:'Conservation Opportunity Index',
     prop:'_opportunity',
     colorFn: f=>{
-      // Use county-level data when available
-      const fsi=f.properties.fsi_avg||(()=>{const st=FIPS_TO_STATE[(f.properties.fips||'').slice(0,2)];return (STATE_AGG[st]||{}).fsi||0.25;})();
-      const om=f.properties.om_avg||(()=>{const st=FIPS_TO_STATE[(f.properties.fips||'').slice(0,2)];return (STATE_AGG[st]||{}).om||0.60;})();
-      if(!fsi&&!om)return'#1a1a30';
+      const d=countyFsiOm(f);
+      if(!d)return NO_DATA_COLOR;
+      const fsi=d.fsi, om=d.om;
       // Opportunity = high OM depletion + moderate FSI (most cropland pressure)
       const omScore=om;
       const fsiMod=1-Math.abs(fsi-0.28)/0.28; // peak at FSI=0.28 (corn belt)
@@ -745,9 +755,9 @@ const STORIES = {
     legTitle:'Crop Productivity Estimate (FSI + OM Proxy)',
     prop:'_productivity',
     colorFn:f=>{
-      const fsi=f.properties.fsi_avg||(()=>{const st=FIPS_TO_STATE[(f.properties.fips||'').slice(0,2)];return(STATE_AGG[st]||{}).fsi||0.3;})();
-      const om=f.properties.om_avg||(()=>{const st=FIPS_TO_STATE[(f.properties.fips||'').slice(0,2)];return(STATE_AGG[st]||{}).om||0.65;})();
-      const prod=1-(fsi*0.6+Math.max(0,om-0.5)*0.4);
+      const d=countyFsiOm(f);
+      if(!d)return NO_DATA_COLOR;
+      const prod=1-(d.fsi*0.6+Math.max(0,d.om-0.5)*0.4);
       if(prod>0.75)return'#005a32';
       if(prod>0.68)return'#238b45';
       if(prod>0.62)return'#41ae76';
@@ -771,9 +781,9 @@ const STORIES = {
     legTitle:'Ecological Interest Index',
     prop:'_ecological',
     colorFn:f=>{
-      const fsi=f.properties.fsi_avg||(()=>{const st=FIPS_TO_STATE[(f.properties.fips||'').slice(0,2)];return(STATE_AGG[st]||{}).fsi||0.3;})();
-      const om=f.properties.om_avg||(()=>{const st=FIPS_TO_STATE[(f.properties.fips||'').slice(0,2)];return(STATE_AGG[st]||{}).om||0.65;})();
-      const eco=Math.max(0,(1-om)*0.6+(1-fsi)*0.4);
+      const d=countyFsiOm(f);
+      if(!d)return NO_DATA_COLOR;
+      const eco=Math.max(0,(1-d.om)*0.6+(1-d.fsi)*0.4);
       if(eco>0.42)return'#7c3aed';
       if(eco>0.36)return'#fcd34d';
       if(eco>0.30)return'#c4b5fd';
