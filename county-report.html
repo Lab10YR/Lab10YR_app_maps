@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="canonical" href="https://lab10yr.com/county-report">
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="Lab10YR">
+<meta property="og:title"       content="County Soil Report — Soil Intelligence">
+<meta property="og:description" content="Pick any US county and get its measured soil profile: organic matter, shrink-swell, wetland extent, corrosion risk, drainage, and water storage, live from the national soil survey.">
+<meta property="og:url"         content="https://lab10yr.com/county-report.html">
+<meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="County Soil Report — Soil Intelligence">
+<meta name="twitter:description" content="Measured soil profile for any US county, live from the national soil survey via Soil Data Access.">
+<title>County Soil Report &middot; Soil Intelligence</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#0d1220;--border:#1e2640;
+  --text:#d4daf0;--dim:#8892b0;--dimmer:#4a5270;
+  --accent:#38bdf8;--accent2:#7c3aed;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;
+  --soil:#c8a84b;--font:'Inter',system-ui,sans-serif;
+  --shadow:0 8px 24px rgba(0,0,0,.6)
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* NAV */
+nav{background:rgba(4,6,12,.97);border-bottom:1px solid var(--border);
+    padding:0 20px;height:48px;display:flex;align-items:center;gap:16px;
+    position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nav-logo{font-weight:800;font-size:14px;color:#fff;white-space:nowrap;flex-shrink:0}
+.nav-logo em{color:var(--soil);font-style:normal}
+.nav-links{display:flex;gap:12px;margin-left:auto}
+.nav-links a{font-size:11px;font-weight:600;color:var(--dim);transition:color .15s;white-space:nowrap;flex-shrink:0}
+.nav-links a:hover{color:var(--text);text-decoration:none}
+
+/* HERO */
+.hero{padding:48px 24px 28px;max-width:960px;margin:0 auto}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+         color:var(--soil);margin-bottom:10px}
+h1{font-size:clamp(22px,4vw,36px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px}
+h1 em{color:var(--soil);font-style:normal}
+.lead{font-size:14px;color:var(--dim);max-width:660px;line-height:1.7}
+
+/* CONTROLS */
+.controls{max-width:960px;margin:0 auto;padding:0 24px 8px;
+          display:flex;gap:10px;align-items:end;flex-wrap:wrap}
+.ctl{display:flex;flex-direction:column;gap:5px}
+.ctl label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+select{background:var(--panel2);border:1px solid var(--border);color:var(--text);
+       border-radius:6px;padding:9px 12px;font-size:13px;min-width:220px;
+       font-family:var(--font);outline:none;cursor:pointer}
+select:focus{border-color:var(--accent)}
+select:disabled{opacity:.5;cursor:not-allowed}
+
+/* REPORT */
+.report{max-width:960px;margin:0 auto;padding:18px 24px 60px}
+.status{color:var(--dim);font-size:13px;padding:30px 0;text-align:center}
+.rpt-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.rpt-title{font-size:22px;font-weight:800;color:#fff}
+.rpt-sym{font-size:12px;color:var(--dimmer);font-weight:600}
+.rpt-sub{font-size:12px;color:var(--dim);margin-bottom:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.metric{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px}
+.metric-l{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.metric-v{font-size:30px;font-weight:800;color:#fff;line-height:1;font-variant-numeric:tabular-nums}
+.metric-v small{font-size:14px;color:var(--soil);font-weight:700}
+.metric-d{font-size:11px;color:var(--dim);margin-top:9px;line-height:1.5}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:9px}
+.tag.low{background:rgba(34,197,94,.16);color:var(--green)}
+.tag.mid{background:rgba(245,158,11,.16);color:var(--amber)}
+.tag.high{background:rgba(239,68,68,.16);color:var(--red)}
+.note{margin-top:22px;font-size:11px;color:var(--dimmer);line-height:1.6;max-width:680px}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:s .8s linear infinite;vertical-align:-3px;margin-right:8px}
+@keyframes s{to{transform:rotate(360deg)}}
+footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:var(--dimmer);font-size:11px}
+.pdf-btn{margin-left:auto;background:var(--accent);color:#04060c;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font)}
+.pdf-btn:hover{filter:brightness(1.08)}
+.print-only-head{display:none}
+@media print{
+  nav,.controls,.hero .lead,.hero .eyebrow,.hero h1,.pdf-btn{display:none!important}
+  body{background:#fff;color:#111;font-size:12px}
+  .hero{padding:0}
+  .report{padding:0;max-width:none}
+  .print-only-head{display:block;border-bottom:2px solid #c8a84b;padding-bottom:8px;margin-bottom:16px;
+    font-weight:800;font-size:13px;color:#111;letter-spacing:.04em}
+  .print-only-head span{font-weight:500;color:#666}
+  .rpt-title{color:#111}.rpt-sym,.rpt-sub{color:#555}
+  .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .metric{background:#fff;border:1px solid #bbb;break-inside:avoid;page-break-inside:avoid;padding:12px}
+  .metric-v{color:#111}.metric-v small{color:#8a6d1f}.metric-l,.metric-d{color:#444}
+  .tag{border:1px solid #aaa}
+  .note{color:#555}
+  footer{border-color:#ccc;color:#666;text-align:left;padding:16px 0 0}
+  a{color:#111;text-decoration:none}
+  @page{margin:1.4cm}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo"><em>Soil</em> Intelligence</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="Regenerative-Agriculture-Risk-Map.html">Risk Map</a>
+    <a href="soil-data-stories.html">Data Stories</a>
+    <a href="https://lab10yr.com/articles/" target="_blank" rel="noopener noreferrer">Articles</a>
+    <a href="sql-explorer.html">SQL Explorer</a>
+    <a href="data-models.html">Data Models</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">County Soil Report</div>
+  <h1>The measured soil profile of <em>any US county</em></h1>
+  <p class="lead">Choose a state and county. This pulls the county's soils straight from the national
+  soil survey through the Soil Data Access API and summarizes what the field and lab records say
+  about its surface organic matter, shrink-swell behavior, wetland extent, corrosion risk, drainage,
+  and plant-available water. Every number is live, sourced, and defensible.</p>
+</div>
+
+<div class="controls">
+  <div class="ctl">
+    <label for="state">State</label>
+    <select id="state"><option value="">Select a state...</option></select>
+  </div>
+  <div class="ctl">
+    <label for="county">County</label>
+    <select id="county" disabled><option value="">Select a state first</option></select>
+  </div>
+</div>
+
+<div class="report" id="report">
+  <div class="status">Pick a state and county to generate its soil report.</div>
+</div>
+
+<footer>
+  Data: National Cooperative Soil Survey (SSURGO) via Soil Data Access. Values are area-representative
+  summaries weighted by component extent; consult the full survey for site-specific decisions.
+  &middot; <a href="index.html">Soil Intelligence</a>
+</footer>
+
+<script>
+const STATES=["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
+const $=s=>document.querySelector(s);
+const stateSel=$("#state"),countySel=$("#county"),report=$("#report");
+stateSel.innerHTML='<option value="">Select a state...</option>'+STATES.map(s=>'<option>'+s+'</option>').join("");
+
+const SDA="https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest";
+async function sda(query){
+  const body=new URLSearchParams();body.set("query",query);body.set("format","JSON+COLUMNNAME");
+  const r=await fetch(SDA,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body});
+  if(!r.ok) throw new Error("Soil Data Access returned "+r.status);
+  const j=await r.json();
+  const t=(j&&j.Table)?j.Table:[];
+  if(t.length<2) return [];
+  const cols=t[0];
+  return t.slice(1).map(row=>{const o={};cols.forEach((c,i)=>o[c]=row[i]);return o;});
+}
+const esc=s=>String(s).replace(/'/g,"''");
+const num=(v,d)=>{const n=parseFloat(v);return isFinite(n)?n.toFixed(d==null?1:d):null;};
+
+stateSel.onchange=async()=>{
+  const st=stateSel.value;
+  countySel.innerHTML='<option value="">Loading counties...</option>';countySel.disabled=true;
+  report.innerHTML='<div class="status">Pick a county to generate its soil report.</div>';
+  if(!st) return;
+  try{
+    const rows=await sda("SELECT areasymbol, areaname FROM legend WHERE areaname LIKE '%, "+esc(st)+"' ORDER BY areaname");
+    if(!rows.length){countySel.innerHTML='<option value="">No survey areas found</option>';return;}
+    countySel.innerHTML='<option value="">Select a county...</option>'+
+      rows.map(r=>'<option value="'+r.areasymbol+'" data-name="'+(r.areaname||"").replace(/"/g,"")+'">'+(r.areaname||r.areasymbol).replace(/, .*$/,"")+'</option>').join("");
+    countySel.disabled=false;
+  }catch(e){countySel.innerHTML='<option value="">Could not load counties</option>';report.innerHTML='<div class="status">'+e.message+'</div>';}
+};
+
+countySel.onchange=()=>{
+  const sym=countySel.value;if(!sym)return;
+  const name=countySel.options[countySel.selectedIndex].getAttribute("data-name")||sym;
+  runReport(sym,name);
+};
+
+function tag(level,text){return '<span class="tag '+level+'">'+text+'</span>';}
+
+async function runReport(sym,name){
+  report.innerHTML='<div class="status"><span class="spin"></span>Querying the national soil survey for '+name+'...</div>';
+  const A="SELECT ROUND(AVG(CAST(ch.om_r AS FLOAT)),2) om, ROUND(AVG(CAST(ch.lep_r AS FLOAT)),2) lep, COUNT(*) n FROM legend l JOIN mapunit mu ON mu.lkey=l.lkey JOIN component c ON c.mukey=mu.mukey JOIN chorizon ch ON ch.cokey=c.cokey WHERE l.areasymbol='"+esc(sym)+"' AND ch.hzdept_r=0 AND c.majcompflag='Yes'";
+  const B="SELECT ROUND(100.0*SUM(CASE WHEN c.hydricrating='Yes' THEN c.comppct_r ELSE 0 END)/NULLIF(SUM(c.comppct_r),0),1) hydric, ROUND(100.0*SUM(CASE WHEN c.corsteel='High' THEN c.comppct_r ELSE 0 END)/NULLIF(SUM(c.comppct_r),0),1) corr, COUNT(DISTINCT mu.mukey) mus, COUNT(*) comps FROM legend l JOIN mapunit mu ON mu.lkey=l.lkey JOIN component c ON c.mukey=mu.mukey WHERE l.areasymbol='"+esc(sym)+"'";
+  const C="SELECT TOP 1 c.drainagecl drain FROM legend l JOIN mapunit mu ON mu.lkey=l.lkey JOIN component c ON c.mukey=mu.mukey WHERE l.areasymbol='"+esc(sym)+"' AND c.drainagecl IS NOT NULL GROUP BY c.drainagecl ORDER BY SUM(c.comppct_r) DESC";
+  const D="SELECT ROUND(AVG(CAST(m.aws0100wta AS FLOAT)),1) aws FROM legend l JOIN mapunit mu ON mu.lkey=l.lkey JOIN muaggatt m ON m.mukey=mu.mukey WHERE l.areasymbol='"+esc(sym)+"'";
+  try{
+    const [a,b,c,d]=await Promise.all([sda(A),sda(B),sda(C),sda(D)]);
+    const A0=a[0]||{},B0=b[0]||{},C0=c[0]||{},D0=d[0]||{};
+    const om=num(A0.om,2),lep=num(A0.lep,2),hydric=num(B0.hydric,1),corr=num(B0.corr,1),
+          aws=num(D0.aws,1),drain=C0.drain||null,mus=B0.mus||0,comps=B0.comps||0;
+    const cards=[];
+    cards.push(metric("Organic Matter (topsoil)",om!=null?om+'<small>%</small>':"&mdash;",
+      "Carbon and fertility in the surface horizon. Higher means a richer, more resilient topsoil.",
+      om==null?null:(om>=4?["low","Rich"]:om>=2?["mid","Moderate"]:["high","Depleted"])));
+    cards.push(metric("Shrink-Swell (LEP)",lep!=null?lep:"&mdash;",
+      "Linear extensibility of the surface soil. Above 6 means clays that swell and crack, stressing foundations, roads, and pipes.",
+      lep==null?null:(lep>=6?["high","High"]:lep>=3?["mid","Moderate"]:["low","Low"])));
+    cards.push(metric("Wetland (Hydric) Soils",hydric!=null?hydric+'<small>%</small>':"&mdash;",
+      "Share of the county's soils rated hydric: saturated long enough to develop wetland conditions and regulatory constraints.",
+      hydric==null?null:(hydric>=30?["high","Extensive"]:hydric>=10?["mid","Notable"]:["low","Limited"])));
+    cards.push(metric("Steel Corrosion Risk",corr!=null?corr+'<small>%</small>':"&mdash;",
+      "Share of soils rated high-corrosion to uncoated steel. Matters for buried utilities, pilings, and tanks.",
+      corr==null?null:(corr>=40?["high","High"]:corr>=15?["mid","Moderate"]:["low","Low"])));
+    cards.push(metric("Dominant Drainage",drain?drain:"&mdash;",
+      "How water moves through the county's most extensive soils, from excessively drained to very poorly drained.",null));
+    cards.push(metric("Plant-Available Water",aws!=null?aws+'<small> cm</small>':"&mdash;",
+      "Water the soil can hold for plants in the top 100 cm. A higher number is a deeper drought buffer.",
+      aws==null?null:(aws>=18?["low","Deep buffer"]:aws>=10?["mid","Moderate"]:["high","Thin buffer"])));
+    report.innerHTML=
+      '<div class="print-only-head">LAB10YR &nbsp;&middot;&nbsp; COUNTY SOIL REPORT <span>&nbsp;&middot;&nbsp; '+new Date().toLocaleDateString()+'</span></div>'+
+      '<div class="rpt-head"><div class="rpt-title">'+name+'</div><div class="rpt-sym">'+sym+'</div><button class="pdf-btn" onclick="window.print()">Save PDF</button></div>'+
+      '<div class="rpt-sub">Area-representative soil summary &middot; '+mus+' map units, '+comps+' soil components mapped</div>'+
+      '<div class="grid">'+cards.join("")+'</div>'+
+      '<div class="note">Tags are quick context, not regulatory determinations. Surface metrics use the top horizon of major components; '+
+      'percentages are weighted by component extent. For a parcel-level answer, drill into the specific map unit in the '+
+      '<a href="sql-explorer.html">SQL Explorer</a> or <a href="soil-atlas.html">Soil Atlas</a>.</div>';
+  }catch(e){
+    report.innerHTML='<div class="status">Could not complete the report: '+e.message+'. The soil survey API may be busy; try again.</div>';
+  }
+}
+function metric(label,value,desc,lvl){
+  return '<div class="metric"><div class="metric-l">'+label+'</div>'+
+    '<div class="metric-v">'+value+'</div>'+
+    '<div class="metric-d">'+desc+'</div>'+
+    (lvl?tag(lvl[0],lvl[1]):'')+'</div>';
+}
+</script>
+</body>
+</html>

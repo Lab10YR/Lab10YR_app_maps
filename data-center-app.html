@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GroundScore DCI — Data Center Siting App · Lab10YR</title>
+<meta name="description" content="The GroundScore DCI siting app: set your campus parameters, drop a point anywhere in the US, and get a GO / CAUTION / NO-GO verdict with an eight-criteria breakdown — ground, slope, power, water, fiber, land, hazard, climate — driven by the national soil survey.">
+<link rel="canonical" href="https://lab10yr.com/data-center-app">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lab10YR">
+<meta property="og:title" content="GroundScore DCI — Data Center Siting App">
+<meta property="og:description" content="Set campus parameters, click a site, get a GO/CAUTION/NO-GO verdict with an eight-criteria DCI breakdown from the national soil survey.">
+<meta property="og:url" content="https://lab10yr.com/data-center-app">
+<meta property="og:image" content="https://lab10yr.com/assets/og-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
+<script src="https://unpkg.com/h3-js@4.1.0/dist/h3-js.umd.js"></script>
+<!-- Vendored locally (no runtime CDN dep): clips the GroundScore soil to the drawn AOI polygon. -->
+<script src="vendor/polygon-clipping.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+/* modern scrollbars everywhere (thin, rounded, floating pill) */
+*{scrollbar-width:thin;scrollbar-color:#2a3354 transparent}
+*::-webkit-scrollbar{width:9px;height:9px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:#2a3354;border-radius:9px;border:2px solid transparent;background-clip:padding-box}
+*::-webkit-scrollbar-thumb:hover{background:#3b4670;background-clip:padding-box}
+*::-webkit-scrollbar-corner{background:transparent}
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--border:#1e2640;--text:#d4daf0;
+  --dim:#5a6490;--accent:#38bdf8;--green:#22c55e;--soil:#c8a84b;--red:#ef4444;--amber:#f59e0b;
+  --font:'Inter',system-ui,-apple-system,sans-serif;--serif:Georgia,'Times New Roman',serif;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow:hidden}
+a{color:var(--accent);text-decoration:none}
+/* top bar */
+#bar{position:fixed;top:0;left:0;right:0;height:52px;z-index:30;display:flex;align-items:center;gap:14px;
+  padding:0 18px;background:rgba(4,6,12,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
+.bar-logo{font-family:var(--serif);font-style:italic;font-weight:700;color:var(--soil);font-size:14px;white-space:nowrap}
+.bar-sep{width:1px;height:22px;background:var(--border)}
+/* header buttons (layers menu) */
+.hdr-btn{background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:12px;font-weight:700;padding:8px 13px;border-radius:8px;cursor:pointer;white-space:nowrap;font-family:var(--font)}
+.hdr-btn:hover,.hdr-btn.active{border-color:var(--soil);color:var(--soil)}
+/* header overlay chips — inline right of the title (Jason directive 2026-06-12) */
+#hdr-chips{display:flex;align-items:center;gap:6px;margin-left:8px;min-width:0;overflow:hidden}
+.hchip{background:var(--bg);border:1px solid var(--border);color:var(--dim);font:700 10.5px var(--font);padding:5px 10px;border-radius:14px;cursor:pointer;white-space:nowrap;transition:color .2s ease,border-color .2s ease}
+.hchip:hover{color:var(--text)}
+.hchip.active{border-color:var(--soil);color:var(--soil)}
+.hchip-fill{display:flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:4px 11px;white-space:nowrap}
+.hf-lbl{font:700 10.5px var(--font);color:var(--dim)}
+.hchip-fill input{-webkit-appearance:none;appearance:none;width:64px;height:4px;border-radius:2px;cursor:pointer;background:linear-gradient(90deg,var(--soil) var(--val,60%),#232c46 var(--val,60%))}
+.hchip-fill input::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--soil);cursor:pointer}
+.hchip-fill input::-moz-range-thumb{width:11px;height:11px;border:none;border-radius:50%;background:var(--soil)}
+.hchip-fill b{font:800 10px var(--font);color:var(--text);min-width:30px;text-align:right;font-variant-numeric:tabular-nums}
+#btn-layers{display:none}
+@media(max-width:1200px){#hdr-chips{display:none}#btn-layers{display:block}}
+.menu{position:fixed;z-index:40;background:rgba(10,14,26,.98);border:1px solid var(--border);border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.6);display:none}
+.menu.open{display:block}
+/* site finder (left sidebar section) */
+.fd-search{display:flex;gap:8px}
+.fd-search .inp{flex:1}
+.fd-crit-toggle{background:none;border:none;color:var(--dim);font-size:11px;font-weight:700;letter-spacing:.04em;cursor:pointer;padding:0;margin-top:11px;font-family:var(--font);display:flex;align-items:center;gap:5px}
+.fd-crit-toggle:hover{color:var(--soil)}
+#finder{display:none;padding-bottom:4px}
+#finder.open{display:block}
+.fd-lbl{font-size:13px;font-weight:600;color:var(--text);margin:14px 0 7px}
+.fd-ta{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:9px;padding:10px 12px;font-size:13px;font-family:var(--font);resize:none;min-height:54px}
+.fd-row{display:flex;gap:22px;margin-top:14px}.fd-row>div{flex:1}
+.fd-slh{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-bottom:6px}.fd-slh b{color:var(--text)}
+.crit-slider{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;cursor:pointer;
+  background:linear-gradient(90deg,var(--soil) var(--val,50%),#232c46 var(--val,50%))}
+.crit-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--soil);cursor:pointer;box-shadow:0 0 0 3px rgba(200,168,75,.2)}
+.crit-slider::-moz-range-thumb{width:16px;height:16px;border:none;border-radius:50%;background:var(--soil)}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:7px}
+.pill{background:var(--bg);border:1px solid var(--border);color:var(--dim);font-size:12px;font-weight:600;padding:7px 14px;border-radius:20px;cursor:pointer;font-family:var(--font)}
+.pill:hover{color:var(--text)}.pill.active{border-color:var(--soil);color:var(--soil)}
+.fd-chk{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:12.5px;color:#c4ccea;cursor:pointer}
+.fd-chk input{accent-color:var(--soil);width:15px;height:15px;cursor:pointer}
+.fd-go{width:100%;background:var(--soil);color:#1a1206;font-size:14px;font-weight:800;border:none;border-radius:9px;padding:13px;margin-top:18px;cursor:pointer}
+/* upper-right map controls: 3D + collapsible Layers card (right sidebar overlays these when open) */
+#mapctl{position:fixed;top:64px;right:14px;z-index:18;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.mapctl-row{display:flex;gap:8px}
+.mapbtn{background:rgba(10,14,26,.95);border:1px solid var(--border);color:var(--text);font-size:11.5px;font-weight:700;padding:8px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;font-family:var(--font);display:flex;align-items:center;gap:7px}
+.mapbtn:hover,.mapbtn.active{border-color:var(--soil);color:var(--soil)}
+#layers-card{width:240px;padding:13px 15px;background:rgba(10,14,26,.97);border:1px solid var(--border);border-radius:12px;box-shadow:0 16px 44px rgba(0,0,0,.55);display:none}
+#layers-card.open{display:block}
+@media(max-width:760px){#mapctl{top:58px;right:8px}}
+/* priorities pills in left panel */
+.prio-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
+.prio-pills .pill{padding:6px 12px;font-size:11.5px}
+.mw-h{display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 6px}.mw-h .v{font-size:15px;font-weight:800;color:var(--text)}.mw-h .v small{color:var(--dim);font-size:10px;font-weight:600}
+/* About guide button (Regen-Ag style) in the left console; opens the right slide-in */
+.about-btn{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;background:none;border:1.5px solid var(--soil);color:var(--soil);font:700 13px var(--font);padding:11px 14px;border-radius:9px;cursor:pointer}
+.about-btn:hover{background:rgba(200,168,75,.08)}
+/* Analysis button lives at the top of the left console; opens the right sidebar */
+.pn-top{padding:12px 16px 0}
+.pn-top:empty{padding:0}
+.rp-toggle{display:none}
+/* left console: collapse + drag-resize */
+.pn-collapse{position:absolute;top:9px;right:9px;z-index:3;background:none;border:none;color:var(--dim);font-size:17px;cursor:pointer;line-height:1;padding:2px 6px}
+.pn-collapse:hover{color:var(--text)}
+.panel-resize{position:absolute;top:0;right:-4px;width:9px;height:100%;cursor:ew-resize;z-index:4}
+.panel-resize:hover{background:linear-gradient(90deg,transparent,rgba(200,168,75,.35),transparent)}
+#panel.collapsed{display:none}
+.panel-open-btn{position:fixed;top:64px;left:14px;z-index:19;display:none;background:rgba(10,14,26,.95);border:1px solid var(--soil);color:var(--soil);font-size:12px;font-weight:800;padding:9px 13px;border-radius:8px;cursor:pointer;font-family:var(--font);box-shadow:0 6px 20px rgba(0,0,0,.4)}
+#rpanel{transition:transform .2s ease}
+#rpanel.hidden{transform:translateX(calc(100% + 24px));pointer-events:none}
+.rp-close{position:absolute;top:9px;right:11px;background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;z-index:2;line-height:1}.rp-close:hover{color:var(--text)}
+/* edge tab — the collapsed right panel peeks back in from the screen edge */
+#rp-edge{position:fixed;right:0;top:46%;z-index:21;display:none;background:rgba(10,14,26,.97);border:1px solid var(--soil);border-right:none;color:var(--soil);font:800 11px var(--font);letter-spacing:.1em;text-transform:uppercase;padding:13px 8px;border-radius:9px 0 0 9px;cursor:pointer;writing-mode:vertical-rl;box-shadow:-6px 0 20px rgba(0,0,0,.4)}
+#rp-edge:hover{background:rgba(200,168,75,.12)}
+/* right panel drag-wide handle (left edge) */
+.rp-resize{position:absolute;top:0;left:-4px;width:9px;height:100%;cursor:ew-resize;z-index:4}
+.rp-resize:hover{background:linear-gradient(90deg,transparent,rgba(200,168,75,.35),transparent)}
+/* modern tooltip engine — every control explains itself (Jason 2026-06-12) */
+#tipbox{position:fixed;z-index:300;max-width:272px;background:linear-gradient(180deg,#161e36,#0c1222);border:1px solid #3a4668;border-radius:9px;padding:9px 12px;font:600 11.5px/1.5 var(--font);color:#dbe2f7;box-shadow:0 14px 40px rgba(0,0,0,.6);pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .15s ease,transform .15s ease}
+#tipbox.show{opacity:1;transform:none}
+/* numbered main steps in the left rail */
+.acc .pp-h[data-step]::before{content:attr(data-step);display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--soil);color:#1a1206;font-size:9.5px;font-weight:900;flex:0 0 auto}
+.step-badge{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#1a1206;color:var(--soil);font-size:9.5px;font-weight:900;flex:0 0 auto}
+/* one-accordion left rail */
+.acc .pp-h{cursor:pointer;user-select:none;margin-bottom:0;gap:8px}
+.acc .pp-h::after{content:'\25BE';flex:0 0 auto;height:auto;background:none;color:var(--dim);font-size:10px;margin-left:auto;transition:transform .2s ease}
+.acc.open .pp-h::after{transform:rotate(180deg)}
+.acc-body{display:none;padding-top:13px}
+.acc.open>.acc-body{display:block}
+/* collapsible detail section under the verdict/radar */
+.det{border-top:1px solid var(--border);margin-top:4px}
+.det summary{cursor:pointer;list-style:none;padding:12px 18px;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:8px}
+.det summary::-webkit-details-marker{display:none}
+.det summary::after{content:'\25BE';margin-left:auto;transition:transform .2s ease}
+.det[open] summary::after{transform:rotate(180deg)}
+.det summary:hover{color:var(--soil)}
+/* skeleton loaders (no spinners) */
+.skel{position:relative;overflow:hidden;background:#10182c;border-radius:7px}
+.skel::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);animation:shim 1.2s infinite}
+@keyframes shim{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+/* tabular numerals — scores never jitter */
+.big,.sub-val,.lb-dci,.chip-v,.vbadge,.lb-rank{font-variant-numeric:tabular-nums}
+/* first-run coach marks */
+#coach{position:fixed;inset:0;z-index:90;background:rgba(2,4,9,.55);display:none}
+#coach.show{display:block}
+.coach-card{position:fixed;max-width:280px;background:linear-gradient(180deg,#13203a,#0a1322);border:1px solid var(--soil);border-radius:12px;padding:16px 18px;box-shadow:0 18px 50px rgba(0,0,0,.6)}
+.coach-step{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--soil);margin-bottom:7px}
+.coach-txt{font-size:12.5px;line-height:1.5;color:#d4daf0;margin-bottom:13px}
+.coach-row{display:flex;gap:8px;align-items:center}
+.coach-next{background:var(--soil);color:#1a1206;border:none;border-radius:7px;font:800 11.5px var(--font);padding:8px 14px;cursor:pointer}
+.coach-skip{background:none;border:none;color:var(--dim);font:700 11px var(--font);cursor:pointer}
+.hdr-view{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:800;letter-spacing:.14em;color:var(--dim);white-space:nowrap}
+.hdr-view select{background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 10px;font-size:12px;font-weight:700;font-family:var(--font);cursor:pointer}
+#rp-about{padding:22px 24px 32px}
+.ab-eyebrow{font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--soil);margin-bottom:14px}
+#rp-about h2{font-family:var(--serif);font-size:1.6rem;line-height:1.18;color:#fff;margin-bottom:14px;font-weight:400}
+#rp-about h3{font-family:var(--serif);font-size:1.15rem;color:var(--soil);margin:22px 0 8px;font-weight:400}
+#rp-about p{font-size:13.5px;line-height:1.62;color:#c4ccea;margin-bottom:12px}#rp-about b{color:#fff;font-weight:700}
+.ab-ul{margin:0 0 12px;padding-left:18px;font-size:13px;color:#c4ccea;line-height:1.75}.ab-ul b{color:#fff}
+.ab-disc{font-size:11px;color:var(--dim);border-top:1px solid var(--border);padding-top:14px;margin-top:18px;line-height:1.5}
+@media(max-width:760px){.hdr-view,.corner{display:none}}
+.bar-title{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+.bar-btn{background:var(--soil);color:#1a1206;font-size:12px;font-weight:800;border:none;border-radius:7px;
+  padding:9px 16px;cursor:pointer;white-space:nowrap}
+.bar-link{font-size:11px;color:var(--dim);white-space:nowrap}.bar-link:hover{color:var(--text)}
+.bar-spacer{flex:1}
+@media(max-width:760px){.bar-title,.bar-sep{display:none}}
+/* map */
+#map{position:fixed;inset:52px 0 0 0;z-index:1}
+/* lift the zoom/compass controls clear of the laptop viewport edge (were clipped at the bottom) */
+.maplibregl-ctrl-bottom-right{bottom:30px;right:8px}
+.maplibregl-popup-content{background:#f4f6fb;border-radius:9px;padding:13px 30px 13px 15px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.maplibregl-popup-close-button{width:24px;height:24px;top:5px;right:5px;font-size:19px;line-height:1;color:#5a6a96;border-radius:6px;background:transparent}
+.maplibregl-popup-close-button:hover{background:#dfe4f0;color:#1a2236}
+.maplibregl-popup-tip{border-top-color:#f4f6fb!important;border-bottom-color:#f4f6fb!important}
+/* console panel */
+#panel{position:fixed;top:64px;left:14px;bottom:14px;width:374px;z-index:20;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,rgba(10,14,26,.97),rgba(7,9,16,.97));border:1px solid var(--border);
+  border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.55);overflow:hidden}
+.panel-scroll{overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
+.panel-scroll::-webkit-scrollbar{width:7px}.panel-scroll::-webkit-scrollbar-thumb{background:#222b45;border-radius:4px}
+.pp{padding:16px 18px}
+.pp-h{font-size:10px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:var(--soil);margin-bottom:13px;display:flex;align-items:center;gap:8px}
+.pp-h::after{content:'';flex:1;height:1px;background:var(--border)}
+.lab{display:block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:11px 0 4px}
+.inp{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:9px 10px;font-size:13px;font-family:var(--font)}
+select.inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--dim) 50%),linear-gradient(135deg,var(--dim) 50%,transparent 50%);background-position:calc(100% - 16px) 16px,calc(100% - 11px) 16px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
+.preset{font-size:11px;font-weight:700;color:var(--dim);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:5px 11px;cursor:pointer}
+.preset:hover{color:var(--text);border-color:var(--soil)}
+.hint{font-size:10.5px;color:var(--dim);margin-top:12px;line-height:1.5}
+/* result */
+#result{border-top:1px solid var(--border)}
+.empty{padding:20px 18px;color:var(--dim);font-size:12.5px;line-height:1.6}
+.r-loc{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dim);padding:13px 18px 0}
+.verdict{display:flex;align-items:center;gap:12px;margin:12px 18px 0;padding:12px 14px;border-radius:10px}
+.verdict.go{background:linear-gradient(90deg,rgba(34,197,94,.18),rgba(34,197,94,.03))}
+.verdict.caution{background:linear-gradient(90deg,rgba(245,158,11,.18),rgba(245,158,11,.03))}
+.verdict.nogo{background:linear-gradient(90deg,rgba(239,68,68,.2),rgba(239,68,68,.03))}
+.vbadge{font-size:15px;font-weight:900;letter-spacing:.05em;padding:6px 12px;border-radius:6px;white-space:nowrap;line-height:1}
+.verdict.go .vbadge{background:var(--green);color:#04130a}
+.verdict.caution .vbadge{background:var(--amber);color:#1a1206}
+.verdict.nogo .vbadge{background:var(--red);color:#1a0606}
+.vrat{font-size:12px;line-height:1.42;color:#cdd5ee}
+.scores{display:flex;gap:20px;align-items:center;flex-wrap:wrap;padding:14px 18px 12px}
+.kick{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.big{font-family:var(--serif);font-size:3.2rem;line-height:.95}
+.band{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.sub{border-left:1px solid var(--border);padding-left:18px}
+.sub-lbl{display:block;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.sub-val{font-size:1.4rem;font-weight:800}
+.sub-mu{font-size:11.5px;color:var(--dim);margin-top:3px;max-width:180px}
+.callout{display:flex;flex-wrap:wrap;gap:7px 20px;padding:0 18px 13px;font-size:11.5px}
+.co-h{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-right:6px}
+.co-p{font-weight:800;margin-right:9px}
+.maplink{background:none;border:1px solid var(--border);color:var(--soil);font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:5px;cursor:pointer;margin-left:auto}
+.maplink:hover{border-color:var(--soil)}
+.radar-wrap{text-align:center;padding:6px 10px 10px;border-top:1px solid var(--border)}
+.radar-cap{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.soil-sec{border-top:1px solid var(--border);padding:13px 18px 0}
+.soil-h{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--soil);margin-bottom:9px}
+.soil-rows{display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-size:12px;align-items:baseline}
+.soil-rows .k{color:var(--dim)}
+.soil-rows .v{font-weight:700;text-align:right;color:var(--text)}
+.soil-flags{margin-top:10px;font-size:11.5px;color:var(--amber);line-height:1.4}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:8px 18px 0}
+.chip{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:6px 8px}
+.chip-k{font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.chip-v{font-size:13px;font-weight:800;color:var(--text);margin-top:2px}
+.assess{font-size:12.5px;line-height:1.55;color:#c4ccea;margin:13px 18px 18px;border-top:1px solid var(--border);padding-top:12px}
+.assess b{color:#fff;font-weight:700}
+.assess p{margin:0 0 9px}.assess p:last-child{margin-bottom:0}
+.assess-h{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--soil);margin:13px 0 5px}
+.assess-h:first-child{margin-top:0}
+.amber{font-size:11.5px;color:var(--amber);margin:12px 18px 18px}
+.locked{padding:14px 18px 18px}
+.locked-h{font-size:13px;font-weight:800;margin-bottom:8px}
+.locked ul{margin:0 0 12px;padding-left:18px;font-size:12px;color:#c4ccea;line-height:1.7}
+.locked .cta{display:inline-block;background:var(--amber);color:#1a1206;font-size:12px;font-weight:800;padding:9px 16px;border-radius:7px;margin-top:4px}
+.lb-head{padding:15px 18px 4px}
+.lb-sum{font-size:12px;color:var(--dim);margin-top:5px}.lb-sum b{color:var(--text)}
+.lb-kill{font-size:11.5px;color:var(--amber);margin-top:5px}
+.lb-list{padding:6px 10px 4px}
+.lb-row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;cursor:pointer}
+.lb-row:hover{background:rgba(200,168,75,.09)}
+.lb-rank{font-size:11px;color:var(--dim);width:18px;text-align:right;font-weight:800}
+.lb-name{flex:1;font-size:13px;font-weight:600;color:var(--text);line-height:1.2}
+.lb-soil{font-size:10px;color:var(--dim);margin-left:0;display:block;font-weight:400;margin-top:1px}
+.lb-dci{font-size:19px;font-weight:800;text-align:right;line-height:1}
+.lb-bar{display:block;height:3px;border-radius:2px;background:#1b2236;margin-top:6px;overflow:hidden;max-width:200px}
+.lb-bar span{display:block;height:100%;border-radius:2px}
+.lb-band{display:block;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:800;margin-top:2px}
+.aoi-ctrls{display:flex;gap:8px;flex-wrap:wrap}
+.aoi-btn{flex:1;min-width:96px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:12px;font-weight:700;padding:9px 10px;border-radius:8px;cursor:pointer;font-family:var(--font)}
+.aoi-btn:hover{border-color:var(--soil)}
+.aoi-btn.primary{background:var(--soil);color:#1a1206;border-color:var(--soil)}
+.aoi-btn.ghost{color:var(--dim)}
+.aoi-head{display:flex;align-items:baseline;gap:10px;padding:14px 18px 0}
+.aoi-area{font-size:11px;color:var(--dim)}
+.aoi-dist{display:flex;height:10px;border-radius:5px;overflow:hidden;margin:11px 18px 0;border:1px solid var(--border)}
+.aoi-dist span{display:block}
+.aoi-distleg{display:flex;flex-wrap:wrap;gap:4px 12px;padding:7px 18px 0;font-size:10.5px;color:var(--dim)}
+/* right sidebar: analysis + layers/transparency */
+#rpanel{position:fixed;top:64px;right:14px;bottom:14px;width:384px;z-index:22;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,rgba(10,14,26,.97),rgba(7,9,16,.97));border:1px solid var(--border);
+  border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.55);overflow:hidden}
+.rp-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.rp-tab{flex:1;padding:11px 8px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent}
+.rp-tab.active{color:var(--soil);border-bottom-color:var(--soil)}
+.rp-scroll{overflow-y:auto;overflow-x:hidden;flex:1;scrollbar-width:thin}
+.rp-scroll::-webkit-scrollbar{width:7px}.rp-scroll::-webkit-scrollbar-thumb{background:#222b45;border-radius:4px}
+.rp-pane{display:none}.rp-pane.active{display:block}
+.ly-sec{padding:14px 16px;border-bottom:1px solid var(--border)}
+.ly-h{font-size:9px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--soil);margin-bottom:11px}
+.ly-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ly-row label{display:flex;align-items:center;gap:8px;color:#c4ccea;font-size:12.5px;cursor:pointer;flex:1}
+.ly-row input[type=checkbox]{accent-color:var(--soil);cursor:pointer;width:15px;height:15px}
+.ly-sw{width:13px;height:13px;border-radius:3px;flex-shrink:0}
+.op-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:3px;margin:2px 0 12px 23px;max-width:calc(100% - 23px);
+  background:linear-gradient(90deg,var(--soil) var(--val,80%),#232c46 var(--val,80%));cursor:pointer}
+.op-slider::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--soil);cursor:pointer}
+.op-slider::-moz-range-thumb{width:13px;height:13px;border:none;border-radius:50%;background:var(--soil);cursor:pointer}
+.op-wrap{display:none}.op-wrap.show{display:block}
+.ly-hint{font-size:10.5px;color:var(--dim);margin-top:2px;line-height:1.4;padding:0 16px}
+.lg-row{display:flex;align-items:center;gap:7px;margin-bottom:4px;color:#b7c0e0;font-size:11px}
+@media(max-width:900px){#rpanel{display:none}}
+.legend{position:fixed;right:14px;bottom:14px;z-index:15;background:rgba(7,9,16,.92);border:1px solid var(--border);border-radius:9px;padding:11px 13px;font-size:10.5px;display:none}
+/* visible model heartbeat — stamped by the one-button rebuild (model_meta.json) */
+#model-badge{position:fixed;left:14px;bottom:14px;z-index:15;background:rgba(7,9,16,.88);border:1px solid var(--border);border-radius:7px;padding:5px 10px;font:600 10px var(--font);color:var(--dim);cursor:help}
+@media(max-width:760px){#model-badge{display:none}}
+/* compare mode: pinned sites side-by-side (radars + pillar deltas) */
+#cmp-bar{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:24;display:none;align-items:center;gap:9px;
+  background:rgba(10,14,26,.97);border:1px solid var(--soil);border-radius:24px;padding:7px 9px 7px 16px;box-shadow:0 14px 40px rgba(0,0,0,.55)}
+#cmp-bar.show{display:flex}
+.cmp-chip{font:700 11px var(--font);color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:4px 9px;display:flex;align-items:center;gap:6px;white-space:nowrap;max-width:170px;overflow:hidden}
+.cmp-chip b{font-variant-numeric:tabular-nums}
+.cmp-chip button{background:none;border:none;color:var(--dim);cursor:pointer;font-size:13px;line-height:1;padding:0}
+.cmp-chip button:hover{color:var(--red)}
+.cmp-go{background:var(--soil);color:#1a1206;border:none;border-radius:16px;font:800 11.5px var(--font);padding:8px 15px;cursor:pointer;white-space:nowrap}
+.cmp-cols{display:flex;gap:0;padding:0 6px}
+.cmp-col{flex:1;min-width:0;padding:10px 10px 4px;border-right:1px solid var(--border)}
+.cmp-col:last-child{border-right:none}
+.cmp-name{font-size:11px;font-weight:700;color:var(--text);line-height:1.3;min-height:30px}
+.cmp-dci{font-family:var(--serif);font-size:2rem;line-height:1;margin-top:6px;font-variant-numeric:tabular-nums}
+.cmp-band{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.cmp-tbl{width:100%;border-collapse:collapse;margin:6px 0 4px}
+.cmp-tbl td,.cmp-tbl th{padding:7px 10px;border-bottom:1px solid var(--border);font-size:12px}
+.cmp-tbl th{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-align:left;font-weight:800}
+.cmp-tbl td.v{text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
+.cmp-tbl td.v.best{text-decoration:underline;text-underline-offset:3px}
+.cmp-verdline{font-size:12.5px;line-height:1.55;color:#c4ccea;padding:10px 16px 16px}
+.cmp-verdline b{color:#fff}
+.legend-h{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+.legend-row{display:flex;align-items:center;gap:7px;margin-bottom:4px;color:#b7c0e0}
+.legend-sw{width:12px;height:12px;border-radius:3px}
+@media(max-width:760px){#panel{left:8px;right:8px;width:auto;top:60px;bottom:8px}.legend{display:none}}
+/* paywall gate */
+#gate{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:24px;
+  background:radial-gradient(120% 120% at 50% 0%,rgba(8,12,22,.86),rgba(4,6,12,.97));backdrop-filter:blur(8px)}
+#gate.show{display:flex}
+.gate-card{max-width:480px;width:100%;background:linear-gradient(180deg,#13203a,#0a1322);border:1px solid var(--amber);
+  border-radius:16px;padding:34px 32px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+.gate-ey{font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+.gate-h{font-family:var(--serif);font-size:1.7rem;color:#fff;line-height:1.18;margin-bottom:12px}
+.gate-p{font-size:13.5px;color:#aab3d4;line-height:1.6;margin-bottom:22px}
+.gate-ul{text-align:left;display:inline-block;margin:0 auto 24px;padding-left:20px;font-size:13px;color:#c4ccea;line-height:1.85}
+.gate-cta{display:block;background:var(--amber);color:#1a1206;font-size:14px;font-weight:800;padding:13px;border-radius:9px;margin-bottom:14px;cursor:pointer;border:none;width:100%}
+.gate-key{display:flex;gap:8px;margin-top:6px}
+.gate-key input{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:11px 12px;font-size:13px;font-family:var(--font)}
+.gate-key button{background:none;border:1px solid var(--soil);color:var(--soil);font-weight:700;font-size:12px;padding:0 16px;border-radius:8px;cursor:pointer}
+.gate-note{font-size:11px;color:var(--dim);margin-top:14px}
+.gate-err{font-size:12px;color:var(--red);margin-top:10px;min-height:16px}
+</style>
+</head>
+<body>
+<div id="bar">
+  <a class="bar-logo" href="index.html" style="text-decoration:none">Lab10YR</a>
+  <span class="bar-sep"></span>
+  <span class="bar-title">GroundScore DCI siting app</span>
+  <div id="hdr-chips">
+    <button class="hchip" id="hc-soil" onclick="chipToggle('soil')" title="Show/hide the GroundScore soil model — turn it off to see the basemap and draw an AOI">GroundScore soil</button>
+    <button class="hchip" id="hc-aoi" onclick="chipToggle('aoi')" title="Show/hide the clipped AOI screening — only the scored parcel" style="display:none">Clipped AOI</button>
+    <span class="hchip-fill" title="GroundScore soil layer fill opacity"><span class="hf-lbl">Fill</span><input type="range" id="hdr-op-soil" min="0" max="100" value="42" style="--val:42%" oninput="setSoilOpacity(this.value)"><b id="hdr-op-val">42%</b></span>
+    <button class="hchip" id="hc-states" onclick="chipToggle('states')" title="State boundary lines">State boundaries</button>
+    <button class="hchip" id="hc-labels" onclick="chipToggle('labels')" title="Place-name labels">Labels</button>
+    <button class="hchip" id="hc-roads" onclick="chipToggle('roads')" title="Road network overlay">Roads</button>
+    <button class="hchip" id="hc-hydro" onclick="chipToggle('hydro')" title="Rivers, lakes and streams (NHD)">Hydro</button>
+    <button class="hchip" id="hc-hillshade" onclick="chipToggle('hillshade')" title="Elevation terrain hillshade (flat-map relief)">Hillshade</button>
+    <button class="hchip" id="hc-imagery" onclick="chipToggle('imagery')" title="Satellite imagery basemap">Imagery</button>
+    <button class="hchip" id="hc-mkt" onclick="chipToggle('mkt')" title="The 47 ranked data-center markets">Markets</button>
+  </div>
+  <div class="bar-spacer"></div>
+  <button class="hdr-btn" id="cb-3d" onclick="toggleTerrain(!_terrOn)" title="Tilt into 3D terrain — see the actual relief under a site (right-drag to orbit)"><span>&#9650;</span> 3D terrain</button>
+  <button class="hdr-btn" id="btn-layers" onclick="toggleLayersCard()" title="Map overlays and transparency">&#9638; Layers</button>
+  <a class="bar-link" href="data-center-suitability.html#pricing" style="margin-left:4px" title="Plans, per-AOI screening rates, and API access">Pricing &rarr;</a>
+</div>
+
+
+<div id="map"></div>
+
+<!-- About the model (one unified model write-up) — rendered INSIDE the right slide-in
+     (one panel system, Jason directive 2026-06-12); this template is moved there on load. -->
+<template id="about-tpl">
+  <div class="ab-eyebrow" style="padding:0">GroundScore DCI &middot; the model</div>
+  <h2>One score for the ground beneath a data center</h2>
+  <p>GroundScore DCI is a single, unified site-suitability index. It is not two separate models stitched
+  together; it is one composite that fuses the <b>soil and ground conditions</b> with the <b>infrastructure
+  realities</b> of a data-center campus, expressed as a single 0&ndash;100 score and a GO / CAUTION / NO-GO read.</p>
+  <h3>One fuzzy-logic system, end to end</h3>
+  <p>Every criterion &mdash; soil and site alike &mdash; is expressed as a fuzzy <b>limitation</b> from 0
+  (no limitation) to 1 (fully limiting), exactly the way a soil-survey interpretation is built. All the
+  criteria then enter <b>one weighted aggregation</b>: the soil survey's raw inputs flow in directly
+  &mdash; the engineering interpretations (commercial buildings, roads, shallow excavations), corrosion
+  of buried steel and concrete, depth to bedrock, seasonal high water table, shrink-swell (linear
+  extensibility), drainage class, flooding and ponding, hydric (wetland) rating &mdash; alongside the
+  site criteria measured at the exact point.</p>
+  <h3>The eight criteria groups</h3>
+  <ul class="ab-ul">
+    <li><b>Ground</b> &mdash; the SSURGO soil criteria above, at the survey's own weightings.</li>
+    <li><b>Slope</b> &mdash; USGS 3DEP LiDAR grade, through the same curve the soils use (2&ndash;15%).</li>
+    <li><b>Power</b> &mdash; high-voltage proximity and voltage, the <b>interconnection-queue wait</b> for the region's grid (the schedule-critical number), and grid carbon.</li>
+    <li><b>Water</b> &mdash; precipitation supply plus regional baseline water stress.</li>
+    <li><b>Fiber</b> &mdash; distance to the nearest long-haul / internet-exchange hub.</li>
+    <li><b>Land</b> &mdash; regional land-acquisition cost.</li>
+    <li><b>Hazard</b> &mdash; ASCE 7 seismic demand, tornado/hail climatology, wildfire potential, and karst (sinkhole) terrain.</li>
+    <li><b>Climate</b> &mdash; hot-day frequency; cooling load.</li>
+  </ul>
+  <p>The weights reflect what actually gates a data-center build &mdash; power and ground heaviest by
+  default &mdash; and re-tune live with your <b>persona, priorities, campus size and cooling</b>. A
+  <b>most-limiting</b> term rides on top: a single fatal flaw &mdash; frequent flooding, a hydric map
+  unit, no grid in reach &mdash; drags the site down rather than being averaged away. A campus is only
+  as good as its worst constraint.</p>
+  <h3>How to read it</h3>
+  <p><b>Prime 80+</b> &middot; <b>Favorable 65&ndash;80</b> &middot; <b>Guarded 50&ndash;65</b> &middot;
+  <b>Elevated 35&ndash;50</b> &middot; <b>Severe &lt;35</b>. Draw an area to screen every map unit in it and
+  get a buildability distribution plus a written, pedologist-grade assessment. The whole model is
+  validated against the siting record of 88 operating hyperscale campuses.</p>
+  <p class="ab-disc">Desktop screening from the National Cooperative Soil Survey (SSURGO via Soil Data Access)
+  fused with public infrastructure data. A screening signal to prioritize sites; it does not replace a
+  geotechnical investigation. Ground truthing is required before commitment.</p>
+</template>
+
+<!-- upper-right of the map: persistent layers card (open by default; header Layers button collapses it;
+     the right sidebar overlays it when open) -->
+<div id="mapctl">
+  <div id="layers-card">
+    <div class="ly-h">Overlays &amp; transparency</div>
+    <div class="ly-row"><label><span class="ly-sw" style="background:linear-gradient(90deg,#ef4444,#eab308,#16a34a)"></span><input type="checkbox" id="ly-soil" onchange="toggleSoilLayer(this.checked)"> GroundScore soil (HD)</label></div>
+    <div class="op-wrap" id="op-soil-wrap"><input type="range" class="op-slider" id="op-soil" min="0" max="100" value="42" oninput="setSoilOpacity(this.value)"></div>
+    <div class="ly-row"><label><span class="ly-sw" style="background:#c8a84b"></span><input type="checkbox" id="ly-mkt" onchange="toggleMarketLayer(this.checked)"> DCI market points</label></div>
+    <div class="ly-row"><label><input type="checkbox" id="chk-states" onchange="toggleStates(this.checked)"> State boundaries</label></div>
+    <div class="ly-row"><label><input type="checkbox" id="chk-imagery" onchange="toggleBase('imagery',this.checked)"> Satellite imagery</label></div>
+    <div class="op-wrap" id="op-imagery-wrap"><input type="range" class="op-slider" id="op-imagery" min="0" max="100" value="100" oninput="setBaseOpacity('imagery',this.value)"></div>
+    <div class="ly-row"><label><input type="checkbox" id="chk-roads" onchange="toggleBase('roads',this.checked)"> Roads</label></div>
+    <div class="op-wrap" id="op-roads-wrap"><input type="range" class="op-slider" id="op-roads" min="0" max="100" value="70" oninput="setBaseOpacity('roads',this.value)"></div>
+    <div class="ly-row"><label><input type="checkbox" id="chk-hydro" onchange="toggleBase('hydro',this.checked)"> Hydrology (NHD)</label></div>
+    <div class="op-wrap" id="op-hydro-wrap"><input type="range" class="op-slider" id="op-hydro" min="0" max="100" value="75" oninput="setBaseOpacity('hydro',this.value)"></div>
+    <div class="ly-row"><label><input type="checkbox" id="chk-hillshade" onchange="toggleHillshade(this.checked)"> Terrain hillshade</label></div>
+    <div class="ly-row" style="margin-bottom:0"><label><input type="checkbox" id="chk-labels" onchange="toggleBase('labels',this.checked)"> Place labels</label></div>
+  </div>
+</div>
+
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-ey">Pro &amp; Enterprise tool</div>
+    <div class="gate-h">The GroundScore DCI siting app is behind the paywall.</div>
+    <div class="gate-p">Per-parcel screening, the eight-criteria breakdown, the GO / CAUTION / NO-GO verdict and the written site-acquisition assessment are licensed. The public overview is open to everyone.</div>
+    <ul class="gate-ul">
+      <li>Unlimited per-site GroundScore DCI screening</li>
+      <li>Eight criteria, one model: ground, slope, power, water, fiber, land, hazard, climate</li>
+      <li>GO/CAUTION/NO-GO verdict and risk callout</li>
+      <li>Written, pedologist-grade site-acquisition assessment</li>
+    </ul>
+    <a class="gate-cta" href="data-center-suitability.html#pricing">See Pro &amp; enterprise pricing &rarr;</a>
+    <div class="gate-key">
+      <input id="gate-key-input" placeholder="Paste your access key" onkeydown="if(event.key==='Enter')applyKey()">
+      <button onclick="applyKey()">Unlock</button>
+    </div>
+    <div class="gate-err" id="gate-err"></div>
+    <div class="gate-note">Have a key? It opens the app instantly. No key is ever stored on our servers.</div>
+  </div>
+</div>
+
+<div id="panel">
+  <button class="pn-collapse" onclick="panelHide()" title="Collapse the console">&laquo;</button>
+  <div class="panel-resize" id="panel-resize" title="Drag to resize"></div>
+  <div class="panel-scroll">
+    <div class="pp acc open" id="acc-finder" style="padding-bottom:14px;border-bottom:1px solid var(--border)">
+      <div class="pp-h" onclick="accToggle(this)" data-step="1" title="Step 1 — find where to look: search a place or describe your criteria and get ranked target sites">Site finder</div>
+      <div class="acc-body">
+      <div class="fd-search">
+        <input id="site-input" class="inp" placeholder="City, county, region, or lat,lng" title="A point scores that point; a city/county/region gets scanned and its best sites ranked" onkeydown="if(event.key==='Enter')findSite();">
+        <button class="bar-btn" onclick="findSite()" title="Locate and score — areas are grid-scanned, exact points scored directly">Find</button>
+      </div>
+      <button class="fd-crit-toggle" id="fd-toggle" onclick="toggleFinder()" title="Open the criteria filters: minimum scores, water stress, emphasis, incentive states">Criteria &amp; filters &#9662;</button>
+      <div id="finder">
+        <div class="fd-lbl" title="Plain English works — name a region and the finder scans it; name criteria and it filters the markets">Describe what you want</div>
+        <textarea class="fd-ta" id="fd-describe" placeholder="Low-opposition Texas sites under medium-high water stress for a 400 MW AI cluster"></textarea>
+        <div class="fd-row">
+          <div title="Only return sites at or above this combined index"><div class="fd-slh">Min GroundScore DCI <b id="fd-minv">60</b></div><input type="range" class="crit-slider" id="fd-min" min="0" max="100" value="60" style="--val:60%" oninput="document.getElementById('fd-minv').textContent=this.value;this.style.setProperty('--val',this.value+'%')"></div>
+          <div title="Only return sites whose GROUND (soil) pillar alone clears this bar"><div class="fd-slh">Min soil GroundScore <b id="fd-soilv">0</b></div><input type="range" class="crit-slider" id="fd-soil" min="0" max="100" value="0" style="--val:0%" oninput="document.getElementById('fd-soilv').textContent=this.value;this.style.setProperty('--val',this.value+'%')"></div>
+        </div>
+        <div class="fd-lbl" title="Cap how water-stressed a market can be — cooling water is a headline siting risk">Max water stress</div>
+        <div class="pills" id="fd-water">
+          <button class="pill active" data-w="9" onclick="pickPill('fd-water',this)">Any</button>
+          <button class="pill" data-w="1" onclick="pickPill('fd-water',this)">Low</button>
+          <button class="pill" data-w="2" onclick="pickPill('fd-water',this)">Low-Med</button>
+          <button class="pill" data-w="3" onclick="pickPill('fd-water',this)">Med-High</button>
+          <button class="pill" data-w="4" onclick="pickPill('fd-water',this)">High</button>
+        </div>
+        <div class="fd-lbl">Emphasis</div>
+        <div class="pills" id="fd-emph">
+          <button class="pill active" data-p="balanced" onclick="pickPill('fd-emph',this);setProfile('balanced')">Balanced</button>
+          <button class="pill" data-p="hyperscale" onclick="pickPill('fd-emph',this);setProfile('hyperscale')">Hyperscale</button>
+          <button class="pill" data-p="ai_cluster" onclick="pickPill('fd-emph',this);setProfile('ai_cluster')">AI cluster</button>
+          <button class="pill" data-p="cost" onclick="pickPill('fd-emph',this);setProfile('cost')">Cost</button>
+          <button class="pill" data-p="risk_averse" onclick="pickPill('fd-emph',this);setProfile('risk_averse')">Risk-averse</button>
+        </div>
+        <label class="fd-chk" title="Limit results to states with active data-center tax-incentive programs"><input type="checkbox" id="fd-incentive"> Incentive-friendly states only</label>
+        <button class="fd-go" onclick="findTargets()" title="Run the criteria against the 47 ranked markets — or scan the region you described">Find target sites</button>
+      </div>
+      </div>
+    </div>
+    <div class="pp acc" id="acc-aoi" style="padding-bottom:14px">
+      <div class="pp-h" onclick="accToggle(this)" data-step="2" title="Step 2 — screen a parcel: draw the candidate campus on the map and every map unit inside it gets scored">Area of interest</div>
+      <div class="acc-body">
+      <div class="aoi-ctrls" id="aoi-ctrls">
+        <button class="aoi-btn primary" id="aoi-draw" onclick="startDraw()" title="Click the map to drop corners around a candidate parcel; double-click or Finish to screen it">Draw an AOI</button>
+      </div>
+      <div class="hint" id="aoi-hint">Draw a candidate campus parcel to screen the whole area: every map unit, all eight criteria, and a written overall assessment. Or click a single point below.</div>
+      </div>
+    </div>
+    <div class="pp acc" id="acc-campus">
+      <div class="pp-h" onclick="accToggle(this)" data-step="3" title="Step 3 — make it YOUR campus: role, priorities, IT load and cooling re-tune the index live">Campus &amp; priorities</div>
+      <div class="acc-body">
+      <label class="lab" style="margin-top:0">View as</label>
+      <select id="in-persona" class="inp" onchange="onPersona()" style="margin-bottom:6px" title="Your role reweights the index toward what you optimize for">
+        <option value="site_acquisition">Site Acquisition Lead</option>
+        <option value="water">Water &amp; Sustainability</option>
+        <option value="investment">Investment Committee</option>
+        <option value="permitting">Permitting &amp; Community</option>
+        <option value="exec">Executive</option>
+      </select>
+      <div class="prio-pills" id="prio-pills">
+        <button class="pill active" data-p="balanced" onclick="setProfilePill(this)" title="Power-first default weighting — the all-around screen">Balanced</button>
+        <button class="pill" data-p="hyperscale" onclick="setProfilePill(this)" title="Big-campus weighting: power and water dominate">Hyperscale</button>
+        <button class="pill" data-p="ai_cluster" onclick="setProfilePill(this)" title="Dense-compute weighting: power heaviest, cooling load up">AI cluster</button>
+        <button class="pill" data-p="cost" onclick="setProfilePill(this)" title="Build-cost weighting: ground and slope matter more">Cost</button>
+        <button class="pill" data-p="risk_averse" onclick="setProfilePill(this)" title="Defensive weighting: ground and seismic up — for lenders and insurers">Risk-averse</button>
+      </div>
+      <input type="hidden" id="in-profile" value="balanced">
+      <div class="mw-h" title="Bigger campuses weight power harder and demand higher-voltage interconnection"><span class="lab" style="margin:0">Campus IT load</span><span class="v" id="mw-val">150 <small>MW</small></span></div>
+      <input type="range" class="crit-slider" id="in-mw" min="10" max="2000" value="150" style="--val:7%" title="Drag to your campus size — the index re-tunes live" oninput="onMW(this.value)">
+      <div class="row2" style="margin-top:14px">
+        <div title="Evaporative is water-hungry, dry cooling trades water for power and heat sensitivity — the weights follow"><label class="lab">Cooling</label><select id="in-cooling" class="inp" onchange="rescore()"><option value="evaporative">Evaporative</option><option value="hybrid">Hybrid</option><option value="dry">Dry</option></select></div>
+        <div title="How long the written assessment runs — a deal-lead summary or full analyst detail"><label class="lab">Output</label><select id="in-depth" class="inp" onchange="rescore()"><option value="exec">Exec summary</option><option value="analyst">Analyst detail</option></select></div>
+      </div>
+      <div class="presets" id="presets" title="One-click famous markets — fly there and score instantly"></div>
+      <div class="hint">Click the map to score a point, draw an AOI, or use the Site finder above for criteria-based search. Changing a priority re-tunes the index live.</div>
+      </div>
+    </div>
+    <div class="pp" style="border-top:1px solid var(--border);padding-bottom:9px">
+      <button class="about-btn rp-toggle" id="rp-toggle" onclick="rpShowView('analysis')" title="Step 4 — the verdict: GO/CAUTION/NO-GO, the eight-criteria radar, the written assessment, and the PDF dossier"><span style="display:flex;align-items:center;gap:8px"><span class="step-badge">4</span>Analysis &amp; results</span><span>&rarr;</span></button>
+    </div>
+    <div class="pp acc" id="acc-portfolio" style="padding-top:0;padding-bottom:9px">
+      <div class="pp-h" onclick="accToggle(this)" title="Power tool — batch-score a whole pipeline of candidate sites from a CSV">Portfolio screening</div>
+      <div class="acc-body">
+      <div class="aoi-ctrls">
+        <button class="aoi-btn primary" onclick="document.getElementById('pf-file').click()" title="CSV with lat,lng columns (optional name) — up to 60 sites, ranked + one merged PDF">&#8682; Upload CSV</button>
+        <input type="file" id="pf-file" accept=".csv,text/csv" style="display:none" onchange="portfolioUpload(this.files[0])">
+      </div>
+      <div class="hint">Batch-score a whole pipeline of candidate sites: a CSV with <b>lat,lng</b> columns (optional <b>name</b>; header row auto-detected, up to 60 rows) returns a ranked table and one merged portfolio report.</div>
+      </div>
+    </div>
+    <div class="pp acc" id="acc-watch" style="padding-top:0;padding-bottom:9px">
+      <div class="pp-h" onclick="accToggle(this);loadWatchlist()" title="Power tool — saved sites re-score monthly on the newest model; movers get flagged">Watchlist</div>
+      <div class="acc-body">
+      <div id="watch-list" class="hint" style="margin-top:0">No watched sites yet — score a site, then hit &#9734; Watch in the analysis bar.</div>
+      </div>
+    </div>
+    <div class="pp" style="padding-top:0">
+      <button class="about-btn" onclick="rpShowView('about')" title="How the index works: the soil core, the pillars, the most-limiting blend, and how to read the bands"><span>GroundScore DCI Model Guide</span><span>&rarr;</span></button>
+    </div>
+  </div>
+</div>
+<button class="panel-open-btn" id="panel-open" onclick="panelShow()">&#9776; Console</button>
+
+<div id="rpanel" class="hidden">
+  <div class="rp-resize" id="rp-resize" title="Drag to widen"></div>
+  <button class="rp-close" onclick="rpHide()">&times;</button>
+  <div class="rp-scroll">
+    <div id="rp-analysis" class="rp-pane active">
+      <div id="result"><div class="empty" style="padding:20px 16px;color:var(--dim);font-size:12.5px;line-height:1.6"><b style="color:var(--text)">Click anywhere on the map to score the ground.</b><br><br>Or: search a city in the Site finder, draw an AOI to screen a whole parcel, or pick a market from the national leaderboard. Every score returns the GO / CAUTION / NO-GO verdict, the eight-criteria radar, and a written assessment.</div></div>
+    </div>
+    <div id="rp-about" class="rp-pane"></div>
+  </div>
+</div>
+<button id="rp-edge" onclick="rpShowView('analysis')">Analysis</button>
+<div id="cmp-bar"></div>
+
+<script>
+// ── build identity + stale-shell self-heal ───────────────────────────────────────────────────
+// A cached browser can keep serving an old build after a deploy (the "fix looks undeployed" bug).
+// On load, compare this build to the tiny no-store /app-build.txt; if stale, drop SWs + caches and
+// reload ONCE (loop-guarded). Also shows a small build stamp so the running version is always visible.
+const APP_BUILD='2026-06-16-aoi-clip-hd';
+(async()=>{ try{
+  const r=await fetch('app-build.txt?cb='+Date.now(),{cache:'no-store'});
+  if(!r.ok) return;
+  const srv=(await r.text()).trim();
+  if(srv && srv.length<40 && srv!==APP_BUILD && !sessionStorage.getItem('_appReloaded')){
+    sessionStorage.setItem('_appReloaded','1');
+    try{ if('serviceWorker' in navigator){ const rs=await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(x=>x.unregister())); } }catch(e){}
+    try{ if(window.caches){ const ks=await caches.keys(); await Promise.all(ks.map(k=>caches.delete(k))); } }catch(e){}
+    location.reload();
+  }
+}catch(e){} })();
+(document.body?Promise.resolve():new Promise(r=>addEventListener('DOMContentLoaded',r))).then(()=>{
+  const b=document.createElement('div'); b.id='build-badge';
+  b.style.cssText='position:fixed;bottom:4px;right:6px;z-index:9999;font:10px/1.2 monospace;color:#5b6478;background:rgba(4,6,12,.6);padding:2px 6px;border-radius:4px;pointer-events:none';
+  b.textContent='build '+APP_BUILD; document.body.appendChild(b);
+});
+// ── shared helpers ──
+function esc(s){return String(s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));}
+// ── modern tooltip engine: every [title] control gets an instant styled explanation ──
+// (titles are lifted into data-tip on first hover so the browser's slow native tip never doubles up)
+(function(){
+  const tb=document.createElement('div'); tb.id='tipbox';
+  (document.body?Promise.resolve():new Promise(r=>addEventListener('DOMContentLoaded',r))).then(()=>document.body.appendChild(tb));
+  let cur=null;
+  function showFor(el){
+    let t=el.getAttribute('data-tip');
+    if(!t){ t=el.getAttribute('title'); if(t){ el.setAttribute('data-tip',t); el.removeAttribute('title'); } }
+    if(!t) return; cur=el;
+    tb.textContent=t; tb.classList.add('show');
+    const r=el.getBoundingClientRect();
+    tb.style.left=Math.max(8,Math.min(r.left,innerWidth-288))+'px';
+    let top=r.bottom+9; const h=tb.offsetHeight;
+    if(top+h>innerHeight-8) top=Math.max(8,r.top-h-9);
+    tb.style.top=top+'px';
+  }
+  document.addEventListener('mouseover',e=>{ const el=e.target.closest&&e.target.closest('[data-tip],[title]'); if(!el||el===cur)return; showFor(el); });
+  document.addEventListener('mouseout',e=>{ if(cur&&(!e.relatedTarget||!cur.contains(e.relatedTarget))){ tb.classList.remove('show'); cur=null; } });
+  ['scroll','pointerdown'].forEach(ev=>document.addEventListener(ev,()=>{ tb.classList.remove('show'); cur=null; },true));
+})();
+function buildableColor(v){return v>=70?'#22c55e':v>=55?'#84cc16':v>=40?'#eab308':v>=25?'#f59e0b':'#ef4444';}
+let _runKey=null;
+function proKey(){return new URLSearchParams(location.search).get('key')||_runKey||(function(){try{return sessionStorage.getItem('l10_key');}catch(e){return null;}})()||'';}
+function dcHeaders(){const h={'Content-Type':'application/json'};const k=proKey();if(k)h['X-Lab10YR-Key']=k;return h;}
+const STATE_NAME={AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DC:'District of Columbia',DE:'Delaware',FL:'Florida',GA:'Georgia',HI:'Hawaii',IA:'Iowa',ID:'Idaho',IL:'Illinois',IN:'Indiana',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',MA:'Massachusetts',MD:'Maryland',ME:'Maine',MI:'Michigan',MN:'Minnesota',MO:'Missouri',MS:'Mississippi',MT:'Montana',NC:'North Carolina',ND:'North Dakota',NE:'Nebraska',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NV:'Nevada',NY:'New York',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VA:'Virginia',VT:'Vermont',WA:'Washington',WI:'Wisconsin',WV:'West Virginia',WY:'Wyoming'};
+const NAME2AB=Object.fromEntries(Object.entries(STATE_NAME).map(([ab,nm])=>[nm,ab]));
+
+// Browser-side climate (the Worker's egress IP is rate-limited by Open-Meteo).
+async function fetchClim(lat,lng){
+  // Open-Meteo's archive (10 yrs of daily data) can stall; cap it so a slow climate
+  // call never blocks the score. clim:null is handled downstream (climate falls back).
+  try{
+    const u=`https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lng}&start_date=2014-01-01&end_date=2023-12-31&daily=temperature_2m_max,precipitation_sum&temperature_unit=fahrenheit&timezone=UTC`;
+    const ctl=new AbortController(), to=setTimeout(()=>ctl.abort(),6500);
+    const d=await fetch(u,{signal:ctl.signal}).then(r=>r.json()).finally(()=>clearTimeout(to));
+    const t=(d.daily.temperature_2m_max||[]).filter(x=>x!=null), pr=(d.daily.precipitation_sum||[]).filter(x=>x!=null);
+    const yrs=Math.max(1,t.length/365);
+    return {hot:t.filter(x=>x>95).length/yrs, precip:pr.reduce((a,b)=>a+b,0)/yrs};
+  }catch(e){ return null; }
+}
+async function revGeo(lat,lng){
+  try{
+    const d=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&zoom=10&lat=${lat}&lon=${lng}`,{headers:{'Accept':'application/json'}}).then(r=>r.json());
+    const a=d&&d.address; if(!a) return null;
+    const place=a.city||a.town||a.village||a.hamlet||a.suburb||a.county||'';
+    const st=a.state?(NAME2AB[a.state]||a.state):'';
+    if(place&&st) return `${place}, ${st} area`;
+    return place||st||null;
+  }catch(e){ return null; }
+}
+
+// ── inputs ──
+let _lastSite=null;
+function sitingInputs(){const v=id=>{const e=document.getElementById(id);return e?e.value:undefined;};
+  return {persona:v('in-persona'),profile:v('in-profile'),mw:Number(v('in-mw'))||150,cooling:v('in-cooling'),depth:v('in-depth')};}
+function rescore(){ if(_lastSite) scoreLatLng(_lastSite.lat,_lastSite.lng,_lastSite.label); }
+
+const PRESETS=[['Phoenix West, AZ',33.55478,-112.64171],['Loudoun (Data Center Alley), VA',39.0185,-77.4636],['Columbus, OH',39.9612,-82.9988],['Dallas–Fort Worth, TX',32.7767,-96.797],['Reno–Storey, NV',39.535,-119.45]];
+function renderPresets(){document.getElementById('presets').innerHTML=PRESETS.map((p,i)=>`<button class="preset" onclick="goPreset(${i})">${esc(p[0].split(',')[0])}</button>`).join('');}
+function goPreset(i){const[label,lat,lng]=PRESETS[i]; if(window._gmap){window._gmap.flyTo({center:[lng,lat],zoom:9,duration:1600});} scoreLatLng(lat,lng,label);}
+function goMarket(lng,lat,name){ if(window._gmap)window._gmap.flyTo({center:[lng,lat],zoom:9,duration:1400}); scoreLatLng(lat,lng,name); }
+// National leaderboard + summary metrics — the home view (Ben's leaderboard, our DCI).
+async function renderLeaderboard(){
+  let m=[]; try{ m=await fetch('data/dc_markets.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():[]); }catch(e){}
+  m=(m||[]).filter(d=>d.dci!=null).sort((a,b)=>b.dci-a.dci);
+  if(!m.length){ return; }
+  const sorted=m.map(d=>d.dci).sort((a,b)=>a-b), med=sorted[Math.floor(sorted.length/2)];
+  const fav=m.filter(d=>d.dci>=60).length, weak=m.filter(d=>(d.score!=null&&d.score<40)).length;
+  const kill=weak>m.length/2?'Ground (soil) is the most common drag':'Water and climate are the most common drag';
+  const rows=m.map((d,i)=>{const c=buildableColor(d.dci);
+    return `<div class="lb-row" onclick="goMarket(${d.lng},${d.lat},${JSON.stringify(d.market)})">
+      <span class="lb-rank">${i+1}</span>
+      <span class="lb-name">${esc(d.market)}<span class="lb-soil">soil ${d.score} &middot; ${esc((d.soil||'').split(',')[0])}</span><span class="lb-bar"><span style="width:${Math.max(4,Math.round(d.dci))}%;background:${c}"></span></span></span>
+      <span class="lb-dci" style="color:${c}">${Math.round(d.dci)}<span class="lb-band">${esc(d.dci_band||'')}</span></span></div>`;}).join('');
+  setResult(`<div class="lb-head"><div class="kick">National leaderboard &middot; GroundScore DCI</div>
+     <div class="lb-sum"><b>${m.length}</b> data-center markets &middot; median DCI <b>${Math.round(med)}</b> &middot; <b>${fav}</b> Favorable or better</div>
+     <div class="lb-kill">Kill factor: ${kill}.</div></div>
+     <div class="lb-list">${rows}</div>
+     <div class="hint" style="padding:8px 18px 16px">Click a market to screen it, click anywhere on the map for a custom point, or draw an AOI above.</div>`);
+}
+
+// Persona ("view as") reweights the index toward what that role cares about, by mapping to an
+// optimization profile (Ben's persona idea, our model).
+const PERSONA_PROFILE={site_acquisition:'balanced',water:'risk_averse',investment:'cost',permitting:'risk_averse',exec:'balanced'};
+function onPersona(){ const p=(document.getElementById('in-persona')||{}).value, pr=PERSONA_PROFILE[p];
+  if(pr)setProfile(pr); else rescore(); }
+
+// Site finder: a point scores that point; a city/county/region screens the AREA and ranks the best sites in it.
+async function findSite(){
+  const q=((document.getElementById('site-input')||{}).value||'').trim(); if(!q) return;
+  rpTab('analysis');
+  const ll=q.match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/);
+  if(ll){ const lat=parseFloat(ll[1]),lng=parseFloat(ll[2]); if(window._gmap)window._gmap.flyTo({center:[lng,lat],zoom:9,duration:1400}); scoreLatLng(lat,lng,`${ll[1]}, ${ll[2]}`); return; }
+  setResult('<div class="empty" style="padding:20px 16px;color:var(--dim)">Locating &ldquo;'+esc(q)+'&rdquo;&hellip;</div>');
+  let g; try{ g=await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=10&addressdetails=1&countrycodes=us,pr,vi,gu,as,mp,pw,fm,mh&q=${encodeURIComponent(q)}`,{headers:{'Accept':'application/json'}}).then(x=>x.json());
+  }catch(e){ setResult('<div class="empty" style="padding:20px 16px;color:var(--red)">Location lookup failed.</div>'); return; }
+  if(!g||!g.length){ setResult('<div class="empty" style="padding:20px 16px;color:var(--red)">Could not find that location. Try a city, county, ZIP, or full address.</div>'); return; }
+  if(g.length===1){ applyGeoResult(g[0]); return; }
+  // Multiple matches: show a picker instead of silently guessing the first hit.
+  _geoResults=g;
+  let h='<div class="r-loc">&#9638; '+g.length+' matches for &ldquo;'+esc(q)+'&rdquo; &middot; choose one</div><div style="padding:4px 0 8px">';
+  g.forEach((r,i)=>{ const nm=r.display_name||'',head=nm.split(',')[0],rest=nm.split(',').slice(1).join(',').trim(),ty=(r.addresstype||r.type||'').replace(/_/g,' ');
+    h+='<div class="geo-opt" onclick="pickGeoResult('+i+')" style="padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.07);font-size:12.5px;line-height:1.4" onmouseover="this.style.background=\'rgba(200,168,75,.12)\'" onmouseout="this.style.background=\'\'"><b style="color:var(--text)">'+esc(head)+'</b>'+(ty?' <span style="color:var(--dim);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em">'+esc(ty)+'</span>':'')+'<br><span style="color:var(--dim);font-size:11px">'+esc(rest)+'</span></div>'; });
+  setResult(h+'</div>');
+}
+let _geoResults=null;
+function pickGeoResult(i){ if(_geoResults&&_geoResults[i]) applyGeoResult(_geoResults[i]); }
+function applyGeoResult(r){
+  openAoiAcc();   // landed on a place -> open the "Area of interest" step so they know to draw an AOI
+  const lat=+r.lat,lng=+r.lon,bb=r.boundingbox;   // [s,n,w,e]
+  if(bb){ let s=+bb[0],n=+bb[1],w=+bb[2],e=+bb[3];
+    const km2=Math.abs((e-w))*Math.abs((n-s))*111*111*Math.cos(lat*Math.PI/180);
+    if(km2>=3){   // a real area -> coarse scan + rank the best sites in it
+      const maxd=0.16, cx=(w+e)/2, cy=(s+n)/2;        // clamp to a ~36 km box (detailed + fast)
+      w=Math.max(w,cx-maxd); e=Math.min(e,cx+maxd); s=Math.max(s,cy-maxd); n=Math.min(n,cy+maxd);
+      if(window._gmap) window._gmap.fitBounds([[w,s],[e,n]],{padding:50,duration:1400});
+      setTimeout(()=>findSitesInArea(w,s,e,n,r.display_name),1500); return;
+    }
+  }
+  if(window._gmap)window._gmap.flyTo({center:[lng,lat],zoom:9,duration:1400});
+  scoreLatLng(lat,lng,r.display_name);
+}
+let _findMode=null;
+function gotoCell(lat,lng){ if(window._gmap)window._gmap.flyTo({center:[lng,lat],zoom:11,duration:1500}); scoreLatLng(lat,lng,`${lat.toFixed(4)}, ${lng.toFixed(4)}`); }
+async function scoreSite(){ return findSite(); }
+// Coarse site scan across an area: sample a grid, score concurrently, rank the best candidate sites.
+async function findSitesInArea(w,s,e,n,label){
+  rpTab('analysis');
+  const _m=window._gmap; if(_m&&_m.getPitch()>3) _m.setPitch(0);   // flat view = reliable per-cell resolution
+  const cols=6,rows=4,grid=[];
+  for(let i=0;i<cols;i++)for(let j=0;j<rows;j++) grid.push([w+(e-w)*(i+0.5)/cols, s+(n-s)*(j+0.5)/rows]);
+  setResult(`<div class="empty" style="padding:20px 16px;color:var(--dim)">Scanning <b>${grid.length}</b> candidate locations across ${esc((label||'').split(',').slice(0,2).join(','))}&hellip;<br><span id="fp">0</span>/${grid.length}</div>`);
+  const inputs=sitingInputs(), results=[], q=grid.slice(); let done=0;
+  const clim=await fetchClim((s+n)/2,(w+e)/2);
+  async function wk(){ while(q.length){ const [lng,lat]=q.shift();
+    const soil=await resolveSoil(lng,lat,false);
+    if(soil&&!soil._nodata){ try{ const jj=await fetch('/api/soil-analyze',{method:'POST',headers:dcHeaders(),body:JSON.stringify({wkt:`point(${lng} ${lat})`,mode:'dc',light:true,soil,clim,...inputs})}).then(x=>x.json());
+      if(jj&&jj.ok&&jj.dci_value!=null) results.push({lat,lng,dci:jj.dci_value,band:jj.dci_band,mu:jj.muname,soil:soil.dcsi_value}); }catch(e){} }
+    const fp=document.getElementById('fp'); if(fp)fp.textContent=++done; } }
+  await Promise.all([wk(),wk(),wk(),wk(),wk()]);
+  if(!results.length){ setResult('<div class="empty" style="padding:20px 16px;color:var(--red)">No mapped soil found in that area (water or unsurveyed). Try a different region.</div>'); return; }
+  results.sort((a,b)=>b.dci-a.dci);
+  renderSiteFinder(results,label);
+}
+function renderSiteFinder(results,label){
+  const top=results.slice(0,8), m=window._gmap;
+  if(m){ const fc={type:'FeatureCollection',features:top.map((t,i)=>({type:'Feature',properties:{dci:t.dci},geometry:{type:'Point',coordinates:[t.lng,t.lat]}}))};
+    if(!m.getSource('finds')) m.addSource('finds',{type:'geojson',data:fc}); else m.getSource('finds').setData(fc);
+    if(!m.getLayer('finds-c')) m.addLayer({id:'finds-c',type:'circle',source:'finds',paint:{'circle-radius':10,'circle-color':['interpolate',['linear'],['get','dci'],30,'#ef4444',45,'#f59e0b',60,'#eab308',75,'#84cc16',85,'#16a34a'],'circle-stroke-color':'#fff','circle-stroke-width':2}});
+    else m.setLayoutProperty('finds-c','visibility','visible'); }
+  const rows=top.map((t,i)=>`<div class="lb-row" onclick="gotoCell(${t.lat},${t.lng})"><span class="lb-rank">${i+1}</span>
+    <span class="lb-name">${t.lat.toFixed(4)}, ${t.lng.toFixed(4)}<span class="lb-soil">soil ${t.soil!=null?t.soil:'?'} &middot; ${esc((t.mu||'').split(',')[0])}</span></span>
+    <span class="lb-dci" style="color:${buildableColor(t.dci)}">${Math.round(t.dci)}<span class="lb-band">${esc(t.band||'')}</span></span></div>`).join('');
+  setResult(`<div class="lb-head"><div class="kick">Best sites in ${esc((label||'').split(',').slice(0,2).join(','))}</div>
+     <div class="lb-sum">Scanned <b>${results.length}</b> locations &middot; best DCI <b>${Math.round(top[0].dci)}</b> ${esc(top[0].band)}</div></div>
+     <div class="lb-list">${rows}</div>
+     <div class="hint" style="padding:8px 16px 16px">Best candidates marked on the map. Click one to run the full screening and generate a report.</div>`);
+}
+function setResult(html){const el=document.getElementById('result'); if(el)el.innerHTML=html;}
+
+// ── Soil from OUR downloaded layer (no SDA): mukey from our own tiles -> GroundScore from the committed
+//    per-state lookup (data/mukey_dcsi/{ST}.json). ────────────────────────────────────────────────────
+const _dcsiCache={}; const _mkReg={};
+function stateForPoint(lng,lat){ for(const[st,[w,s,e,n]] of Object.entries(STATE_BBOX)){ if(lng>=w&&lng<=e&&lat>=s&&lat<=n) return st; } return null; }
+function ensureMukeyLayer(m,st){ if(_mkReg[st])return; _mkReg[st]=true; registerPM();
+  try{ m.addSource('mk-'+st,{type:'vector',url:`pmtiles://data/pmtiles/${st}.pmtiles`});
+    m.addLayer({id:'mkq-'+st,type:'fill',source:'mk-'+st,'source-layer':st,minzoom:7,paint:{'fill-opacity':0}});
+    m.on('error',e=>{ if(e.sourceId==='mk-'+st){/* ignore */} }); }catch(e){} }
+// ── Map data layers: GroundScore soil choropleth (our tiles colored by GroundScore via feature-state) + DCI markets ──
+let _soilOn=false,_mktOn=false;
+function visibleStatesApp(m){ const b=m.getBounds(),out=new Set(),la=[b.getSouth(),(b.getSouth()+b.getNorth())/2,b.getNorth()],ln=[b.getWest(),(b.getWest()+b.getEast())/2,b.getEast()];
+  // ALL overlapping states (bboxes overlap; never break early)
+  la.forEach(y=>ln.forEach(x=>{ for(const[st,[w,s,e,n]] of Object.entries(STATE_BBOX)){ if(x>=w&&x<=e&&y>=s&&y<=n)out.add(st); } })); return out; }
+function _soilOpac(){ const s=document.getElementById('op-soil'); return s?(+s.value)/100:0.42; }
+function paintSoilState(m,st){
+  if(!m.getLayer('gs-fill-'+st)){ try{ const before=m.getLayer('roads')?'roads':('mkq-'+st);
+    m.addLayer({id:'gs-fill-'+st,type:'fill',source:'mk-'+st,'source-layer':st,minzoom:8,
+    paint:{'fill-color':'rgba(0,0,0,0)','fill-opacity':_soilOpac()}},before);
+    m.addLayer({id:'gs-line-'+st,type:'line',source:'mk-'+st,'source-layer':st,minzoom:12,
+      layout:{'line-join':'round','line-cap':'round'},
+      paint:{'line-color':'#0c1220','line-opacity':0.7,
+        'line-width':['interpolate',['linear'],['zoom'],12,0.5,14,1.0,16,1.4]}},before);
+    }catch(e){return;} }
+  // Color each map unit by DCI via a data-driven match on the tile's own `mukey`
+  // (same clean approach as the Regen Ag map). NO promoteId / feature-state — that
+  // path mis-tessellated the polygons into shards.
+  const lookup=_dcsiCache[st]; if(!lookup)return;
+  const expr=['match',['to-string',['get','mukey']]]; let any=false;
+  for(const mk in lookup){ const r=lookup[mk]; if(r&&r.dcsi_value!=null){ expr.push(mk, buildableColor(+r.dcsi_value)); any=true; } }
+  if(!any)return; expr.push('rgba(0,0,0,0)');
+  try{ m.setPaintProperty('gs-fill-'+st,'fill-color',expr); }catch(e){} }
+async function refreshSoilLayer(){ const m=window._gmap; if(!m||!_soilOn||m.getZoom()<7)return;
+  if(_clipOn)return;  // in clipped-AOI mode the global soil stays hidden — don't repaint it on pan/zoom
+  for(const st of visibleStatesApp(m)){ ensureMukeyLayer(m,st); await loadStateDcsi(st); paintSoilState(m,st); } }
+function _soilSrcCb(e){ if(_soilOn&&e.sourceId&&e.sourceId.indexOf('mk-')===0&&e.isSourceLoaded) refreshSoilLayer(); }
+function toggleSoilLayer(on){ _soilOn=on; const m=window._gmap; if(!m)return;
+  const w=document.getElementById('op-soil-wrap'); if(w)w.classList.toggle('show',on);
+  const cb=document.getElementById('ly-soil'); if(cb)cb.checked=on;
+  syncChip('soil',on);
+  document.getElementById('cb-soil')?.classList.toggle('active',on);
+  if(on){ refreshSoilLayer(); m.on('moveend',refreshSoilLayer); m.on('sourcedata',_soilSrcCb); const h=document.getElementById('ly-hint'); if(h)h.textContent='Each soil map unit shaded by GroundScore — the SSURGO HD model in detail (zoom in).'; }
+  else{ m.off('moveend',refreshSoilLayer); m.off('sourcedata',_soilSrcCb);
+    // Remove EVERY gs-fill-*/gs-line-* in the style (not just _mkReg) so no state's soil persists.
+    try{ (m.getStyle().layers||[]).forEach(l=>{ if(/^gs-(fill|line)-/.test(l.id)&&m.getLayer(l.id)) m.removeLayer(l.id); }); }catch(e){}
+    const h=document.getElementById('ly-hint'); if(h)h.textContent=''; } }
+async function toggleMarketLayer(on){ _mktOn=on; const m=window._gmap; if(!m)return;
+  syncChip('mkt',on); const mcb=document.getElementById('ly-mkt'); if(mcb)mcb.checked=on;
+  if(on){ let mk=[]; try{ mk=await fetch('data/dc_markets.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.json()); }catch(e){}
+    const fc={type:'FeatureCollection',features:(mk||[]).filter(d=>d.dci!=null).map(d=>({type:'Feature',properties:{dci:d.dci,name:d.market},geometry:{type:'Point',coordinates:[d.lng,d.lat]}}))};
+    if(!m.getSource('mktpts')) m.addSource('mktpts',{type:'geojson',data:fc}); else m.getSource('mktpts').setData(fc);
+    if(!m.getLayer('mktpts-c')) m.addLayer({id:'mktpts-c',type:'circle',source:'mktpts',paint:{'circle-radius':['interpolate',['linear'],['zoom'],3,4,8,9],'circle-color':['interpolate',['linear'],['get','dci'],30,'#ef4444',45,'#f59e0b',60,'#eab308',75,'#84cc16',85,'#16a34a'],'circle-stroke-color':'#04060c','circle-stroke-width':1.5}});
+    else m.setLayoutProperty('mktpts-c','visibility','visible');
+    try{ m.moveLayer('mktpts-c'); }catch(e){} }   // keep market points above soil + AOI mask
+  else if(m.getLayer('mktpts-c')) m.setLayoutProperty('mktpts-c','visibility','none'); }
+async function loadStateDcsi(st){ if(_dcsiCache[st])return _dcsiCache[st];
+  try{ _dcsiCache[st]=await fetch(`data/mukey_dcsi/${st}.json?v=2`,{cache:'force-cache'}).then(r=>r.ok?r.json():{}); }catch(e){ _dcsiCache[st]={}; }
+  return _dcsiCache[st]; }
+// State bounding boxes OVERLAP (states aren't rectangles), so a border point matches several. Try
+// ALL candidates and use whichever tile actually has a soil polygon at the point.
+function statesForPoint(lng,lat){ const out=[]; for(const[st,[w,s,e,n]] of Object.entries(STATE_BBOX)){ if(lng>=w&&lng<=e&&lat>=s&&lat<=n) out.push(st); } return out; }
+async function resolveSoil(lng,lat,fly=true){
+  const m=window._gmap; if(!m) return null;
+  const cands=statesForPoint(lng,lat); if(!cands.length) return null;
+  cands.forEach(st=>ensureMukeyLayer(m,st));
+  const layers=cands.map(st=>'mkq-'+st);
+  if(fly&&m.getZoom()<7) m.flyTo({center:[lng,lat],zoom:9,duration:700});   // detail tiles need zoom >= 7
+  let st=null,mukey=null,muname='';
+  for(let i=0;i<26;i++){
+    if(m.getZoom()>=7){ const fs=m.queryRenderedFeatures(m.project([lng,lat]),{layers});
+      if(fs&&fs.length){ const f=fs[0]; mukey=String(f.properties.mukey); muname=f.properties.muname||''; st=f.layer.id.replace('mkq-',''); break; } }
+    await new Promise(r=>setTimeout(r,200));
+  }
+  if(!mukey||!st) return null;
+  const lookup=await loadStateDcsi(st);
+  const r=lookup[mukey];
+  if(!r||r.dcsi_value==null) return {mukey,muname,state:st,_nodata:true};
+  return {mukey,state:st,muname:r.muname||muname,dcsi_value:r.dcsi_value,dcsi_class:r.dcsi_class,dcsi_flags:r.dcsi_flags,
+    s_commercial:r.s_commercial,s_roads:r.s_roads,s_excavation:r.s_excavation,s_corr_steel:r.s_corr_steel,s_corr_concrete:r.s_corr_concrete,
+    bedrock_cm:r.bedrock_cm,watertable_cm:r.watertable_cm,drainage:r.drainage,shrink_swell_lep:r.shrink_swell_lep,hydric_pct:r.hydric_pct}; }
+
+// Skeleton placeholder — the analysis pane sketches its own layout while scoring (no spinners).
+function skeletonHtml(label){
+  return `<div class="r-loc">&#128205; ${esc(label||'')}</div>
+    <div style="padding:12px 18px 0"><div class="skel" style="height:46px"></div></div>
+    <div style="display:flex;gap:20px;padding:14px 18px 12px"><div class="skel" style="width:120px;height:64px"></div><div class="skel" style="flex:1;height:64px"></div></div>
+    <div style="padding:6px 30px 14px"><div class="skel" style="height:190px;border-radius:50%/40%"></div></div>
+    <div style="padding:0 18px 18px"><div class="skel" style="height:13px;margin-bottom:8px"></div><div class="skel" style="height:13px;margin-bottom:8px;width:88%"></div><div class="skel" style="height:13px;width:70%"></div></div>`;
+}
+// Ground-only popup for a point click: just what's in the soil at that spot, straight from our
+// client-side soil lookup (no worker call) so it's instant. The full DCI / site analysis is an
+// AOI concern and lives in the right sidebar.
+function popupSoil(soil,label){
+  const gs=soil.dcsi_value, c=buildableColor(gs||0);
+  const rows=[];
+  if(soil.drainage) rows.push(['Drainage',esc(soil.drainage)]);
+  if(soil.watertable_cm!=null) rows.push(['Seasonal water table',Math.round(soil.watertable_cm)+' cm']);
+  if(soil.bedrock_cm!=null) rows.push(['Depth to bedrock',Math.round(soil.bedrock_cm)+' cm']);
+  if(soil.shrink_swell_lep!=null) rows.push(['Shrink-swell (LEP)',soil.shrink_swell_lep]);
+  if(soil.hydric_pct!=null) rows.push(['Hydric (wetland)',Math.round(soil.hydric_pct)+'%']);
+  const flags=soil.dcsi_flags?`<div style="font-size:11px;color:#b45309;margin-top:6px;line-height:1.4">${esc(soil.dcsi_flags)}</div>`:'';
+  return `<div style="font-family:Inter,system-ui,sans-serif;min-width:212px">
+    <div style="font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#7a85ad;margin-bottom:6px">On the ground</div>
+    <div style="font-weight:800;font-size:13px;color:#1a2233">${esc((soil.muname||'Soil map unit').split(',')[0])}</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:7px">
+      <span style="font-size:30px;font-weight:800;color:${c};line-height:1">${gs!=null?Math.round(gs):'&ndash;'}</span>
+      <span style="font-size:9.5px;font-weight:800;color:#666;text-transform:uppercase;letter-spacing:.06em;line-height:1.3">${esc(soil.dcsi_class||'')}<br>GroundScore (soil)</span>
+    </div>${flags}
+    ${rows.length?`<table style="margin-top:9px;font-size:11px;color:#444;border-collapse:collapse">${rows.map(r=>`<tr><td style="padding:1px 10px 1px 0;color:#7a85ad">${r[0]}</td><td style="font-weight:700">${r[1]}</td></tr>`).join('')}</table>`:''}
+    <div style="font-size:10px;color:#9aa3bd;margin-top:9px">Draw an AOI for the full GroundScore DCI &amp; site analysis &rarr;</div>
+  </div>`;
+}
+async function scoreLatLng(lat,lng,label){
+  // Point click shows ONLY what's on the ground (soil) in the popup — instant, client-side, no
+  // worker DCI call. The right sidebar is reserved for the AOI's overall analysis and is untouched.
+  _lastSite={lat,lng,label}; _findMode=null;
+  dropMarker(lat,lng);
+  sitePopup(lat,lng,popMsg('Reading the ground&hellip;'));
+  const soil=await resolveSoil(lng,lat);
+  if(!soil){ sitePopup(lat,lng,popMsg('Zoom in a little and click again — per-parcel soil loads at street scale.','#b45309')); return; }
+  if(soil._nodata){ sitePopup(lat,lng,popMsg('No soil GroundScore here (open water, urban land, or an unsurveyed map unit).','#b91c1c')); return; }
+  sitePopup(lat,lng,popupSoil(soil,label));
+}
+
+// ── verdict + ranks (v3: 8 display rollups of the ONE fuzzy aggregation) ──
+const DCI_PILLARS=[['ground','Ground'],['slope','Slope'],['power','Power'],['water','Water'],['fiber','Fiber'],['land','Land'],['hazard','Hazard'],['climate','Climate']];
+// Plain-English one-liners — every pillar number explains itself on hover (progressive disclosure).
+const PILLAR_TIP={
+  ground:v=>`Ground ${Math.round(v)} — SSURGO soil GroundScore at this exact map unit: foundations, excavation, corrosion of buried steel/concrete, water table, shrink-swell.`,
+  slope:v=>`Slope ${Math.round(v)} — USGS 3DEP LiDAR grade: ${v>=70?'flat pad, minimal grading.':v>=40?'moderate grading and engineered-fill cost.':'steep — major grading or retaining structures.'}`,
+  power:v=>`Power ${Math.round(v)} — proximity and voltage of the nearest high-voltage transmission: ${v>=70?'strong interconnection position.':v>=40?'workable; budget interconnection-study time.':'far from the grid — interconnection is the schedule risk.'}`,
+  water:v=>`Water ${Math.round(v)} — precipitation and cooling-water availability: ${v>=70?'comfortable supply.':v>=40?'plan hybrid or dry-cooling options.':'dry — water sourcing is a real constraint.'}`,
+  fiber:v=>`Fiber ${Math.round(v)} — distance to the nearest long-haul/IXP hub metro: ${v>=70?'strong connectivity position; latency routes are short.':v>=40?'workable; budget for a lateral build to long-haul routes.':'remote from the fiber backbone — connectivity is a real cost and timeline item.'}`,
+  land:v=>`Land ${Math.round(v)} — regional land-acquisition cost: ${v>=70?'inexpensive ground; the campus footprint is cheap to assemble.':v>=40?'moderate land costs.':'expensive market — acreage is a major budget line.'}`,
+  hazard:v=>`Hazard ${Math.round(v)} — seismic (ASCE 7) + tornado/hail + wildfire + karst terrain: ${v>=70?'low natural-hazard exposure; standard design and insurability.':v>=40?'moderate exposure — priceable design and insurance premiums.':'high hazard exposure — structural, insurance and karst-foundation risk.'}`,
+  climate:v=>`Climate ${Math.round(v)} — hot-day frequency and cooling load: ${v>=70?'mild; efficient free-cooling hours.':v>=40?'warm; higher summer PUE.':'hot — cooling capex/opex premium.'}`};
+const CHIP_TIP={'LiDAR slope':'Ground grade from USGS 3DEP LiDAR — drives grading and fill cost','Seismic Ss':'ASCE 7 short-period spectral response — structural design load','Days >95F':'Hot days per year — cooling load and summer PUE','Precip':'Annual precipitation — cooling-water supply signal','Nearest HV':'Distance to the nearest high-voltage transmission line','Max kV':'Highest line voltage nearby — interconnection capacity','Queue wait':'Typical interconnection request-to-energization for this grid region — usually the schedule-critical number','Fiber hub':'Distance to the nearest long-haul / internet-exchange metro','Water stress':'Regional baseline water stress — cooling-water sourcing risk'};
+const SOIL_TIP={'Foundations (commercial)':'SSURGO engineering interpretation for large commercial buildings','Excavation / trenching':'Ease and stability of shallow excavation for utilities and foundations','Corrosion of steel':'Soil corrosivity to buried uncoated steel — cathodic protection signal','Corrosion of concrete':'Soil chemistry attack on buried concrete','Shrink-swell (LEP)':'Linear extensibility — clay swelling that cracks slabs and foundations','Seasonal water table':'Depth to seasonal high water — dewatering and slab design','Depth to bedrock':'Shallow rock raises excavation cost','Drainage':'Natural drainage class of the map unit','Hydric (wetland)':'Share of the unit with hydric (wetland) soils — permitting risk'};
+function dciVerdict(dciV,pillars){
+  const vals=DCI_PILLARS.map(p=>pillars[p[0]]).filter(v=>v!=null);
+  const minP=vals.length?Math.min(...vals):100;
+  if(dciV<45||minP<20) return {v:'NO-GO',cls:'nogo'};
+  if(dciV>=68&&minP>=45) return {v:'GO',cls:'go'};
+  return {v:'CAUTION',cls:'caution'};
+}
+function pillarRanks(pillars){
+  const arr=DCI_PILLARS.filter(p=>pillars[p[0]]!=null).map(p=>({k:p[1],v:pillars[p[0]]}));
+  return {risks:[...arr].sort((a,b)=>a.v-b.v).slice(0,2), strengths:[...arr].sort((a,b)=>b.v-a.v).slice(0,2)};
+}
+function verdictRationale(v,ranks){
+  const r=(ranks.risks||[]).map(x=>`${x.k} (${Math.round(x.v)})`).join(' and ');
+  if(v==='GO'){ const s=(ranks.strengths||[])[0]; return s?`Strong across all eight criteria; ${s.k} leads at ${Math.round(s.v)}. Standard site preparation.`:`Strong overall DCI. Standard site preparation.`; }
+  if(v==='NO-GO') return r?`${r} fall below buildable thresholds &mdash; treat as a hard constraint before committing land.`:`DCI below buildable threshold &mdash; evaluate site constraints before committing land.`;
+  return r?`Viable site; ${r} carry real risk and must be priced into the development budget.`:`Viable site; review soil constraints and price into the development budget.`;
+}
+
+// ── radar (color-coded per pillar) ──
+function buildRadar(host,pillars,color){
+  if(!host||!window.d3)return; host.innerHTML='';
+  const W=300,H=240,cx=W/2,cy=H/2,R=80,n=DCI_PILLARS.length;
+  const svg=d3.select(host).append('svg').attr('viewBox',`0 0 ${W} ${H}`).attr('width','100%').style('display','block').style('overflow','visible');
+  const ang=i=>-Math.PI/2+i*2*Math.PI/n, pt=(i,r)=>[cx+Math.cos(ang(i))*r,cy+Math.sin(ang(i))*r];
+  [25,50,75,100].forEach(g=>svg.append('polygon').attr('points',DCI_PILLARS.map((_,i)=>pt(i,R*g/100).join(',')).join(' ')).attr('fill','none').attr('stroke','#1b2236'));
+  DCI_PILLARS.forEach((p,i)=>{const[x,y]=pt(i,R);svg.append('line').attr('x1',cx).attr('y1',cy).attr('x2',x).attr('y2',y).attr('stroke','#1b2236');
+    const[lx,ly]=pt(i,R+15),v=pillars[p[0]];
+    const tip=(v!=null&&PILLAR_TIP[p[0]])?PILLAR_TIP[p[0]](v):p[1];
+    const lt=svg.append('text').attr('x',lx).attr('y',ly).attr('text-anchor','middle').attr('dominant-baseline','middle').attr('font-size',10).attr('font-weight',700).attr('fill','#7a85ad').style('cursor','help').text(p[1]);
+    lt.append('title').text(tip);
+    if(v!=null){ const vt=svg.append('text').attr('x',lx).attr('y',ly+11).attr('text-anchor','middle').attr('font-size',10).attr('font-weight',800).attr('fill',buildableColor(v)).style('cursor','help').text(Math.round(v));
+      vt.append('title').text(tip); }});
+  const poly=DCI_PILLARS.map((p,i)=>pt(i,R*((pillars[p[0]]||0)/100)));
+  svg.append('polygon').attr('points',DCI_PILLARS.map(()=>cx+','+cy).join(' ')).attr('fill',color).attr('fill-opacity',0.2).attr('stroke',color).attr('stroke-width',2)
+     .transition().duration(800).ease(d3.easeCubicOut).attr('points',poly.map(p=>p.join(',')).join(' '));
+  DCI_PILLARS.forEach((p,i)=>{if(pillars[p[0]]==null)return;const pv=pillars[p[0]],[x,y]=pt(i,R*(pv/100));
+    svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',pv<40?4.4:3.2).attr('fill',buildableColor(pv)).attr('stroke','#04060c').attr('stroke-width',1)
+      .transition().delay(250).duration(650).ease(d3.easeCubicOut).attr('cx',x).attr('cy',y);});
+}
+// Render the model's markdown assessment as clean HTML (## headings, **bold**, paragraphs).
+// The soil/ground intelligence behind the "Ground" pillar — the layer Ben's tool does not have.
+function soilDetail(j){
+  const f=j.factors||{};
+  const lim=v=>v==null?'n/a':v<0.34?'Not limited':v<0.67?'Somewhat limited':'Very limited';
+  const corr=v=>v==null?'n/a':v<0.34?'Low':v<0.67?'Moderate':'High';
+  const rows=[
+    ['Foundations (commercial)',lim(f.s_commercial)],
+    ['Excavation / trenching',lim(f.s_excavation)],
+    ['Corrosion of steel',corr(f.s_corr_steel)],
+    ['Corrosion of concrete',corr(f.s_corr_concrete)],
+    ['Shrink-swell (LEP)',f.shrink_swell_lep!=null?Math.round(f.shrink_swell_lep*100)/100:'n/a'],
+    ['Seasonal water table',f.watertable_cm!=null?Math.round(f.watertable_cm)+' cm':'None in profile'],
+    ['Depth to bedrock',f.bedrock_cm!=null?Math.round(f.bedrock_cm)+' cm':'None in profile'],
+    ['Drainage',f.drainage||'n/a'],
+    ['Hydric (wetland)',f.hydric_pct!=null?Math.round(f.hydric_pct)+'%':'n/a'],
+  ];
+  return `<div class="soil-sec"><div class="soil-h">Ground &amp; soil detail &middot; ${esc((j.muname||'').split(',')[0])}</div>
+    <div class="soil-rows">${rows.map(r=>`<div class="k" style="cursor:help" title="${esc(SOIL_TIP[r[0]]||'')}">${esc(r[0])}</div><div class="v">${esc(String(r[1]))}</div>`).join('')}</div>
+    ${j.dcsi_flags?`<div class="soil-flags">Limiting flags: ${esc(j.dcsi_flags)}</div>`:''}</div>`;
+}
+function assessHtml(t){
+  const il=s=>s.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>');
+  const lines=esc(t).split(/\r?\n/); let out='',p=[];
+  const flush=()=>{ if(p.length){ out+='<p>'+il(p.join(' '))+'</p>'; p=[]; } };
+  for(const ln of lines){
+    const h=ln.match(/^\s*#{2,4}\s+(.*\S)\s*$/);
+    if(h){ flush(); out+='<h4 class="assess-h">'+il(h[1])+'</h4>'; }
+    else if(!ln.trim()){ flush(); }
+    else p.push(ln.trim());
+  }
+  flush(); return out;
+}
+
+// ── render ──
+function renderPanel(j,label){
+  const c=buildableColor(j.dcsi_value), dciV=j.dci_value, dc=dciV!=null?buildableColor(dciV):c;
+  const pro=!!(j.dci&&j.dci.pillars);
+  let verdictHtml='',calloutHtml='',body='';
+  if(pro&&dciV!=null){
+    window._lastReport={j,label};   // for the PDF report
+    const vd=dciVerdict(dciV,j.dci.pillars),ranks=pillarRanks(j.dci.pillars);
+    verdictHtml=`<div class="verdict ${vd.cls}"><span class="vbadge">${vd.v}</span><span class="vrat">${verdictRationale(vd.v,ranks)}</span></div>`;
+    const chip=x=>{const tip=PILLAR_TIP[x.k.toLowerCase()]?PILLAR_TIP[x.k.toLowerCase()](x.v):'';return `<span class="co-p" style="color:${buildableColor(x.v)};cursor:help" title="${esc(tip)}">${esc(x.k)} ${Math.round(x.v)}</span>`;};
+    calloutHtml=`<div class="callout"><span><span class="co-h">Top risks</span>${ranks.risks.map(chip).join('')}</span><span><span class="co-h">Strengths</span>${ranks.strengths.map(chip).join('')}</span><button class="maplink" onclick="siteReport()" title="Download the 6-page branded site dossier — cover, verdict, pillar reads, next steps">&#8595; PDF Report</button><button class="maplink" onclick="pinSite()" title="Pin this site — pin 2-3 and compare them side by side, pillar by pillar">&#8853; Pin</button><button class="maplink" id="share-btn" onclick="shareReport()" title="Create a read-only link you can forward — no login needed to view it">&#128279; Share</button><button class="maplink" id="watch-btn" onclick="watchSite()" title="Watch this site: it re-scores every month on the newest model and you get flagged when it moves">&#9734; Watch</button><button class="maplink" onclick="showOnMap()" title="Fly the map back to this site">&#9650; Map</button></div>`;
+    const r=j.dci.raw||{};
+    const chips=[['LiDAR slope',r.slope_pct!=null?r.slope_pct+'%':'n/a'],['Seismic Ss',r.seismic_ss!=null?r.seismic_ss:'n/a'],['Days >95F',r.hot_days_95F!=null?r.hot_days_95F+'/yr':'n/a'],['Precip',r.precip_mm_yr!=null?r.precip_mm_yr+' mm':'n/a'],['Nearest HV',r.hv_line_mi!=null?'≤ '+r.hv_line_mi+' mi':'n/a'],['Max kV',r.hv_max_kv?r.hv_max_kv+' kV':'n/a'],['Queue wait',r.queue_wait_years!=null?'~'+r.queue_wait_years+' yr':'n/a'],['Fiber hub',r.fiber_hub_mi!=null?'<= '+r.fiber_hub_mi+' mi':'n/a'],['Water stress',r.water_stress!=null?Math.round(r.water_stress*100)+'%':'n/a']];
+    // Verdict, score, radar and the written read live on TOP; the data tables collapse below.
+    body=`<div class="radar-wrap"><div id="radar"></div><div class="radar-cap">One model &middot; eight criteria &middot; soils + slope + power + water + fiber + land + hazard + climate &middot; hover any number</div></div>`+
+      (j.assessment?`<div class="assess">${assessHtml(j.assessment)}</div>`:`<div class="amber">Written site-acquisition assessment is being enabled for your account. The full eight-criteria screening above is live now.</div>`)+
+      `<details class="det"><summary>Ground &amp; site detail</summary>
+      ${soilDetail(j)}
+      <div class="soil-sec"><div class="soil-h">Site &amp; infrastructure</div></div>
+      <div class="chips" style="padding-bottom:16px">${chips.map(c=>`<div class="chip" style="cursor:help" title="${esc(CHIP_TIP[c[0]]||'')}"><div class="chip-k">${c[0]}</div><div class="chip-v">${esc(String(c[1]))}</div></div>`).join('')}</div>
+      </details>`;
+  } else {
+    body=`<div class="locked"><div class="locked-h">Pro unlocks the full index</div>
+      <ul><li>All eight criteria scores and the radar</li><li>Live site data: slope, hazard, water, fiber, cooling load, grid voltage, queue wait</li><li>GO/CAUTION/NO-GO verdict and written site-acquisition assessment</li></ul>
+      <div style="font-size:11.5px;color:var(--amber);margin-bottom:10px">${esc(j.message||'Upgrade for the full GroundScore DCI.')}</div>
+      <a class="cta" href="data-center-suitability.html#pricing">See Pro &amp; enterprise &rarr;</a></div>`;
+  }
+  setResult(`<div class="r-loc" id="r-loc">&#128205; ${esc(label||'')}</div>
+    ${verdictHtml}
+    <div class="scores">
+      <div><div class="kick">GroundScore DCI</div><div class="big" style="color:${dc}">${dciV!=null?dciV:'n/a'}</div><div class="band" style="color:${dc}">${esc(j.dci_band||'')}</div></div>
+      <div class="sub"><span class="sub-lbl">GroundScore (soil)</span><span class="sub-val" style="color:${c}">${j.dcsi_value} <span style="font-size:10px;text-transform:uppercase;letter-spacing:.06em">${esc(j.dcsi_class||'')}</span></span><div class="sub-mu">${esc(j.muname||'')}</div></div>
+    </div>
+    ${calloutHtml}${body}`);
+  if(pro) buildRadar(document.getElementById('radar'), j.dci.pillars, dc);
+}
+
+// ── AOI screening: draw a polygon, hex-sample the whole area on the full DCI, roll it up ──
+let _draw=false, _aoiPts=[], _aoiInit=false, _aoiAccShown=false;
+function dciBandName(v){return v>=80?'Prime':v>=65?'Favorable':v>=50?'Guarded':v>=35?'Elevated':'Severe';}
+function ensureAoiLayers(m){ if(_aoiInit)return;
+  m.addSource('aoi',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+  m.addLayer({id:'aoi-fill',type:'fill',source:'aoi',paint:{'fill-color':'#c8a84b','fill-opacity':0.10}});
+  // Clipped GroundScore soil: the SSURGO soil polygons INTERSECTED with the AOI (so soil renders
+  // ONLY inside the parcel; outside keeps the basemap/imagery/roads/labels for context). Replaces the
+  // old darkening-mask approach, which couldn't hide soil without also hiding the imagery beneath it.
+  m.addSource('aoisoil',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+  m.addLayer({id:'aoisoil-fill',type:'fill',source:'aoisoil',paint:{'fill-color':['get','color'],'fill-opacity':_soilOpac()}});
+  m.addLayer({id:'aoisoil-line',type:'line',source:'aoisoil',layout:{'line-join':'round'},paint:{'line-color':'#0c1220','line-opacity':0.7,'line-width':['interpolate',['linear'],['zoom'],12,0.5,14,1.0,16,1.4]}});
+  // AOI mask (LEGACY — kept only for the zoomed-out hex-overview fallback; soil mode now clips
+  // instead of darkening). world bbox MINUS the AOI ring, opaque dark fill.
+  m.addSource('aoi-mask',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+  m.addLayer({id:'aoi-mask',type:'fill',source:'aoi-mask',layout:{visibility:'none'},paint:{'fill-color':'#04060c','fill-opacity':0.82}});
+  m.addLayer({id:'aoi-line',type:'line',source:'aoi',paint:{'line-color':'#c8a84b','line-width':2,'line-dasharray':[2,1]}});
+  // Visible corner dots so each click registers immediately while drawing.
+  m.addSource('aoi-vert',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+  m.addLayer({id:'aoi-vert',type:'circle',source:'aoi-vert',paint:{'circle-radius':5,'circle-color':'#c8a84b','circle-stroke-color':'#1a1206','circle-stroke-width':2}});
+  m.addSource('aoihex',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+  // Hex is the overview screening grid; it fades out as you zoom in so the SSURGO HD soil shows through.
+  m.addLayer({id:'aoihex-fill',type:'fill',source:'aoihex',paint:{'fill-color':['get','color'],'fill-opacity':['interpolate',['linear'],['zoom'],10,0.62,12,0.52,15,0.44]}});
+  m.addLayer({id:'aoihex-line',type:'line',source:'aoihex',paint:{'line-color':'#04060c','line-opacity':['interpolate',['linear'],['zoom'],12,0.3,14,0],'line-width':0.5}});
+  _aoiInit=true;
+}
+function aoiSetData(){ const m=window._gmap; if(!m)return; const pts=_aoiPts;
+  const f=pts.length>=3?{type:'Feature',geometry:{type:'Polygon',coordinates:[[...pts,pts[0]]]}}:(pts.length?{type:'Feature',geometry:{type:'LineString',coordinates:pts}}:null);
+  m.getSource('aoi').setData(f?{type:'FeatureCollection',features:[f]}:{type:'FeatureCollection',features:[]});
+  const vs=m.getSource('aoi-vert'); if(vs) vs.setData({type:'FeatureCollection',features:pts.map(p=>({type:'Feature',geometry:{type:'Point',coordinates:p}}))}); }
+// Build the "world minus AOI" mask polygon and show it. The outer ring is a world bbox (CW),
+// the inner ring is the AOI (the hole), so only the area OUTSIDE the parcel is darkened — the
+// full SSURGO soil inside the AOI stays fully visible. Pass null/[] to clear+hide the mask.
+function setAoiMask(pts){ const m=window._gmap; if(!m||!m.getLayer('aoi-mask'))return;
+  if(!pts||pts.length<3){ m.getSource('aoi-mask').setData({type:'FeatureCollection',features:[]}); m.setLayoutProperty('aoi-mask','visibility','none'); return; }
+  const world=[[-180,-85],[180,-85],[180,85],[-180,85],[-180,-85]];  // CCW exterior
+  let hole=[...pts,pts[0]];
+  // The hole MUST wind opposite the exterior or maplibre classifies it as a second FILLED polygon
+  // (by signed-area sign), darkening the AOI interior and hiding the soil. world is CCW (area<0 by
+  // this shoelace), so force the hole CW. This was the intermittent "no soil in the AOI" bug: it
+  // worked only when the user happened to draw the AOI clockwise.
+  let _a=0; for(let i=1;i<hole.length;i++){ _a+=(hole[i][0]-hole[i-1][0])*(hole[i][1]+hole[i-1][1]); }
+  if(_a<0) hole=hole.slice().reverse();  // CCW like world -> reverse to CW so it cuts the hole
+  m.getSource('aoi-mask').setData({type:'FeatureCollection',features:[{type:'Feature',geometry:{type:'Polygon',coordinates:[world,hole]}}]});
+  // Mask must sit ABOVE the soil fills (gs-fill-* are added on top), so move it to the very top,
+  // then lift the AOI outline / corner dots back above the mask so they stay visible.
+  try{ m.moveLayer('aoi-mask'); ['aoihex-fill','aoihex-line','aoi-fill','aoi-line','aoi-vert'].forEach(id=>{ if(m.getLayer(id)) m.moveLayer(id); }); }catch(e){}
+  m.setLayoutProperty('aoi-mask','visibility','visible'); }
+
+// Clip the GroundScore soil to the AOI polygon and render ONLY the inside. soilFeats are the SSURGO
+// map-unit pieces (from the mkq query layer) that overlap the parcel; each is intersected with the
+// AOI via the vendored polygon-clipping lib (handles concave parcels). Everything outside the AOI is
+// left to the basemap/imagery/roads/labels — no soil, no darkening. Global gs-fill/gs-line stay
+// hidden while clipped (see toggleClipAOI). Keeps the AOI outline + corner dots on top.
+let _aoiClipFC=null;
+function applyAoiClip(pts,soilFeats){ const m=window._gmap; if(!m)return; ensureAoiLayers(m);
+  const pc=window.polygonClipping, aoiMP=[[[...pts,pts[0]]]], out=[];
+  if(pc&&soilFeats){ for(const f of soilFeats){ const g=f.geometry; let subj;
+    if(g.type==='Polygon')subj=[g.coordinates]; else if(g.type==='MultiPolygon')subj=g.coordinates; else continue;
+    let inter=null; try{ inter=pc.intersection(subj,aoiMP); }catch(e){}
+    if(inter&&inter.length) out.push({type:'Feature',properties:{color:f.properties.color,dci:f.properties.dci},geometry:{type:'MultiPolygon',coordinates:inter}}); } }
+  // Fallback: if the lib failed to load, show the unclipped overlapping soil (still better than nothing).
+  _aoiClipFC={type:'FeatureCollection',features: out.length?out : (soilFeats||[])};
+  const s=m.getSource('aoisoil'); if(s) s.setData(_aoiClipFC);
+  if(m.getLayer('aoisoil-fill')) m.setPaintProperty('aoisoil-fill','fill-opacity',_soilOpac());
+  try{ ['aoisoil-fill','aoisoil-line','aoi-fill','aoi-line','aoi-vert'].forEach(id=>{ if(m.getLayer(id)) m.moveLayer(id); }); }catch(e){} }
+// Drop the clipped soil + leave clip mode (so the full soil returns while drawing the next parcel).
+function clearAoiClip(){ const m=window._gmap; if(!m)return; _aoiClipFC=null; _clipAoiPts=null; _clipStates=null;
+  const s=m.getSource('aoisoil'); if(s) s.setData({type:'FeatureCollection',features:[]});
+  if(_clipOn) toggleClipAOI(false); }
+// Re-clip the soil on every zoom/pan so the parcel ALWAYS shows full SSURGO detail at the current
+// zoom (vector tiles load finer geometry as you zoom — re-querying keeps the clip HD, no re-screen).
+let _clipAoiPts=null,_clipStates=null,_reclipWired=false;
+function _collectClipSoil(pts,states){ const m=window._gmap; if(!m)return [];
+  const layers=(states||[]).map(st=>'mkq-'+st).filter(id=>m.getLayer(id)); if(!layers.length)return [];
+  const pip=(px,py,poly)=>{let ins=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const[xi,yi]=poly[i],[xj,yj]=poly[j];if(((yi>py)!==(yj>py))&&px<(xj-xi)*(py-yi)/(yj-yi)+xi)ins=!ins;}return ins;};
+  const out=[]; m.queryRenderedFeatures({layers}).forEach(f=>{ const mk=String(f.properties.mukey||''); if(!mk)return;
+    const g=f.geometry; let ring; if(g.type==='Polygon')ring=g.coordinates[0]; else if(g.type==='MultiPolygon')ring=g.coordinates[0][0]; else return;
+    const cx=ring.reduce((s,p)=>s+p[0],0)/ring.length, cy=ring.reduce((s,p)=>s+p[1],0)/ring.length;
+    if(!(pip(cx,cy,pts)||ring.some(p=>pip(p[0],p[1],pts))||pts.some(p=>pip(p[0],p[1],ring))))return;
+    const st=f.layer.id.replace('mkq-',''); const r=(_dcsiCache[st]||{})[mk]; if(!r||r.dcsi_value==null)return;
+    out.push({type:'Feature',properties:{color:buildableColor(+r.dcsi_value),dci:+r.dcsi_value},geometry:g}); });
+  return out; }
+function reclipAoi(){ const m=window._gmap; if(!m||!_clipOn||!_clipAoiPts)return;
+  const feats=_collectClipSoil(_clipAoiPts,_clipStates); if(feats.length) applyAoiClip(_clipAoiPts,feats); }
+function updateAoiUI(){ const c=document.getElementById('aoi-ctrls'),h=document.getElementById('aoi-hint'); if(!c)return;
+  if(_draw){ c.innerHTML=`<button class="aoi-btn primary" onclick="finishDraw()">&#10003; Finish (${_aoiPts.length})</button><button class="aoi-btn ghost" onclick="cancelDraw()">Cancel</button>`;
+    h.textContent='Click the map to drop corners. Add at least 3, then Finish (or double-click the map).'; }
+  else { c.innerHTML=`<button class="aoi-btn primary" id="aoi-draw" onclick="startDraw()">Draw an AOI</button>`;
+    h.textContent='Draw a candidate campus parcel to screen the whole area: every map unit, all eight criteria, and a written overall assessment. Or click a single point below.'; } }
+function startDraw(){ const m=window._gmap; if(!m)return; _draw=true; _aoiPts=[]; _findMode=null;
+  try{ ensureAoiLayers(m); clearAoiClip(); aoiSetData(); setAoiMask(null); m.setPaintProperty('aoi-line','line-dasharray',[2,1]); m.setLayoutProperty('aoi-vert','visibility','visible'); if(m.getSource('aoihex')) m.getSource('aoihex').setData({type:'FeatureCollection',features:[]}); }catch(e){}
+  m.getCanvas().style.cursor='crosshair'; if(m.doubleClickZoom) m.doubleClickZoom.disable(); updateAoiUI(); }
+function cancelDraw(){ const m=window._gmap; _draw=false; _aoiPts=[]; aoiSetData(); setAoiMask(null); clearAoiClip(); if(m){m.getCanvas().style.cursor='crosshair'; m.doubleClickZoom.enable();} updateAoiUI(); }
+function addVertex(lng,lat){ _aoiPts.push([lng,lat]); aoiSetData(); updateAoiUI(); }
+function finishDraw(){ if(_aoiPts.length<3) return; _draw=false; const m=window._gmap; if(m){ m.doubleClickZoom.enable(); try{ m.setPaintProperty('aoi-line','line-dasharray',[1,0]); m.setLayoutProperty('aoi-vert','visibility','none'); }catch(e){} } updateAoiUI(); screenAOI(_aoiPts.slice()); }
+// spherical polygon area (km^2)
+function polyAreaKm2(pts){ const R=6371; let a=0; for(let i=0;i<pts.length;i++){const[x1,y1]=pts[i],[x2,y2]=pts[(i+1)%pts.length]; a+=(x2-x1)*Math.PI/180*(2+Math.sin(y1*Math.PI/180)+Math.sin(y2*Math.PI/180));} return Math.abs(a*R*R/2); }
+function pickRes(km2){ return km2>60?8: km2>6?9: 10; }
+// Overview DCI grid (national, coarse — ~1 point per county). Backs the zoomed-out hexagon
+// screen when an AOI is too large / the map too far out for SSURGO soil tiles to be loaded.
+let _gsGrid=null;
+async function loadGsGrid(){ if(_gsGrid)return _gsGrid; try{ _gsGrid=await fetch('data/groundscore_grid_dci.json').then(r=>r.json()); }catch(e){ _gsGrid=[]; } return _gsGrid; }
+function ptInPolyLL(px,py,poly){ let inside=false; for(let i=0,j=poly.length-1;i<poly.length;j=i++){const[xi,yi]=poly[i],[xj,yj]=poly[j]; if(((yi>py)!==(yj>py))&&px<(xj-xi)*(py-yi)/(yj-yi)+xi)inside=!inside;} return inside; }
+// Coarse hexagon screen from the national DCI grid — used when zoomed too far out for soil tiles.
+async function hexScreenAOI(pts,km2){
+  const grid=await loadGsGrid(), res=pickRes(km2), cells={};
+  grid.forEach(([lng,lat,dci])=>{ if(dci==null||!ptInPolyLL(lng,lat,pts))return; const c=h3.latLngToCell(lat,lng,res); (cells[c]=cells[c]||[]).push(+dci); });
+  return Object.entries(cells).map(([c,vals])=>{ const dci=vals.reduce((a,b)=>a+b,0)/vals.length, ll=h3.cellToLatLng(c); return {c,dci,band:dciBandName(dci),flags:'',mu:'',lat:ll[0],lng:ll[1]}; });
+}
+
+async function screenAOI(pts){
+  rpTab('analysis');
+  const m=window._gmap; if(m&&m.getPitch()>3) m.setPitch(0);
+  const km2=polyAreaKm2(pts), acres=km2*247.105;
+  setResult('<div class="empty">Loading soil map units&hellip;</div>');
+  ensureAoiLayers(m); aoiSetData(); fitAoi(pts);
+
+  // States whose bounding boxes overlap the AOI
+  let mnx=180,mny=90,mxx=-180,mxy=-90;
+  pts.forEach(([x,y])=>{mnx=Math.min(mnx,x);mny=Math.min(mny,y);mxx=Math.max(mxx,x);mxy=Math.max(mxy,y);});
+  const aoiStates=[...new Set([[mnx,mny],[mxx,mny],[mxx,mxy],[mnx,mxy],[(mnx+mxx)/2,(mny+mxy)/2]]
+    .flatMap(([x,y])=>statesForPoint(x,y)))];
+  aoiStates.forEach(st=>ensureMukeyLayer(m,st));
+  await Promise.all(aoiStates.map(st=>loadStateDcsi(st)));
+
+  // Wait up to 3 s for tiles to render
+  const layers=aoiStates.map(st=>'mkq-'+st);
+  let allFeats=[];
+  // Wait up to ~12 s for tiles to load+render (full-res tiles are large; 3 s fell back to hex too early)
+  for(let i=0;i<60;i++){ allFeats=m.queryRenderedFeatures({layers}); if(allFeats.length)break; await new Promise(r=>setTimeout(r,200)); }
+
+  // Ray-casting point-in-polygon
+  function ptInPoly(px,py,poly){ let inside=false; for(let i=0,j=poly.length-1;i<poly.length;j=i++){const[xi,yi]=poly[i],[xj,yj]=poly[j]; if(((yi>py)!==(yj>py))&&px<(xj-xi)*(py-yi)/(yj-yi)+xi)inside=!inside;} return inside; }
+  function ringCtr(ring){ return[ring.reduce((s,p)=>s+p[0],0)/ring.length,ring.reduce((s,p)=>s+p[1],0)/ring.length]; }
+
+  // Collect unique mukeys whose centroid falls inside the AOI
+  const mukeyMap={}, soilFeats=[];
+  allFeats.forEach(f=>{
+    const mk=String(f.properties.mukey||''); if(!mk)return;
+    const g=f.geometry; let ring;
+    if(g.type==='Polygon')ring=g.coordinates[0];
+    else if(g.type==='MultiPolygon')ring=g.coordinates[0][0];
+    else return;
+    // Count a map unit if it OVERLAPS the AOI — not only when its centroid lands inside.
+    // Full-res SSURGO map units are large/irregular: a unit can clearly cover the parcel yet have
+    // its (clipped tile-piece) centroid outside it. A small AOI sitting entirely inside one big
+    // map unit has zero soil centroids inside it and the unit's centroid far away → the old
+    // centroid-only gate dropped every feature → "No DCI data". Test centroid-in-AOI OR any soil
+    // vertex in the AOI OR any AOI vertex in the soil ring.
+    const[cx,cy]=ringCtr(ring);
+    if(!(ptInPoly(cx,cy,pts) || ring.some(p=>ptInPoly(p[0],p[1],pts)) || pts.some(p=>ptInPoly(p[0],p[1],ring)))) return;
+    const st=f.layer.id.replace('mkq-','');
+    const r=(_dcsiCache[st]||{})[mk]; if(!r||r.dcsi_value==null)return;
+    const color=buildableColor(+r.dcsi_value);
+    soilFeats.push({type:'Feature',properties:{color,dci:+r.dcsi_value},geometry:g});
+    if(!mukeyMap[mk]) mukeyMap[mk]={mukey:mk,state:st,dci:+r.dcsi_value,band:dciBandName(+r.dcsi_value),flags:r.dcsi_flags||'',mu:r.muname||f.properties.muname||'',lat:cy,lng:cx};
+  });
+
+  let results=Object.values(mukeyMap), mode='soil';
+  if(results.length){
+    // State/county zoom: CLIP the SSURGO soil to the parcel — render only the soil inside the AOI,
+    // leave everything outside to the basemap/imagery/roads/labels (Jason 2026-06-16). soilFeats are
+    // the overlapping map-unit pieces; applyAoiClip intersects them with the AOI. The mukey roll-up
+    // still drives the panel aggregation.
+    m.getSource('aoihex').setData({type:'FeatureCollection',features:[]});
+    setAoiMask(null);
+    _clipAoiPts=pts; _clipStates=aoiStates;        // remember for re-clip on zoom/pan
+    applyAoiClip(pts,soilFeats);
+    if(!_reclipWired){ m.on('moveend',reclipAoi); _reclipWired=true; }   // keep the clip HD at every zoom
+  } else {
+    // Zoomed too far out for SSURGO soil tiles: fall back to the coarse national DCI hexagon overview.
+    mode='hex'; results=await hexScreenAOI(pts,km2);
+    if(!results.length){ setResult('<div class="empty" style="color:var(--red)">No DCI data falls inside this area. Zoom in to a state or county and draw again for soil-level detail.</div>'); return; }
+    setAoiMask(null);
+    renderAoiHex(results);
+  }
+
+  const agg=aggregateAoiMukey(results,acres,mode);
+  renderAoiPanel(agg);
+  // The per-mukey soil cache has no slope/power/water/fiber/land/hazard/climate pillars (those are
+  // location-specific), so the radar would be empty. Fill it from a light DCI score at the AOI
+  // centroid — location pillars are ~uniform across a parcel; ground stays the AOI's soil aggregate.
+  (async()=>{ try{
+    const cen=[pts.reduce((s,p)=>s+p[0],0)/pts.length, pts.reduce((s,p)=>s+p[1],0)/pts.length];
+    const [csoil,cclim]=await Promise.all([resolveSoil(cen[0],cen[1],false),fetchClim(cen[1],cen[0])]);
+    if(!csoil||csoil._nodata) return;
+    const j=await fetch('/api/soil-analyze',{method:'POST',headers:dcHeaders(),body:JSON.stringify({wkt:`point(${cen[0]} ${cen[1]})`,mode:'dc',light:true,soil:csoil,clim:cclim,...sitingInputs()})}).then(r=>r.json());
+    if(!j||!j.ok||!j.dci||!j.dci.pillars) return;
+    const pil={...j.dci.pillars,ground:agg.mean};   // AOI soil aggregate is the ground pillar
+    agg.pillars=pil; if(window._lastAoi) window._lastAoi.pillars=pil;
+    const rh=document.getElementById('radar'); if(rh) buildRadar(rh,pil,buildableColor(agg.mean));
+  }catch(e){} })();
+  // Soil renders inside the AOI under the mask, but the user is in CLIPPED-AOI mode — the overall
+  // "GroundScore soil" toggle reads OFF (Clipped AOI is the active layer).
+  if(mode==='soil'){ _soilOn=true; syncChip('soil',false); document.getElementById('cb-soil')?.classList.toggle('active',false); const sc=document.getElementById('ly-soil'); if(sc)sc.checked=false; }
+  else if(_soilOn) toggleSoilLayer(false);
+  const ca=document.getElementById('hc-aoi'); if(ca)ca.style.display='inline-flex';
+  toggleClipAOI(true);
+
+  // One AI call for the written assessment
+  const inputs=sitingInputs();
+  try{ const a=await fetch('/api/soil-analyze',{method:'POST',headers:dcHeaders(),body:JSON.stringify({mode:'dc-aoi',wkt:`polygon((${[...pts,pts[0]].map(p=>p[0]+' '+p[1]).join(',')}))`,agg:agg.payload,...inputs})}).then(r=>r.json());
+    if(a&&a.assessment&&window._lastAoi) window._lastAoi.assessment=a.assessment;
+    const el=document.getElementById('aoi-assess'); if(el) el.innerHTML=(a&&a.assessment)?assessHtml(a.assessment):'<div class="amber">Written assessment is being enabled for your account.</div>';
+  }catch(e){ const el=document.getElementById('aoi-assess'); if(el)el.innerHTML='<div class="amber">Assessment unavailable right now.</div>'; }
+}
+function aggregateAoi(results,acres,hexes){
+  const d=results.map(r=>r.dci), mean=d.reduce((a,b)=>a+b,0)/d.length, min=Math.min(...d), max=Math.max(...d);
+  const dist={}; results.forEach(r=>{const b=r.band||dciBandName(r.dci); dist[b]=(dist[b]||0)+1;});
+  const pillars={}; ['ground','slope','power','water','fiber','land','hazard','climate'].forEach(k=>{const vs=results.map(r=>r.pillars&&r.pillars[k]).filter(v=>v!=null); if(vs.length)pillars[k]=vs.reduce((a,b)=>a+b,0)/vs.length;});
+  const flags=[...new Set(results.flatMap(r=>r.flags.split(/;\s*/).map(s=>s.trim()).filter(Boolean)))];
+  const mus=[...new Set(results.map(r=>r.mu).filter(Boolean))];
+  const band=dciBandName(mean);
+  const top=[...results].sort((a,b)=>b.dci-a.dci).slice(0,5).map(r=>{const ll=h3.cellToLatLng(r.c); return {lat:ll[0],lng:ll[1],dci:r.dci,band:r.band,mu:r.mu};});
+  return {mean,min,max,dist,pillars,flags,mus,band,acres,hexes,top,
+    payload:{dci:Math.round(mean*10)/10,band,pillars,dist,flags,min:Math.round(min),max:Math.round(max),acres:Math.round(acres),hexes,muSample:mus}};
+}
+// Aggregate AOI results (DCI from local cache, no per-cell API calls). mode: 'soil' = SSURGO map
+// unit polygons (state/county zoom); 'hex' = coarse national-grid hexagons (zoomed out).
+function aggregateAoiMukey(results,acres,mode){
+  const d=results.map(r=>r.dci), mean=d.reduce((a,b)=>a+b,0)/d.length, min=Math.min(...d), max=Math.max(...d);
+  const dist={}; results.forEach(r=>{dist[r.band]=(dist[r.band]||0)+1;});
+  const flags=[...new Set(results.flatMap(r=>r.flags.split(/;\s*/).map(s=>s.trim()).filter(Boolean)))];
+  const mus=[...new Set(results.map(r=>r.mu).filter(Boolean))];
+  const band=dciBandName(mean), count=results.length;
+  const top=[...results].sort((a,b)=>b.dci-a.dci).slice(0,5);
+  return{mean,min,max,dist,pillars:{},flags,mus,band,acres,count,mode:mode||'soil',top,
+    payload:{dci:Math.round(mean*10)/10,band,pillars:{},dist,flags,min:Math.round(min),max:Math.round(max),acres:Math.round(acres),count,mode:mode||'soil',muSample:mus}};
+}
+function renderAoiHex(results){ const m=window._gmap; if(!m||!m.getSource('aoihex'))return;
+  const feats=results.map(r=>{const b=h3.cellToBoundary(r.c,true); b.push(b[0]); return {type:'Feature',properties:{color:buildableColor(r.dci),dci:r.dci},geometry:{type:'Polygon',coordinates:[b]}};});
+  m.getSource('aoihex').setData({type:'FeatureCollection',features:feats}); }
+function fitAoi(pts){ const m=window._gmap; if(!m)return; let mnx=180,mny=90,mxx=-180,mxy=-90; pts.forEach(([x,y])=>{mnx=Math.min(mnx,x);mny=Math.min(mny,y);mxx=Math.max(mxx,x);mxy=Math.max(mxy,y);});
+  m.fitBounds([[mnx,mny],[mxx,mxy]],{padding:{top:80,bottom:80,left:400,right:80},duration:1200}); }
+function renderAoiPanel(a){
+  window._lastAoi=a;   // for the AOI PDF report
+  const c=buildableColor(a.mean), vd=dciVerdict(a.mean,a.pillars), ranks=pillarRanks(a.pillars);
+  const total=Object.values(a.dist).reduce((x,y)=>x+y,0);
+  const order=['Prime','Favorable','Guarded','Elevated','Severe'], col={Prime:'#16a34a',Favorable:'#84cc16',Guarded:'#eab308',Elevated:'#f59e0b',Severe:'#ef4444'};
+  const bar=order.filter(b=>a.dist[b]).map(b=>`<span style="width:${(a.dist[b]/total*100).toFixed(1)}%;background:${col[b]}"></span>`).join('');
+  const leg=order.filter(b=>a.dist[b]).map(b=>`<span><span style="color:${col[b]}">&#9632;</span> ${b} ${a.dist[b]}</span>`).join('');
+  const chip=x=>`<span class="co-p" style="color:${buildableColor(x.v)}">${esc(x.k)} ${Math.round(x.v)}</span>`;
+  const finding=_findMode!=null;
+  const isHex=a.mode==='hex', unit=n=>isHex?`overview cell${n===1?'':'s'}`:`soil map unit${n===1?'':'s'}`;
+  const bestRows=(a.top||[]).map((t,i)=>{
+    const hasLL=t.lat&&t.lng; const onclick=hasLL?`onclick="gotoCell(${t.lat},${t.lng})"`:''
+    const title=hasLL?`${t.lat.toFixed(4)}, ${t.lng.toFixed(4)}`:esc((t.mu||'').split(',')[0]||'Map unit');
+    const sub=hasLL?esc((t.mu||'').split(',')[0]):'';
+    return `<div class="lb-row" ${onclick}><span class="lb-rank">${i+1}</span>
+    <span class="lb-name">${title}${sub?`<span class="lb-soil">${sub}</span>`:''}</span>
+    <span class="lb-dci" style="color:${buildableColor(t.dci)}">${Math.round(t.dci)}<span class="lb-band">${esc(t.band||'')}</span></span></div>`;}).join('');
+  setResult(`<div class="r-loc">&#9638; ${finding?'Site search &middot; '+esc((_findMode.label||'').split(',').slice(0,2).join(',')):'Area of interest'} &middot; ${a.count} ${unit(a.count)}${isHex?' &middot; overview':''}</div>
+    <div class="verdict ${vd.cls}"><span class="vbadge">${vd.v}</span><span class="vrat">${verdictRationale(vd.v,ranks)}</span></div>
+    <div class="aoi-head"><div><div class="kick">${finding?'Best area DCI':'Area GroundScore DCI'}</div><div class="big" style="color:${c}">${a.mean.toFixed(1)}</div><div class="band" style="color:${c}">${esc(a.band)}</div></div>
+      <div class="aoi-area">${a.acres.toFixed(0)} acres screened<br>range ${Math.round(a.min)}&ndash;${Math.round(a.max)} across the area<br>${isHex?`${a.count} ${unit(a.count)} &middot; coarse national grid`:`${a.mus.length} soil map unit${a.mus.length===1?'':'s'}`}</div></div>
+    <div class="aoi-dist">${bar}</div><div class="aoi-distleg">${leg}</div>
+    ${(a.top&&a.top.length)?`<div class="soil-sec"><div class="soil-h">${finding?'Best sites found &mdash; click to screen':'Strongest ground in the AOI'}</div><div class="lb-list" style="padding:0">${bestRows}</div></div>`:''}
+    <div class="callout"><span><span class="co-h">Top risks</span>${ranks.risks.map(chip).join('')}</span><span><span class="co-h">Strengths</span>${ranks.strengths.map(chip).join('')}</span></div>
+    <div style="padding:12px 18px 0"><button class="aoi-btn primary" style="width:100%" onclick="aoiReport()" title="Download the branded area dossier — cover, verdict, eight-criteria reads, distribution, next steps">&#8595; Download the AOI PDF report</button></div>
+    <div class="radar-wrap"><div id="radar"></div><div class="radar-cap">Area mean &middot; eight criteria &middot; one model</div></div>
+    ${a.flags.length?`<div class="soil-sec"><div class="soil-h">Limiting factors in the AOI</div><div class="soil-flags">${esc(a.flags.join(' · '))}</div></div>`:''}
+    <div class="soil-sec"><div class="soil-h">Overall assessment</div></div>
+    <div class="assess" id="aoi-assess"><div class="amber">Writing the area assessment&hellip;</div></div>`);
+  buildRadar(document.getElementById('radar'), a.pillars, c);
+}
+// ── Watchlist: save a scored site; it re-scores monthly and movers get flagged ──
+async function watchSite(){
+  const R=window._lastReport; if(!R||!R.j||!R.j.dci){ return; }
+  const btn=document.getElementById('watch-btn'); if(btn)btn.textContent='Saving…';
+  const j=R.j, f=j.factors||{};
+  const payload={label:R.label||'Watched site',lat:_lastSite&&_lastSite.lat,lng:_lastSite&&_lastSite.lng,
+    profile:sitingInputs().profile,dci_value:j.dci_value,dci_band:j.dci_band,
+    soil:{mukey:j.mukey,muname:j.muname,state:f.state||j.state,dcsi_value:j.dcsi_value,dcsi_class:j.dcsi_class,dcsi_flags:j.dcsi_flags,
+      s_commercial:f.s_commercial,s_roads:f.s_roads,s_excavation:f.s_excavation,s_corr_steel:f.s_corr_steel,s_corr_concrete:f.s_corr_concrete,
+      bedrock_cm:f.bedrock_cm,watertable_cm:f.watertable_cm,drainage:f.drainage,shrink_swell_lep:f.shrink_swell_lep,hydric_pct:f.hydric_pct}};
+  try{
+    const r=await fetch('/api/watchlist',{method:'POST',headers:dcHeaders(),body:JSON.stringify(payload)}).then(x=>x.json());
+    if(btn){ btn.textContent=(r&&r.ok)?'Watching ✓':(r&&r.upgrade)?'Pro feature':(r&&r.error)?'Unavailable':'Unavailable';
+      setTimeout(()=>{ btn.innerHTML='&#9734; Watch'; },2600); }
+  }catch(e){ if(btn){ btn.textContent='Unavailable'; setTimeout(()=>{ btn.innerHTML='&#9734; Watch'; },2600); } }
+}
+async function loadWatchlist(){
+  const host=document.getElementById('watch-list'); if(!host)return;
+  try{
+    const r=await fetch('/api/watchlist',{headers:dcHeaders()}).then(x=>x.json());
+    if(!r||!r.ok){ host.textContent=(r&&r.upgrade)?'The watchlist is a Pro feature.':'Watchlist unavailable right now.'; return; }
+    if(!r.sites||!r.sites.length){ host.innerHTML='No watched sites yet — score a site, then hit &#9734; Watch in the analysis bar.'; return; }
+    host.innerHTML=r.sites.map(s=>`<div class="lb-row" style="padding:7px 4px" onclick="gotoCell(${s.lat},${s.lng})" title="Fly to this site and re-score it now">
+      <span class="lb-name" style="font-size:12px">${esc(s.label||'')}<span class="lb-soil">${s.updated?('re-scored '+esc(String(s.updated).slice(0,10))):'awaiting first monthly re-score'}${s.model_version?(' · model v'+esc(s.model_version)):''}</span></span>
+      ${s.last_dci!=null?`<span class="lb-dci" style="font-size:15px;color:${buildableColor(s.last_dci)}">${Math.round(s.last_dci)}<span class="lb-band">${esc(s.last_band||'')}</span></span>`:''}
+      <button class="maplink" style="margin-left:6px" title="Stop watching this site" onclick="event.stopPropagation();removeWatch('${esc(s.id)}')">&times;</button></div>`).join('');
+  }catch(e){ host.textContent='Watchlist unavailable right now.'; }
+}
+async function removeWatch(id){ try{ await fetch('/api/watchlist?id='+encodeURIComponent(id),{method:'DELETE',headers:dcHeaders()}); }catch(e){} loadWatchlist(); }
+
+// ── Share link: store the scored DATA server-side, get back /report/{id} to forward ──
+async function shareReport(){
+  const R=window._lastReport; if(!R||!R.j||!R.j.dci){ return; }
+  const btn=document.getElementById('share-btn'); if(btn)btn.textContent='Creating…';
+  const j=R.j, raw=(j.dci&&j.dci.raw)||{}, vd=dciVerdict(j.dci_value,j.dci.pillars);
+  const payload={label:R.label||'Candidate site',dci_value:j.dci_value,dci_band:j.dci_band,
+    dcsi_value:j.dcsi_value,dcsi_class:j.dcsi_class,muname:j.muname,verdict:vd.v,
+    queue_wait_years:raw.queue_wait_years,iso:raw.iso,assessment:j.assessment||'',
+    pillars:j.dci.pillars,model_version:(window._modelMeta||{}).model_version||''};
+  try{
+    const r=await fetch('/api/report',{method:'POST',headers:dcHeaders(),body:JSON.stringify(payload)}).then(x=>x.json());
+    if(r&&r.ok&&r.url){ try{ await navigator.clipboard.writeText(r.url); if(btn)btn.textContent='Link copied ✓'; }
+      catch(e){ if(btn)btn.textContent='Link ready'; prompt('Shareable report link:',r.url); }
+      setTimeout(()=>{ if(btn)btn.innerHTML='&#128279; Share'; },2600); return; }
+    if(btn){ btn.textContent=(r&&r.upgrade)?'Pro feature':'Unavailable'; setTimeout(()=>{ btn.innerHTML='&#128279; Share'; },2600); }
+  }catch(e){ if(btn){ btn.textContent='Unavailable'; setTimeout(()=>{ btn.innerHTML='&#128279; Share'; },2600); } }
+}
+
+// ── Portfolio screening (enterprise SKU): CSV -> batch score -> ranked table + merged report ──
+function parsePortfolioCsv(text){
+  const rows=text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>l.split(/[,;\t]/).map(c=>c.trim().replace(/^"|"$/g,'')));
+  if(!rows.length) return [];
+  // header detection + column mapping: lat/lng by name, else the first numeric pair in range
+  let start=0, latC=-1, lngC=-1, nameC=-1;
+  const h=rows[0].map(c=>c.toLowerCase());
+  if(h.some(c=>/lat/.test(c))){ latC=h.findIndex(c=>/^lat|latitude/.test(c)); lngC=h.findIndex(c=>/^lon|^lng|longitude/.test(c)); nameC=h.findIndex(c=>/name|site|label|market|parcel|id/.test(c)); start=1; }
+  const out=[];
+  for(let i=start;i<rows.length&&out.length<60;i++){ const r=rows[i]; let lat,lng,name='';
+    if(latC>=0){ lat=parseFloat(r[latC]); lng=parseFloat(r[lngC]); name=nameC>=0?(r[nameC]||''):''; }
+    else{ for(let a=0;a<r.length-1;a++){ const x=parseFloat(r[a]),y=parseFloat(r[a+1]);
+        if(Number.isFinite(x)&&Number.isFinite(y)&&x>=18&&x<=72&&y<=-60&&y>=-170){ lat=x;lng=y;name=r.filter((_,k)=>k!==a&&k!==a+1).join(' ').trim();break; } } }
+    if(Number.isFinite(lat)&&Number.isFinite(lng)&&lat>=18&&lat<=72&&lng<=-60&&lng>=-170) out.push({name:name||`Site ${out.length+1}`,lat,lng});
+  }
+  return out;
+}
+async function portfolioUpload(file){
+  if(!file) return;
+  const sites=parsePortfolioCsv(await file.text());
+  if(!sites.length){ rpShowView('analysis'); setResult('<div class="empty" style="color:var(--red)">No usable rows. The CSV needs lat,lng columns (US coordinates), optional name.</div>'); return; }
+  rpShowView('analysis');
+  setResult(`<div class="empty">Screening <b>${sites.length}</b> portfolio sites on the GroundScore DCI&hellip;<br><span id="pf-prog">0</span>/${sites.length}</div>`);
+  const m=window._gmap; if(m&&m.getPitch()>3)m.setPitch(0);
+  const inputs=sitingInputs(), results=[], q=sites.slice(); let done=0;
+  async function wk(){ while(q.length){ const s=q.shift();
+    try{ const soil=await resolveSoil(s.lng,s.lat,false);
+      if(soil&&!soil._nodata){
+        const j=await fetch('/api/soil-analyze',{method:'POST',headers:dcHeaders(),body:JSON.stringify({wkt:`point(${s.lng} ${s.lat})`,mode:'dc',light:true,soil,clim:await fetchClim(s.lat,s.lng),...inputs})}).then(r=>r.json());
+        if(j&&j.ok&&j.dci_value!=null) results.push({...s,dci:j.dci_value,band:j.dci_band,soil:soil.dcsi_value,mu:j.muname||soil.muname||'',pillars:(j.dci&&j.dci.pillars)||null});
+        else results.push({...s,dci:null,err:(j&&j.error)||'no score'});
+      } else results.push({...s,dci:null,err:'no mapped soil'});
+    }catch(e){ results.push({...s,dci:null,err:'error'}); }
+    const pe=document.getElementById('pf-prog'); if(pe)pe.textContent=++done; } }
+  await Promise.all([wk(),wk(),wk()]);
+  renderPortfolio(results);
+}
+function renderPortfolio(results){
+  window._lastPortfolio=results;
+  const ok=results.filter(r=>r.dci!=null).sort((a,b)=>b.dci-a.dci), skip=results.filter(r=>r.dci==null);
+  if(!ok.length){ setResult('<div class="empty" style="color:var(--red)">None of the sites resolved to mapped soil. Check the coordinates.</div>'); return; }
+  const m=window._gmap;
+  if(m){ const fc={type:'FeatureCollection',features:ok.map(r=>({type:'Feature',properties:{dci:r.dci},geometry:{type:'Point',coordinates:[r.lng,r.lat]}}))};
+    if(!m.getSource('finds'))m.addSource('finds',{type:'geojson',data:fc});else m.getSource('finds').setData(fc);
+    if(!m.getLayer('finds-c'))m.addLayer({id:'finds-c',type:'circle',source:'finds',paint:{'circle-radius':9,'circle-color':['interpolate',['linear'],['get','dci'],30,'#ef4444',45,'#f59e0b',60,'#eab308',75,'#84cc16',85,'#16a34a'],'circle-stroke-color':'#fff','circle-stroke-width':2}});else m.setLayoutProperty('finds-c','visibility','visible'); }
+  const med=ok.map(r=>r.dci).sort((a,b)=>a-b)[Math.floor(ok.length/2)];
+  const rows=ok.map((r,i)=>`<div class="lb-row" onclick="gotoCell(${r.lat},${r.lng})"><span class="lb-rank">${i+1}</span>
+    <span class="lb-name">${esc(r.name)}<span class="lb-soil">soil ${r.soil!=null?r.soil:'?'} &middot; ${esc((r.mu||'').split(',')[0])}</span><span class="lb-bar"><span style="width:${Math.max(4,Math.round(r.dci))}%;background:${buildableColor(r.dci)}"></span></span></span>
+    <span class="lb-dci" style="color:${buildableColor(r.dci)}">${Math.round(r.dci)}<span class="lb-band">${esc(r.band||'')}</span></span></div>`).join('');
+  setResult(`<div class="lb-head"><div class="kick">Portfolio screening &middot; GroundScore DCI</div>
+    <div class="lb-sum"><b>${ok.length}</b> of ${results.length} sites scored &middot; median DCI <b>${Math.round(med)}</b> &middot; best <b>${Math.round(ok[0].dci)}</b> ${esc(ok[0].band||'')}</div>
+    ${skip.length?`<div class="lb-kill">${skip.length} site${skip.length===1?'':'s'} skipped (unmapped ground or errors).</div>`:''}</div>
+    <div class="callout" style="padding-top:4px"><button class="maplink" style="margin-left:0" onclick="portfolioReport()">&#8595; Portfolio PDF</button></div>
+    <div class="lb-list">${rows}</div>
+    <div class="hint" style="padding:8px 16px 16px">Ranked on the current model + your campus inputs. Click a row to fly there and run the full screening.</div>`);
+}
+function portfolioReport(){
+  const R=window._lastPortfolio; if(!R){ alert('Upload a portfolio first.'); return; }
+  const ok=R.filter(r=>r.dci!=null).sort((a,b)=>b.dci-a.dci), skip=R.filter(r=>r.dci==null);
+  const med=ok.map(r=>r.dci).sort((a,b)=>a-b)[Math.floor(ok.length/2)]||0;
+  const meta=window._modelMeta||{};
+  const rows=ok.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${r.lat.toFixed(4)}, ${r.lng.toFixed(4)}</td><td>${esc((r.mu||'').split(',')[0])}</td><td>${r.soil??''}</td><td><b style="color:${buildableColor(r.dci)}">${Math.round(r.dci)}</b> ${esc(r.band||'')}</td></tr>`).join('');
+  _reportShell('GroundScore DCI Portfolio Report',`
+   <h1>Portfolio Screening</h1><div class="sub">${ok.length} sites ranked &middot; median DCI ${Math.round(med)} &middot; ${new Date().toLocaleDateString()}${meta.model_version?` &middot; Model v${meta.model_version}`:''}</div>
+   <div class="exec" style="font-size:13px;line-height:1.65">The strongest ground in this portfolio is <b>${esc(ok[0].name)}</b> at <b style="color:${buildableColor(ok[0].dci)}">${ok[0].dci} (${esc(ok[0].band||'')})</b>${ok.length>1?`; the spread runs ${Math.round(ok[ok.length-1].dci)}&ndash;${Math.round(ok[0].dci)} across the ${ok.length} screened sites`:''}. Shortlist from the top of this table; sites under 50 are carrying pillar risks that belong in the price or the pass pile.</div>
+   <h3>Ranked sites</h3>
+   <table><tr><th>#</th><th>Site</th><th>Coordinates</th><th>Soil map unit</th><th>Soil</th><th>DCI</th></tr>${rows}</table>
+   ${skip.length?`<h3>Not scored</h3><div style="font-size:12px;color:#6b7280">${skip.map(s=>esc(s.name)+' ('+esc(s.err||'')+')').join(' · ')}</div>`:''}
+   <h3>Method</h3><div style="font-size:12px;color:#374151;line-height:1.6">Each site scored on the GroundScore DCI (soil GroundScore from the National Cooperative Soil Survey fused with power, water, seismic, slope and climate pillars) under your campus inputs. Screening signal — shortlist first, then run the full per-site dossier and geotechnical investigation on the finalists.</div>`);
+}
+
+// ── Compare mode: pin 2-3 scored sites -> side-by-side radars + pillar delta table ──
+// Site selection is always comparative; this is the screen nobody else shows in one view.
+window._pins=[];
+function pinSite(){
+  const R=window._lastReport; if(!R||!R.j||!R.j.dci){ return; }
+  const key=(R.label||'')+R.j.dci_value;
+  if(window._pins.some(p=>p.key===key)) { renderCmpBar(); return; }
+  window._pins.push({key,label:R.label||'Site',j:R.j,lat:_lastSite&&_lastSite.lat,lng:_lastSite&&_lastSite.lng});
+  if(window._pins.length>3) window._pins.shift();   // keep the latest 3
+  renderCmpBar();
+}
+function unpin(i){ window._pins.splice(i,1); renderCmpBar(); if(window._pins.length<2){ /* keep bar state */ } }
+function renderCmpBar(){
+  const bar=document.getElementById('cmp-bar'); if(!bar)return;
+  const P=window._pins;
+  if(!P.length){ bar.classList.remove('show'); bar.innerHTML=''; return; }
+  bar.innerHTML=P.map((p,i)=>`<span class="cmp-chip" title="${esc(p.label)}"><b style="color:${buildableColor(p.j.dci_value)}">${Math.round(p.j.dci_value)}</b> ${esc((p.label||'').split(',')[0].split('(')[0].slice(0,18))}<button onclick="unpin(${i})" title="Remove">&times;</button></span>`).join('')+
+    (P.length>=2?`<button class="cmp-go" onclick="renderCompare()">Compare ${P.length} sites &rarr;</button>`:`<span style="font:600 10.5px var(--font);color:var(--dim)">pin ${2-P.length} more to compare</span>`);
+  bar.classList.add('show');
+}
+function renderCompare(){
+  const P=window._pins; if(P.length<2)return;
+  rpShowView('analysis');
+  const cols=P.map((p,i)=>{const c=buildableColor(p.j.dci_value);const vd=dciVerdict(p.j.dci_value,p.j.dci.pillars);
+    const bc=vd.cls==='go'?'var(--green)':vd.cls==='caution'?'var(--amber)':'var(--red)';
+    return `<div class="cmp-col"><div class="cmp-name">${esc((p.label||'').split('(')[0])}</div>
+      <div class="cmp-dci" style="color:${c}">${p.j.dci_value}</div>
+      <div class="cmp-band" style="color:${c}">${esc(p.j.dci_band||'')} &middot; <span style="color:${bc}">${vd.v}</span></div>
+      <div id="cmp-radar-${i}"></div></div>`;}).join('');
+  const rows=DCI_PILLARS.map(([k,nm])=>{
+    const vals=P.map(p=>p.j.dci.pillars[k]);
+    const best=Math.max(...vals.filter(v=>v!=null));
+    return `<tr><td title="${esc(PILLAR_TIP[k]?PILLAR_TIP[k](best):nm)}" style="cursor:help;color:var(--dim)">${nm}</td>${vals.map(v=>`<td class="v${v===best?' best':''}" style="color:${v!=null?buildableColor(v):'var(--dim)'}">${v!=null?Math.round(v):'–'}</td>`).join('')}</tr>`;
+  }).join('');
+  // headline: the biggest swings between the two strongest sites
+  const top=[...P].sort((a,b)=>b.j.dci_value-a.j.dci_value), A=top[0], B=top[1];
+  const deltas=DCI_PILLARS.map(([k,nm])=>({nm,d:(A.j.dci.pillars[k]??0)-(B.j.dci.pillars[k]??0)})).sort((a,b)=>Math.abs(b.d)-Math.abs(a.d));
+  const wins=deltas.filter(x=>x.d>3).slice(0,2).map(x=>`${x.nm.toLowerCase()} (+${Math.round(x.d)})`);
+  const loses=deltas.filter(x=>x.d<-3).slice(0,2).map(x=>`${x.nm.toLowerCase()} (${Math.round(x.d)})`);
+  const an=esc((A.label||'A').split(',')[0]), bn=esc((B.label||'B').split(',')[0]);
+  const line=`<b>${an}</b> leads at ${A.j.dci_value} vs ${B.j.dci_value}${wins.length?` — it wins on ${wins.join(' and ')}`:''}${loses.length?`, concedes ${loses.join(' and ')} to <b>${bn}</b>`:''}.`;
+  setResult(`<div class="r-loc">&#8853; Side-by-side &middot; ${P.length} pinned sites</div>
+    <div class="cmp-cols">${cols}</div>
+    <table class="cmp-tbl"><tr><th>Pillar</th>${P.map(p=>`<th style="text-align:right">${esc((p.label||'').split(',')[0].slice(0,14))}</th>`).join('')}</tr>${rows}</table>
+    <div class="cmp-verdline">${line}</div>
+    <div class="hint" style="padding:0 16px 16px">Underlined = best of the pinned sites on that pillar. Click a pin's &times; below to drop it; score more sites to swap them in.</div>`);
+  P.forEach((p,i)=>{ const host=document.getElementById('cmp-radar-'+i); if(host){ const small=document.createElement('div'); host.appendChild(small); buildRadar(small,p.j.dci.pillars,buildableColor(p.j.dci_value)); } });
+}
+
+// ── Dossier helpers: dependency-free SVG radar + pillar bars for the print window ──
+function radarSvg(pillars,color,size=300){
+  const n=DCI_PILLARS.length,cx=size/2,cy=size/2*0.92,R=size*0.30;
+  const ang=i=>-Math.PI/2+i*2*Math.PI/n, pt=(i,r)=>[cx+Math.cos(ang(i))*r,cy+Math.sin(ang(i))*r];
+  let s=`<svg viewBox="0 0 ${size} ${size*0.84}" width="${size}" style="display:block;margin:0 auto">`;
+  [25,50,75,100].forEach(g=>{s+=`<polygon points="${DCI_PILLARS.map((_,i)=>pt(i,R*g/100).join(',')).join(' ')}" fill="none" stroke="#e2e5ee"/>`;});
+  DCI_PILLARS.forEach((p,i)=>{const[x,y]=pt(i,R);s+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#e2e5ee"/>`;
+    const[lx,ly]=pt(i,R+20),v=pillars[p[0]];
+    s+=`<text x="${lx}" y="${ly}" text-anchor="middle" font-size="11" font-weight="700" fill="#6b7280" font-family="sans-serif">${p[1]}</text>`;
+    if(v!=null)s+=`<text x="${lx}" y="${ly+13}" text-anchor="middle" font-size="11" font-weight="800" fill="${buildableColor(v)}" font-family="sans-serif">${Math.round(v)}</text>`;});
+  s+=`<polygon points="${DCI_PILLARS.map((p,i)=>pt(i,R*((pillars[p[0]]||0)/100)).join(',')).join(' ')}" fill="${color}" fill-opacity="0.22" stroke="${color}" stroke-width="2.5"/>`;
+  DCI_PILLARS.forEach((p,i)=>{const v=pillars[p[0]];if(v==null)return;const[x,y]=pt(i,R*v/100);
+    s+=`<circle cx="${x}" cy="${y}" r="4" fill="${buildableColor(v)}" stroke="#fff" stroke-width="1.3"/>`;});
+  return s+'</svg>';
+}
+function pillarBar(v){const c=buildableColor(v);return `<div style="background:#eef0f5;border-radius:4px;height:10px;overflow:hidden;margin:4px 0 2px"><div style="width:${Math.max(2,Math.round(v))}%;height:100%;background:${c}"></div></div>`;}
+// Plain-English long reads per pillar for the dossier (what the number costs you).
+const PILLAR_READ={
+  ground:(v,j)=>`The soil GroundScore at this map unit is ${Math.round(v)}. ${v>=70?'The ground itself is an asset: standard shallow foundations, normal trenching, no special corrosion program implied by the survey data.':v>=40?'Workable ground with real line items: expect geotechnical findings to shape foundation design, and budget for the limiting factors flagged below.':'The ground is the problem to price: engineered foundations, dewatering or corrosion protection are likely, and the geotechnical investigation should come early, not late.'} ${j&&j.dcsi_flags?('The survey flags: '+j.dcsi_flags+'.'):''}`,
+  slope:v=>`Slope scores ${Math.round(v)}. ${v>=70?'The terrain is effectively pad-ready; grading is a minor line item.':v>=40?'Moderate grading and engineered fill belong in the site budget.':'Steep ground: mass grading, retaining structures, or a smaller buildable envelope.'}`,
+  power:(v,j)=>{const r=j&&j.dci&&j.dci.raw||{};return `Power scores ${Math.round(v)}${r.hv_line_mi!=null?` with the nearest high-voltage line within ~${r.hv_line_mi} miles at up to ${r.hv_max_kv} kV`:''}. ${r.queue_wait_years!=null?`The schedule-critical number: a typical interconnection in ${r.iso} runs ~${r.queue_wait_years} years from request to energization — start the utility conversation before the land closes.`:'Confirm interconnection position with the serving utility early.'}`;},
+  water:v=>`Water scores ${Math.round(v)}. ${v>=70?'Precipitation and supply context support evaporative cooling options.':v>=40?'Plan hybrid or dry cooling alternatives and open the water-rights conversation early.':'Water is a defining constraint here: dry cooling and municipal negotiations are the realistic path.'}`,
+  hazard:(v,j)=>{const h=(j&&j.dci&&j.dci.raw&&j.dci.raw.hazard)||{};return `Hazard scores ${Math.round(v)} across seismic (ASCE 7), tornado/hail, wildfire and karst terrain. ${v>=70?'Low natural-hazard exposure: standard structural package and clean insurability.':v>=40?'Moderate exposure — design and insurance premiums are known and priceable.':'High exposure — structural premiums, insurance load, and karst-foundation risk belong in the budget.'}${h.karst>=0.5?' Karst terrain is present in this region — sinkhole/solution-cavity risk warrants geophysical screening.':''}`;},
+  fiber:v=>`Fiber scores ${Math.round(v)}. ${v>=70?'Long-haul connectivity is close; latency routes and lit capacity are a procurement task, not a build.':v>=40?'A lateral build to long-haul routes belongs in the budget and timeline.':'Remote from the backbone: fiber construction is a major cost and schedule item.'}`,
+  land:v=>`Land scores ${Math.round(v)} on regional acquisition cost. ${v>=70?'Acreage is inexpensive to assemble here.':v>=40?'Moderate land costs for the campus footprint.':'An expensive land market — site assembly is a major budget line.'}`,
+  climate:v=>`Climate scores ${Math.round(v)} on cooling load. ${v>=70?'A mild profile with meaningful free-cooling hours and favorable PUE.':v>=40?'A warm profile; summer PUE and water/power interplay deserve modeling.':'A hot profile: cooling capex and opex carry a structural premium.'}`};
+
+// ── PDF report: open a clean printable site/AOI report (browser print -> PDF) ──
+function _reportShell(title,inner){
+  const w=window.open('','_blank'); if(!w){ alert('Allow pop-ups to download the report.'); return; }
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${title}</title><style>
+   *{box-sizing:border-box} body{font:13px/1.55 -apple-system,Segoe UI,Roboto,sans-serif;color:#13203a;margin:0;padding:40px 46px;max-width:840px}
+   .rh{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #c8a84b;padding-bottom:9px;margin-bottom:18px}
+   .rh .b{font:italic 700 16px Georgia,serif;color:#a8862f}.rh .d{font-size:11px;color:#6b7280}
+   h1{font:600 21px Georgia,serif;margin:0 0 3px}.sub{color:#6b7280;font-size:12px;margin-bottom:16px}
+   .big{font:800 40px Georgia,serif;line-height:1}.band{font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
+   .verdict{display:inline-block;font-weight:900;padding:5px 12px;border-radius:5px;font-size:14px;margin:12px 0}
+   .go{background:#16a34a;color:#fff}.caution{background:#f59e0b;color:#1a1206}.nogo{background:#ef4444;color:#fff}
+   table{width:100%;border-collapse:collapse;margin:8px 0 14px;font-size:12.5px}td,th{text-align:left;padding:6px 8px;border-bottom:1px solid #e5e7eb}
+   th{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#6b7280}
+   h3{font:800 10px sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a8862f;margin:20px 0 6px;border-top:1px solid #e5e7eb;padding-top:13px}
+   .assess p{margin:0 0 9px}.assess h4{font:800 10px sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a8862f;margin:13px 0 4px}
+   .disc{font-size:10.5px;color:#6b7280;border-top:1px solid #e5e7eb;margin-top:22px;padding-top:12px;line-height:1.5}
+   .pg{page-break-before:always}
+   .cover{min-height:88vh;display:flex;flex-direction:column;justify-content:center;text-align:center}
+   .cover .huge{font:800 96px Georgia,serif;line-height:1;margin:18px 0 4px}
+   .cover .vb{display:inline-block;font-weight:900;padding:8px 22px;border-radius:7px;font-size:19px;margin:16px auto}
+   .exec{font-size:14px;line-height:1.7}
+   .psec{margin:14px 0 6px;page-break-inside:avoid}
+   .psec h2{font:600 16px Georgia,serif;margin:0 0 2px}
+   .psec .pv{font:800 22px Georgia,serif;float:right}
+   .psec p{margin:6px 0 0;font-size:12.5px;line-height:1.6;color:#374151}
+   .next li{margin-bottom:7px;line-height:1.5}
+   @media print{body{padding:0}}</style></head><body>
+   <div class="rh"><span class="b">Lab10YR &middot; GroundScore DCI</span><span class="d">${new Date().toLocaleDateString()}</span></div>
+   ${inner}
+   <div class="disc">Desktop screening from the National Cooperative Soil Survey (SSURGO via Soil Data Access) fused with public infrastructure data (USGS 3DEP and seismic, Open-Meteo, HIFLD transmission). A screening signal to prioritize sites; it does not replace a geotechnical investigation. Ground truthing is required before commitment. &copy; ${new Date().getFullYear()} Lab10YR.</div>
+   </body></html>`);
+  w.document.close(); w.focus(); setTimeout(()=>{ try{ w.print(); }catch(e){} },650);
+}
+function _pillarTable(p){ const o=[['ground','Ground (soil)'],['slope','Slope'],['power','Power'],['water','Water'],['fiber','Fiber'],['land','Land'],['hazard','Hazard'],['climate','Climate']];
+  return `<table><tr><th>Pillar</th><th>Score (0-100)</th></tr>${o.filter(x=>p[x[0]]!=null).map(x=>`<tr><td>${x[1]}</td><td><b style="color:${buildableColor(p[x[0]])}">${Math.round(p[x[0]])}</b></td></tr>`).join('')}</table>`; }
+function siteReport(){
+  const R=window._lastReport; if(!R){ alert('Score a site first.'); return; }
+  const j=R.j,f=j.factors||{},dc=buildableColor(j.dci_value),vd=dciVerdict(j.dci_value,j.dci.pillars);
+  const ranks=pillarRanks(j.dci.pillars), raw=(j.dci&&j.dci.raw)||{};
+  const lim=v=>v==null?'n/a':v<0.34?'Not limited':v<0.67?'Somewhat limited':'Very limited', corr=v=>v==null?'n/a':v<0.34?'Low':v<0.67?'Moderate':'High';
+  const sr=[['Foundations (commercial)',lim(f.s_commercial)],['Excavation / trenching',lim(f.s_excavation)],['Corrosion of steel',corr(f.s_corr_steel)],['Corrosion of concrete',corr(f.s_corr_concrete)],['Shrink-swell (LEP)',f.shrink_swell_lep!=null?Math.round(f.shrink_swell_lep*100)/100:'n/a'],['Seasonal water table',f.watertable_cm!=null?Math.round(f.watertable_cm)+' cm':'None in profile'],['Depth to bedrock',f.bedrock_cm!=null?Math.round(f.bedrock_cm)+' cm':'None in profile'],['Drainage',f.drainage||'n/a'],['Hydric (wetland)',f.hydric_pct!=null?Math.round(f.hydric_pct)+'%':'n/a']];
+  const vbColor=vd.cls==='go'?'background:#16a34a;color:#fff':vd.cls==='caution'?'background:#f59e0b;color:#1a1206':'background:#ef4444;color:#fff';
+  // Executive summary, generated from the data — plain English a deal lead forwards unedited.
+  const exec=`This site screens <b style="color:${dc}">${j.dci_value} (${esc(j.dci_band||'')})</b> on the GroundScore DCI — a ${vd.v==='GO'?'proceed signal':vd.v==='CAUTION'?'proceed-with-diligence signal':'hard-stop signal'} at the desktop stage. `+
+    `The strongest pillars are ${ranks.strengths.map(x=>`${x.k.toLowerCase()} (${Math.round(x.v)})`).join(' and ')}; the screen's real risks are ${ranks.risks.map(x=>`${x.k.toLowerCase()} (${Math.round(x.v)})`).join(' and ')}. `+
+    `The ground itself — ${esc((j.muname||'this map unit').split(',')[0])} — carries a soil GroundScore of ${j.dcsi_value} (${esc(j.dcsi_class||'')}). `+
+    (raw.queue_wait_years!=null?`On schedule: a typical grid interconnection in ${esc(raw.iso)} runs about <b>${raw.queue_wait_years} years</b> from request to energization — usually the critical path. `:'')+
+    `Verdict rationale: ${verdictRationale(vd.v,ranks)}`;
+  // "What we'd investigate next" — rule-driven from the weakest pillars + flags (consulting setup).
+  const nextSteps=[];
+  if((j.dci.pillars.ground??100)<70||j.dcsi_flags) nextSteps.push('Commission the geotechnical investigation early; target the survey-flagged limitations ('+esc(j.dcsi_flags||'foundation and excavation behavior')+') with borings on the actual building pads.');
+  if(raw.queue_wait_years!=null) nextSteps.push(`Open the interconnection conversation with the serving utility now (~${raw.queue_wait_years}-year typical ${esc(raw.iso)} queue); request a feasibility/system-impact study before closing on land.`);
+  if((j.dci.pillars.water??100)<60) nextSteps.push('Engage the water utility / rights holder on cooling supply; model dry and hybrid cooling against the climate profile.');
+  if((j.dci.pillars.slope??100)<60) nextSteps.push('Run a grading study off the LiDAR surface to size cut/fill and the realistic buildable envelope.');
+  if((f.hydric_pct??0)>0) nextSteps.push('Order a wetland delineation — the map unit shows hydric inclusions ('+f.hydric_pct+'%), a permitting-timeline risk.');
+  nextSteps.push('Validate the desktop screen with a Lab10YR site-specific consult: pedologist read of the full SSURGO stack plus the pillar data behind this dossier.');
+  const meta=window._modelMeta||{};
+  _reportShell('GroundScore DCI Site Dossier',`
+   <div class="cover">
+     <div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#a8862f;font-weight:800">GroundScore DCI &middot; Site Dossier</div>
+     <h1 style="font-size:30px;margin-top:10px">${esc((R.label||'Candidate site').split('(')[0])}</h1>
+     <div class="sub">${esc(j.muname||'')}</div>
+     <div class="huge" style="color:${dc}">${j.dci_value}</div>
+     <div class="band" style="color:${dc};font-size:15px">${esc(j.dci_band||'')} &middot; Data Center Index</div>
+     <span class="vb" style="${vbColor}">${vd.v}</span>
+     ${radarSvg(j.dci.pillars,dc,340)}
+     <div style="font-size:11px;color:#6b7280">Soil GroundScore ${j.dcsi_value} (${esc(j.dcsi_class||'')}) &middot; ${new Date().toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'})}${meta.model_version?` &middot; Model v${meta.model_version}`:''}</div>
+   </div>
+   <div class="pg"></div>
+   <h3>Executive summary</h3><div class="exec">${exec}</div>
+   <h3>The eight criteria, read one at a time</h3>
+   ${DCI_PILLARS.map(([k,nm])=>{const v=j.dci.pillars[k];if(v==null)return '';
+     return `<div class="psec"><span class="pv" style="color:${buildableColor(v)}">${Math.round(v)}</span><h2>${nm}</h2>${pillarBar(v)}<p>${PILLAR_READ[k]?PILLAR_READ[k](v,j):''}</p></div>`;}).join('')}
+   <div class="pg"></div>
+   <h3>Ground &amp; soil detail &middot; ${esc((j.muname||'').split(',')[0])}</h3>
+   <table>${sr.map(r=>`<tr><td>${r[0]}</td><td>${esc(String(r[1]))}</td></tr>`).join('')}</table>
+   ${j.dcsi_flags?`<div style="color:#b45309;font-size:12px;margin-bottom:8px"><b>Limiting flags:</b> ${esc(j.dcsi_flags)}</div>`:''}
+   <h3>Site &amp; infrastructure data</h3>
+   <table>${[['LiDAR slope',raw.slope_pct!=null?raw.slope_pct+' %':'n/a'],['Seismic Ss (ASCE 7)',raw.seismic_ss??'n/a'],['Hot days >95°F',raw.hot_days_95F!=null?raw.hot_days_95F+' /yr':'n/a'],['Precipitation',raw.precip_mm_yr!=null?raw.precip_mm_yr+' mm/yr':'n/a'],['Nearest HV transmission',raw.hv_line_mi!=null?'≤ '+raw.hv_line_mi+' mi @ '+raw.hv_max_kv+' kV':'n/a'],['Typical interconnection wait',raw.queue_wait_years!=null?'~'+raw.queue_wait_years+' years ('+esc(raw.iso||'')+')':'n/a'],['Grid carbon',raw.grid_lb_co2_mwh!=null?raw.grid_lb_co2_mwh+' lb CO₂/MWh':'n/a']].map(r=>`<tr><td>${r[0]}</td><td>${esc(String(r[1]))}</td></tr>`).join('')}</table>
+   ${j.assessment?`<div class="pg"></div><h3>Site-acquisition assessment</h3><div class="assess">${assessHtml(j.assessment)}</div>`:''}
+   <h3>What to investigate next</h3><ol class="next">${nextSteps.map(s=>`<li>${s}</li>`).join('')}</ol>
+   <h3>Methodology &amp; data vintages</h3>
+   <div style="font-size:12px;line-height:1.6;color:#374151">The GroundScore DCI fuses a fuzzy-logic soil model computed per SSURGO map unit (National Cooperative Soil Survey engineering interpretations, corrosion attributes, hydrology) with live site pillars: USGS 3DEP LiDAR slope, HIFLD high-voltage transmission proximity, interconnection-queue timelines (LBNL Queued Up 2025), Open-Meteo climate normals (2014–2023), USGS ASCE 7 seismic design values, and EPA eGRID grid-carbon intensity. Pillars are weighted by your campus inputs and combined with a most-limiting blend — a site is only as good as its worst constraint.${meta.model_version?` Model v${meta.model_version}, rebuilt ${meta.built_at?new Date(meta.built_at).toLocaleDateString():''}.`:''} Validated against ${''}the siting record of 88 announced or operating US hyperscale campuses.</div>
+   <div style="margin-top:16px;font-size:12px"><b>Lab10YR</b> &middot; soil-first site intelligence &middot; lab10yr.com &middot; info@lab10yr.com</div>`);
+}
+function aoiReport(){
+  const a=window._lastAoi; if(!a){ alert('Screen an AOI first.'); return; }
+  const dc=buildableColor(a.mean),vd=dciVerdict(a.mean,a.pillars),total=Object.values(a.dist).reduce((x,y)=>x+y,0);
+  const ranks=pillarRanks(a.pillars), meta=window._modelMeta||{};
+  const order=['Prime','Favorable','Guarded','Elevated','Severe'];
+  const isHex=a.mode==='hex', unit=n=>isHex?`overview cell${n===1?'':'s'}`:`soil map unit${n===1?'':'s'}`;
+  const dr=order.filter(b=>a.dist[b]).map(b=>`<tr><td>${b}</td><td>${a.dist[b]} ${unit(a.dist[b])} (${(a.dist[b]/total*100).toFixed(0)}%)</td></tr>`).join('');
+  const vbColor=vd.cls==='go'?'background:#16a34a;color:#fff':vd.cls==='caution'?'background:#f59e0b;color:#1a1206':'background:#ef4444;color:#fff';
+  const sevPct=((a.dist.Severe||0)+(a.dist.Elevated||0))/total;
+  const exec=`This area screens <b style="color:${dc}">${a.mean.toFixed(1)} (${esc(a.band)})</b> on the area-mean GroundScore DCI across ${a.count} ${unit(a.count)}${isHex?' (coarse national grid)':''} and ${a.acres.toFixed(0)} acres — a ${vd.v==='GO'?'proceed signal':vd.v==='CAUTION'?'proceed-with-diligence signal':'hard-stop signal'} at the desktop stage. `+
+    `DCI runs ${Math.round(a.min)} to ${Math.round(a.max)}${isHex?'':`, over ${a.mus.length} soil map unit${a.mus.length===1?'':'s'}`}${sevPct>0?`, with ${(sevPct*100).toFixed(0)}% of the area screening Elevated or Severe — siting the pads matters here`:''}. `+
+    (ranks.strengths.length?`The strongest pillars are ${ranks.strengths.map(x=>`${x.k.toLowerCase()} (${Math.round(x.v)})`).join(' and ')}; the screen's real risks are ${ranks.risks.map(x=>`${x.k.toLowerCase()} (${Math.round(x.v)})`).join(' and ')}. `:'') +
+    `Verdict rationale: ${verdictRationale(vd.v,ranks)}`;
+  const bestRows=(a.top||[]).map((t,i)=>`<tr><td>${i+1}</td><td>${t.lat.toFixed(4)}, ${t.lng.toFixed(4)}</td><td>${esc((t.mu||'').split(',')[0])}</td><td><b style="color:${buildableColor(t.dci)}">${Math.round(t.dci)}</b> ${esc(t.band||'')}</td></tr>`).join('');
+  const nextSteps=[];
+  if((a.pillars.ground??100)<70||a.flags.length) nextSteps.push('Commission the geotechnical investigation early, targeted at the survey-flagged limitations ('+esc(a.flags.length?a.flags.join('; '):'foundation and excavation behavior')+') — bore the actual pad locations, starting with the strongest ground above.');
+  if(sevPct>0.15) nextSteps.push('Mask the Elevated/Severe ground out of the buildable envelope and re-run the campus layout on the remaining area.');
+  if((a.pillars.power??100)<60) nextSteps.push('Open the interconnection conversation with the serving utility now; request a feasibility/system-impact study before closing on land.');
+  if((a.pillars.water??100)<60) nextSteps.push('Engage the water utility / rights holder on cooling supply; model dry and hybrid cooling against the climate profile.');
+  if((a.pillars.slope??100)<60) nextSteps.push('Run a grading study off the LiDAR surface to size cut/fill and the realistic buildable envelope.');
+  nextSteps.push('Validate the desktop screen with a Lab10YR site-specific consult: pedologist read of the full SSURGO stack across every map unit in the parcel.');
+  _reportShell('GroundScore DCI Area Dossier',`
+   <div class="cover">
+     <div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#a8862f;font-weight:800">GroundScore DCI &middot; Area Dossier</div>
+     <h1 style="font-size:30px;margin-top:10px">Area-of-Interest Screening</h1>
+     <div class="sub">${a.count} ${unit(a.count)} &middot; ${a.acres.toFixed(0)} acres${isHex?'':` &middot; ${a.mus.length} soil map unit${a.mus.length===1?'':'s'}`}</div>
+     <div class="huge" style="color:${dc}">${a.mean.toFixed(1)}</div>
+     <div class="band" style="color:${dc};font-size:15px">${esc(a.band)} &middot; Area-mean Data Center Index</div>
+     <span class="vb" style="${vbColor}">${vd.v}</span>
+     ${radarSvg(a.pillars,dc,340)}
+     <div style="font-size:11px;color:#6b7280">DCI range ${Math.round(a.min)}&ndash;${Math.round(a.max)} &middot; ${new Date().toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'})}${meta.model_version?` &middot; Model v${meta.model_version}`:''}</div>
+   </div>
+   <div class="pg"></div>
+   <h3>Executive summary</h3><div class="exec">${exec}</div>
+   <h3>The eight criteria, read one at a time &mdash; area mean</h3>
+   ${DCI_PILLARS.map(([k,nm])=>{const v=a.pillars[k];if(v==null)return '';
+     return `<div class="psec"><span class="pv" style="color:${buildableColor(v)}">${Math.round(v)}</span><h2>${nm}</h2>${pillarBar(v)}<p>${PILLAR_READ[k]?PILLAR_READ[k](v):''}</p></div>`;}).join('')}
+   <div class="pg"></div>
+   <h3>Buildability across the parcel</h3><table>${dr}</table>
+   ${bestRows?`<h3>Strongest ground in the AOI</h3><table><tr><th>#</th><th>Location</th><th>Soil map unit</th><th>DCI</th></tr>${bestRows}</table>`:''}
+   ${a.flags.length?`<h3>Limiting factors present</h3><div style="color:#b45309;font-size:12px">${esc(a.flags.join(' · '))}</div>`:''}
+   ${a.assessment?`<h3>Overall assessment</h3><div class="assess">${assessHtml(a.assessment)}</div>`:''}
+   <h3>What to investigate next</h3><ol class="next">${nextSteps.map(s=>`<li>${s}</li>`).join('')}</ol>
+   <h3>Methodology &amp; data vintages</h3>
+   <div style="font-size:12px;line-height:1.6;color:#374151">${isHex?'Each overview cell is':'Every soil map unit in the parcel is'} scored on the GroundScore DCI: a fuzzy-logic soil model computed per SSURGO map unit (National Cooperative Soil Survey engineering interpretations, corrosion attributes, hydrology) fused with live site pillars — USGS 3DEP LiDAR slope, HIFLD high-voltage transmission proximity, interconnection-queue timelines, Open-Meteo climate normals, USGS ASCE 7 seismic design values, and EPA eGRID grid-carbon intensity — then rolled up to the area mean. Pillars are weighted by your campus inputs and combined with a most-limiting blend.${isHex?' This area was screened on the coarse national grid (zoomed out) — zoom to a state or county and re-draw for soil-map-unit detail.':''}${meta.model_version?` Model v${meta.model_version}, rebuilt ${meta.built_at?new Date(meta.built_at).toLocaleDateString():''}.`:''}</div>
+   <div style="margin-top:16px;font-size:12px"><b>Lab10YR</b> &middot; soil-first site intelligence &middot; lab10yr.com &middot; info@lab10yr.com</div>`);
+}
+
+// ── map ──
+const GS_RAMP=['interpolate',['linear'],['get','gs'],20,'#7f1d1d',32,'#ef4444',42,'#f59e0b',52,'#eab308',62,'#84cc16',75,'#22c55e',88,'#16a34a'];
+const DCSI_COLOR={Prime:'#16a34a',Suitable:'#84cc16',Marginal:'#eab308',Poor:'#f59e0b',Excluded:'#b91c1c'};
+const DCSI_ORDER=['Prime','Suitable','Marginal','Poor','Excluded'];
+const STATE_BBOX={AL:[-88.47,30.22,-84.89,35.01],AR:[-94.62,33.00,-89.64,36.50],AZ:[-114.82,31.33,-109.05,37.00],CA:[-124.41,32.53,-114.13,42.01],CO:[-109.06,36.99,-102.04,41.00],CT:[-73.73,40.99,-71.79,42.05],DC:[-77.12,38.79,-76.91,38.99],DE:[-75.79,38.45,-75.05,39.84],FL:[-87.63,24.52,-79.97,31.00],GA:[-85.61,30.36,-80.84,35.00],IA:[-96.64,40.37,-90.14,43.50],ID:[-117.24,41.99,-111.04,49.00],IL:[-91.51,36.97,-87.02,42.51],IN:[-88.10,37.77,-84.78,41.76],KS:[-102.05,36.99,-94.59,40.00],KY:[-89.57,36.50,-81.96,39.15],LA:[-94.04,28.93,-88.82,33.02],MA:[-73.51,41.24,-69.93,42.89],MD:[-79.49,37.91,-75.05,39.72],ME:[-71.08,43.06,-66.95,47.46],MI:[-90.42,41.70,-82.42,48.19],MN:[-97.24,43.50,-89.49,49.38],MO:[-95.77,35.99,-89.10,40.61],MS:[-91.65,30.17,-88.10,35.01],MT:[-116.05,44.36,-104.04,49.00],NC:[-84.32,33.84,-75.46,36.59],ND:[-104.05,45.94,-96.55,49.00],NE:[-104.05,40.00,-95.31,43.00],NH:[-72.56,42.70,-70.70,45.31],NJ:[-75.56,38.93,-73.89,41.36],NM:[-109.05,31.33,-103.00,37.00],NV:[-120.00,35.00,-114.04,42.00],NY:[-79.76,40.50,-71.85,45.01],OH:[-84.82,38.40,-80.52,41.98],OK:[-103.00,33.62,-94.43,37.00],OR:[-124.57,42.00,-116.46,46.24],PA:[-80.52,39.72,-74.69,42.27],SC:[-83.35,32.05,-78.54,35.22],SD:[-104.06,42.48,-96.44,45.94],TN:[-90.31,34.98,-81.65,36.68],TX:[-106.65,25.84,-93.51,36.50],UT:[-114.05,37.00,-109.04,42.00],VA:[-83.68,36.54,-75.24,39.47],WA:[-124.75,45.54,-116.92,49.00],WI:[-92.89,42.49,-86.25,47.08],WV:[-82.64,37.20,-77.72,40.64],WY:[-111.05,41.00,-104.05,45.01],AK:[-179.15,51.21,-129.98,71.54],HI:[-160.25,18.92,-154.81,22.24],RI:[-71.91,41.15,-71.12,42.02],VT:[-73.44,42.73,-71.46,45.02],PR:[-67.94,17.88,-65.22,18.52],GU:[144.55,13.18,145.05,13.72],MP:[144.8,14.05,146.15,20.6],AS:[-171.15,-14.6,-168.1,-11.0],VI:[-65.15,17.62,-64.5,18.5],PW:[131.0,2.8,134.8,8.5],FM:[137.0,0.8,163.3,10.2],MH:[160.5,4.5,172.3,15.05]};
+let _pmReg=false; const _pmStates={};
+function registerPM(){ if(_pmReg||!window.pmtiles) return; const p=new pmtiles.Protocol(); maplibregl.addProtocol('pmtiles',p.tile.bind(p)); _pmReg=true; }
+function visibleStates(map){ const b=map.getBounds(),out=new Set(); const lats=[b.getSouth(),(b.getSouth()+b.getNorth())/2,b.getNorth()],lngs=[b.getWest(),(b.getWest()+b.getEast())/2,b.getEast()]; lats.forEach(la=>lngs.forEach(ln=>{for(const[st,[w,s,e,n]]of Object.entries(STATE_BBOX)){if(ln>=w&&ln<=e&&la>=s&&la<=n){out.add(st);break;}}})); return out; }
+function addParcelState(map,st){ if(_pmStates[st])return; _pmStates[st]=true; const src='dcsi-'+st; try{ map.addSource(src,{type:'vector',url:`pmtiles://data/pmtiles_dcsi/${st}.pmtiles`});
+  const col=['match',['get','dcsi_class']]; DCSI_ORDER.forEach(c=>col.push(c,DCSI_COLOR[c])); col.push('#3a4358');
+  map.addLayer({id:'dcsi-fill-'+st,type:'fill',source:src,'source-layer':st,minzoom:7,paint:{'fill-color':col,'fill-opacity':0.72}});
+  map.addLayer({id:'dcsi-line-'+st,type:'line',source:src,'source-layer':st,minzoom:9,paint:{'line-color':'#0a0e16','line-opacity':0.3,'line-width':['interpolate',['linear'],['zoom'],9,0.3,12,1.0]}});
+  map.on('error',e=>{ if(e.sourceId===src){/* gated tiles — ignore */} });
+}catch(e){} }
+function refreshParcels(map){ if(map.getZoom()<7) return; registerPM(); visibleStates(map).forEach(st=>addParcelState(map,st)); }
+
+function dropMarker(lat,lng){ const m=window._gmap; if(!m)return; if(window._siteMarker)window._siteMarker.remove();
+  window._siteMarker=new maplibregl.Marker({color:'#c8a84b'}).setLngLat([lng,lat]).addTo(m); }
+function showOnMap(){ const m=window._gmap; if(!m||!_lastSite)return; m.flyTo({center:[_lastSite.lng,_lastSite.lat],zoom:10,duration:1600}); dropMarker(_lastSite.lat,_lastSite.lng); }
+
+const IMAGERY_T='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+const ROADS_T='https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}';
+const NHD_WMS='https://basemap.nationalmap.gov/arcgis/rest/services/USGSHydroCached/MapServer/tile/{z}/{y}/{x}';  // USGS cached hydro tiles (the NHD WMS endpoint returns XML errors)
+const LABELS_T='https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png';
+function buildMap(){
+  const map=new maplibregl.Map({container:'map',attributionControl:false,antialias:true,
+    style:'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json',
+    center:[-95,38.6],zoom:3.7,pitch:0,maxPitch:82});
+  window._gmap=map;
+  map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'bottom-right');
+  map.on('load',()=>{ map.getCanvas().style.cursor='crosshair';
+    // Base raster layers — added once, hidden until toggled (lazy = fast initial load).
+    map.addSource('imagery-src',{type:'raster',tileSize:256,tiles:[IMAGERY_T],attribution:'Esri'});
+    map.addLayer({id:'imagery',type:'raster',source:'imagery-src',paint:{'raster-opacity':1},layout:{visibility:'none'}});
+    map.addSource('roads-src',{type:'raster',tileSize:256,tiles:[ROADS_T],attribution:'Esri'});
+    map.addLayer({id:'roads',type:'raster',source:'roads-src',paint:{'raster-opacity':0.7},layout:{visibility:'none'}});
+    map.addSource('hydro-src',{type:'raster',tileSize:256,tiles:[NHD_WMS]});
+    map.addLayer({id:'hydro',type:'raster',source:'hydro-src',paint:{'raster-opacity':0.75},layout:{visibility:'none'}});
+    map.addSource('labels-src',{type:'raster',tileSize:256,tiles:[LABELS_T]});
+    map.addLayer({id:'labels',type:'raster',source:'labels-src',paint:{'raster-opacity':0.9},layout:{visibility:'none'}});
+    const mk=PRESETS.map(p=>({type:'Feature',properties:{name:p[0]},geometry:{type:'Point',coordinates:[p[2],p[1]]}}));
+    map.addSource('mk',{type:'geojson',data:{type:'FeatureCollection',features:mk}});
+    map.addLayer({id:'mk',type:'circle',source:'mk',paint:{'circle-radius':5,'circle-color':'#c8a84b','circle-stroke-color':'#04060c','circle-stroke-width':2}});
+  });
+  // Once an AOI exists, map clicks are SUPPRESSED — no point popup, no point score. The AOI's
+  // overall analysis is the active result and must stay. Clicks register only while drawing the AOI.
+  // While drawing, a click adds a vertex. Otherwise a click drops the instant ground-only soil popup
+  // — allowed even when an AOI exists (Jason 2026-06-16): scoreLatLng is sidebar-safe (it never writes
+  // the AOI analysis), so a point click inside the parcel inspects the ground without stealing the panel.
+  map.on('click',e=>{ if(_draw){ addVertex(e.lngLat.lng,e.lngLat.lat); return; } scoreLatLng(e.lngLat.lat,e.lngLat.lng,`${e.lngLat.lat.toFixed(4)}, ${e.lngLat.lng.toFixed(4)}`); });
+  map.on('dblclick',e=>{ if(_draw){ e.preventDefault(); finishDraw(); } });
+  // Zooming into soil-detail range should reveal the "Area of interest" step (once per session),
+  // so users know they can draw an AOI. Don't fire while drawing or after an AOI already exists.
+  map.on('moveend',()=>{ if(_aoiAccShown||_draw||_aoiPts.length) return;
+    if(map.getZoom()>=9){ _aoiAccShown=true; openAoiAcc(); } });
+}
+// ── ONE right slide-in with swappable content (analysis | about) + edge tab ──
+function rpShowView(view){
+  const rp=document.getElementById('rpanel');
+  document.querySelectorAll('#rpanel .rp-pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById(view==='about'?'rp-about':'rp-analysis').classList.add('active');
+  rp.classList.remove('hidden');
+  const e=document.getElementById('rp-edge'); if(e)e.style.display='none';
+}
+function rpShow(){ rpShowView('analysis'); }
+function rpHide(){ document.getElementById('rpanel').classList.add('hidden');
+  const e=document.getElementById('rp-edge'); if(e&&window._unlocked)e.style.display='block'; }
+function rpTab(){ rpShowView('analysis'); }   // searches + AOI screening open the analysis pane
+function toggleAbout(){ rpShowView('about'); }
+// one accordion open at a time in the left rail
+function accToggle(h){ const sec=h.closest('.acc'); if(!sec)return; const open=sec.classList.contains('open');
+  document.querySelectorAll('#panel .acc.open').forEach(s=>s.classList.remove('open'));
+  if(!open) sec.classList.add('open'); }
+// After the finder lands on a place, open the "Area of interest" step so users know to draw an AOI.
+function openAoiAcc(){ _aoiAccShown=true; const h=document.querySelector('#panel .acc .pp-h[data-step="2"]'); if(!h)return;
+  const sec=h.closest('.acc'); if(sec&&!sec.classList.contains('open')){ document.querySelectorAll('#panel .acc.open').forEach(s=>s.classList.remove('open')); sec.classList.add('open'); } }
+// header overlay chips <-> layer functions (chips on desktop; the ☰ card keeps mobile covered)
+function chipToggle(name){ const el=document.getElementById('hc-'+name); const on=!(el&&el.classList.contains('active'));
+  if(name==='soil') toggleSoilLayer(on); else if(name==='aoi') toggleClipAOI(on); else if(name==='states') toggleStates(on); else if(name==='mkt') toggleMarketLayer(on);
+  else if(name==='hillshade') toggleHillshade(on); else toggleBase(name,on); }
+// Clipped AOI on/off (Jason 2026-06-16). ON = focus: soil clipped to the parcel, global soil hidden
+// so nothing renders outside (basemap/imagery/roads/labels still show for context). OFF = context:
+// the full GroundScore soil everywhere again. The AOI outline stays drawn either way.
+let _clipOn=false;
+function toggleClipAOI(on){ _clipOn=on; const m=window._gmap; if(!m)return;
+  ['aoisoil-fill','aoisoil-line','aoihex-fill','aoihex-line'].forEach(id=>{ if(m.getLayer(id)) m.setLayoutProperty(id,'visibility',on?'visible':'none'); });
+  if(on){ // hide every state's global soil so soil shows ONLY inside the parcel
+    (m.getStyle().layers||[]).forEach(l=>{ if(/^gs-(fill|line)-/.test(l.id)) m.setLayoutProperty(l.id,'visibility','none'); });
+  } else { // restore the full soil everywhere (re-create/paint if it was torn down)
+    if(_soilOn){ (m.getStyle().layers||[]).forEach(l=>{ if(/^gs-(fill|line)-/.test(l.id)) m.setLayoutProperty(l.id,'visibility','visible'); }); refreshSoilLayer(); }
+    else toggleSoilLayer(true); }
+  m.setLayoutProperty('aoi-mask','visibility','none'); // legacy darkening mask off in clip mode
+  syncChip('aoi',on); }
+// Flat-map elevation relief — same DEM the 3D mode uses, no tilt (Jason 2026-06-12).
+function toggleHillshade(on){ const m=window._gmap; if(!m)return;
+  if(on){ if(!m.getSource('terrain-dem')) m.addSource('terrain-dem',{type:'raster-dem',tiles:['https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png'],maxzoom:15,tileSize:256,encoding:'terrarium'});
+    if(!m.getLayer('hillshade-flat')){ try{ const before=(m.getStyle().layers.find(l=>/^(gs-fill-|mkq-|aoihex-fill|imagery)/.test(l.id))||{}).id; m.addLayer({id:'hillshade-flat',type:'hillshade',source:'terrain-dem',paint:{'hillshade-exaggeration':0.45,'hillshade-shadow-color':'#a9adb5','hillshade-highlight-color':'#f0f2f5','hillshade-accent-color':'#c4c8cf'}},before); }catch(e){} }
+    else m.setLayoutProperty('hillshade-flat','visibility','visible'); }
+  else if(m.getLayer('hillshade-flat')) m.setLayoutProperty('hillshade-flat','visibility','none');
+  syncChip('hillshade',on); const cb=document.getElementById('chk-hillshade'); if(cb)cb.checked=on; }
+function syncChip(name,on){ const hc=document.getElementById('hc-'+name); if(hc)hc.classList.toggle('active',on); }
+// the About write-up renders inside the right slide-in (single panel system)
+(function(){ const t=document.getElementById('about-tpl'), host=document.getElementById('rp-about');
+  if(t&&host) host.appendChild(t.content.cloneNode(true)); })();
+// right panel drag-wide
+(function(){ const h=document.getElementById('rp-resize'), p=document.getElementById('rpanel'); if(!h||!p) return;
+  let drag=false;
+  h.addEventListener('pointerdown',e=>{ drag=true; h.setPointerCapture(e.pointerId); p.style.transition='none'; e.preventDefault(); });
+  h.addEventListener('pointermove',e=>{ if(!drag) return;
+    const w=Math.min(Math.max(p.getBoundingClientRect().right-e.clientX,340),Math.min(760,window.innerWidth-160));
+    p.style.width=w+'px'; try{sessionStorage.setItem('l10_rw',String(w));}catch(_){ } });
+  h.addEventListener('pointerup',e=>{ drag=false; p.style.transition=''; try{h.releasePointerCapture(e.pointerId);}catch(_){ } });
+  try{ const w=+sessionStorage.getItem('l10_rw'); if(w>=340&&w<=760) p.style.width=w+'px'; }catch(_){ }
+})();
+// Point scores surface as an on-map popup (Regen-Ag flow); the deep analysis stays in the panel.
+let _sitePop=null;
+function sitePopup(lat,lng,html){ const m=window._gmap; if(!m) return;
+  if(_sitePop) _sitePop.remove();
+  _sitePop=new maplibregl.Popup({maxWidth:'300px',offset:18}).setLngLat([lng,lat]).setHTML(html).addTo(m); }
+function popMsg(t,color){ return `<div style="font:600 12.5px Inter,system-ui,sans-serif;color:${color||'#333'};max-width:230px;line-height:1.45">${t}</div>`; }
+function popupSummary(j,label){
+  const dciV=j.dci_value, gs=j.dcsi_value, v=dciV!=null?dciV:gs, c=buildableColor(v||0);
+  let badge='';
+  if(j.dci&&j.dci.pillars&&dciV!=null){ const vd=dciVerdict(dciV,j.dci.pillars);
+    const bc=vd.cls==='go'?'#16a34a':vd.cls==='caution'?'#d97706':'#dc2626';
+    badge=`<span style="background:${bc};color:#fff;font-weight:900;font-size:11px;padding:3px 9px;border-radius:5px;letter-spacing:.05em">${vd.v}</span>`; }
+  const report=window._lastReport?`<button onclick="siteReport()" style="flex:1;background:#fff;border:1px solid #c8a84b;color:#7a6320;border-radius:6px;font:800 11.5px Inter,sans-serif;padding:8px;cursor:pointer">&#8595; PDF Report</button>`:'';
+  return `<div style="font-family:Inter,system-ui,sans-serif;min-width:212px">
+    <div style="font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#7a85ad;margin-bottom:7px">${esc((label||'Site').split('(')[0])}</div>
+    <div style="display:flex;align-items:center;gap:11px">
+      <span style="font-size:32px;font-weight:800;color:${c};line-height:1">${v!=null?Math.round(v):'&ndash;'}</span>
+      <span style="display:flex;flex-direction:column;gap:4px;align-items:flex-start">${badge}<span style="font-size:9.5px;font-weight:800;color:#666;text-transform:uppercase;letter-spacing:.07em">${esc(j.dci_band||j.dcsi_class||'')} &middot; GroundScore DCI</span></span>
+    </div>
+    <div style="font-size:11.5px;color:#444;margin-top:7px">Soil GroundScore <b>${gs!=null?Math.round(gs):'&ndash;'}</b>${j.muname?' &middot; '+esc(j.muname.split(',')[0]):''}</div>
+    <div style="display:flex;gap:7px;margin-top:10px">
+      <button onclick="rpShow()" style="flex:1.2;background:#c8a84b;border:none;color:#1a1206;border-radius:6px;font:800 11.5px Inter,sans-serif;padding:8px;cursor:pointer">Full analysis &rarr;</button>${report}
+    </div></div>`;
+}
+// finder + layers card (the card is the narrow-screen fallback for the header chips)
+function toggleLayersCard(){ const c=document.getElementById('layers-card'); const open=c.classList.toggle('open');
+  document.getElementById('btn-layers').classList.toggle('active',open); }
+// left console: collapse / reopen / drag-resize (width persists for the session)
+function panelHide(){ document.getElementById('panel').classList.add('collapsed'); document.getElementById('panel-open').style.display='block'; }
+function panelShow(){ document.getElementById('panel').classList.remove('collapsed'); document.getElementById('panel-open').style.display='none'; }
+(function(){ const h=document.getElementById('panel-resize'), p=document.getElementById('panel'); if(!h||!p) return;
+  let drag=false;
+  h.addEventListener('pointerdown',e=>{ drag=true; h.setPointerCapture(e.pointerId); e.preventDefault(); });
+  h.addEventListener('pointermove',e=>{ if(!drag) return;
+    const w=Math.min(Math.max(e.clientX-p.getBoundingClientRect().left,290),Math.min(620,window.innerWidth-120));
+    p.style.width=w+'px'; try{sessionStorage.setItem('l10_pw',String(w));}catch(_){ } });
+  h.addEventListener('pointerup',e=>{ drag=false; try{h.releasePointerCapture(e.pointerId);}catch(_){ } });
+  try{ const w=+sessionStorage.getItem('l10_pw'); if(w>=290&&w<=620) p.style.width=w+'px'; }catch(_){ }
+})();
+function openFinder(){ document.getElementById('finder').classList.add('open'); const t=document.getElementById('fd-toggle'); if(t)t.innerHTML='Criteria &amp; filters &#9652;'; }
+function closeFinder(){ document.getElementById('finder').classList.remove('open'); const t=document.getElementById('fd-toggle'); if(t)t.innerHTML='Criteria &amp; filters &#9662;'; }
+function toggleFinder(){ document.getElementById('finder').classList.contains('open')?closeFinder():openFinder(); }
+// priorities / emphasis pills (shared between left panel and finder)
+function pickPill(group,btn){ document.getElementById(group).querySelectorAll('.pill').forEach(p=>p.classList.remove('active')); btn.classList.add('active'); }
+function setProfile(p){ const hp=document.getElementById('in-profile'); if(hp)hp.value=p;
+  ['prio-pills','fd-emph'].forEach(g=>{ const c=document.getElementById(g); if(c)c.querySelectorAll('.pill').forEach(b=>b.classList.toggle('active',b.dataset.p===p)); }); rescore(); }
+function setProfilePill(btn){ setProfile(btn.dataset.p); }
+function onMW(v){ const el=document.getElementById('mw-val'); if(el)el.innerHTML=v+' <small>MW</small>'; const s=document.getElementById('in-mw'); if(s)s.style.setProperty('--val',((v-10)/1990*100).toFixed(1)+'%'); rescore(); }
+function toggleStates(on){ const m=window._gmap; if(!m)return;
+  if(on){ if(!m.getSource('states-src')) m.addSource('states-src',{type:'geojson',data:'data/us-states.geojson'});
+    if(!m.getLayer('states-ln')) m.addLayer({id:'states-ln',type:'line',source:'states-src',paint:{'line-color':'#5a6490','line-width':1,'line-opacity':0.6}}); else m.setLayoutProperty('states-ln','visibility','visible'); }
+  else if(m.getLayer('states-ln')) m.setLayoutProperty('states-ln','visibility','none');
+  syncChip('states',on); const cb=document.getElementById('chk-states'); if(cb)cb.checked=on; }
+// Find target sites: filter the national leaderboard by criteria; a described region runs the area scan.
+const INCENTIVE_STATES=new Set(['OH','GA','VA','TX','IA','NE','NV','AZ','OR','WA','TN','IN','WY','UT','ND','SD','MS','AL','LA','OK']);
+function findTargets(){
+  closeFinder(); rpShow();
+  const desc=((document.getElementById('fd-describe')||{}).value||'').trim();
+  // if a place is described, geocode + scan that area
+  if(desc && /\b([A-Z][a-z]+(?:\s[A-Z][a-z]+)*),?\s*(county|parish|[A-Z]{2}|texas|arizona|virginia|ohio|iowa|georgia|nevada|oregon|nebraska)\b/i.test(desc)){
+    document.getElementById('site-input').value=desc; findSite(); return; }
+  const minDci=+document.getElementById('fd-min').value, minSoil=+document.getElementById('fd-soil').value;
+  const incentive=document.getElementById('fd-incentive').checked;
+  const ab=m=>{ const t=(m.market||'').match(/,\s*([A-Z]{2})\b/); return t?t[1]:''; };
+  fetch('data/dc_markets.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(list=>{
+    let res=(list||[]).filter(m=>m.dci!=null && m.dci>=minDci && (m.score==null||m.score>=minSoil) && (!incentive||INCENTIVE_STATES.has(ab(m))));
+    res.sort((a,b)=>b.dci-a.dci);
+    if(!res.length){ setResult('<div class="empty" style="padding:20px 16px;color:var(--amber)">No markets match those criteria. Loosen the minimum DCI, soil, or filters.</div>'); return; }
+    const m=window._gmap; if(m){ const fc={type:'FeatureCollection',features:res.slice(0,12).map(d=>({type:'Feature',properties:{dci:d.dci},geometry:{type:'Point',coordinates:[d.lng,d.lat]}}))};
+      if(!m.getSource('finds'))m.addSource('finds',{type:'geojson',data:fc});else m.getSource('finds').setData(fc);
+      if(!m.getLayer('finds-c'))m.addLayer({id:'finds-c',type:'circle',source:'finds',paint:{'circle-radius':9,'circle-color':['interpolate',['linear'],['get','dci'],30,'#ef4444',45,'#f59e0b',60,'#eab308',75,'#84cc16',85,'#16a34a'],'circle-stroke-color':'#fff','circle-stroke-width':2}});else m.setLayoutProperty('finds-c','visibility','visible'); }
+    const rows=res.slice(0,15).map((d,i)=>`<div class="lb-row" onclick="goMarket(${d.lng},${d.lat},${JSON.stringify(d.market)})"><span class="lb-rank">${i+1}</span>
+      <span class="lb-name">${esc(d.market)}<span class="lb-soil">soil ${d.score} &middot; ${esc((d.soil||'').split(',')[0])}</span></span>
+      <span class="lb-dci" style="color:${buildableColor(d.dci)}">${Math.round(d.dci)}<span class="lb-band">${esc(d.dci_band||'')}</span></span></div>`).join('');
+    setResult(`<div class="lb-head"><div class="kick">Target sites &middot; GroundScore DCI</div>
+       <div class="lb-sum"><b>${res.length}</b> markets match &middot; min DCI ${minDci}${minSoil>0?' &middot; min soil '+minSoil:''}${incentive?' &middot; incentive states':''}</div></div>
+       <div class="lb-list">${rows}</div>
+       <div class="hint" style="padding:8px 16px 16px">Each result shows the soil GroundScore + map unit. Click to run the full screening + report.</div>`);
+  }).catch(()=>setResult('<div class="empty" style="padding:20px 16px;color:var(--red)">Could not load markets.</div>'));
+}
+function toggleBase(name,on){ const m=window._gmap; if(!m||!m.getLayer(name))return; m.setLayoutProperty(name,'visibility',on?'visible':'none');
+  const w=document.getElementById('op-'+name+'-wrap'); if(w)w.classList.toggle('show',on);
+  syncChip(name,on); const cb=document.getElementById('chk-'+name); if(cb)cb.checked=on; }
+function setBaseOpacity(name,val){ const m=window._gmap; if(m&&m.getLayer(name))m.setPaintProperty(name,'raster-opacity',(+val)/100);
+  const s=document.getElementById('op-'+name); if(s)s.style.setProperty('--val',Math.round(val)+'%'); }
+let _exag=1.6, _terrOn=false;
+function toggleTerrain(on){ const m=window._gmap; if(!m)return; _terrOn=on;
+  document.getElementById('cb-3d')?.classList.toggle('active',on);
+  const ct=document.getElementById('chk-terrain'); if(ct)ct.checked=on;
+  if(on){ if(!m.getSource('terrain-dem')) m.addSource('terrain-dem',{type:'raster-dem',tiles:['https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png'],maxzoom:15,tileSize:256,encoding:'terrarium'});
+    if(!m.getLayer('hillshade')){ try{ m.addLayer({id:'hillshade',type:'hillshade',source:'terrain-dem',paint:{'hillshade-exaggeration':0.5}}); }catch(e){} }
+    m.setTerrain({source:'terrain-dem',exaggeration:_exag}); m.easeTo({pitch:60,duration:1000}); }
+  else{ m.setTerrain(null); if(m.getLayer('hillshade'))m.removeLayer('hillshade'); m.easeTo({pitch:0,duration:800}); } }
+function setExag(v){ _exag=parseFloat(v); document.getElementById('exag-val').textContent=_exag+'×'; const m=window._gmap; if(m&&m.getTerrain())m.setTerrain({source:'terrain-dem',exaggeration:_exag}); }
+function setSoilOpacity(val){ const m=window._gmap; if(!m)return; Object.keys(_mkReg).forEach(st=>{ if(m.getLayer('gs-fill-'+st)) m.setPaintProperty('gs-fill-'+st,'fill-opacity',(+val)/100); });
+  if(m.getLayer('aoisoil-fill')) m.setPaintProperty('aoisoil-fill','fill-opacity',(+val)/100);  // clipped soil follows the same slider
+  // keep the header Fill chip and the mobile card slider in lockstep
+  ['op-soil','hdr-op-soil'].forEach(id=>{ const s=document.getElementById(id); if(s){ s.value=val; s.style.setProperty('--val',Math.round(val)+'%'); } });
+  const hv=document.getElementById('hdr-op-val'); if(hv)hv.textContent=Math.round(val)+'%'; }
+
+// ── paywall gate ──
+function showGate(){document.getElementById('gate').classList.add('show');}
+function hideGate(){document.getElementById('gate').classList.remove('show');}
+async function validateKey(k){
+  // Keyless probe included: when the worker's temporary REVIEW_MODE is on, /api/usage
+  // answers without a key and the app unlocks with a visible review banner. With
+  // REVIEW_MODE off (normal), keyless returns 401 and the gate shows as always.
+  try{ const j=await fetch('/api/usage'+(k?'?key='+encodeURIComponent(k):'')).then(r=>r.json());
+    if(j&&j.ok&&j.status==='active'){ return j; }
+    return null; }catch(e){ return null; } }
+// Review-mode banner intentionally NOT shown (Jason 2026-06-12: clean app for Ben's review).
+// The off-switch visibility lives in ops/todo P0, the worker logs, and the smoke-test reminder.
+async function applyKey(){
+  const el=document.getElementById('gate-key-input'),err=document.getElementById('gate-err');
+  const k=((el&&el.value)||'').trim(); if(!k){ err.textContent='Enter your access key.'; return; }
+  err.textContent='Checking key…';
+  const v=await validateKey(k);
+  if(v){ _runKey=k; try{sessionStorage.setItem('l10_key',k);}catch(e){} err.textContent=''; hideGate(); afterUnlock(); }
+  else { err.textContent='That key is not valid or not active.'; }
+}
+
+// ── first-run coach marks: 4 steps, skippable, runs once ──
+const COACH_STEPS=[
+  {sel:'#map',pos:'center',step:'1 / 4 · Score',txt:'Click anywhere on the map to score the ground — instant GO / CAUTION / NO-GO with the eight-criteria breakdown.'},
+  {sel:'#hdr-chips',pos:'below',step:'2 / 4 · Map view',txt:'Tune the map up here: soil fill opacity, state boundaries, labels, roads, hydrology, imagery.'},
+  {sel:'#acc-finder',pos:'right',step:'3 / 4 · Site finder',txt:'Describe what you need — minimum DCI, water stress, incentive states — and the finder ranks target sites.'},
+  {sel:'#rp-toggle',pos:'right',step:'4 / 4 · The verdict',txt:'The full analysis lives on the right: verdict, radar, written assessment, and the PDF report you can forward.'}];
+function coachMarks(force){
+  try{ if(!force && localStorage.getItem('l10_tour')) return; }catch(_){ if(!force) return; }
+  const old=document.getElementById('coach'); if(old)old.remove();
+  const ov=document.createElement('div'); ov.id='coach'; ov.className='show';
+  ov.innerHTML='<div class="coach-card" id="coach-card"><div class="coach-step" id="coach-step"></div><div class="coach-txt" id="coach-txt"></div><div class="coach-row"><button class="coach-next" id="coach-next">Next</button><button class="coach-skip" id="coach-skip">Skip tour</button></div></div>';
+  document.body.appendChild(ov);
+  let i=0;
+  function place(){
+    const s=COACH_STEPS[i], card=document.getElementById('coach-card'), t=document.querySelector(s.sel);
+    document.getElementById('coach-step').textContent=s.step;
+    document.getElementById('coach-txt').textContent=s.txt;
+    document.getElementById('coach-next').textContent=i===COACH_STEPS.length-1?'Done':'Next';
+    const r=t&&t.offsetParent!==null?t.getBoundingClientRect():null;
+    if(!r||s.pos==='center'){ card.style.left='50%'; card.style.top='42%'; card.style.transform='translate(-50%,-50%)'; return; }
+    card.style.transform='none';
+    if(s.pos==='below'){ card.style.left=Math.min(r.left,window.innerWidth-300)+'px'; card.style.top=(r.bottom+12)+'px'; }
+    else { card.style.left=Math.min(r.right+14,window.innerWidth-300)+'px'; card.style.top=Math.max(60,r.top)+'px'; }
+  }
+  function done(){ try{localStorage.setItem('l10_tour','1');}catch(_){ } ov.remove(); }
+  document.getElementById('coach-next').onclick=()=>{ if(++i>=COACH_STEPS.length){ done(); return; } place(); };
+  document.getElementById('coach-skip').onclick=done;
+  place();
+}
+
+// ── Demo mode (?demo=1): a 60-second self-running flythrough for cold outreach ──
+// Scores Data Center Alley, pins it, scores Council Bluffs, and lands on the compare
+// view — the three wow beats (instant verdict, radar, side-by-side) with zero clicks.
+async function demoMode(){
+  const note=document.createElement('div');
+  note.id='demo-note';
+  note.style.cssText='position:fixed;top:62px;left:50%;transform:translateX(-50%);z-index:80;background:rgba(10,14,26,.97);border:1px solid #c8a84b;border-radius:9px;padding:9px 18px;font:700 12px Inter,system-ui,sans-serif;color:#e8dfc0;box-shadow:0 14px 40px rgba(0,0,0,.5);transition:opacity .3s';
+  document.body.appendChild(note);
+  const say=t=>{note.textContent=t;};
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  say('GroundScore DCI demo — scoring Data Center Alley…'); await wait(2200);
+  await scoreLatLng(39.0185,-77.4636,'Loudoun (Data Center Alley), VA'); await wait(2600);
+  if(window._lastReport){ pinSite(); say('Pinned. Now the strongest ground in the Midwest…'); }
+  await wait(2200);
+  await scoreLatLng(41.2619,-95.8608,'Council Bluffs, IA'); await wait(2600);
+  if(window._lastReport&&window._pins.length){ pinSite(); await wait(900); if(window._pins.length>=2){ renderCompare(); say('Side-by-side: every pillar, the deltas, the verdict. Click anywhere to take over.'); } }
+  await wait(6000); note.style.opacity='0'; setTimeout(()=>note.remove(),400);
+}
+
+// ── init ──
+function afterUnlock(){
+  if(window._unlocked) return; window._unlocked=true;
+  // GroundScore soil is OFF by default — users see the basemap first, then toggle soil on or draw an AOI.
+  document.getElementById('rp-toggle').style.display='flex';   // Analysis button in the left rail
+  setTimeout(()=>coachMarks(new URLSearchParams(location.search).get('tour')==='1'),1200);   // first-run tour; ?tour=1 force-replays
+  const q=new URLSearchParams(location.search), set=(id,val)=>{const e=document.getElementById(id);if(e&&val)e.value=val;};
+  set('in-persona',q.get('persona')); set('in-mw',q.get('mw')); set('in-cooling',q.get('cooling')); set('in-depth',q.get('depth'));
+  if(q.get('profile')) setProfile(q.get('profile'));
+  if(q.get('mw')) onMW(q.get('mw'));
+  const lat=parseFloat(q.get('lat')),lng=parseFloat(q.get('lng'));
+  if(q.get('demo')){
+    try{localStorage.setItem('l10_tour','1');}catch(_){ }   // no coach marks over the demo
+    const go=()=>setTimeout(demoMode,1200);
+    if(window._gmap&&window._gmap.loaded()) go(); else setTimeout(go,1200);
+  } else if(Number.isFinite(lat)&&Number.isFinite(lng)){
+    const fire=()=>{ if(window._gmap){window._gmap.flyTo({center:[lng,lat],zoom:9,duration:1800});} scoreLatLng(lat,lng,`${lat.toFixed(4)}, ${lng.toFixed(4)}`); };
+    if(window._gmap&&window._gmap.loaded()) fire(); else setTimeout(fire,900);
+  } else {
+    renderLeaderboard();   // pre-render the leaderboard into the (closed) panel; "Analysis →" opens it
+  }
+}
+// Model heartbeat badge — model_meta.json is stamped by the one-button rebuild, so the
+// visible version/date updates with zero page edits whenever the model or data changes.
+async function modelBadge(){
+  try{ const m=await fetch('data/model_meta.json',{cache:'no-store'}).then(r=>r.ok?r.json():null); if(!m)return;
+    window._modelMeta=m;   // the dossier stamps its methodology page from this
+    const d=document.createElement('div'); d.id='model-badge';
+    d.title='Every score, map and chart here is computed from GroundScore DCI model v'+m.model_version+'. '+(m.notes||'');
+    d.textContent=`Model v${m.model_version} · rebuilt ${new Date(m.built_at).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})}`;
+    document.body.appendChild(d); }catch(e){}
+}
+async function init(){
+  renderPresets();
+  buildMap();
+  modelBadge();
+  const v=await validateKey(proKey());
+  if(v){ hideGate(); afterUnlock(); } else { showGate(); }
+}
+window.addEventListener('load',init);
+</script>
+</body>
+</html>

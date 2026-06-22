@@ -1,0 +1,15 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+node_modules/
+.claude/
+
+# Heavy map data — served from Cloudflare R2 (bucket: lab10yr-mapdata) via the
+# lab10yr-core Worker, NEVER committed here (keeps this repo lean).
+data/pmtiles/
+data/pmtiles_dcsi/
+data/raster/
+data/national_download.csv
+data/raw_interp_data.csv
+data/mukey_dcsi.json
+data/*.tmp

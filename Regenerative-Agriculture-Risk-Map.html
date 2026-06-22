@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map">
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="Lab10YR">
+  <meta property="og:title"       content="Regenerative Agriculture Risk Map — Fragile Soils & OM Depletion">
+  <meta property="og:description" content="Dual-pane national map of Fragile Soil Index and Organic Matter Depletion risk for every US county and map unit, built from SSURGO national soil survey data.">
+  <meta property="og:url"         content="https://lab10yr.com/Regenerative-Agriculture-Risk-Map.html">
+  <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Regenerative Agriculture Risk Map — Fragile Soils & OM Depletion">
+  <meta name="twitter:description" content="Dual-pane national map of Fragile Soil Index and Organic Matter Depletion risk for every US county and map unit, built from SSURGO national soil survey data.">
+  <meta name="twitter:image"       content="https://lab10yr.com/assets/og-preview.png">
+<title>Regenerative Agriculture Risk Map — Fragile Soils &amp; Organic Matter Depletion</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
+<script src="https://unpkg.com/wellknown@0.5.0/wellknown.js"></script>
+<script src="js/shared.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080810;--panel:#11111e;--panel2:#191928;--panel3:#21213a;
+  --border:#252538;--text:#dde1f0;--dim:#7880a8;--dimmer:#454566;
+  --accent:#4e9fff;--accent2:#a78bfa;--green:#22c55e;
+  --c0:#1b7837;--c1:#78c679;--c2:#fecc5c;--c3:#f03b20;--c4:#7b0007;--cx:#343450;
+  --radius:7px;--shadow:0 6px 28px rgba(0,0,0,0.65);
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --hdr:84px;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);
+     height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* ── HEADER (two rows) ────────────────────────────────────── */
+#hdr{
+  height:var(--hdr);flex-shrink:0;z-index:300;
+  background:rgba(8,8,16,0.97);border-bottom:1px solid var(--border);
+  display:flex;flex-direction:column;
+  backdrop-filter:blur(10px);
+}
+/* Row 1: logo + search + action buttons */
+#hdr-top{
+  height:48px;flex-shrink:0;display:flex;align-items:center;
+  padding:0 14px;gap:8px;border-bottom:1px solid var(--border);
+}
+/* Row 2: overlays */
+#hdr-bot{
+  flex:1;display:flex;align-items:center;
+  padding:0 14px;gap:8px;overflow:hidden;
+}
+.logo{font-size:13px;font-weight:700;color:#fff;white-space:nowrap;
+      display:flex;align-items:center;gap:6px;flex-shrink:0}
+.logo em{color:var(--accent);font-style:normal}
+.logo small{font-size:10px;color:var(--dim);font-weight:400}
+
+#search-wrap{position:relative;flex:0 0 220px}
+#search-input{
+  width:100%;padding:5px 10px 5px 28px;
+  background:var(--panel2);border:1px solid var(--border);
+  color:var(--text);border-radius:6px;font-size:11px;outline:none;
+  transition:border-color .2s
+}
+#search-input:focus{border-color:var(--accent)}
+#search-icon{position:absolute;left:8px;top:50%;transform:translateY(-50%);
+             color:var(--dim);font-size:12px;pointer-events:none}
+#search-results{
+  position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:500;
+  background:var(--panel);border:1px solid var(--border);border-radius:6px;
+  overflow:hidden;display:none;box-shadow:var(--shadow)
+}
+.sr-item{padding:7px 10px;font-size:11px;cursor:pointer;border-bottom:1px solid var(--border)}
+.sr-item:last-child{border-bottom:none}
+.sr-item:hover{background:var(--panel3)}
+.sr-name{color:var(--text);font-weight:600}
+.sr-type{color:var(--dim);font-size:10px}
+
+.layer-group{display:flex;align-items:center;gap:6px;
+             background:var(--panel2);border:1px solid var(--border);
+             padding:4px 10px;border-radius:6px}
+.layer-group span{font-size:10px;color:var(--dim);font-weight:600;
+                  text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.layer-chk{display:flex;align-items:center;gap:4px;cursor:pointer;
+           font-size:11px;color:var(--dim);transition:color .2s;white-space:nowrap}
+.layer-chk input[type=checkbox]{accent-color:var(--accent);cursor:pointer;width:13px;height:13px}
+.layer-chk:hover{color:var(--text)}
+
+/* ── OPACITY SLIDERS ──────────────────────────────────────── */
+.op-wrap{display:none;align-items:center;gap:3px;margin-left:2px}
+.op-wrap.visible{display:flex}
+.op-slider{
+  -webkit-appearance:none;appearance:none;
+  width:60px;height:5px;border-radius:4px;outline:none;cursor:pointer;
+  background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--val,82%),var(--dimmer) var(--val,82%),var(--dimmer) 100%);
+  transition:background .04s;
+}
+.op-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+  background:#fff;cursor:pointer;border:2px solid var(--accent);
+  box-shadow:0 1px 4px rgba(0,0,0,.5);
+  transition:transform .1s;
+}
+.op-slider::-webkit-slider-thumb:hover{transform:scale(1.25)}
+.op-slider::-moz-range-thumb{
+  width:14px;height:14px;border-radius:50%;border:2px solid var(--accent);
+  background:#fff;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.5);
+}
+.op-slider::-moz-range-track{height:5px;border-radius:4px;background:var(--dimmer);}
+.op-slider::-moz-range-progress{height:5px;border-radius:4px;background:var(--accent);}
+.op-pct{font-size:9px;color:var(--dimmer);width:22px;text-align:right}
+
+.hdr-btn{
+  padding:5px 11px;font-size:11px;font-weight:600;
+  background:var(--panel2);border:1px solid var(--border);
+  color:var(--accent);border-radius:6px;cursor:pointer;
+  white-space:nowrap;transition:all .2s
+}
+.hdr-btn:hover{background:var(--accent);color:#fff}
+.hdr-btn:disabled{opacity:.5;cursor:not-allowed}
+.hdr-btn.active{background:var(--accent);color:#fff;box-shadow:0 0 8px var(--accent)55}
+.hdr-sep{width:1px;height:24px;background:var(--border);flex-shrink:0}
+/* 3D control panel */
+#view3d-wrap{position:relative;z-index:900}
+#menu-3d{
+  display:none;position:absolute;top:calc(100% + 6px);right:0;z-index:1200;
+  background:var(--panel);border:1px solid var(--border);border-radius:8px;
+  padding:10px;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.6);
+}
+#menu-3d.open{display:block}
+.v3d-btn{
+  width:100%;padding:7px 10px;margin-bottom:4px;border:1px solid var(--border);
+  border-radius:5px;background:var(--panel2);color:var(--text);
+  font-size:11px;font-weight:600;cursor:pointer;text-align:left;
+  display:flex;align-items:center;gap:8px;transition:background .15s,border-color .15s
+}
+.v3d-btn:hover{background:var(--panel3);border-color:var(--accent)}
+.v3d-btn.active{background:var(--accent)22;border-color:var(--accent);color:var(--accent)}
+.v3d-btn:last-child{margin-bottom:0}
+#exag-wrap{margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+#exag-label{font-size:10px;color:var(--dim);margin-bottom:4px}
+#exag-slider{
+  -webkit-appearance:none;appearance:none;
+  width:100%;height:6px;border-radius:4px;outline:none;cursor:pointer;
+  background:linear-gradient(to right,var(--accent) var(--pct,21%),var(--panel3) var(--pct,21%));
+  transition:background .04s;
+}
+#exag-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:#fff;cursor:pointer;border:2px solid var(--accent);
+  box-shadow:0 1px 5px rgba(0,0,0,.5);transition:transform .12s,box-shadow .12s;
+}
+#exag-slider::-webkit-slider-thumb:hover{
+  transform:scale(1.2);box-shadow:0 2px 8px rgba(56,189,248,.4);
+}
+#exag-slider::-moz-range-thumb{
+  width:18px;height:18px;border-radius:50%;border:2px solid var(--accent);
+  background:#fff;cursor:pointer;box-shadow:0 1px 5px rgba(0,0,0,.5);
+}
+#exag-slider::-moz-range-track{height:6px;border-radius:4px;background:var(--panel3);}
+#exag-slider::-moz-range-progress{height:6px;border-radius:4px;background:var(--accent);}
+#north-btn{
+  position:absolute;bottom:80px;right:10px;z-index:300;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(8,8,16,.85);border:1px solid var(--border);
+  color:var(--accent);font-size:14px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  transition:background .15s
+}
+#north-btn:hover{background:var(--panel2)}
+
+/* ── INTERPRETATION INFO PANEL ──────────────────────────────── */
+#interp-panel{
+  position:fixed;top:0;right:-480px;width:460px;height:100vh;
+  background:var(--panel);border-left:1px solid var(--border);
+  z-index:500;transition:right .35s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+#interp-panel.open{right:0}
+#interp-panel-inner{
+  flex:1;overflow-y:auto;padding:28px 28px 40px;
+  font-family:'Georgia',serif;
+}
+#interp-panel-inner::-webkit-scrollbar{width:3px}
+#interp-panel-inner::-webkit-scrollbar-thumb{background:var(--border)}
+.ip-close{
+  position:absolute;top:14px;right:16px;
+  background:none;border:none;color:var(--dim);font-size:20px;
+  cursor:pointer;line-height:1;padding:4px 8px;
+}
+.ip-close:hover{color:var(--text)}
+.ip-eyebrow{
+  font-family:'Arial',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--accent);
+  margin-bottom:10px;
+}
+.ip-headline{
+  font-size:22px;font-weight:700;line-height:1.25;
+  color:var(--text);margin-bottom:14px;
+  font-family:'Georgia',serif;
+}
+.ip-lead{
+  font-size:14px;line-height:1.65;color:#bcc4e0;
+  margin-bottom:22px;border-bottom:1px solid var(--border);
+  padding-bottom:22px;
+}
+.ip-section-head{
+  font-family:'Arial',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+  margin:22px 0 12px;
+}
+.ip-class{
+  display:grid;grid-template-columns:12px 1fr;gap:0 12px;
+  align-items:start;margin-bottom:14px;
+}
+.ip-swatch{
+  width:12px;height:12px;border-radius:2px;margin-top:3px;flex-shrink:0;
+}
+.ip-class-name{
+  font-weight:700;font-size:13px;color:var(--text);margin-bottom:3px;
+}
+.ip-class-range{
+  font-family:'Arial',sans-serif;font-size:10px;color:var(--accent);
+  font-weight:600;letter-spacing:.04em;margin-bottom:4px;
+}
+.ip-class-desc{
+  font-size:12.5px;line-height:1.55;color:#9ba3c0;
+}
+.ip-divider{
+  border:none;border-top:1px solid var(--border);
+  margin:26px 0;
+}
+.ip-source{
+  font-family:'Arial',sans-serif;font-size:10px;color:var(--dimmer);
+  margin-top:10px;line-height:1.5;
+}
+
+/* ── BODY ─────────────────────────────────────────────────── */
+#body{flex:1;display:flex;overflow:hidden}
+
+/* ── SIDEBAR ─────────────────────────────────────────────── */
+#sidebar{
+  width:280px;flex-shrink:0;z-index:100;
+  background:var(--panel);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+  transition:width .2s ease
+}
+#sidebar.collapsed{width:0;border-right:none}
+#sb-toggle{
+  flex-shrink:0;width:16px;padding:0;border:none;
+  border-right:1px solid var(--border);
+  background:var(--panel);color:var(--dim);
+  cursor:pointer;font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+  z-index:200;user-select:none;
+  transition:background .15s,color .15s
+}
+#sb-toggle:hover{background:var(--panel2);color:var(--text)}
+#sb-inner{flex:1;overflow-y:auto;padding:12px}
+#sb-inner::-webkit-scrollbar{width:3px}
+#sb-inner::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+.sb-sec{margin-bottom:16px}
+.sb-hd{font-size:10px;font-weight:700;text-transform:uppercase;
+       letter-spacing:.08em;color:var(--dim);margin-bottom:7px;
+       padding-bottom:4px;border-bottom:1px solid var(--border);
+       display:flex;justify-content:space-between;align-items:center}
+
+.leg-item{display:flex;align-items:flex-start;gap:8px;
+          border-radius:4px;padding:4px;
+          transition:background .15s;position:relative;cursor:help}
+.leg-item:hover{background:var(--panel2)}
+.swatch{width:13px;height:13px;border-radius:3px;flex-shrink:0;margin-top:1px;
+        border:1px solid rgba(255,255,255,0.1)}
+.leg-text{font-size:11px;line-height:1.3}
+.leg-label{font-weight:600;color:var(--text)}
+.leg-hint{font-size:10px;color:var(--dim);margin-top:1px}
+
+.def-tip{
+  position:fixed;z-index:2000;
+  background:rgba(10,10,22,0.97);border:1px solid var(--border);
+  border-left:3px solid var(--accent);
+  border-radius:8px;padding:11px 14px;max-width:270px;
+  font-size:11px;line-height:1.6;color:var(--text);
+  box-shadow:var(--shadow);pointer-events:none;display:none
+}
+.def-tip strong{color:var(--accent);display:block;margin-bottom:5px;font-size:12px;font-weight:700}
+.def-tip .def-bar{height:3px;border-radius:2px;margin-bottom:8px;opacity:.7}
+
+.stat-row{margin-bottom:5px}
+.stat-lbl{font-size:10px;color:var(--dim);display:flex;
+          justify-content:space-between;margin-bottom:2px}
+.stat-bg{background:var(--panel2);border-radius:3px;height:5px;overflow:hidden}
+.stat-bar{height:100%;border-radius:3px;transition:width .6s ease}
+
+#info-panel{
+  border-top:1px solid var(--border);padding:12px;
+  background:var(--panel2);min-height:100px;max-height:260px;overflow-y:auto
+}
+#info-panel::-webkit-scrollbar{width:3px}
+#info-panel::-webkit-scrollbar-thumb{background:var(--border)}
+.i-row{display:flex;justify-content:space-between;align-items:baseline;
+       padding:4px 0;border-bottom:1px solid rgba(37,37,56,.5);font-size:11px}
+.i-row:last-child{border-bottom:none}
+.i-key{color:var(--dim)}
+.i-val{font-weight:600;text-align:right}
+.chip{padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700}
+
+/* ── MAPS ─────────────────────────────────────────────────── */
+#maps-area{flex:1;display:flex;position:relative;overflow:hidden}
+.map-pane{flex:1;position:relative;overflow:hidden}
+.map-label{
+  position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  z-index:50;background:rgba(8,8,16,0.88);border:1px solid var(--border);
+  padding:4px 16px;border-radius:20px;font-size:11px;font-weight:700;
+  color:var(--text);letter-spacing:.04em;pointer-events:none;
+  backdrop-filter:blur(6px)
+}
+
+#divider{
+  width:4px;flex-shrink:0;background:var(--border);cursor:col-resize;
+  position:relative;z-index:50;transition:background .2s
+}
+#divider:hover,#divider.dragging{background:var(--accent)}
+#divider::after{
+  content:'⋮';position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);color:var(--dim);font-size:18px;pointer-events:none
+}
+
+/* Attribution + scale bar — dark/muted, compact by default */
+
+/* Compact "i" button — dim, small */
+.maplibregl-ctrl-attrib.maplibregl-compact{
+  background:rgba(8,8,16,0.45)!important;
+  backdrop-filter:blur(4px)!important;
+  border-radius:4px!important;
+  min-height:unset!important;
+}
+/* Hide attribution text by default; only show when expanded */
+.maplibregl-ctrl-attrib-inner{
+  display:none!important;
+}
+.maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-inner{
+  display:block!important;
+  color:#6670a0!important;
+  font-size:9px!important;
+  font-family:var(--font)!important;
+  padding:3px 6px!important;
+  white-space:nowrap;
+}
+.maplibregl-ctrl-attrib.maplibregl-compact-show{
+  background:rgba(8,8,16,0.80)!important;
+}
+.maplibregl-ctrl-attrib a{color:#6670a0!important;text-decoration:none!important}
+.maplibregl-ctrl-attrib a:hover{color:#9ba3c0!important}
+/* "i" button tinted to match */
+.maplibregl-ctrl-attrib-button{
+  background-color:transparent!important;
+  filter:invert(0.45) sepia(1) hue-rotate(200deg) brightness(0.85)!important;
+  width:18px!important;height:18px!important;
+}
+
+/* Scale bar */
+.maplibregl-ctrl-scale{
+  background:rgba(8,8,16,0.45)!important;
+  backdrop-filter:blur(4px)!important;
+  border-color:#3a3a55!important;
+  border-width:0 1px 1px 1px!important;
+  border-style:solid!important;
+  color:#6670a0!important;
+  font-size:8px!important;
+  font-family:var(--font)!important;
+  padding:0 3px 1px!important;
+  border-radius:0 0 3px 3px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  max-width:70px!important;
+}
+
+#map-tooltip{
+  position:fixed;z-index:400;pointer-events:none;
+  background:rgba(8,8,16,0.95);border:1px solid var(--border);
+  border-radius:8px;padding:9px 13px;max-width:240px;font-size:11px;
+  box-shadow:var(--shadow);display:none
+}
+#map-tooltip .tt-name{font-weight:700;font-size:12px;margin-bottom:5px;color:#fff}
+#map-tooltip .tt-row{display:flex;justify-content:space-between;
+                     gap:14px;padding:2px 0;color:var(--dim)}
+#map-tooltip .tt-val{color:var(--text);font-weight:600}
+
+/* ── MY SOIL MODAL ───────────────────────────────────────────── */
+#mysoil-overlay{
+  display:none;position:fixed;inset:0;z-index:800;
+  background:rgba(0,0,0,.55);align-items:center;justify-content:center
+}
+#mysoil-overlay.open{display:flex}
+#mysoil-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  padding:22px 24px;max-width:380px;width:90%;box-shadow:0 16px 48px rgba(0,0,0,.7);
+  position:relative;animation:ms-in .2s ease
+}
+@keyframes ms-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+#mysoil-close{
+  position:absolute;top:12px;right:14px;background:none;border:none;
+  color:var(--dim);cursor:pointer;font-size:16px;line-height:1;padding:2px 6px
+}
+#mysoil-close:hover{color:#fff}
+.ms-eyebrow{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--accent);margin-bottom:6px}
+.ms-headline{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3}
+.ms-sub{font-size:11px;color:var(--dim);margin-bottom:16px}
+.ms-row{display:flex;justify-content:space-between;align-items:baseline;
+        padding:6px 0;border-bottom:1px solid rgba(37,37,56,.6);font-size:11px}
+.ms-row:last-child{border-bottom:none}
+.ms-key{color:var(--dim)}
+.ms-val{font-weight:600;color:var(--text)}
+.ms-chip{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700}
+.ms-pct{font-size:10px;color:var(--dimmer);margin-top:12px;text-align:center;
+        padding-top:10px;border-top:1px solid var(--border)}
+#ms-spinner{text-align:center;padding:20px 0;color:var(--dim);font-size:12px}
+
+#loading{
+  position:absolute;inset:0;z-index:500;
+  background:rgba(8,8,16,0.9);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px
+}
+.spinner{width:36px;height:36px;border:3px solid var(--border);
+         border-top-color:var(--accent);border-radius:50%;
+         animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+#loading p{color:var(--dim);font-size:12px;max-width:300px;text-align:center}
+#loading .load-sub{font-size:10px;color:var(--dimmer)}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+
+  <!-- Row 1: logo · search · action buttons -->
+  <div id="hdr-top">
+    <div class="logo">
+      <em>Regenerative Agriculture Risk Map</em>
+      <small>Fragile Soils &amp; Organic Matter Depletion · SSURGO</small>
+    </div>
+    <div class="hdr-sep"></div>
+    <div id="search-wrap">
+      <span id="search-icon"></span>
+      <input id="search-input" type="text" placeholder="Search location…" autocomplete="off">
+      <div id="search-results"></div>
+    </div>
+    <span id="live-sda-hint" style="display:none;font-size:10px;color:var(--accent);padding:0 6px;animation:pulse 1s infinite">⟳ Loading exact soil lines…</span>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0">
+      <button class="hdr-btn" id="btn-mysoil" onclick="findMySoil()" title="Show soil data for your current location">My Soil</button>
+      <button class="hdr-btn" id="btn-share" onclick="shareMap()" title="Copy shareable link to this map view">⤴ Share</button>
+      <button class="hdr-btn" onclick="downloadCSV()">⬇ CSV</button>
+      <button class="hdr-btn" id="btn-img" onclick="downloadMapImage()">PNG</button>
+      <button class="hdr-btn" id="btn-raster" onclick="toggleRasterStyle()" title="Toggle raster-style (no polygon outlines)">Raster</button>
+      <div id="view3d-wrap">
+        <button class="hdr-btn" id="btn-3d" onclick="toggleMenu3D(event)" title="3D view options">3D ▾</button>
+        <div id="menu-3d">
+          <button class="v3d-btn" id="v3d-2d"        onclick="set3DMode('2d')"><span>Flat 2D</span></button>
+          <button class="v3d-btn" id="v3d-landscape"  onclick="set3DMode('landscape')"><span>Landscape</span></button>
+          <button class="v3d-btn" id="v3d-globe"      onclick="set3DMode('globe')"><span>Globe</span></button>
+          <button class="v3d-btn" id="v3d-overhead"   onclick="set3DMode('overhead')"><span>Overhead 3D</span></button>
+          <div id="exag-wrap">
+            <div id="exag-label">Terrain exaggeration: <span id="exag-val">2.5×</span></div>
+            <input id="exag-slider" type="range" min="1" max="8" step="0.5" value="2.5"
+                   style="--pct:21.4%"
+                   oninput="setTerrainExag(this.value);var sl=this;var pct=((parseFloat(sl.value)-parseFloat(sl.min))/(parseFloat(sl.max)-parseFloat(sl.min))*100).toFixed(1);sl.style.setProperty('--pct',pct+'%')">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: overlays -->
+  <div id="hdr-bot">
+    <span style="font-size:10px;font-weight:700;color:var(--dim);white-space:nowrap;flex-shrink:0">Overlays</span>
+    <div class="hdr-sep"></div>
+
+    <label class="layer-chk" title="Soil classification fill opacity">
+      <input type="checkbox" id="chk-fill" checked onchange="toggleFill(this.checked)"> Fill
+    </label>
+    <div class="op-wrap visible" id="op-fill-wrap">
+      <input type="range" class="op-slider" id="op-fill" min="0" max="100" value="82"
+             style="--val:82%" oninput="setFillOpacity(this.value)">
+      <span class="op-pct" id="op-fill-pct">82%</span>
+    </div>
+
+    <label class="layer-chk" title="US state boundaries">
+      <input type="checkbox" id="chk-states" onchange="toggleStates(this.checked)"> State Boundaries
+    </label>
+
+    <label class="layer-chk" id="chk-raster-wrap" title="National 900m soil raster — both maps" style="display:none">
+      <input type="checkbox" id="chk-raster" onchange="toggleNationalRaster(this.checked)"> National Raster
+    </label>
+
+    <label class="layer-chk" title="Place name labels">
+      <input type="checkbox" id="chk-labels" checked onchange="toggleLayer('labels',this.checked)"> Labels
+    </label>
+
+    <label class="layer-chk" title="Road network">
+      <input type="checkbox" id="chk-roads" onchange="toggleLayer('roads',this.checked)"> Roads
+    </label>
+    <div class="op-wrap" id="op-roads-wrap">
+      <input type="range" class="op-slider" id="op-roads" min="0" max="100" value="55"
+             style="--val:55%" oninput="setRasterOpacity('roads',this.value)">
+      <span class="op-pct" id="op-roads-pct">55%</span>
+    </div>
+
+    <label class="layer-chk" title="USGS National Hydrography Dataset">
+      <input type="checkbox" id="chk-hydro" onchange="toggleLayer('hydro',this.checked)"> Hydro
+    </label>
+    <div class="op-wrap" id="op-hydro-wrap">
+      <input type="range" class="op-slider" id="op-hydro" min="0" max="100" value="70"
+             style="--val:70%" oninput="setRasterOpacity('hydro',this.value)">
+      <span class="op-pct" id="op-hydro-pct">70%</span>
+    </div>
+
+    <label class="layer-chk" title="Esri World Imagery basemap">
+      <input type="checkbox" id="chk-imagery" onchange="toggleLayer('imagery',this.checked)"> Imagery
+    </label>
+    <div class="op-wrap" id="op-imagery-wrap">
+      <input type="range" class="op-slider" id="op-imagery" min="0" max="100" value="100"
+             style="--val:100%" oninput="setRasterOpacity('imagery',this.value)">
+      <span class="op-pct" id="op-imagery-pct">100%</span>
+    </div>
+
+    <label class="layer-chk" title="USGS Watershed Boundary Dataset (HUC2/4/8)">
+      <input type="checkbox" id="chk-watershed" onchange="toggleLayer('watershed',this.checked)"> Watersheds
+    </label>
+  </div>
+
+</div>
+
+<!-- ── INTERPRETATION INFO PANEL ─────────────────────────────── -->
+<div id="interp-panel">
+  <button class="ip-close" onclick="toggleInterpPanel()" title="Close">✕</button>
+  <div id="interp-panel-inner">
+
+    <div class="ip-eyebrow">USDA Regenerative Agriculture Risk Map</div>
+    <h1 class="ip-headline">Two Lenses on America's Soil Vulnerability</h1>
+    <p class="ip-lead">
+      Not all soils respond to disturbance the same way. This map renders two complementary
+      soil risk interpretations, both derived from the National Cooperative Soil Survey,
+      that together reveal where the land beneath America's farms and forests is most at risk.
+      Each interpretation draws on decades of field observation and laboratory analysis,
+      aggregated to the map unit level and expressed as a dominant condition across millions
+      of individually surveyed parcels.
+    </p>
+
+    <!-- FSI -->
+    <div class="ip-eyebrow">Left panel</div>
+    <h2 class="ip-headline" style="font-size:18px">Fragile Soil Index</h2>
+    <p class="ip-lead" style="margin-bottom:16px">
+      The Fragile Soil Index (FSI) measures a soil's inherent susceptibility to structural
+      breakdown under physical disturbance: tillage, traffic, compaction, and the removal
+      of protective cover. It integrates texture, organic matter content, aggregate stability,
+      clay mineralogy, drainage class, and bulk density into a continuous fuzzy-logic score
+      from 0 to 1. A high score does not mean the soil is already degraded; it means the
+      soil has little tolerance for disturbance before long-term productivity is compromised.
+      Fragile soils require conservation-first management practices, including cover crops,
+      minimal tillage, and careful traffic management, to preserve function across generations.
+    </p>
+
+    <div class="ip-section-head">Classification Criteria · FSI Score Range</div>
+
+    <div class="ip-class">
+      <div class="ip-swatch" style="background:#1b7837"></div>
+      <div>
+        <div class="ip-class-name">Not Fragile</div>
+        <div class="ip-class-range">Score 0.00 – 0.15</div>
+        <div class="ip-class-desc">Highly stable soils with strong aggregate structure, adequate organic matter, and favorable drainage. These soils absorb disturbance with minimal long-term consequence and support intensive use without structural decline.</div>
+      </div>
+    </div>
+
+    <div class="ip-class">
+      <div class="ip-swatch" style="background:#78c679"></div>
+      <div>
+        <div class="ip-class-name">Slightly Fragile</div>
+        <div class="ip-class-range">Score 0.15 – 0.30</div>
+        <div class="ip-class-desc">Generally resilient soils with minor susceptibility to compaction or aggregate disruption. Good management practices maintain productivity with few restrictions, but bare soil periods should be minimized.</div>
+      </div>
+    </div>
+
+    <div class="ip-class">
+      <div class="ip-swatch" style="background:#fecc5c"></div>
+      <div>
+        <div class="ip-class-name">Moderately Fragile</div>
+        <div class="ip-class-range">Score 0.30 – 0.50</div>
+        <div class="ip-class-desc">Soils showing meaningful sensitivity to tillage and compaction. Structural decline under repeated disturbance is measurable. Reduced-tillage systems, residue retention, and cover crops are strongly recommended to prevent irreversible loss.</div>
+      </div>
+    </div>
+
+    <div class="ip-class">
+      <div class="ip-swatch" style="background:#f03b20"></div>
+      <div>
+        <div class="ip-class-name">Highly Fragile</div>
+        <div class="ip-class-range">Score 0.50 – 0.70</div>
+        <div class="ip-class-desc">Soils prone to rapid structural collapse under conventional management. Regenerative land practices are essential. Any period of bare soil exposure or heavy equipment traffic poses a substantial risk of lasting degradation that is difficult and costly to reverse.</div>
+      </div>
+    </div>
+
+    <div class="ip-class">
+      <div class="ip-swatch" style="background:#7b0007"></div>
+      <div>
+        <div class="ip-class-name">Very Highly Fragile</div>
+        <div class="ip-class-range">Score 0.70 – 1.00</div>
+        <div class="ip-class-desc">The most vulnerable soils in the landscape. Even modest disturbance risks severe, potentially irreversible structural failure. These soils are best maintained in permanent vegetative cover, including native grass, woodland, or perennial systems, with the most conservative stewardship practices applied at every stage.</div>
+      </div>
+    </div>
+
+    <hr class="ip-divider">
+
+    <!-- OM Depletion -->
+    <div class="ip-eyebrow">Right panel</div>
+    <h2 class="ip-headline" style="font-size:18px">Organic Matter Depletion</h2>
+    <p class="ip-lead" style="margin-bottom:16px">
+      The Soil Organic Health Organic Matter Depletion interpretation quantifies how
+      readily a soil will lose its organic matter pool when subjected to tillage, residue
+      removal, or a change in land use. Organic matter is the engine of soil fertility:
+      it feeds microbial communities, binds aggregates, retains water, and sequesters
+      atmospheric carbon. Its loss is largely invisible at the surface yet profoundly
+      consequential over time. This interpretation weighs clay content and mineralogy
+      (which anchor organic carbon against decomposition), mean annual temperature
+      (which governs microbial respiration rates), and precipitation seasonality
+      (which drives both production and breakdown). Soils that score high are those
+      where biology and chemistry conspire to accelerate loss under any management that
+      reduces inputs or exposes the soil surface.
+    </p>
+
+    <div class="ip-section-head">Classification Criteria · Depletion Risk</div>
+
+    <div class="ip-class">
+      <div class="ip-swatch" style="background:#1b7837"></div>
+      <div>
+        <div class="ip-class-name">Low Depletion</div>
+        <div class="ip-class-range">Highly stable organic matter pool</div>
+        <div class="ip-class-desc">High clay content or 2:1 clay mineralogy (smectite) strongly binds organic carbon. Cool climates or high precipitation suppresses decomposition rates. Organic matter is stable or likely to increase under most management regimes.</div>
+      </div>
+    </div>
+
+    <div class="ip-class">
+      <div class="ip-swatch" style="background:#78c679"></div>
+      <div>
+        <div class="ip-class-name">Moderately Low Depletion</div>
+        <div class="ip-class-range">Minor risk under typical management</div>
+        <div class="ip-class-desc">Favorable conditions for organic matter retention with some sensitivity to management intensity. Maintaining residue cover and limiting fallow periods will hold organic matter at productive levels with moderate effort.</div>
+      </div>
+    </div>
+
+    <div class="ip-class">
+      <div class="ip-swatch" style="background:#fecc5c"></div>
+      <div>
+        <div class="ip-class-name">Moderate Depletion</div>
+        <div class="ip-class-range">Measurable loss under tillage</div>
+        <div class="ip-class-desc">Tillage and residue removal produce measurable organic matter reductions over a 5–10 year horizon. Cover crops, manure additions, and reduced-till systems are beneficial and often necessary to maintain soil quality indicators within productive ranges.</div>
+      </div>
+    </div>
+
+    <div class="ip-class">
+      <div class="ip-swatch" style="background:#f03b20"></div>
+      <div>
+        <div class="ip-class-name">Moderately High Depletion</div>
+        <div class="ip-class-range">Significant risk; active management required</div>
+        <div class="ip-class-desc">Sandy textures, warm temperatures, or kaolinitic mineralogy combine to accelerate organic matter turnover. Organic matter losses can be rapid and are difficult to replace. Continuous-cover systems and high organic matter inputs are necessary to stabilize the pool.</div>
+      </div>
+    </div>
+
+    <div class="ip-class">
+      <div class="ip-swatch" style="background:#7b0007"></div>
+      <div>
+        <div class="ip-class-name">High Depletion</div>
+        <div class="ip-class-range">Rapid, severe loss under disturbance</div>
+        <div class="ip-class-desc">The most vulnerable soils for organic matter retention. Coarse texture, high temperatures, and low clay activity create conditions where organic carbon oxidizes rapidly with any reduction in plant inputs. These soils require continuous organic matter additions, permanent cover, and minimal soil disturbance to maintain functional capacity.</div>
+      </div>
+    </div>
+
+    <hr class="ip-divider">
+
+    <p class="ip-source">
+      <strong>Data source:</strong> USDA Natural Resources Conservation Service,
+      National Cooperative Soil Survey (NCSS). Interpretations computed via the
+      Soil Data Access (SDA) tabular endpoint using dominant condition aggregation
+      across all major soil components per map unit. Values reflect the most recent
+      official SSURGO soil survey data for each survey area.
+      <br><br>
+      <strong>Geographic coverage:</strong> All 50 states, DC, and US territories
+      where SSURGO spatial data has been published.
+      County values are area-weighted averages derived from spatial intersection
+      of map unit polygon geometry with Census county boundaries.
+    </p>
+
+  </div><!-- /interp-panel-inner -->
+</div><!-- /interp-panel -->
+
+<!-- ── MY SOIL MODAL ──────────────────────────────────────────────── -->
+<div id="mysoil-overlay" onclick="if(event.target===this)closeMySoil()">
+  <div id="mysoil-card">
+    <button id="mysoil-close" onclick="closeMySoil()">✕</button>
+    <div id="mysoil-content">
+      <div id="ms-spinner"><div class="spinner" style="margin:0 auto 10px"></div>Locating your soil…</div>
+    </div>
+  </div>
+</div>
+
+<div id="body">
+  <div id="sidebar">
+    <div id="sb-inner">
+      <div class="sb-sec">
+        <div class="sb-hd">
+          <span style="color:var(--accent)">Fragile Soil Index</span>
+          <span style="font-size:9px;color:var(--dimmer)">← LEFT</span>
+        </div>
+        <div id="legend-fsi"></div>
+      </div>
+
+      <div class="sb-sec">
+        <div class="sb-hd">
+          <span style="color:var(--accent2)">OM Depletion</span>
+          <span style="font-size:9px;color:var(--dimmer)">RIGHT →</span>
+        </div>
+        <div id="legend-om"></div>
+      </div>
+
+      <div class="sb-sec" id="state-stats-sec" style="display:none">
+        <div class="sb-hd">
+          <span id="state-stats-label">State</span>
+          <span style="font-size:9px;color:var(--dimmer)">visible</span>
+        </div>
+        <div style="font-size:10px;color:var(--dim);margin-bottom:5px;font-weight:600;
+                    display:flex;align-items:center;gap:5px">
+          <span style="width:8px;height:8px;background:var(--accent);
+                border-radius:50%;display:inline-block"></span>
+          Fragile Soil Index
+        </div>
+        <div id="state-stats-fsi"></div>
+        <div style="font-size:10px;color:var(--dim);margin:9px 0 5px;font-weight:600;
+                    display:flex;align-items:center;gap:5px">
+          <span style="width:8px;height:8px;background:var(--accent2);
+                border-radius:50%;display:inline-block"></span>
+          Organic Matter Depletion
+        </div>
+        <div id="state-stats-om"></div>
+      </div>
+
+      <div class="sb-sec">
+        <div class="sb-hd">National Distribution</div>
+        <div style="font-size:10px;color:var(--dim);margin-bottom:5px;font-weight:600;
+                    display:flex;align-items:center;gap:5px">
+          <span style="width:8px;height:8px;background:var(--accent);
+                border-radius:50%;display:inline-block"></span>
+          Fragile Soil Index
+        </div>
+        <div id="stats-fsi"></div>
+        <div style="font-size:10px;color:var(--dim);margin:9px 0 5px;font-weight:600;
+                    display:flex;align-items:center;gap:5px">
+          <span style="width:8px;height:8px;background:var(--accent2);
+                border-radius:50%;display:inline-block"></span>
+          Organic Matter Depletion
+        </div>
+        <div id="stats-om"></div>
+      </div>
+
+      <div class="sb-sec">
+        <div class="sb-hd">About</div>
+        <button onclick="toggleInterpPanel()"
+          style="width:100%;margin-bottom:10px;padding:8px 12px;
+                 background:linear-gradient(135deg,var(--panel2),var(--panel3));
+                 border:1px solid var(--accent);border-radius:6px;
+                 color:var(--accent);font-size:12px;font-weight:700;
+                 cursor:pointer;letter-spacing:.03em;text-align:left;
+                 display:flex;align-items:center;gap:8px;
+                 transition:background .2s,color .2s"
+          onmouseover="this.style.background='var(--accent)';this.style.color='#fff'"
+          onmouseout="this.style.background='linear-gradient(135deg,var(--panel2),var(--panel3))';this.style.color='var(--accent)'"
+          title="Open the soil interpretation guide">
+          <span style="font-size:15px"></span>
+          <span>Regenerative Ag Map Guide</span>
+          <span style="margin-left:auto;font-size:10px;opacity:.7">→</span>
+        </button>
+        <div style="font-size:11px;color:var(--dim);line-height:1.65">
+          <p style="margin-bottom:6px">
+            <strong style="color:var(--text)">Aggregation:</strong>
+            Dominant Condition — the rating class with the highest sum of major
+            component percents per map unit, then the most common class per county.
+          </p>
+          <p style="margin-bottom:6px">
+            <strong style="color:var(--text)">Hover</strong> any legend item for a
+            plain-English definition of that rating class.
+          </p>
+          <p style="margin-bottom:6px">
+            <strong style="color:var(--text)">Data:</strong>
+            USDA SSURGO ·
+            <a href="https://sdmdataaccess.sc.egov.usda.gov" target="_blank" rel="noopener noreferrer"
+               style="color:var(--accent)">SDA REST API</a> ·
+            auto-refreshed weekly.
+          </p>
+          <p>
+            <a href="https://github.com/jneme910/NRCS-Soil-Data-Access"
+               target="_blank" rel="noopener noreferrer" style="color:var(--accent)">GitHub ↗</a>
+            &nbsp;·&nbsp;
+            <a href="data/metadata-iso19115.xml" download
+               style="color:var(--dim)" title="Download ISO 19115 metadata">ISO 19115 ⬇</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div id="info-panel">
+      <div style="color:var(--dim);font-size:11px;font-style:italic;
+                  text-align:center;margin-top:14px" id="info-ph">
+        Click any county for details
+      </div>
+      <div id="info-location" style="display:none;font-size:10px;color:var(--dimmer);
+                  padding:4px 8px;border-bottom:1px solid var(--border);
+                  display:none;align-items:center;gap:4px">
+        <span style="color:var(--accent)"></span>
+        <span id="info-location-text"></span>
+      </div>
+      <div id="info-content" style="display:none"></div>
+    </div>
+  </div>
+
+  <button id="sb-toggle" onclick="toggleSidebar()" title="Collapse sidebar" aria-label="Toggle sidebar">&#8249;</button>
+
+  <div id="maps-area">
+    <div class="map-pane" id="pane-left">
+      <div id="map-left" style="position:absolute;inset:0"></div>
+      <div class="map-label" style="border-color:rgba(78,159,255,0.3)">
+        Fragile Soil Index
+      </div>
+      <button id="north-btn" onclick="resetNorth()" title="Reset to North / Flat view">⊕</button>
+    </div>
+    <div id="divider"></div>
+    <div class="map-pane" id="pane-right">
+      <div id="map-right" style="position:absolute;inset:0"></div>
+      <div class="map-label" style="border-color:rgba(167,139,250,0.3)">
+        Organic Matter Depletion
+      </div>
+    </div>
+    <div id="map-tooltip"></div>
+    <div id="loading">
+      <div class="spinner"></div>
+      <p id="loading-msg">Loading regenerative agriculture risk data…</p>
+      <p class="load-sub">SSURGO · Dominant Condition · All US states &amp; territories</p>
+    </div>
+  </div>
+</div>
+
+<div class="def-tip" id="def-tip"></div>
+
+<script>
+// ── CONSTANTS ──────────────────────────────────────────────────────────────
+const DATA_INTERP    = 'data/interp_data.json';
+const DATA_CSV       = 'data/national_download.csv';
+const DATA_MUKEY     = 'data/mukey_ratings.json';
+const COUNTIES_CDN   = 'https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json';
+const BASESTYLE      = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json';
+const ROADS_TILES    = 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}';
+const NHD_WMS        = 'https://hydro.nationalmap.gov/arcgis/services/nhd/MapServer/WMSServer';
+const WBD_WMS        = 'https://hydro.nationalmap.gov/arcgis/services/wbd/MapServer/WMSServer';
+const IMAGERY_TILES  = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+const SDA_TABULAR    = 'https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest';
+
+// States/territories whose SSURGO SSA symbols don't align with Census county FIPS.
+// fetch_soil_data.py writes a "<STATE>_state" fallback key into interp_data.json.
+// AK/HI + all territories + Freely Associated States (Palau, Marshalls, Micronesia)
+const TERRITORY_FALLBACK = new Set(['AK','HI','PR','VI','GU','AS','MP','PW','MH','FM']);
+
+const FIPS_TO_STATE = {
+  '01':'AL','02':'AK','04':'AZ','05':'AR','06':'CA','08':'CO','09':'CT',
+  '10':'DE','11':'DC','12':'FL','13':'GA','15':'HI','16':'ID','17':'IL',
+  '18':'IN','19':'IA','20':'KS','21':'KY','22':'LA','23':'ME','24':'MD',
+  '25':'MA','26':'MI','27':'MN','28':'MS','29':'MO','30':'MT','31':'NE',
+  '32':'NV','33':'NH','34':'NJ','35':'NM','36':'NY','37':'NC','38':'ND',
+  '39':'OH','40':'OK','41':'OR','42':'PA','44':'RI','45':'SC','46':'SD',
+  '47':'TN','48':'TX','49':'UT','50':'VT','51':'VA','53':'WA','54':'WV',
+  '55':'WI','56':'WY',
+  // Territories & Freely Associated States
+  '60':'AS','64':'FM','66':'GU','68':'MH','69':'MP','70':'PW','72':'PR','78':'VI'
+};
+
+const FSI_MAP = {
+  'Not fragile':'#1b7837','Slightly fragile':'#78c679',
+  'Moderately fragile':'#fecc5c','Fragile':'#fd8d3c',
+  'Highly fragile':'#f03b20','Extremely fragile':'#bd0026',
+  'Very highly fragile':'#7b0007','Not rated':'#343450',
+};
+const OM_MAP = {
+  'OM depletion low':'#1b7837','OM depletion moderately low':'#78c679',
+  'OM depletion moderate':'#fecc5c','OM depletion moderately high':'#f03b20',
+  'OM depletion high':'#7b0007','Not rated':'#555566',
+};
+const FSI_ORDER = ['Not fragile','Slightly fragile','Moderately fragile',
+                   'Fragile','Highly fragile','Extremely fragile',
+                   'Very highly fragile','Not rated'];
+const OM_ORDER  = ['OM depletion low','OM depletion moderately low',
+                   'OM depletion moderate','OM depletion moderately high',
+                   'OM depletion high','Not rated'];
+
+const DEFINITIONS = {
+  'Not fragile':{
+    short:'Very resistant to degradation',
+    full:'Soils with high structural stability; resistant to compaction, erosion, and organic matter loss under disturbance. These soils can withstand intensive management with minimal long-term degradation risk.',
+  },
+  'Slightly fragile':{
+    short:'Minor susceptibility to degradation',
+    full:'Generally stable soils with minor susceptibility to disturbance-related degradation. Good management practices maintain productivity without major restrictions.',
+  },
+  'Moderately fragile':{
+    short:'Needs management attention',
+    full:'Soils showing meaningful sensitivity to tillage, compaction, or cover loss. Reduced tillage, cover crops, and residue management are recommended to prevent decline.',
+  },
+  'Fragile':{
+    short:'Significant conservation concern',
+    full:'Soils with notable structural sensitivity to disturbance. Consistent use of regenerative land practices — cover crops, reduced tillage, and residue retention — is needed to prevent progressive degradation.',
+  },
+  'Highly fragile':{
+    short:'High conservation priority',
+    full:'Soils prone to rapid structural decline under disturbance. Regenerative land practices are essential; bare soil periods and tillage should be minimized to prevent severe and lasting degradation.',
+  },
+  'Extremely fragile':{
+    short:'Extreme sensitivity; perennial cover recommended',
+    full:'The most sensitive soils in the landscape. Any disturbance risks severe, potentially irreversible structural degradation. These soils are best maintained in perennial cover or managed with the most conservative practices.',
+  },
+  'Very highly fragile':{
+    short:'Extreme sensitivity; perennial cover recommended',
+    full:'The most sensitive soils in the landscape. Any disturbance risks severe, potentially irreversible structural degradation. These soils are best maintained in perennial cover or managed with the most conservative practices.',
+  },
+  'OM depletion low':{
+    short:'Organic matter stable or increasing',
+    full:'The soil has favorable organic matter retention characteristics, typically high clay content, cool temperatures, or high residue inputs. Organic matter loss under current management is unlikely.',
+  },
+  'OM depletion moderately low':{
+    short:'Minor OM depletion risk',
+    full:'Generally favorable conditions with some management considerations. Maintaining residue cover and minimizing bare soil periods will keep organic matter levels stable.',
+  },
+  'OM depletion moderate':{
+    short:'Moderate OM loss risk with tillage',
+    full:'Tillage and cover removal can lead to significant organic matter reductions over time. Cover crops, reduced tillage, and organic matter additions are beneficial for maintaining soil quality.',
+  },
+  'OM depletion moderately high':{
+    short:'High OM depletion risk',
+    full:'These soils are vulnerable to rapid carbon depletion under conventional tillage. Continuous ground cover, no-till or strip-till, and residue management are strongly recommended.',
+  },
+  'OM depletion high':{
+    short:'Extreme OM depletion risk',
+    full:'Soils that lose organic matter rapidly under tillage or bare-soil conditions. Intensive cover management, no-till, and organic amendments are essential to maintain productivity and soil quality over time.',
+  },
+  'Not rated':{
+    short:'Not assessed for this interpretation',
+    full:'No interpretation data is available for this map unit. This typically includes water bodies, urban/built-up areas, rock outcrops, and other miscellaneous land types not evaluated for soil risk interpretations.',
+  },
+};
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let geojsonData=null, csvData=null, muKeyRatings={};
+let mapL, mapR;
+let syncing=false, mapsLoaded=0;
+let layerState={labels:true,roads:false,hydro:false,imagery:false,watershed:false};
+let muFetchTimer=null;
+
+// ── FIND MY SOIL ───────────────────────────────────────────────────────────
+function openMySoil(){document.getElementById('mysoil-overlay').classList.add('open');}
+function closeMySoil(){document.getElementById('mysoil-overlay').classList.remove('open');}
+
+function findMySoil(){
+  if(!navigator.geolocation){
+    alert('Geolocation is not supported by your browser.');return;
+  }
+  openMySoil();
+  document.getElementById('mysoil-content').innerHTML=
+    '<div id="ms-spinner"><div class="spinner" style="margin:0 auto 10px"></div>Locating your soil…</div>';
+  navigator.geolocation.getCurrentPosition(
+    pos=>_lookupMySoil(pos.coords.latitude,pos.coords.longitude),
+    err=>{
+      document.getElementById('mysoil-content').innerHTML=
+        `<div style="color:var(--dim);font-size:12px;padding:10px 0">
+          Could not get your location.<br>
+          <small style="color:var(--dimmer)">${err.message}</small>
+        </div>`;
+    },
+    {timeout:10000,maximumAge:60000}
+  );
+}
+
+async function _lookupMySoil(lat,lng){
+  const sql=`SELECT TOP 1
+    mu.mukey, mu.musym, mu.muname,
+    l.areasymbol, l.areaname,
+    c.compname, c.taxclname, c.drainagecl
+  FROM SDA_Get_Mukey_from_intersection_with_WktWgs84('POINT(${lng.toFixed(6)} ${lat.toFixed(6)})')  r
+  INNER JOIN mapunit   mu ON CAST(mu.mukey AS varchar(30))=CAST(r.mukey AS varchar(30))
+  INNER JOIN legend     l ON l.lkey=mu.lkey
+  LEFT JOIN  component  c ON c.mukey=mu.mukey AND c.majcompflag='Yes'`;
+  try{
+    const t0=performance.now();
+    SoilLog.debug('MYSOIL','Point query lat='+lat.toFixed(4)+' lng='+lng.toFixed(4));
+    const resp=await fetch(SDA_TABULAR,{method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:`query=${encodeURIComponent(sql)}&format=JSON%2BCOLUMNNAME`});
+    if(!resp.ok) throw new Error('SDA HTTP '+resp.status);
+    const d=await resp.json();
+    SoilLog.info('MYSOIL','OK '+Math.round(performance.now()-t0)+'ms');
+    const rows=d.Table?d.Table.slice(2):[];
+    if(!rows.length){
+      document.getElementById('mysoil-content').innerHTML=
+        '<div style="color:var(--dim);font-size:12px;padding:10px 0">No SSURGO data at this location.<br><small style="color:var(--dimmer)">May be outside the soil survey extent.</small></div>';
+      return;
+    }
+    const[mukey,musym,muname,areasymbol,areaname,compname,taxclname,drainagecl]=rows[0];
+    const rat=muKeyRatings?muKeyRatings[String(mukey)]||{}:{};
+    const fc=rat.fc||null, oc=rat.oc||null;
+    const fcCol=FSI_MAP[fc]||'#555566', ocCol=OM_MAP[oc]||'#555566';
+
+    // Compute national percentiles from loaded county data
+    let fsiPct=null,omPct=null;
+    if(geojsonData){
+      const vals=geojsonData.features
+        .map(f=>f.properties.fsi_avg)
+        .filter(v=>v!=null)
+        .map(Number)
+        .sort((a,b)=>a-b);
+      if(fc&&vals.length){
+        // find county FSI avg for the areasymbol
+        const countyFeat=geojsonData.features.find(f=>f.properties.areasymbol===areasymbol);
+        const cFsi=countyFeat?.properties?.fsi_avg;
+        if(cFsi!=null){
+          const rank=vals.filter(v=>v<=+cFsi).length;
+          fsiPct=Math.round(rank/vals.length*100);
+        }
+      }
+    }
+
+    document.getElementById('mysoil-content').innerHTML=`
+      <div class="ms-eyebrow">Your Soil · ${lat.toFixed(4)}°N, ${Math.abs(lng).toFixed(4)}°${lng<0?'W':'E'}</div>
+      <div class="ms-headline">${muname||musym}</div>
+      <div class="ms-sub">${areaname||areasymbol}${compname?` · ${compname}`:''}</div>
+      <div class="ms-row"><span class="ms-key">Survey Area</span>
+        <span class="ms-val" style="color:var(--accent)">${areasymbol}</span></div>
+      ${taxclname?`<div class="ms-row"><span class="ms-key">Taxonomy</span>
+        <span class="ms-val" style="font-size:10px">${taxclname}</span></div>`:''}
+      ${drainagecl?`<div class="ms-row"><span class="ms-key">Drainage</span>
+        <span class="ms-val">${drainagecl}</span></div>`:''}
+      <div class="ms-row"><span class="ms-key">Fragile Soil Index</span>
+        <span class="ms-val"><span class="ms-chip" style="background:${fcCol}22;color:${fcCol};border:1px solid ${fcCol}55">
+          ${fc||'No data'}</span></span></div>
+      <div class="ms-row"><span class="ms-key">OM Depletion</span>
+        <span class="ms-val"><span class="ms-chip" style="background:${ocCol}22;color:${ocCol};border:1px solid ${ocCol}55">
+          ${oc||'No data'}</span></span></div>
+      ${fsiPct!=null?`<div class="ms-pct">
+        Your county's FSI is higher than <strong style="color:var(--accent)">${fsiPct}%</strong> of US counties
+      </div>`:''}
+    `;
+
+    // Fly both maps to the location
+    const flyOpts={center:[lng,lat],zoom:Math.max(mapL.getZoom(),10),duration:1200};
+    mapL.flyTo(flyOpts);
+    mapR.flyTo(flyOpts);
+  }catch(e){
+    SoilLog.error('MYSOIL','Point query failed: '+e.message);
+    document.getElementById('mysoil-content').innerHTML=
+      `<div style="color:var(--dim);font-size:12px;padding:10px 0">Error querying soil data:<br><small style="color:var(--dimmer)">${e.message}</small></div>`;
+  }
+}
+
+// ── URL HASH STATE ─────────────────────────────────────────────────────────
+function readHash(){
+  const h=window.location.hash.slice(1);
+  if(!h)return null;
+  const p=Object.fromEntries(h.split('&').filter(s=>s.includes('=')).map(s=>s.split('=')));
+  const z=parseFloat(p.z),lat=parseFloat(p.lat),lng=parseFloat(p.lng);
+  if(isFinite(z)&&isFinite(lat)&&isFinite(lng))return{zoom:z,center:[lng,lat]};
+  return null;
+}
+function writeHash(){
+  if(!mapL)return;
+  const c=mapL.getCenter(),z=mapL.getZoom();
+  const hash='#z='+z.toFixed(2)+'&lat='+c.lat.toFixed(4)+'&lng='+c.lng.toFixed(4);
+  history.replaceState(null,'',hash);
+}
+function shareMap(){
+  writeHash();
+  navigator.clipboard.writeText(window.location.href)
+    .then(()=>{
+      const btn=document.getElementById('btn-share');
+      const orig=btn.textContent;
+      btn.textContent='✓ Copied!';
+      setTimeout(()=>btn.textContent=orig,2000);
+    })
+    .catch(()=>prompt('Copy this link:',window.location.href));
+}
+
+// ── MAP INIT ───────────────────────────────────────────────────────────────
+function initMaps(){
+  const saved=readHash();
+  const opts={
+    style:BASESTYLE,
+    center:saved?saved.center:[-96,38],
+    zoom:saved?saved.zoom:3.3,
+    minZoom:2,maxZoom:14,preserveDrawingBuffer:true,attributionControl:false,
+  };
+  mapL=new maplibregl.Map({container:'map-left',...opts});
+  mapR=new maplibregl.Map({container:'map-right',...opts});
+  mapL.addControl(new maplibregl.NavigationControl({showCompass:false}),'top-right');
+  mapR.addControl(new maplibregl.NavigationControl({showCompass:false}),'top-right');
+  mapL.addControl(new maplibregl.AttributionControl({compact:true}),'bottom-left');
+  mapR.addControl(new maplibregl.ScaleControl({maxWidth:70,unit:'imperial'}),'bottom-right');
+  mapL.on('move',()=>syncMap(mapL,mapR));
+  mapR.on('move',()=>syncMap(mapR,mapL));
+  mapL.on('load',()=>{mapsLoaded++;tryAddLayers();});
+  mapR.on('load',()=>{mapsLoaded++;tryAddLayers();});
+}
+
+function syncMap(src,tgt){
+  if(syncing)return; syncing=true;
+  tgt.jumpTo({center:src.getCenter(),zoom:src.getZoom(),
+               bearing:src.getBearing(),pitch:src.getPitch()});
+  syncing=false;
+}
+
+function tryAddLayers(){if(mapsLoaded>=2&&geojsonData)addLayers();}
+
+// ── ADD LAYERS ─────────────────────────────────────────────────────────────
+function addLayers(){
+  [mapL,mapR].forEach((m,idx)=>{
+    const prop=idx===0?'fsi_dominant':'om_dominant';
+    const cmap=idx===0?FSI_MAP:OM_MAP;
+    const order=idx===0?FSI_ORDER:OM_ORDER;
+    const src=`counties-${idx}`;
+
+    // ── Imagery basemap (inserted first so everything else draws on top) ──
+    m.addSource(`imagery-src-${idx}`,{type:'raster',tileSize:256,
+      tiles:[IMAGERY_TILES],
+      attribution:'Tiles © Esri — Source: Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS'});
+    m.addLayer({id:`imagery-${idx}`,type:'raster',source:`imagery-src-${idx}`,
+      paint:{'raster-opacity':1.0},
+      layout:{visibility:'none'}});
+
+    // ── County / SSA fill ─────────────────────────────────────────────────
+    m.addSource(src,{type:'geojson',data:geojsonData,generateId:true});
+
+    const colorExpr=['match',['get',prop]];
+    order.forEach(cls=>colorExpr.push(cls,cmap[cls]));
+    colorExpr.push('#555566');
+
+    m.addLayer({id:`fill-${idx}`,type:'fill',source:src,paint:{
+      'fill-color':colorExpr,
+      'fill-opacity':['case',['boolean',['feature-state','hover'],false],1.0,0.82],
+    }});
+    m.addLayer({id:`outline-${idx}`,type:'line',source:src,paint:{
+      'line-color':'#000','line-opacity':0.45,
+      'line-width':['interpolate',['linear'],['zoom'],3,0.1,8,0.4,12,0.8],
+    }});
+
+    // ── Labels ────────────────────────────────────────────────────────────
+    m.addSource(`labels-src-${idx}`,{type:'raster',tileSize:256,
+      tiles:['https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png',
+             'https://b.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png'],
+      attribution:'© OpenStreetMap © CARTO'});
+    m.addLayer({id:`labels-${idx}`,type:'raster',source:`labels-src-${idx}`,
+      paint:{'raster-opacity':0.9},
+      layout:{visibility:layerState.labels?'visible':'none'}});
+
+    // ── Roads ─────────────────────────────────────────────────────────────
+    m.addSource(`roads-src-${idx}`,{type:'raster',tileSize:256,
+      tiles:[ROADS_TILES],attribution:'Esri'});
+    m.addLayer({id:`roads-${idx}`,type:'raster',source:`roads-src-${idx}`,
+      paint:{'raster-opacity':0.55},
+      layout:{visibility:layerState.roads?'visible':'none'}});
+
+    // ── Hydro (NHD WMS) ───────────────────────────────────────────────────
+    m.addSource(`hydro-src-${idx}`,{type:'raster',tileSize:256,
+      tiles:[`${NHD_WMS}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=0,1,2,3,4,5,6,7,8,9,10&STYLES=&FORMAT=image/png&TRANSPARENT=true&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&BBOX={bbox-epsg-3857}`],
+      attribution:'USGS NHD'});
+    m.addLayer({id:`hydro-${idx}`,type:'raster',source:`hydro-src-${idx}`,
+      paint:{'raster-opacity':0.7},
+      layout:{visibility:layerState.hydro?'visible':'none'}});
+
+    // ── Watershed Boundary Dataset (USGS WBD WMS — HUC2/4/6/8) ──────────────
+    m.addSource(`watershed-src-${idx}`,{type:'raster',tileSize:256,
+      tiles:[`${WBD_WMS}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=2,3,4,5&STYLES=&FORMAT=image/png&TRANSPARENT=true&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&BBOX={bbox-epsg-3857}`],
+      attribution:'USGS WBD'});
+    m.addLayer({id:`watershed-${idx}`,type:'raster',source:`watershed-src-${idx}`,
+      paint:{'raster-opacity':0.65},
+      layout:{visibility:layerState.watershed?'visible':'none'}});
+
+    setupHover(m,`fill-${idx}`,src,idx);
+    if(document.getElementById('chk-states')?.checked) _raiseStateBoundaries(idx);
+  });
+
+  buildLegends();
+  buildStats();
+  initMuLayerEvents();
+  // Trigger mu layer and state stats on initial load
+  refreshMuLayer();
+  updateStateStats();
+  document.getElementById('loading').style.display='none';
+}
+
+// ── LAYER TOGGLE & OPACITY ─────────────────────────────────────────────────
+
+function toggleSidebar(){
+  const collapsed=document.getElementById('sidebar').classList.toggle('collapsed');
+  const btn=document.getElementById('sb-toggle');
+  btn.innerHTML=collapsed?'&#8250;':'&#8249;';
+  btn.title=collapsed?'Expand sidebar':'Collapse sidebar';
+}
+
+let _rasterOn=false;
+function toggleRasterStyle(){
+  _rasterOn=!_rasterOn;
+  const btn=document.getElementById('btn-raster');
+  btn.classList.toggle('active',_rasterOn);
+  btn.textContent=_rasterOn?'Vector':'Raster';
+  // Hide/show polygon outline layers for all loaded mu states
+  Object.keys(muStateCache).forEach(st=>{
+    [mapL,mapR].forEach((m,idx)=>{
+      const lineId=`mu-line-${st}-${idx}`;
+      if(m.getLayer(lineId)){
+        m.setLayoutProperty(lineId,'visibility',_rasterOn?'none':'visible');
+      }
+    });
+  });
+  // Keep opacity slider authoritative for all fill layers.
+  _applyFillOpacity();
+}
+
+// ── 3D VIEW SYSTEM ────────────────────────────────────────────────────────
+let _3dMode='2d', _terrainExag=2.5;
+
+const VIEW_MODES={
+  '2d':        {pitch:0,  bearing:0, terrain:false, fog:false, globe:false, duration:900},
+  'landscape': {pitch:65, bearing:0, terrain:true,  fog:true,  globe:false, duration:1400},
+  'overhead':  {pitch:45, bearing:0, terrain:true,  fog:false, globe:false, duration:1000},
+  'globe':     {pitch:20, bearing:0, terrain:true,  fog:true,  globe:true,  duration:1600},
+};
+
+function toggleMenu3D(e){
+  e.stopPropagation();
+  document.getElementById('menu-3d').classList.toggle('open');
+}
+document.addEventListener('click',()=>document.getElementById('menu-3d')?.classList.remove('open'));
+
+function _ensureTerrain(m,idx){
+  if(!m.getSource('terrain-dem')){
+    m.addSource('terrain-dem',{
+      type:'raster-dem',
+      url:'https://demotiles.maplibre.org/terrain-tiles/tiles.json',
+      tileSize:256, encoding:'terrarium'
+    });
+  }
+  if(!m.getLayer(`sky-${idx}`)){
+    m.addLayer({
+      id:`sky-${idx}`, type:'sky',
+      paint:{
+        'sky-type':'atmosphere',
+        'sky-atmosphere-sun':[0,60],
+        'sky-atmosphere-sun-intensity':15,
+        'sky-atmosphere-color':'rgba(100,180,255,1)',
+        'sky-atmosphere-halo-color':'rgba(255,255,255,0.6)',
+        'sky-opacity':['interpolate',['linear'],['zoom'],0,0,4,0.5,8,1]
+      }
+    });
+  }
+}
+
+function set3DMode(mode){
+  _3dMode=mode;
+  const cfg=VIEW_MODES[mode]||VIEW_MODES['2d'];
+
+  // Update button states (header dropdown only)
+  ['2d','landscape','overhead','globe'].forEach(m=>{
+    document.getElementById(`v3d-${m}`)?.classList.toggle('active',m===mode);
+  });
+  const btn=document.getElementById('btn-3d');
+  const labels={'2d':'3D ▾','landscape':'3D ▾','globe':'3D ▾','overhead':'3D ▾'};
+  btn.textContent=labels[mode]||'3D ▾';
+  btn.classList.toggle('active', mode!=='2d');
+
+  [mapL,mapR].forEach((m,idx)=>{
+    if(cfg.terrain){
+      _ensureTerrain(m,idx);
+      m.setTerrain({source:'terrain-dem', exaggeration:_terrainExag});
+    } else {
+      m.setTerrain(null);
+      if(m.getLayer(`sky-${idx}`)) m.removeLayer(`sky-${idx}`);
+    }
+    try{
+      if(cfg.fog) m.setFog({
+        color:'rgb(180,215,240)','high-color':'rgb(60,130,220)',
+        'horizon-blend':0.04,'space-color':'rgb(3,3,18)','star-intensity':0.9
+      });
+      else m.setFog(null);
+    }catch(e){}
+    try{
+      if(cfg.globe) m.setProjection({type:'globe'});
+      else m.setProjection({type:'mercator'});
+    }catch(e){}
+    m.easeTo({pitch:cfg.pitch, bearing:cfg.bearing, duration:cfg.duration});
+  });
+
+  // Show/hide north reset button
+  document.getElementById('north-btn').style.display = mode==='2d'?'none':'flex';
+
+  document.getElementById('menu-3d').classList.remove('open');
+}
+
+function setTerrainExag(v){
+  _terrainExag=parseFloat(v);
+  const lbl=_terrainExag+'×';
+  ['exag-val','sb-exag-val'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=lbl;});
+  ['exag-slider','sb-exag-slider'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=_terrainExag;});
+  if(_3dMode==='2d') return;
+  [mapL,mapR].forEach(m=>{
+    if(m.getTerrain()) m.setTerrain({source:'terrain-dem',exaggeration:_terrainExag});
+  });
+}
+
+function resetNorth(){
+  [mapL,mapR].forEach(m=>m.easeTo({bearing:0,pitch:0,duration:600}));
+  set3DMode('2d');
+}
+
+// Keep old toggle for any external references
+function toggle3D(){ set3DMode(_3dMode==='2d'?'landscape':'2d'); }
+
+function toggleLayer(name,on){
+  layerState[name]=on;
+  [0,1].forEach(idx=>{
+    const m=[mapL,mapR][idx];
+    m.setLayoutProperty(`${name}-${idx}`,'visibility',on?'visible':'none');
+  });
+  // Show/hide the opacity slider for this layer
+  const wrap=document.getElementById(`op-${name}-wrap`);
+  if(wrap) wrap.classList.toggle('visible',on);
+  // When imagery toggled, adjust county fill opacity automatically
+  if(name==='imagery') _applyFillOpacity();
+}
+
+// Fill checkbox (county + mu layers together)
+let fillVisible=true;
+function toggleFill(on){
+  fillVisible=on;
+  document.getElementById('op-fill-wrap').classList.toggle('visible',on);
+  _applyFillOpacity();
+  _eachMuFillLayer((m,id)=>m.setLayoutProperty(id,'visibility',on?'visible':'none'));
+}
+
+// County / mu fill opacity — accounts for imagery-on dimming
+function setFillOpacity(val){
+  val=+val;
+  const pct=Math.round(val);
+  const el=document.getElementById('op-fill');
+  el.style.setProperty('--val',pct+'%');
+  document.getElementById('op-fill-pct').textContent=pct+'%';
+  _applyFillOpacity();
+}
+
+function _applyFillOpacity(){
+  const base  = (+document.getElementById('op-fill').value)/100;
+  const imgOn = layerState.imagery;
+  // With imagery on, cap visible opacity lower so imagery shows through
+  const vis   = imgOn ? Math.min(base, 0.75) : base;
+  const hov   = Math.min(vis+0.1, 1.0);
+  const expr  =['case',['boolean',['feature-state','hover'],false],hov,vis];
+  if(!fillVisible){return;}
+  [0,1].forEach(idx=>{
+    const m=[mapL,mapR][idx];
+    if(m.getLayer(`fill-${idx}`))
+      m.setPaintProperty(`fill-${idx}`,'fill-opacity',expr);
+    _eachMuFillLayer((mm,id,i)=>{if(i===idx)mm.setPaintProperty(id,'fill-opacity',expr);});
+    if(m.getLayer(`live-fill-${idx}`))
+      m.setPaintProperty(`live-fill-${idx}`,'fill-opacity',expr);
+  });
+}
+
+// Raster layer opacity (labels / roads / hydro / imagery)
+function setRasterOpacity(name,val){
+  val=+val;
+  const pct=Math.round(val);
+  const slider=document.getElementById(`op-${name}`);
+  slider.style.setProperty('--val',pct+'%');
+  document.getElementById(`op-${name}-pct`).textContent=pct+'%';
+  [0,1].forEach(idx=>{
+    if([mapL,mapR][idx].getLayer(`${name}-${idx}`))
+      [mapL,mapR][idx].setPaintProperty(`${name}-${idx}`,'raster-opacity',val/100);
+  });
+  // If imagery opacity changed, re-evaluate fill dimming
+  if(name==='imagery') _applyFillOpacity();
+}
+
+// ── HOVER INTERACTIONS ─────────────────────────────────────────────────────
+let hovId=[null,null];
+function setupHover(m,layerId,src,idx,sourceLayer=null){
+  const tip=document.getElementById('map-tooltip');
+  function fref(id){return sourceLayer?{source:src,sourceLayer,id}:{source:src,id};}
+  m.on('mousemove',layerId,(e)=>{
+    if(!e.features.length)return;
+    m.getCanvas().style.cursor='pointer';
+    const f=e.features[0];
+    if(hovId[idx]!==null)m.setFeatureState(fref(hovId[idx]),{hover:false});
+    hovId[idx]=f.id;
+    m.setFeatureState(fref(hovId[idx]),{hover:true});
+    const p=f.properties;
+    const fc=p.fsi_dominant||'—', oc=p.om_dominant||'—';
+    const isMu=!!p.mukey;
+    tip.innerHTML=isMu?`
+      <div class="tt-name">${p.muname||p.musym||p.mukey}</div>
+      <div class="tt-row"><span>Survey Area</span><span class="tt-val" style="color:var(--accent)">${p.areasymbol||'—'}</span></div>
+      <div class="tt-row"><span>Symbol</span><span class="tt-val">${p.musym||'—'}</span></div>
+      <div class="tt-row"><span>Fragile Soil Index</span>
+        <span class="tt-val" style="color:${FSI_MAP[fc]||'#888'}">${fc}</span></div>
+      <div class="tt-row"><span>OM Depletion</span>
+        <span class="tt-val" style="color:${OM_MAP[oc]||'#888'}">${oc}</span></div>
+      ${p.fsi_value!=null?`<div class="tt-row"><span>FSI value</span><span class="tt-val">${(+p.fsi_value).toFixed(3)}</span></div>`:''}
+      ${p.om_value!=null?`<div class="tt-row"><span>OM value</span><span class="tt-val">${(+p.om_value).toFixed(3)}</span></div>`:''}
+    `:`
+      <div class="tt-name">${p.areaname||p.areasymbol||p.fips}</div>
+      <div class="tt-row"><span>Fragile Soil Index</span>
+        <span class="tt-val" style="color:${FSI_MAP[fc]||'#888'}">${fc}</span></div>
+      <div class="tt-row"><span>OM Depletion</span>
+        <span class="tt-val" style="color:${OM_MAP[oc]||'#888'}">${oc}</span></div>
+      ${p.fsi_avg!=null?`<div class="tt-row"><span>FSI avg</span><span class="tt-val">${(+p.fsi_avg).toFixed(3)}</span></div>`:''}
+      ${p.om_avg!=null?`<div class="tt-row"><span>OM avg</span><span class="tt-val">${(+p.om_avg).toFixed(3)}</span></div>`:''}
+    `;
+    tip.style.display='block';
+    tip.style.left=(e.originalEvent.clientX+14)+'px';
+    tip.style.top=(e.originalEvent.clientY-10)+'px';
+  });
+  m.on('mouseleave',layerId,()=>{
+    m.getCanvas().style.cursor='';
+    tip.style.display='none';
+    if(hovId[idx]!==null)m.setFeatureState(fref(hovId[idx]),{hover:false});
+    hovId[idx]=null;
+  });
+  m.on('click',layerId,(e)=>{if(e.features.length)showInfo(e.features[0].properties);});
+}
+
+// ── LEGENDS ────────────────────────────────────────────────────────────────
+function buildLegends(){
+  buildLegend('legend-fsi',FSI_ORDER,FSI_MAP,{
+    'Not fragile':'Very resistant','Slightly fragile':'Minor susceptibility',
+    'Moderately fragile':'Needs management','Highly fragile':'High priority',
+    'Very highly fragile':'Extreme sensitivity','Not rated':'Not assessed',
+  });
+  buildLegend('legend-om',OM_ORDER,OM_MAP,{
+    'OM depletion low':'OM stable/building','OM depletion moderately low':'Minor risk',
+    'OM depletion moderate':'Moderate risk','OM depletion moderately high':'High risk',
+    'OM depletion high':'Extreme risk','Not rated':'Not assessed',
+  });
+  ['legend-fsi','legend-om'].forEach(id=>{
+    const el=document.getElementById(id);
+    const item=document.createElement('div');
+    item.className='leg-item';
+    item.innerHTML=`
+      <div class="swatch" style="background:#555566;opacity:0.7"></div>
+      <div class="leg-text">
+        <div class="leg-label" style="color:var(--dim)">No data</div>
+        <div class="leg-hint">No interpretation available</div>
+      </div>`;
+    el.appendChild(item);
+  });
+}
+
+function buildLegend(elId,order,cmap,hints){
+  const el=document.getElementById(elId);
+  el.innerHTML='';
+  order.forEach(cls=>{
+    const item=document.createElement('div');
+    item.className='leg-item';
+    item.innerHTML=`
+      <div class="swatch" style="background:${cmap[cls]||'#343450'}"></div>
+      <div class="leg-text">
+        <div class="leg-label">${cls}</div>
+        <div class="leg-hint">${hints[cls]||''}</div>
+      </div>`;
+    item.addEventListener('mouseenter',(e)=>showDef(e,cls,cmap[cls]));
+    item.addEventListener('mousemove',(e)=>moveDef(e));
+    item.addEventListener('mouseleave',hideDef);
+    el.appendChild(item);
+  });
+}
+
+// ── DEFINITION TOOLTIP ─────────────────────────────────────────────────────
+const defTip=document.getElementById('def-tip');
+function showDef(e,cls,color){
+  const d=DEFINITIONS[cls]; if(!d)return;
+  defTip.innerHTML=`
+    <div class="def-bar" style="background:${color}"></div>
+    <strong>${cls}</strong>
+    <span style="color:var(--dim);display:block;margin-bottom:6px;font-size:10px;
+                 font-style:italic">${d.short}</span>
+    ${d.full}`;
+  defTip.style.display='block';
+  posDef(e);
+}
+function moveDef(e){posDef(e);}
+function hideDef(){defTip.style.display='none';}
+function posDef(e){
+  const w=defTip.offsetWidth||270, h=defTip.offsetHeight||100;
+  const vw=window.innerWidth, vh=window.innerHeight;
+  defTip.style.left=(e.clientX+16+w>vw?e.clientX-w-8:e.clientX+16)+'px';
+  defTip.style.top=(e.clientY+16+h>vh?e.clientY-h-8:e.clientY+16)+'px';
+}
+
+// ── STATS ──────────────────────────────────────────────────────────────────
+function buildStats(){
+  if(!geojsonData)return;
+  renderStats('stats-fsi','fsi_dominant',FSI_ORDER,FSI_MAP);
+  renderStats('stats-om','om_dominant',OM_ORDER,OM_MAP);
+}
+
+let _stateStatsTimer=null;
+function scheduleStateStats(){
+  clearTimeout(_stateStatsTimer);
+  _stateStatsTimer=setTimeout(updateStateStats,400);
+}
+
+function updateStateStats(){
+  if(!geojsonData||!mapL)return;
+  const zoom=mapL.getZoom();
+  const sec=document.getElementById('state-stats-sec');
+
+  // Only show state panel when zoomed in enough to see a state or two
+  if(zoom<4){sec.style.display='none';return;}
+
+  const b=mapL.getBounds();
+  const visStates=new Set();
+  geojsonData.features.forEach(f=>{
+    const st=f.properties.state;
+    if(!st)return;
+    // Check if any county in this state is in the viewport bounds
+    const fips=f.properties.fips||'';
+    if(!visStates.has(st)){
+      // Use the feature's centroid approximation via FIPS_TO_STATE lookup
+      visStates.add(st);
+    }
+  });
+
+  // Filter to states visible in current bounds using STATE_BBOX
+  const inView=new Set();
+  const bw=b.getWest(),be=b.getEast(),bs=b.getSouth(),bn=b.getNorth();
+  for(const [st,[w,s,e,n]] of Object.entries(STATE_BBOX)){
+    if(e>=bw&&w<=be&&n>=bs&&s<=bn) inView.add(st);
+  }
+
+  const features=geojsonData.features.filter(f=>inView.has(f.properties.state));
+  if(!features.length){sec.style.display='none';return;}
+
+  const stateNames=new Set(features.map(f=>f.properties.state));
+  const label=stateNames.size<=3?[...stateNames].join(', '):`${stateNames.size} states`;
+  document.getElementById('state-stats-label').textContent=label;
+
+  renderStatsFromFeatures('state-stats-fsi','fsi_dominant',FSI_ORDER,FSI_MAP,features);
+  renderStatsFromFeatures('state-stats-om','om_dominant',OM_ORDER,OM_MAP,features);
+  sec.style.display='block';
+}
+
+function renderStatsFromFeatures(elId,prop,order,cmap,features){
+  const counts={};let total=0;
+  features.forEach(f=>{const v=f.properties[prop]||'Not rated';counts[v]=(counts[v]||0)+1;total++;});
+  const el=document.getElementById(elId);el.innerHTML='';
+  order.forEach(cls=>{
+    const n=counts[cls]||0,pct=total>0?(n/total*100):0,col=cmap[cls]||'#343450';
+    if(n===0)return;
+    const d=document.createElement('div');d.className='stat-row';
+    d.innerHTML=`<div class="stat-lbl"><span style="color:${col}">${SHORT[cls]||cls}</span><span>${pct.toFixed(1)}%</span></div>
+      <div class="stat-bg"><div class="stat-bar" style="width:${pct}%;background:${col}"></div></div>`;
+    el.appendChild(d);
+  });
+}
+const SHORT={
+  'Not fragile':'Not Fragile','Slightly fragile':'Slightly','Moderately fragile':'Mod.',
+  'Highly fragile':'Highly','Very highly fragile':'V.Highly','Not rated':'Not Rated',
+  'OM depletion low':'Low','OM depletion moderately low':'Mod. Low',
+  'OM depletion moderate':'Moderate','OM depletion moderately high':'Mod. High',
+  'OM depletion high':'High',
+};
+function renderStats(elId,prop,order,cmap){
+  const counts={};let total=0;
+  geojsonData.features.forEach(f=>{const v=f.properties[prop]||'Not rated';counts[v]=(counts[v]||0)+1;total++;});
+  const el=document.getElementById(elId);el.innerHTML='';
+  order.forEach(cls=>{
+    const n=counts[cls]||0,pct=total>0?(n/total*100):0,col=cmap[cls]||'#343450';
+    const d=document.createElement('div');d.className='stat-row';
+    d.innerHTML=`<div class="stat-lbl"><span style="color:${col}">${SHORT[cls]||cls}</span><span>${pct.toFixed(1)}%</span></div>
+      <div class="stat-bg"><div class="stat-bar" style="width:${pct}%;background:${col}"></div></div>`;
+    el.appendChild(d);
+  });
+}
+
+// ── INFO PANEL ─────────────────────────────────────────────────────────────
+function showInfo(p){
+  document.getElementById('info-ph').style.display='none';
+  const ic=document.getElementById('info-content');ic.style.display='block';
+  const fc=FSI_MAP[p.fsi_dominant]||'#555', oc=OM_MAP[p.om_dominant]||'#555';
+  const isMu=!!p.mukey;
+  if(isMu){
+    ic.innerHTML=`
+      <div style="font-weight:700;font-size:12px;margin-bottom:8px;padding-bottom:6px;
+                  border-bottom:1px solid var(--border)">${p.muname||p.musym||p.mukey}</div>
+      <div class="i-row"><span class="i-key">Soil Survey Area</span>
+        <span class="i-val" style="color:var(--accent)">${p.areasymbol||'—'}</span></div>
+      <div class="i-row"><span class="i-key">Map Unit Symbol</span>
+        <span class="i-val">${p.musym||'—'}</span></div>
+      <div class="i-row"><span class="i-key">Map Unit Key</span>
+        <span class="i-val" style="color:var(--dim)">${p.mukey}</span></div>
+      <div class="i-row"><span class="i-key">Fragile Soil Index</span>
+        <span class="i-val"><span class="chip" style="background:${fc}22;color:${fc};border:1px solid ${fc}44">
+          ${p.fsi_dominant||'No data'}</span></span></div>
+      ${p.fsi_value!=null?`<div class="i-row"><span class="i-key">FSI value</span><span class="i-val">${(+p.fsi_value).toFixed(3)}</span></div>`:''}
+      <div class="i-row"><span class="i-key">OM Depletion</span>
+        <span class="i-val"><span class="chip" style="background:${oc}22;color:${oc};border:1px solid ${oc}44">
+          ${p.om_dominant||'No data'}</span></span></div>
+      ${p.om_value!=null?`<div class="i-row"><span class="i-key">OM value</span><span class="i-val">${(+p.om_value).toFixed(3)}</span></div>`:''}`;
+  } else {
+    ic.innerHTML=`
+      <div style="font-weight:700;font-size:12px;margin-bottom:8px;padding-bottom:6px;
+                  border-bottom:1px solid var(--border)">${p.areaname||p.areasymbol}</div>
+      <div class="i-row"><span class="i-key">Area Symbol</span>
+        <span class="i-val" style="color:var(--accent)">${p.areasymbol}</span></div>
+      <div class="i-row"><span class="i-key">FIPS</span><span class="i-val">${p.fips}</span></div>
+      <div class="i-row"><span class="i-key">Fragile Soil Index</span>
+        <span class="i-val"><span class="chip" style="background:${fc}22;color:${fc};border:1px solid ${fc}44">
+          ${p.fsi_dominant||'No data'}</span></span></div>
+      ${p.fsi_avg!=null?`<div class="i-row"><span class="i-key">FSI avg</span><span class="i-val">${(+p.fsi_avg).toFixed(3)}</span></div>`:''}
+      <div class="i-row"><span class="i-key">OM Depletion</span>
+        <span class="i-val"><span class="chip" style="background:${oc}22;color:${oc};border:1px solid ${oc}44">
+          ${p.om_dominant||'No data'}</span></span></div>
+      ${p.om_avg!=null?`<div class="i-row"><span class="i-key">OM avg</span><span class="i-val">${(+p.om_avg).toFixed(3)}</span></div>`:''}
+      <button onclick="querySDA('${p.fips}','${p.areasymbol}')"
+        style="width:100%;margin-top:8px;padding:5px;background:var(--panel);
+               border:1px solid var(--border);color:var(--accent);border-radius:5px;
+               cursor:pointer;font-size:10px;font-weight:600">
+        Load map unit detail from SDA ›</button>`;
+  }
+}
+
+async function querySDA(fips,areasymbol){
+  const ic=document.getElementById('info-content');
+  ic.innerHTML+=`<div id="sda-load" style="color:var(--dim);font-size:10px;margin-top:6px">Querying SDA…</div>`;
+  const sql=`SELECT mu.mukey,mu.musym,mu.muname,
+    (SELECT TOP 1 ci.interphrc FROM component c INNER JOIN cointerp ci ON ci.cokey=c.cokey AND ci.ruledepth=0 AND ci.mrulename='Fragile Soil Index' WHERE c.mukey=mu.mukey AND c.majcompflag='Yes' ORDER BY c.comppct_r DESC) AS fsi_class,
+    (SELECT TOP 1 ci.interphrc FROM component c INNER JOIN cointerp ci ON ci.cokey=c.cokey AND ci.ruledepth=0 AND ci.mrulename='SOH - Organic Matter Depletion' WHERE c.mukey=mu.mukey AND c.majcompflag='Yes' ORDER BY c.comppct_r DESC) AS om_class
+    FROM legend l INNER JOIN mapunit mu ON mu.lkey=l.lkey WHERE l.areasymbol='${areasymbol}' ORDER BY mu.musym`;
+  try{
+    const t0=performance.now();
+    SoilLog.debug('SDAQUERY','SSA='+areasymbol);
+    const r=await fetch(SDA_TABULAR,
+      {method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+       body:`query=${encodeURIComponent(sql)}&format=JSON%2BCOLUMNNAME`});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    SoilLog.info('SDAQUERY',areasymbol+' OK '+Math.round(performance.now()-t0)+'ms');
+    const el=document.getElementById('sda-load');
+    if(!d.Table||d.Table.length<2){if(el)el.textContent='No data.';return;}
+    const[,,...rows]=d.Table;
+    const ab={
+      'Not fragile':'NF','Slightly fragile':'SF','Moderately fragile':'MF',
+      'Highly fragile':'HF','Very highly fragile':'VHF','Not rated':'NR',
+      'OM depletion low':'L','OM depletion moderately low':'ML',
+      'OM depletion moderate':'M','OM depletion moderately high':'MH','OM depletion high':'H',
+    };
+    let t=`<div style="font-size:10px;font-weight:700;color:var(--dim);margin-top:10px;
+              padding-bottom:3px;border-bottom:1px solid var(--border)">
+              ${areasymbol} — ${rows.length} map units</div>
+            <div style="max-height:180px;overflow-y:auto;margin-top:4px">
+            <table style="width:100%;border-collapse:collapse;font-size:10px">
+            <tr style="color:var(--dim)">
+              <th style="text-align:left;padding:2px">Sym</th>
+              <th style="text-align:left;padding:2px">Name</th>
+              <th style="padding:2px">FSI</th><th style="padding:2px">OM</th>
+            </tr>`;
+    rows.forEach(r=>{
+      const fc=FSI_MAP[r[3]]||'#555',oc=OM_MAP[r[4]]||'#555';
+      t+=`<tr style="border-top:1px solid rgba(37,37,56,.4)">
+        <td style="padding:2px;color:var(--accent)">${r[1]}</td>
+        <td style="padding:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:80px" title="${r[2]}">${r[2]}</td>
+        <td style="padding:2px;text-align:center;color:${fc};font-size:9px;font-weight:700">${ab[r[3]]||'?'}</td>
+        <td style="padding:2px;text-align:center;color:${oc};font-size:9px;font-weight:700">${ab[r[4]]||'?'}</td>
+      </tr>`;
+    });
+    t+=`</table></div>
+      <button onclick="dlCounty('${areasymbol}',${JSON.stringify(rows)})"
+        style="width:100%;margin-top:6px;padding:4px;background:var(--panel);
+               border:1px solid var(--border);color:var(--accent2);border-radius:4px;
+               cursor:pointer;font-size:10px;font-weight:600">⬇ ${areasymbol} CSV</button>`;
+    if(el)el.outerHTML=t; else ic.innerHTML+=t;
+  }catch(e){
+    SoilLog.error('SDAQUERY','querySDA failed for '+areasymbol+': '+e.message);
+    const el=document.getElementById('sda-load');
+    if(el) el.textContent='Could not load map unit data. Try again.';
+  }
+}
+
+function dlCounty(sym,rows){
+  const hdr='mukey,musym,muname,fsi_class,om_class';
+  const lines=[hdr,...rows.map(r=>r.map(v=>`"${v??''}"`).join(','))];
+  dlFile(lines.join('\n'),`soil_${sym}.csv`,'text/csv');
+}
+
+// ── GEOCODER ───────────────────────────────────────────────────────────────
+let searchTimer;
+const si=document.getElementById('search-input'),sr=document.getElementById('search-results');
+si.addEventListener('input',()=>{
+  clearTimeout(searchTimer);
+  const q=si.value.trim();
+  if(q.length<3){sr.style.display='none';return;}
+  searchTimer=setTimeout(()=>geocode(q),350);
+});
+si.addEventListener('keydown',e=>{if(e.key==='Escape'){sr.style.display='none';si.blur();}});
+document.addEventListener('click',e=>{if(!e.target.closest('#search-wrap'))sr.style.display='none';});
+
+async function geocode(q){
+  try{
+    const res=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=5&countrycodes=us`,
+      {headers:{'Accept-Language':'en','User-Agent':'NRCS-SoilHealthRisk/1.0'}});
+    const data=await res.json();
+    sr.innerHTML='';
+    if(!data.length){
+      sr.innerHTML='<div class="sr-item"><span class="sr-name" style="color:var(--dim)">No results</span></div>';
+    } else {
+      data.forEach(r=>{
+        const item=document.createElement('div');item.className='sr-item';
+        item.innerHTML=`<div class="sr-name">${r.display_name.split(',').slice(0,2).join(',')}</div>
+          <div class="sr-type">${r.type||r.class||''}</div>`;
+        item.addEventListener('click',()=>{
+          const bb=r.boundingbox;
+          [mapL,mapR].forEach(m=>m.fitBounds(
+            [[+bb[2],+bb[0]],[+bb[3],+bb[1]]],{padding:40,maxZoom:12,duration:900}));
+          si.value=r.display_name.split(',').slice(0,2).join(',');
+          sr.style.display='none';
+        });
+        sr.appendChild(item);
+      });
+    }
+    sr.style.display='block';
+  }catch(e){}
+}
+
+// ── INTERPRETATION PANEL ────────────────────────────────────────────────────
+function toggleInterpPanel(){
+  document.getElementById('interp-panel').classList.toggle('open');
+}
+
+// ── DOWNLOADS ──────────────────────────────────────────────────────────────
+function downloadCSV(){
+  if(csvData){dlFile(csvData,'soil_health_risk_national.csv','text/csv');return;}
+  if(!geojsonData){alert('Data not loaded.');return;}
+  const lines=['fips,state,areasymbol,areaname,fsi_dominant,fsi_avg,om_dominant,om_avg'];
+  geojsonData.features.forEach(f=>{
+    const p=f.properties;
+    lines.push([p.fips,p.state,p.areasymbol,p.areaname,
+                p.fsi_dominant,p.fsi_avg,p.om_dominant,p.om_avg].map(v=>`"${v??''}"`).join(','));
+  });
+  dlFile(lines.join('\n'),'soil_health_risk_county.csv','text/csv');
+}
+
+function downloadMapImage(){
+  const btn=document.getElementById('btn-img');
+  btn.textContent='⏳';btn.disabled=true;
+  mapL.once('render',()=>{
+    try{
+      const cL=mapL.getCanvas(),cR=mapR.getCanvas();
+      const out=document.createElement('canvas');
+      out.width=cL.width+cR.width;out.height=cL.height;
+      const ctx=out.getContext('2d');
+      ctx.drawImage(cL,0,0);ctx.drawImage(cR,cL.width,0);
+      ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(cL.width,0);ctx.lineTo(cL.width,cL.height);ctx.stroke();
+      const dpr=window.devicePixelRatio||1;
+      [[0,'Fragile Soil Index','#4e9fff'],[cL.width,'Organic Matter Depletion','#a78bfa']].forEach(([x,lbl,col])=>{
+        ctx.fillStyle='rgba(8,8,16,0.85)';ctx.fillRect(x,0,230*dpr,32*dpr);
+        ctx.fillStyle=col;ctx.font=`700 ${12*dpr}px Inter,sans-serif`;
+        ctx.fillText('Regenerative Ag Risk — '+lbl,x+10*dpr,20*dpr);
+      });
+      const a=document.createElement('a');
+      a.download=`regen_ag_soil_risk_${new Date().toISOString().slice(0,10)}.png`;
+      a.href=out.toDataURL('image/png');
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+    }catch(e){alert('Capture failed: '+e.message);}
+    finally{btn.textContent='PNG';btn.disabled=false;}
+  });
+  mapL.triggerRepaint();
+}
+
+function dlFile(content,name,mime){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:mime}));
+  a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
+// ── TOPOJSON → GEOJSON ─────────────────────────────────────────────────────
+// Territory fix: SSA symbols for AK/HI/PR/VI/GU/AS/MP don't follow the
+// Census county FIPS pattern, so interp[asy] misses.  fetch_soil_data.py (v3)
+// writes a "<STATE>_state" key with the territory-wide dominant condition.
+function topoToGeoJSON(topo,interp){
+  const obj=topo.objects.counties,arcs=topo.arcs;
+  const sc=topo.transform.scale,tr=topo.transform.translate;
+  function dec(ring){let x=0,y=0;return ring.map(p=>{x+=p[0];y+=p[1];return[x*sc[0]+tr[0],y*sc[1]+tr[1]]});}
+  function ac(i){const rev=i<0,r=arcs[rev?~i:i],c=dec(r);return rev?c.reverse():c;}
+  function gm(g){
+    if(g.type==='Polygon')return{type:'Polygon',coordinates:g.arcs.map(ring=>ring.flatMap(ac))};
+    if(g.type==='MultiPolygon')return{type:'MultiPolygon',coordinates:g.arcs.map(p=>p.map(ring=>ring.flatMap(ac)))};
+    return null;
+  }
+  const features=[];
+  for(const g of obj.geometries){
+    const fips=String(g.id).padStart(5,'0');
+    const st=FIPS_TO_STATE[fips.slice(0,2)]||fips.slice(0,2);
+    const asy=st+fips.slice(2);
+    // 1st: 5-digit FIPS key (authoritative, from laoverlap in fetch_soil_data.py)
+    // 2nd: computed areasymbol (works for most continental counties)
+    // 3rd: state-level fallback for territories whose SSAs don't follow FIPS
+    const d=interp[fips]||interp[asy]||(TERRITORY_FALLBACK.has(st)?interp[st+'_state']:null)||{};
+    const geo=gm(g);if(!geo)continue;
+    features.push({type:'Feature',id:fips,geometry:geo,properties:{
+      fips,state:st,areasymbol:asy,areaname:d.name||'',
+      fsi_dominant:d.fc||null,fsi_avg:d.fv??null,
+      om_dominant:d.oc||null,om_avg:d.ov??null,
+    }});
+  }
+  return{type:'FeatureCollection',features};
+}
+
+// ── STATE BOUNDARIES ──────────────────────────────────────────────────────
+function topoStatesToGeoJSON(topo){
+  const obj=topo.objects.states,arcs=topo.arcs;
+  const sc=topo.transform.scale,tr=topo.transform.translate;
+  function dec(ring){let x=0,y=0;return ring.map(p=>{x+=p[0];y+=p[1];return[x*sc[0]+tr[0],y*sc[1]+tr[1]]});}
+  function ac(i){const rev=i<0,r=arcs[rev?~i:i],c=dec(r);return rev?c.reverse():c;}
+  function gm(g){
+    if(g.type==='Polygon')return{type:'Polygon',coordinates:g.arcs.map(ring=>ring.flatMap(ac))};
+    if(g.type==='MultiPolygon')return{type:'MultiPolygon',coordinates:g.arcs.map(p=>p.map(ring=>ring.flatMap(ac)))};
+    return null;
+  }
+  const features=[];
+  for(const g of obj.geometries){
+    const geo=gm(g);if(!geo)continue;
+    features.push({type:'Feature',geometry:geo,properties:{id:g.id}});
+  }
+  return{type:'FeatureCollection',features};
+}
+
+function addStateBoundaries(topo){
+  const statesGeoJSON=topoStatesToGeoJSON(topo);
+  const showStates=!!document.getElementById('chk-states')?.checked;
+  [mapL,mapR].forEach((m,idx)=>{
+    m.addSource(`states-src-${idx}`,{type:'geojson',data:statesGeoJSON});
+    // Soft white underlay for readability on mixed fills (no black halo)
+    m.addLayer({
+      id:`states-halo-${idx}`,
+      type:'line',
+      source:`states-src-${idx}`,
+      layout:{'visibility':showStates?'visible':'none'},
+      paint:{
+        'line-color':'#ffffff',
+        'line-width':['interpolate',['exponential',1.2],['zoom'],2,3.9,4,2.9,6,2.0,8,1.25,10,0.82,12,0.66],
+        'line-opacity':['interpolate',['linear'],['zoom'],2,0.17,6,0.13,10,0.09,12,0.07],
+        'line-blur':0.7,
+      }
+    });
+    // Crisp white stroke with zoom-variable visual weight
+    m.addLayer({
+      id:`states-line-${idx}`,
+      type:'line',
+      source:`states-src-${idx}`,
+      layout:{'visibility':showStates?'visible':'none'},
+      paint:{
+        'line-color':'#ffffff',
+        'line-width':['interpolate',['exponential',1.18],['zoom'],2,1.45,4,1.18,6,0.88,8,0.64,10,0.54,12,0.48],
+        'line-opacity':['interpolate',['linear'],['zoom'],2,0.84,6,0.78,10,0.70,12,0.64],
+      }
+    });
+    if(showStates) _raiseStateBoundaries(idx);
+  });
+}
+
+function _raiseStateBoundaries(idx){
+  const m=[mapL,mapR][idx];
+  const haloId=`states-halo-${idx}`;
+  const lineId=`states-line-${idx}`;
+  if(m.getLayer(haloId)) m.moveLayer(haloId);
+  if(m.getLayer(lineId)) m.moveLayer(lineId);
+}
+
+function toggleStates(on){
+  [0,1].forEach(idx=>{
+    const m=[mapL,mapR][idx];
+    [`states-halo-${idx}`,`states-line-${idx}`].forEach(id=>{
+      if(m.getLayer(id))m.setLayoutProperty(id,'visibility',on?'visible':'none');
+    });
+    if(on) _raiseStateBoundaries(idx);
+  });
+}
+
+// ── NATIONAL RASTER PMTiles (900m FSI + OM) ───────────────────────────────
+// mapL shows FSI raster; mapR shows OM raster — both at 900m national resolution.
+// The checkbox is hidden until the raster files are confirmed present.
+let _rasterNationalReady=false;
+
+async function initNationalRaster(){
+  try{
+    const r=await fetch('data/raster/fsi_900m.pmtiles',{method:'HEAD'});
+    if(!r.ok)return;
+    _rasterNationalReady=true;
+    // Reveal checkbox now that files are confirmed
+    const wrap=document.getElementById('chk-raster-wrap');
+    if(wrap)wrap.style.display='';
+    SoilLog.info('RasterMap','National 900m raster PMTiles available');
+  }catch(_){/* not yet built */}
+}
+
+function toggleNationalRaster(on){
+  if(!_rasterNationalReady)return;
+  const datasets=['fsi','om'];
+  [mapL,mapR].forEach((m,idx)=>{
+    const ds=datasets[idx];
+    const srcId=`natl-raster-${ds}-${idx}`;
+    const layId=`natl-raster-${ds}-layer-${idx}`;
+    if(on){
+      if(!m.getSource(srcId)){
+        m.addSource(srcId,{
+          type:'raster',
+          url:`pmtiles://data/raster/${ds}_900m.pmtiles`,
+          tileSize:256,minzoom:4,maxzoom:8,
+        });
+        // Insert before county fill so fill hover still works on top
+        const before=m.getLayer('fill-0')?'fill-0':undefined;
+        m.addLayer({
+          id:layId,type:'raster',source:srcId,
+          paint:{'raster-opacity':0.72},
+        },before);
+      }else{
+        if(m.getLayer(layId))m.setLayoutProperty(layId,'visibility','visible');
+      }
+    }else{
+      if(m.getLayer(layId))m.setLayoutProperty(layId,'visibility','none');
+    }
+  });
+}
+
+// ── MAP UNIT POLYGON LAYER ────────────────────────────────────────────────
+// PMTiles vector tiles — per-state files in data/pmtiles/{STATE}.pmtiles.
+// tippecanoe builds these from the GeoJSON with layer name = state abbreviation.
+// MapLibre loads only the tiles needed for the current viewport via byte-range HTTP.
+// Displayed at zoom >= 8; zoom 7 tiles are too sparse due to tippecanoe feature-dropping.
+
+const MU_PMTILES_BASE = 'data/pmtiles/';
+const MU_ZOOM_THRESH  = 8;
+
+// Register the pmtiles:// protocol with MapLibre (uses the pmtiles.js CDN lib)
+const _pmProto = new pmtiles.Protocol();
+maplibregl.addProtocol('pmtiles', _pmProto.tile.bind(_pmProto));
+
+// Track which states have sources/layers added  {state: true}
+const muStateCache = {};
+
+// Helper: call fn(map, layerId, mapIdx) for every active mu fill layer
+function _eachMuFillLayer(fn){
+  Object.keys(muStateCache).forEach(st=>{
+    [mapL,mapR].forEach((m,i)=>{
+      const id=`mu-fill-${st}-${i}`;
+      if(m.getLayer(id)) fn(m,id,i);
+    });
+  });
+}
+
+const STATE_BBOX = {
+  AL:[-88.47,30.22,-84.89,35.01],AR:[-94.62,33.00,-89.64,36.50],
+  AZ:[-114.82,31.33,-109.05,37.00],CA:[-124.41,32.53,-114.13,42.01],
+  CO:[-109.06,36.99,-102.04,41.00],CT:[-73.73,40.99,-71.79,42.05],
+  DC:[-77.12,38.79,-76.91,38.99],DE:[-75.79,38.45,-75.05,39.84],
+  FL:[-87.63,24.52,-79.97,31.00],GA:[-85.61,30.36,-80.84,35.00],
+  HI:[-160.25,18.92,-154.81,22.24],IA:[-96.64,40.37,-90.14,43.50],
+  ID:[-117.24,41.99,-111.04,49.00],IL:[-91.51,36.97,-87.02,42.51],
+  IN:[-88.10,37.77,-84.78,41.76],KS:[-102.05,36.99,-94.59,40.00],
+  KY:[-89.57,36.50,-81.96,39.15],LA:[-94.04,28.93,-88.82,33.02],
+  MA:[-73.51,41.24,-69.93,42.89],MD:[-79.49,37.91,-75.05,39.72],
+  ME:[-71.08,43.06,-66.95,47.46],MI:[-90.42,41.70,-82.42,48.19],
+  MN:[-97.24,43.50,-89.49,49.38],MO:[-95.77,35.99,-89.10,40.61],
+  MS:[-91.65,30.17,-88.10,35.01],MT:[-116.05,44.36,-104.04,49.00],
+  NC:[-84.32,33.84,-75.46,36.59],ND:[-104.05,45.94,-96.55,49.00],
+  NE:[-104.05,40.00,-95.31,43.00],NH:[-72.56,42.70,-70.70,45.31],
+  NJ:[-75.56,38.93,-73.89,41.36],NM:[-109.05,31.33,-103.00,37.00],
+  NV:[-120.00,35.00,-114.04,42.00],NY:[-79.76,40.50,-71.85,45.01],
+  OH:[-84.82,38.40,-80.52,41.98],OK:[-103.00,33.62,-94.43,37.00],
+  OR:[-124.57,42.00,-116.46,46.24],PA:[-80.52,39.72,-74.69,42.27],
+  RI:[-71.91,41.15,-71.12,42.02],SC:[-83.35,32.05,-78.54,35.22],
+  SD:[-104.06,42.48,-96.44,45.94],TN:[-90.31,34.98,-81.65,36.68],
+  TX:[-106.65,25.84,-93.51,36.50],UT:[-114.05,37.00,-109.04,42.00],
+  VA:[-83.68,36.54,-75.24,39.47],VT:[-73.44,42.73,-71.46,45.02],
+  WA:[-124.75,45.54,-116.92,49.00],WI:[-92.89,42.49,-86.25,47.08],
+  WV:[-82.64,37.20,-77.72,40.64],WY:[-111.05,41.00,-104.05,45.01],
+  AK:[-179.15,51.21,-129.98,71.54],
+  PR:[-67.94,17.88,-65.22,18.52],VI:[-65.09,17.67,-64.57,18.45],
+  GU:[144.62,13.24,144.96,13.65],AS:[-170.85,-14.55,-168.15,-11.05],
+  MP:[145.12,14.11,145.87,20.56],PW:[131.13,2.95,134.73,8.12],
+  MH:[160.80,4.57,172.00,14.61],FM:[138.07,0.92,163.04,10.09],
+};
+
+function latLngToState(lat,lng){
+  for(const [st,[w,s,e,n]] of Object.entries(STATE_BBOX)){
+    if(lng>=w&&lng<=e&&lat>=s&&lat<=n) return st;
+  }
+  return null;
+}
+
+function visibleStates(){
+  const b=mapL.getBounds();
+  const pts=[];
+  for(const lat of [b.getSouth(),(b.getSouth()+b.getNorth())/2,b.getNorth()])
+    for(const lng of [b.getWest(),(b.getWest()+b.getEast())/2,b.getEast()])
+      pts.push({lat,lng});
+  const states=new Set();
+  pts.forEach(({lat,lng})=>{const st=latLngToState(lat,lng);if(st)states.add(st);});
+  return states;
+}
+
+function addStateMuLayers(state){
+  if(muStateCache[state]) return;
+  muStateCache[state]=true;
+  const url=`${MU_PMTILES_BASE}${state}.pmtiles`;
+  console.log(`[mu] loading ${state} from ${url}`);
+  [mapL,mapR].forEach((m,idx)=>{
+    const src   =`mu-src-${state}-${idx}`;
+    const fillId=`mu-fill-${state}-${idx}`;
+    const lineId=`mu-line-${state}-${idx}`;
+    if(m.getSource(src)) return;
+    m.addSource(src,{type:'vector',url:`pmtiles://${url}`});
+    m.on('error', e => { if(e.sourceId===src) console.error(`[mu] ${state} error:`, e.error); });
+    const prop =idx===0?'fsi_dominant':'om_dominant';
+    const cmap =idx===0?FSI_MAP:OM_MAP;
+    const order=idx===0?FSI_ORDER:OM_ORDER;
+    const base=(+document.getElementById('op-fill').value)/100;
+    const vis=layerState.imagery?Math.min(base,0.75):base;
+    const hov=Math.min(vis+0.1,1.0);
+    const fillExpr=['case',['boolean',['feature-state','hover'],false],hov,fillVisible?vis:0];
+    const colorExpr=['match',['get',prop]];
+    order.forEach(cls=>colorExpr.push(cls,cmap[cls]));
+    colorExpr.push('#555566');
+    m.addLayer({id:fillId,type:'fill',source:src,'source-layer':state,paint:{
+      'fill-color':colorExpr,
+      'fill-opacity':fillExpr}});
+    m.addLayer({id:lineId,type:'line',source:src,'source-layer':state,
+      layout:{visibility:_rasterOn?'none':'visible'},
+      paint:{
+        'line-color':'#222','line-opacity':0.70,
+        'line-width':['interpolate',['linear'],['zoom'],8,0.4,10,0.8,12,1.2,14,1.6]}});
+    setupHover(m,fillId,src,idx,state);
+    if(document.getElementById('chk-states')?.checked) _raiseStateBoundaries(idx);
+  });
+}
+
+function removeStateMuLayers(state){
+  delete muStateCache[state];
+  [mapL,mapR].forEach((m,idx)=>{
+    [`mu-fill-${state}-${idx}`,`mu-line-${state}-${idx}`]
+      .forEach(id=>{if(m.getLayer(id))m.removeLayer(id);});
+    const src=`mu-src-${state}-${idx}`;
+    if(m.getSource(src))m.removeSource(src);
+  });
+}
+
+function removeMuLayers(){
+  [...Object.keys(muStateCache)].forEach(removeStateMuLayers);
+}
+
+async function refreshMuLayer(){
+  if(mapL.getZoom()<MU_ZOOM_THRESH){removeMuLayers();return;}
+  const needed=visibleStates();
+  needed.forEach(st=>addStateMuLayers(st));
+  // Evict states no longer in view
+  Object.keys(muStateCache).forEach(st=>{if(!needed.has(st))removeStateMuLayers(st);});
+}
+
+function scheduleMuRefresh(){
+  clearTimeout(muFetchTimer);
+  muFetchTimer=setTimeout(refreshMuLayer,600);
+}
+
+function updateLocationIndicator(){
+  if(!geojsonData)return;
+  const c=mapL.getCenter();
+  const st=latLngToState(c.lat,c.lng);
+  const loc=document.getElementById('info-location');
+  const txt=document.getElementById('info-location-text');
+  if(!st){loc.style.display='none';return;}
+  // Find county under center
+  const feat=geojsonData.features.find(f=>{
+    if(f.properties.state!==st)return false;
+    const fips=f.properties.fips;
+    // Approximate: match state only at low zoom
+    return true;
+  });
+  // Just show state at low zoom, county name at high zoom via feature query
+  const zoom=mapL.getZoom();
+  if(zoom>=6){
+    const pt=mapL.project([c.lng,c.lat]);
+    const feats=mapL.queryRenderedFeatures(pt,{layers:['fill-0']});
+    if(feats.length){
+      const p=feats[0].properties;
+      txt.textContent=`${p.areaname||p.areasymbol}, ${p.state}`;
+      loc.style.display='flex';
+      return;
+    }
+  }
+  loc.style.display='none';
+}
+
+function initMuLayerEvents(){
+  mapL.on('moveend',()=>{
+    const z=mapL.getZoom();
+    if(z>=LIVE_ZOOM) _scheduleLiveSDA();
+    else { if(_liveActive){_setLiveVisible(false);_setPMTilesVisible(true);_liveActive=false;} scheduleMuRefresh(); }
+    scheduleStateStats();updateLocationIndicator();writeHash();
+  });
+  mapR.on('moveend',scheduleMuRefresh);
+  mapL.on('zoomend',()=>{
+    const z=mapL.getZoom();
+    if(z>=LIVE_ZOOM) _scheduleLiveSDA();
+    else{
+      if(_liveActive){_setLiveVisible(false);_setPMTilesVisible(true);_liveActive=false;}
+      if(z<MU_ZOOM_THRESH) removeMuLayers(); else scheduleMuRefresh();
+    }
+    scheduleStateStats();updateLocationIndicator();
+  });
+}
+
+// ── LIVE SDA EXACT GEOMETRY (zoom ≥ 11) ──────────────────────────────────
+// PMTiles max-zoom=10 overzooms at higher zoom, showing simplified geometry.
+// This layer queries SDA live for exact, unmodified SSURGO polygon boundaries.
+const LIVE_ZOOM=11;
+let _liveCtrl=null,_liveTimer=null,_liveActive=false;
+const _liveCache=new Map();
+const LIVE_CACHE_MAX=24;
+
+function _round3(v){return Math.round(v*1000)/1000;}
+
+function _liveCacheKey(bounds,zoom,states){
+  const z=Math.floor(zoom);
+  const w=_round3(bounds.getWest()),e=_round3(bounds.getEast());
+  const s=_round3(bounds.getSouth()),n=_round3(bounds.getNorth());
+  const st=[...states].sort().join(',')||'ALL';
+  return `${z}|${w},${s},${e},${n}|${st}`;
+}
+
+function _liveStateFilterClause(states){
+  const list=[...states]
+    .map(st=>String(st||'').toUpperCase())
+    .filter(st=>/^[A-Z]{2}$/.test(st));
+  if(!list.length) return '';
+  return ` AND (${list.map(st=>`l.areasymbol LIKE '${st}%'`).join(' OR ')})`;
+}
+
+function _applyLiveGeoJSON(geojson){
+  _setPMTilesVisible(false);
+  _liveActive=true;
+  [mapL,mapR].forEach((m,idx)=>{
+    const src=`live-sda-${idx}`;
+    if(m.getSource(src)){m.getSource(src).setData(geojson);return;}
+    m.addSource(src,{type:'geojson',data:geojson,generateId:true});
+    const prop=idx===0?'fsi_dominant':'om_dominant';
+    const cmap=idx===0?FSI_MAP:OM_MAP,order=idx===0?FSI_ORDER:OM_ORDER;
+    const base=(+document.getElementById('op-fill').value)/100;
+    const vis=layerState.imagery?Math.min(base,0.75):base;
+    const hov=Math.min(vis+0.1,1.0);
+    const fillExpr=['case',['boolean',['feature-state','hover'],false],hov,fillVisible?vis:0];
+    const col=['match',['get',prop]];order.forEach(c=>col.push(c,cmap[c]));col.push('#1a1a2e');
+    m.addLayer({id:`live-fill-${idx}`,type:'fill',source:src,paint:{
+      'fill-color':col,
+      'fill-opacity':fillExpr}});
+    m.addLayer({id:`live-line-${idx}`,type:'line',source:src,layout:{'line-join':'round','line-cap':'round'},paint:{
+      'line-color':'#222','line-opacity':0.75,
+      'line-width':['interpolate',['linear'],['zoom'],11,0.45,13,0.75,15,1.1]}});
+    setupHover(m,`live-fill-${idx}`,src,idx);
+    if(document.getElementById('chk-states')?.checked) _raiseStateBoundaries(idx);
+  });
+}
+
+function _wktToGeom(wkt){
+  if(!wkt)return null;
+  try{
+    const s=wkt.trim(),isMulti=s.startsWith('MULTIPOLYGON');
+    const body=s.replace(/^(MULTI)?POLYGON\s*/i,'').trim();
+    function grp(str,td){
+      const r=[];let d=0,b=-1;
+      for(let i=0;i<str.length;i++){
+        if(str[i]==='('){d++;if(d===td)b=i+1;}
+        else if(str[i]===')'){if(d===td&&b!==-1){r.push(str.slice(b,i));b=-1;}d--;}
+      }
+      return r;
+    }
+    function ring(s){return s.split(',').map(p=>{const[x,y]=p.trim().split(/\s+/);return[+x,+y];});}
+    return isMulti
+      ?{type:'MultiPolygon',coordinates:grp(body,2).map(pb=>grp(pb,1).map(ring))}
+      :{type:'Polygon',coordinates:grp(body,2).map(ring)};
+  }catch(e){return null;}
+}
+
+async function _fetchLiveSDA(){
+  const zoom=mapL.getZoom();
+  if(zoom<LIVE_ZOOM){_setLiveVisible(false);_setPMTilesVisible(true);_liveActive=false;return;}
+  if(_liveCtrl)_liveCtrl.abort();
+  _liveCtrl=new AbortController();
+  const b=mapL.getBounds();
+  const states=visibleStates();
+  const cacheKey=_liveCacheKey(b,zoom,states);
+  if(_liveCache.has(cacheKey)){
+    _applyLiveGeoJSON(_liveCache.get(cacheKey));
+    return;
+  }
+  const W=b.getWest().toFixed(5),E=b.getEast().toFixed(5);
+  const S=b.getSouth().toFixed(5),N=b.getNorth().toFixed(5);
+  const topN=zoom>=12?4000:2500;
+  const stateClause=_liveStateFilterClause(states);
+  const hint=document.getElementById('live-sda-hint');
+  if(hint)hint.style.display='inline';
+  const sql=`SELECT TOP ${topN} mu.mukey,mu.musym,mu.muname,l.areasymbol,
+    mupolygongeo.STAsText() AS geom
+    FROM mapunit mu JOIN legend l ON l.lkey=mu.lkey JOIN mupolygon mp ON mp.mukey=mu.mukey
+    WHERE mp.mupolygongeo.STIntersects(
+      geometry::STGeomFromText('POLYGON((${W} ${S},${E} ${S},${E} ${N},${W} ${N},${W} ${S}))',4326)
+    )=1${stateClause}`;
+  try{
+    const resp=await fetch(SDA_TABULAR,{method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:`query=${encodeURIComponent(sql)}&format=JSON%2BCOLUMNNAME`,
+      signal:_liveCtrl.signal});
+    const d=await resp.json();
+    if(hint)hint.style.display='none';
+    const rows=d.Table?d.Table.slice(2):[];
+    const features=[];
+    for(const[mukey,musym,muname,areasymbol,wkt]of rows){
+      const geometry=_wktToGeom(wkt);
+      if(!geometry)continue;
+      const rat=muKeyRatings[String(mukey)]||{};
+      features.push({type:'Feature',id:features.length,geometry,
+        properties:{mukey:String(mukey),musym,muname,areasymbol,
+          fsi_dominant:rat.fc||null,om_dominant:rat.oc||null}});
+    }
+    const geojson={type:'FeatureCollection',features};
+    _liveCache.set(cacheKey,geojson);
+    if(_liveCache.size>LIVE_CACHE_MAX){
+      const first=_liveCache.keys().next().value;
+      _liveCache.delete(first);
+    }
+    _applyLiveGeoJSON(geojson);
+  }catch(e){
+    if(hint)hint.style.display='none';
+    if(e.name!=='AbortError'){
+      console.error('[live-sda]',e);
+      _showSdaBanner();
+    }
+  }
+}
+
+let _sdaBannerShown=false;
+function _showSdaBanner(){
+  if(_sdaBannerShown)return;
+  _sdaBannerShown=true;
+  const banner=document.createElement('div');
+  banner.id='sda-banner';
+  banner.style.cssText='position:fixed;bottom:36px;left:50%;transform:translateX(-50%);z-index:600;'+
+    'background:rgba(30,20,10,.97);border:1px solid rgba(255,167,38,.4);color:#ffa726;'+
+    'border-radius:8px;padding:10px 18px;font-size:11px;font-weight:600;max-width:480px;'+
+    'box-shadow:0 8px 24px rgba(0,0,0,.6);display:flex;align-items:center;gap:10px';
+  banner.innerHTML='<span></span><span>SDA exact-geometry queries unavailable. Map data from cached tiles; point queries and live boundaries may not load.</span>'+
+    '<button onclick="this.parentElement.remove();_sdaBannerShown=false" style="background:none;border:none;color:#ffa726;cursor:pointer;font-size:14px;padding:0 4px;flex-shrink:0">✕</button>';
+  document.body.appendChild(banner);
+  setTimeout(()=>{ if(banner.parentElement)banner.remove(); _sdaBannerShown=false; },12000);
+}
+
+function _setLiveVisible(on){
+  [mapL,mapR].forEach((m,idx)=>{
+    [`live-fill-${idx}`,`live-line-${idx}`].forEach(id=>{
+      if(m.getLayer(id))m.setLayoutProperty(id,'visibility',on?'visible':'none');
+    });
+  });
+}
+
+function _setPMTilesVisible(on){
+  Object.keys(muStateCache).forEach(st=>{
+    [mapL,mapR].forEach((m,idx)=>{
+      const fid=`mu-fill-${st}-${idx}`,lid=`mu-line-${st}-${idx}`;
+      if(m.getLayer(fid))m.setLayoutProperty(fid,'visibility',on&&fillVisible?'visible':'none');
+      if(m.getLayer(lid))m.setLayoutProperty(lid,'visibility',on&&!_rasterOn?'visible':'none');
+    });
+  });
+}
+
+function _scheduleLiveSDA(){clearTimeout(_liveTimer);_liveTimer=setTimeout(_fetchLiveSDA,700);}
+
+// ── DRAGGABLE DIVIDER ──────────────────────────────────────────────────────
+(function(){
+  const div=document.getElementById('divider'),area=document.getElementById('maps-area');
+  let drag=false,sx,sl;
+  div.addEventListener('mousedown',e=>{drag=true;div.classList.add('dragging');sx=e.clientX;sl=document.getElementById('pane-left').offsetWidth;e.preventDefault();});
+  document.addEventListener('mousemove',e=>{
+    if(!drag)return;
+    const tot=area.offsetWidth-div.offsetWidth;
+    const nl=Math.max(150,Math.min(tot-150,sl+(e.clientX-sx)));
+    const pct=nl/tot*100;
+    document.getElementById('pane-left').style.flex=`0 0 ${pct}%`;
+    document.getElementById('pane-right').style.flex=`0 0 ${100-pct}%`;
+    [mapL,mapR].forEach(m=>m.resize());
+  });
+  document.addEventListener('mouseup',()=>{drag=false;div.classList.remove('dragging');});
+})();
+
+// ── LOAD DATA ──────────────────────────────────────────────────────────────
+async function loadData(){
+  try{
+    document.getElementById('loading-msg').textContent='Loading regenerative agriculture risk data…';
+    const ir=await fetch(DATA_INTERP);
+    if(!ir.ok)throw new Error('interp_data.json not found — run: python scripts/fetch_soil_data.py');
+    const interpData=await ir.json();
+
+    // mukey ratings for zoom-9 layer (non-fatal if missing)
+    try{const mr=await fetch(DATA_MUKEY);if(mr.ok)muKeyRatings=await mr.json();}catch(_){}
+
+    document.getElementById('loading-msg').textContent='Loading county boundaries…';
+    const tr=await fetch(COUNTIES_CDN);
+    if(!tr.ok)throw new Error('Could not load county boundaries from CDN');
+    const topo=await tr.json();
+
+    document.getElementById('loading-msg').textContent='Joining soil data to counties…';
+    geojsonData=topoToGeoJSON(topo,interpData);
+    addStateBoundaries(topo);
+    initNationalRaster(); // reveal checkbox if 900m raster PMTiles exist
+
+    try{const cr=await fetch(DATA_CSV);if(cr.ok)csvData=await cr.text();}catch(_){}
+    tryAddLayers();
+  }catch(err){
+    document.getElementById('loading-msg').textContent=''+err.message;
+    geojsonData={type:'FeatureCollection',features:[]};
+    setTimeout(()=>document.getElementById('loading').style.display='none',5000);
+  }
+}
+
+initMaps();
+loadData();
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/NRCS-Soil-Data-Access/sw.js',{scope:'/NRCS-Soil-Data-Access/'})
+    .catch(()=>{});
+}
+</script>
+</body>
+</html>

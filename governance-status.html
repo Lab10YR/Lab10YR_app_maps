@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://lab10yr.com/governance-status">
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="Lab10YR">
+  <meta property="og:title"       content="Governance Status — Lab10YR">
+  <meta property="og:description" content="Repository governance controls, required checks, branch protection, and enforcement status for the Lab10YR soil intelligence platform.">
+  <meta property="og:url"         content="https://lab10yr.com/governance-status">
+  <meta name="twitter:card"       content="summary">
+  <meta name="twitter:title"      content="Governance Status — Lab10YR">
+  <meta name="twitter:description" content="Repository governance controls, required checks, and enforcement status.">
+  <title>Governance Status — Lab10YR</title>
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="assets/theme-advanced.js" defer></script>
+</head>
+<body>
+  <header class="header" id="top">
+    <h1>Governance Status</h1>
+    <p>Repository governance controls, required checks, and enforcement expectations.</p>
+    <nav class="navbar" aria-label="Main navigation">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="soil-atlas.html" style="font-weight:700;color:#22c55e">Soil Atlas</a>
+      <a class="nav-link" href="soil-data-stories.html" style="font-weight:700;color:#4e9fff">Data Stories</a>
+      <a class="nav-link" href="https://lab10yr.com/articles/" target="_blank" rel="noopener noreferrer">Articles</a>
+      <a class="nav-link" href="sql-explorer.html">SQL Explorer</a>
+      <a class="nav-link" href="examples.html">Examples</a>
+      <a class="nav-link" href="governance-status.html">Governance</a>
+      <a class="nav-link" href="../README.md">README</a>
+      <a class="nav-link" href="data-models.html">Data Models</a>
+    </nav>
+    <div class="floating-nav">
+      <button class="btn" id="themeToggleBtn" type="button">Theme: Light</button>
+      <button class="btn" id="densityToggleBtn" type="button">Density: Comfortable</button>
+      <button class="btn" id="backToTopFab" title="Back to top" style="display:inline-block;">↑</button>
+    </div>
+    <div class="badge-bar" id="badgeBar"></div>
+  </header>
+
+  <main class="wrap">
+    <section class="panel">
+      <h2>Required CI Checks</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Validate SQL index</h3>
+          <p>Ensures docs/data/sql-index.json is regenerated and committed whenever SQL metadata changes.</p>
+          <p><a href="../.github/workflows/validate-sql-index.yml" target="_blank" rel="noopener noreferrer">Workflow</a></p>
+        </article>
+        <article class="card">
+          <h3>Repository quality</h3>
+          <p>Runs markdown lint, workflow lint, and link checks for README/docs reliability.</p>
+          <p><a href="../.github/workflows/repo-quality.yml" target="_blank" rel="noopener noreferrer">Workflow</a></p>
+        </article>
+        <article class="card">
+          <h3>Secret scan</h3>
+          <p>Scans commits and pull requests for credential and token leakage.</p>
+          <p><a href="../.github/workflows/secret-scan.yml" target="_blank" rel="noopener noreferrer">Workflow</a></p>
+        </article>
+        <article class="card">
+          <h3>CodeQL</h3>
+          <p>Performs static security analysis to detect high-risk patterns in repository automation/code.</p>
+          <p><a href="../.github/workflows/codeql.yml" target="_blank" rel="noopener noreferrer">Workflow</a></p>
+        </article>
+        <article class="card">
+          <h3>PR size/risk label gate</h3>
+          <p>Fails pull requests missing required size and risk labels; add as required check after first successful run appears in GitHub checks list.</p>
+          <p><a href="../.github/workflows/pr-size-risk-gate.yml" target="_blank" rel="noopener noreferrer">Workflow</a></p>
+        </article>
+      </div>
+    </section>
+
+
+
+    <section class="panel">
+      <h2>Branch Protection Baseline (main)</h2>
+      <ol>
+        <li>Require pull request before merging.</li>
+        <li>Require at least 1 approval.</li>
+        <li>Dismiss stale approvals when new commits are pushed.</li>
+        <li>Require conversation resolution before merge.</li>
+        <li>Require branches to be up to date before merging.</li>
+        <li>Require status checks: Validate SQL index, Repository quality, Secret scan, CodeQL, PR size/risk label gate.</li>
+        <li>Block force-push and deletion on main.</li>
+      </ol>
+    </section>
+
+
+
+    <footer class="footer">
+      Soil Data Access SQL Library • Governance controls summary • <span data-year></span>
+    </footer>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome to GroundScore DCI Pro · Lab10YR</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--border:#1e2640;--text:#d4daf0;--dim:#5a6490;
+  --accent:#38bdf8;--green:#22c55e;--soil:#c8a84b;--amber:#f59e0b;
+  --font:'Inter',system-ui,-apple-system,sans-serif;--serif:Georgia,'Times New Roman',serif}
+html,body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+#nav{position:fixed;top:0;left:0;right:0;z-index:500;height:46px;display:flex;align-items:center;padding:0 24px;
+  background:rgba(4,6,12,.97);border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
+.nav-logo{font-family:var(--serif);font-size:13px;font-style:italic;color:var(--soil);font-weight:700}
+.wrap{max-width:760px;margin:0 auto;padding:96px min(7vw,40px) 80px}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:800;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--green);border:1px solid rgba(34,197,94,.3);border-radius:20px;padding:6px 14px;margin-bottom:22px}
+h1{font-family:var(--serif);font-size:clamp(2rem,4vw,2.8rem);font-weight:400;color:#fff;letter-spacing:-.02em;line-height:1.1;margin-bottom:14px}
+.lead{font-size:1.08rem;color:rgba(212,218,240,.72);max-width:60ch;margin-bottom:30px}
+.keybox{border:1px solid var(--amber);border-radius:12px;background:linear-gradient(180deg,rgba(245,158,11,.08),rgba(10,14,26,.4));padding:20px 22px;margin-bottom:14px}
+.keybox .lbl{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:10px}
+.keyrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.keyval{flex:1;min-width:240px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:15px;color:#fff;
+  background:#05070e;border:1px solid var(--border);border-radius:8px;padding:13px 15px;word-break:break-all;user-select:all}
+.btn{border:none;border-radius:8px;font-family:var(--font);font-weight:700;font-size:13px;padding:13px 18px;cursor:pointer;white-space:nowrap}
+.btn-amber{background:var(--amber);color:#1a1003}.btn-soil{background:var(--soil);color:#05070d}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+.warn{font-size:12.5px;color:var(--amber);margin-top:12px}
+.steps{margin-top:34px;display:grid;gap:14px}
+.step{border:1px solid var(--border);border-radius:11px;background:var(--panel2);padding:18px 20px}
+.step h3{font-size:14px;color:#fff;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.step .n{width:22px;height:22px;border-radius:50%;background:var(--soil);color:#05070d;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.step p{font-size:13px;color:#c4ccea;line-height:1.6}
+pre{background:#05070e;border:1px solid var(--border);border-radius:9px;padding:12px 14px;overflow-x:auto;margin:8px 0 0}
+code{font-family:'SF Mono',Menlo,Consolas,monospace;font-size:12px;color:#aeb9e6}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.miss{border:1px solid var(--border);border-radius:12px;background:var(--panel2);padding:24px;text-align:center}
+</style>
+</head>
+<body>
+<nav id="nav"><a href="https://lab10yr.com" class="nav-logo">Lab10YR</a></nav>
+<div class="wrap" id="root"></div>
+
+<script>
+const key = new URLSearchParams(location.search).get('key') || '';
+const root = document.getElementById('root');
+
+if (!key) {
+  root.innerHTML = `<div class="miss"><h1>No key found</h1>
+    <p class="lead" style="margin:12px auto">This page shows your API key after checkout. If you just subscribed and landed here without a key, your key is also emailed to you. Otherwise, start a subscription on the pricing page.</p>
+    <a class="btn btn-soil" href="dci-pricing.html">See pricing</a></div>`;
+} else {
+  const esc = s => String(s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+  root.innerHTML = `
+    <div class="badge">&#10003; Subscription active</div>
+    <h1>You're in. Here's your API key.</h1>
+    <p class="lead">This key unlocks the full GroundScore DCI: per-parcel screenings, the six-pillar breakdown, and the written site-acquisition assessment. Save it now, it is your access to the tool and the API.</p>
+
+    <div class="keybox">
+      <div class="lbl">Your GroundScore DCI key</div>
+      <div class="keyrow">
+        <div class="keyval" id="kv">${esc(key)}</div>
+        <button class="btn btn-amber" id="copyBtn" onclick="copyKey()">Copy key</button>
+      </div>
+      <div class="warn">Treat this like a password. It is metered to your account and used for billing.</div>
+    </div>
+    <div class="row">
+      <a class="btn btn-soil" href="data-center-suitability.html?key=${encodeURIComponent(key)}">Open the screening tool with your key</a>
+      <button class="btn btn-ghost" onclick="manageBilling()">Manage billing</button>
+    </div>
+
+    <div class="steps">
+      <div class="step"><h3><span class="n">1</span> Score sites in the browser</h3>
+        <p>Open the screening tool above (your key is already attached), then search an address or click the map. You will get the full radar, the site data, and the written assessment.</p></div>
+      <div class="step"><h3><span class="n">2</span> Call the API</h3>
+        <p>Send your key as a header (or <code>?key=</code>) to score any point programmatically.</p>
+        <pre><code>curl -s https://lab10yr.com/api/soil-analyze \\
+  -H "content-type: application/json" \\
+  -H "X-Lab10YR-Key: ${esc(key)}" \\
+  -d '{"wkt":"point(-112.64171 33.55478)","mode":"dc"}'</code></pre></div>
+      <div class="step"><h3><span class="n">3</span> Track your usage</h3>
+        <p>Check screenings used this period any time.</p>
+        <pre><code>GET https://lab10yr.com/api/usage?key=${esc(key)}</code></pre></div>
+    </div>`;
+}
+
+function copyKey(){
+  navigator.clipboard.writeText(key).then(()=>{
+    const b=document.getElementById('copyBtn'); b.textContent='Copied'; setTimeout(()=>b.textContent='Copy key',1600);
+  });
+}
+async function manageBilling(){
+  try{
+    const r=await fetch('/api/portal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key})});
+    const j=await r.json();
+    if(j&&j.url){ location.href=j.url; return; }
+    alert((j&&j.error)||'Billing portal is not available yet.');
+  }catch(e){ alert('Could not open billing portal.'); }
+}
+</script>
+</body>
+</html>

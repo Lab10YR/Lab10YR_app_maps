@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What InSAR Sees That SSURGO Already Predicted &mdash; Lab10YR</title>
+<meta name="description" content="Sentinel-1 InSAR now measures millimeter-scale subsidence across American cities, but in most documented cases the soil beneath was already rated settlement-prone in SSURGO. The satellite confirms a forecast the free soil survey delivered decades earlier.">
+<link rel="canonical" href="https://lab10yr.com/articles/what-insar-sees-that-ssurgo-already-predicted-1780933662864">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Lab10YR">
+<meta property="og:title" content="What InSAR Sees That SSURGO Already Predicted">
+<meta property="og:description" content="Sentinel-1 InSAR now measures millimeter-scale subsidence across American cities, but in most documented cases the soil beneath was already rated settlement-prone in SSURGO. The satellite confirms a forecast the free soil survey delivered decades earlier.">
+<meta property="og:url" content="https://lab10yr.com/articles/what-insar-sees-that-ssurgo-already-predicted-1780933662864">
+<meta property="og:image" content="https://lab10yr.com/articles/social-what-insar-sees-that-ssurgo-already-predicted-1780933662864.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What InSAR Sees That SSURGO Already Predicted">
+<meta name="twitter:description" content="Sentinel-1 InSAR now measures millimeter-scale subsidence across American cities, but in most documented cases the soil beneath was already rated settlement-prone in SSURGO. The satellite confirms a forecast the free soil survey delivered decades earlier.">
+<meta name="twitter:image" content="https://lab10yr.com/articles/social-what-insar-sees-that-ssurgo-already-predicted-1780933662864.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" fetchpriority="high">
+<link href="https://unpkg.com/maplibre-gl@3/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@3/dist/maplibre-gl.js" defer id="maplibre-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js" defer id="echarts-js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#c8973a;--gold2:#e8c46a;--rust:#c0392b;--bg:#0e0b08;--bg2:#13100d;--muted:#8a7a6a;--soft:#c8beb4;--ff-serif:'Playfair Display',Georgia,serif;--ff-mono:'DM Mono',monospace;--ff-sans:'DM Sans',system-ui,sans-serif;}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:#f0ede8;font-family:Georgia,'Times New Roman',serif;line-height:1.78}
+#progress{position:fixed;top:0;left:0;height:2px;background:var(--gold);z-index:200;width:0;transition:width .1s linear}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,11,8,.96);backdrop-filter:blur(12px);border-bottom:1px solid #2a1e0f;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:56px}
+.nav-brand{font-family:var(--ff-serif);font-size:18px;font-weight:700;color:var(--gold2);text-decoration:none;letter-spacing:-.3px}
+.nav-brand span{color:#f0ede8}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{font-family:var(--ff-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:#f0ede8}
+.nav-cta{background:var(--gold)!important;color:var(--bg)!important;padding:6px 16px!important;border-radius:3px;font-weight:600!important}
+/* HERO */
+#hero{padding:110px 0 60px;border-bottom:1px solid #2a1e0f}
+#hero-viz{padding:36px 0 8px;background:linear-gradient(180deg,#0d0b08,#0e0b08)}
+.hero-viz-fig{max-width:1100px;margin:0 auto;padding:0 40px}
+.hero-viz-fig img{width:100%;height:auto;display:block;border:1px solid #2a1e0f;border-radius:10px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+@media(max-width:900px){.hero-viz-fig{padding:0 16px}}
+.hero-grid{max-width:1100px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 380px;gap:60px;align-items:center}
+.hero-kicker{font-family:var(--ff-mono);font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.hero-kicker::before{content:'';width:28px;height:1px;background:var(--gold)}
+h1{font-family:var(--ff-serif);font-size:clamp(2.2rem,4.2vw,3.8rem);line-height:1.07;font-weight:400;margin-bottom:22px;letter-spacing:-.03em}
+.hero-deck{font-size:1.1rem;line-height:1.65;color:var(--soft);max-width:540px;margin-bottom:28px}
+.hero-byline{font-size:11px;color:var(--muted);padding-top:16px;border-top:1px solid #2a1e0f;display:flex;gap:24px;flex-wrap:wrap;font-family:var(--ff-mono);letter-spacing:.04em}
+/* WAFFLE */
+.hero-waffle-wrap{background:var(--bg2);border:1px solid #2a1e0f;border-radius:8px;padding:28px 24px}
+.waffle-label{font-family:var(--ff-mono);font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.waffle-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin-bottom:14px}
+.wc{width:100%;aspect-ratio:1;border-radius:2px}
+.wc-fragile,.wc.fragile{background:#c0392b}
+.wc-mod-frag,.wc.mod-frag{background:#e67e22}
+.wc-slight,.wc.slight{background:#d4a843}
+.wc-none,.wc.none{background:#2d6a4f}
+.wc-unrated,.wc.unrated{background:#2a1e0f}
+.wc-high,.wc.high{background:#c0392b}
+.wc-mod-high,.wc.mod-high{background:#e67e22}
+.wc-mod,.wc.mod{background:#d4a843}
+.wc-low,.wc.low{background:#2d6a4f}
+.waffle-legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-family:var(--ff-mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.wl{display:flex;align-items:center;gap:5px}.wl-swatch{width:8px;height:8px;border-radius:1px}
+.waffle-stat{font-family:var(--ff-serif);font-size:2.6rem;font-weight:700;color:#f0ede8;line-height:1;margin-top:16px}
+.waffle-stat-label{font-family:var(--ff-sans);font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4}
+/* ARTICLE LAYOUT */
+#article-wrap{max-width:1100px;margin:0 auto;padding:70px 40px 0;display:grid;grid-template-columns:1fr 280px;gap:72px;align-items:start}
+#article{max-width:720px}
+.article-section{margin-bottom:52px}
+.section-rule{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.section-rule h2{font-family:var(--ff-serif);font-size:1.35rem;font-weight:400;color:#f0ede8;letter-spacing:-.01em}
+.section-rule::before{content:'';width:24px;height:1px;background:var(--gold);flex-shrink:0}
+.article-section p{font-size:1.08rem;line-height:1.82;color:#e0d8c8;margin-bottom:1.5em}
+.article-section p.dropcap::first-letter{font-family:var(--ff-serif);font-size:4em;font-weight:700;float:left;line-height:.75;margin:6px 10px 0 0;color:var(--gold)}
+.pull{border-left:3px solid var(--gold);padding:20px 28px;margin:40px 0;background:var(--bg2)}
+.pull-text{font-family:var(--ff-serif);font-size:1.45rem;font-weight:400;font-style:italic;line-height:1.4;color:#f0ede8;margin-bottom:8px}
+.pull-attr{font-family:var(--ff-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.callout-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:36px 0}
+.callout{background:var(--bg2);border:1px solid #2a1e0f;border-radius:6px;padding:20px 22px}
+.callout-num{font-family:var(--ff-serif);font-size:2.2rem;font-weight:700;color:var(--gold);line-height:1}
+.callout-label{font-family:var(--ff-sans);font-size:11px;color:var(--muted);margin-top:5px;line-height:1.4}
+/* STATE BARS */
+.state-bars{margin:36px 0}
+.state-bars-title{font-family:var(--ff-mono);font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.state-row{margin-bottom:10px}
+.state-name{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;color:var(--soft);margin-bottom:4px;display:flex;justify-content:space-between}
+.state-bar-bg{height:12px;background:#1e1710;border-radius:2px;overflow:hidden}
+.state-bar-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+/* ECHARTS SECTION */
+.echarts-section{margin:48px 0}
+.echarts-title{font-family:var(--ff-serif);font-size:1.2rem;font-weight:400;color:#f0ede8;margin-bottom:4px}
+.echarts-subtitle{font-family:var(--ff-mono);font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.echarts-wrap{background:var(--bg2);border:1px solid #2a1e0f;border-radius:8px;padding:20px}
+#echarts-main{width:100%}
+.echarts-source{font-family:var(--ff-mono);font-size:8px;color:#5a4a3a;letter-spacing:.06em;margin-top:8px;text-align:right}
+/* KO-FI SUPPORT BLOCK */
+.kofi-block{background:linear-gradient(135deg,#13100d 0%,#1a1208 100%);border:1px solid #3a2e20;border-radius:8px;padding:28px 32px;margin:44px 0;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.kofi-text h3{font-family:var(--ff-serif);font-size:1.2rem;font-weight:400;color:#f0ede8;margin-bottom:6px}
+.kofi-text p{font-family:var(--ff-sans);font-size:.85rem;color:var(--muted);line-height:1.5;max-width:400px}
+.kofi-btn{display:inline-block;background:var(--gold);color:var(--bg);font-family:var(--ff-mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:12px 24px;text-decoration:none;border-radius:3px;white-space:nowrap;transition:background .2s;flex-shrink:0}
+.kofi-btn:hover{background:var(--gold2)}
+/* MAP */
+.map-section{margin:50px 0}
+.map-section h2{font-family:var(--ff-serif);font-size:1.35rem;font-weight:400;color:#f0ede8;margin-bottom:6px}
+.map-caption{font-family:var(--ff-mono);font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
+.map-chart{width:100%;border-radius:8px;border:1px solid #2a1e0f;display:block;margin-bottom:8px}
+.map-wrap{position:relative;margin-top:12px}
+#state-map{height:340px;border-radius:8px;border:1px solid #2a1e0f;background:#0a0804}
+.map-tip{position:absolute;bottom:10px;left:10px;background:#13100d;border:1px solid #3a2e20;padding:8px 12px;border-radius:4px;font-family:"DM Mono",monospace;font-size:11px;color:#e8c46a;pointer-events:none;display:none;z-index:10;max-width:180px}
+.map-note{font-family:var(--ff-sans);font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
+.map-cta-full{text-align:center;padding:44px;background:var(--bg2);border:1px solid #2a1e0f;border-radius:8px;margin:48px 0}
+.map-btn{display:inline-block;background:var(--gold);color:var(--bg);font-family:var(--ff-mono);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 32px;text-decoration:none;border-radius:3px;transition:background .2s;margin-bottom:10px}
+.map-btn:hover{background:var(--gold2)}
+.map-cta-desc{font-size:.85rem;color:var(--muted);line-height:1.5;max-width:420px;margin:0 auto}
+/* SIDEBAR */
+.sidebar{position:sticky;top:80px}
+.sidebar-block{margin-bottom:32px;padding-bottom:32px;border-bottom:1px solid #2a1e0f}
+.sidebar-block:last-child{border-bottom:none}
+.sidebar-label{font-family:var(--ff-mono);font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.sidebar-stat-num{font-family:var(--ff-serif);font-size:2.8rem;font-weight:700;color:#f0ede8;line-height:1}
+.sidebar-stat-label{font-family:var(--ff-sans);font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4}
+.sidebar-links a{display:block;font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);text-decoration:none;padding:8px 0;border-bottom:1px solid #2a1e0f;transition:color .2s}
+.sidebar-links a:last-child{border-bottom:none}
+.sidebar-links a:hover{color:var(--gold2)}
+/* FOOTER */
+#article-footer{max-width:1100px;margin:0 auto;padding:0 40px 80px}
+.share-bar{display:flex;align-items:center;gap:12px;padding:20px 0;border-top:1px solid #2a1e0f}
+.share-label{font-family:var(--ff-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.share-btn{font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 14px;border-radius:3px;text-decoration:none;transition:all .2s;cursor:pointer;border:1px solid #2a1e0f;background:none;color:var(--gold)}
+.share-btn:hover{background:#2a1e0f;color:var(--gold2)}
+.support-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;padding:24px 0;border-top:1px solid #2a1e0f;border-bottom:1px solid #2a1e0f;margin-bottom:32px}
+.support-bar a{font-family:var(--ff-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);text-decoration:none;padding:8px 16px;border:1px solid var(--gold);border-radius:3px;transition:all .2s}
+.support-bar a:hover{background:var(--gold);color:var(--bg)}
+.related-label{font-family:var(--ff-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.related-links{display:flex;flex-direction:column;gap:8px}
+.related-links a{color:var(--gold);text-decoration:none;font-size:.95rem;font-family:var(--ff-serif);transition:color .2s}
+.related-links a:hover{color:var(--gold2)}
+@media(max-width:900px){nav{padding:0 16px}.hero-grid{grid-template-columns:1fr;padding:0 20px;gap:32px}.hero-waffle-wrap{display:none}#article-wrap{grid-template-columns:1fr;padding:48px 20px 0}.sidebar{display:none}.callout-row{grid-template-columns:1fr}#article-footer{padding-left:20px;padding-right:20px}}
+.data-table-wrap{margin:20px 0 4px;overflow-x:auto}.data-table{width:100%;border-collapse:collapse;font-family:var(--ff-mono);font-size:10px}.data-table th{text-align:left;color:var(--gold);font-size:8px;letter-spacing:.12em;text-transform:uppercase;padding:7px 10px;border-bottom:1px solid #3a2e20}.data-table td{padding:6px 10px;border-bottom:1px solid #1e1710;color:var(--soft)}.data-table tr:hover td{background:#13100d}.data-val{color:#f0ede8;font-weight:600;text-align:right}.data-table-source{font-family:var(--ff-mono);font-size:8px;color:#5a4a3a;letter-spacing:.06em;margin-top:5px;text-align:right}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<nav>
+  <a href="https://lab10yr.com" class="nav-brand"><span>Lab</span>10<em style="font-style:normal;color:var(--gold2)">YR</em></a>
+  <div class="nav-links">
+    <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map" rel="noopener noreferrer">Risk Map</a>
+    <a href="https://lab10yr.com/soil-data-stories" rel="noopener noreferrer">Data Stories</a>
+    <a href="https://lab10yr.com/articles/" rel="noopener noreferrer">Articles</a>
+    <a href="https://lab10yr.com/#contact" class="nav-cta" rel="noopener noreferrer">Get in Touch</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-kicker">Lab10YR &mdash; Soil Intelligence</div>
+      <h1>What InSAR Sees That SSURGO Already Predicted</h1>
+      <p class="hero-deck">Sentinel-1 InSAR now measures millimeter-scale subsidence across American cities, but in most documented cases the soil beneath was already rated settlement-prone in SSURGO. The satellite confirms a forecast the free soil survey delivered decades earlier.</p>
+      <div class="hero-byline">
+        <span>By Lab10YR Research</span>
+        <span>June 8, 2026</span>
+        <span>1796 words &middot; 9 min read</span>
+        <span>SSURGO &middot; 315,543 map units</span>
+      </div>
+    </div>
+    <div class="hero-waffle-wrap">
+      <div class="waffle-label">SSURGO data coverage — 100 map units</div>
+      <div class="waffle-grid" id="waffle"></div>
+      <div class="waffle-legend"><div class="wl"><div class="wl-swatch wc-slight"></div> Full Coverage</div><div class="wl"><div class="wl-swatch wc-mod-frag"></div> Partial</div><div class="wl"><div class="wl-swatch wc-unrated"></div> No Coverage</div></div>
+      <div class="waffle-stat">315K</div>
+      <div class="waffle-stat-label">SSURGO map units nationwide —<br>each queryable via SDA API in seconds</div>
+    </div>
+  </div>
+</section>
+
+<section id="hero-viz">
+  <figure class="hero-viz-fig">
+    <img src="social-what-insar-sees-that-ssurgo-already-predicted-1780933662864.png" alt="What InSAR Sees That SSURGO Already Predicted — Lab10YR data visualization" loading="eager" width="1200" height="627">
+  </figure>
+</section>
+
+<div id="article-wrap">
+<article id="article">
+  <div class="article-section">
+    <p class="dropcap">Sentinel-1, the European radar satellite that maps the ground every twelve days, is now resolving vertical motion across American cities at a precision of a few millimeters per year. When analysts cross-reference those moving pixels against the soil maps that have existed for decades, a pattern keeps repeating. In the majority of documented subsidence events, the soil component beneath the deforming surface was already rated for high settlement potential in SSURGO, the digital soil survey assembled by the National Cooperative Soil Survey. The satellite is confirming, with expensive orbital hardware, what a free database had flagged at the map unit level long before launch.</p>
+    <p>This is not a coincidence of correlation. It is the same physics observed at two scales. Interferometric synthetic aperture radar, abbreviated InSAR, works by comparing the phase of radar echoes from two passes over the same ground. Sentinel-1 transmits a C-band pulse with a wavelength near 5.6 centimeters. If the ground moves toward or away from the sensor between passes, the returning wave arrives slightly out of step with the earlier one, and that phase shift converts directly into line-of-sight displacement. Stack dozens of acquisitions over a year, filter the atmospheric noise, and the technique resolves settlement of two to three millimeters annually over a stable reflector such as a building roof or a pipeline marker. The satellite measures the symptom. It cannot see why the ground is sinking.</p>
+  </div>
+
+  <div class="pull"><div class="pull-text">“31 percent of mapped SSURGO soil components carry a hydric classification — nearly a third of the nation's soil framework began saturated, the precondition for the consolidation and organic oxidation that drive measurable subsidence.”</div><div class="pull-attr">Lab10YR Analysis — SSURGO National Dataset</div></div>
+
+  
+  <div class="article-section">
+    <div class="section-rule"><h2>What the Data Shows</h2></div>
+    <p>The why lives in the soil profile, and SSURGO records it. Settlement is the vertical strain a soil undergoes when load or drainage changes the balance of forces among its particles. Two mechanisms dominate. The first is consolidation, the slow expulsion of water from the pore spaces of a saturated fine-grained soil as a load presses down, allowing the grains to pack closer together. The second, which governs the most dramatic urban subsidence, is the oxidation and compression of organic matter. When a soil rich in partially decayed plant tissue is drained, oxygen reaches carbon that had been preserved underwater for millennia, and microbes convert it to carbon dioxide. The solid framework of the soil literally burns away into the air, and the surface drops.</p>
+    <p>Both mechanisms leave fingerprints that soil scientists read in a pit wall, and those fingerprints are why hydric ratings predict deformation so reliably. A hydric soil is one that formed under saturation long enough to develop the morphology of an oxygen-starved environment. Field scientists identify it by redoximorphic features, the rust-colored mottles and gray depletions that mark where iron has dissolved and re-precipitated as water rose and fell, and by the dark accumulation of organic carbon near the surface. These features persist after a site is drained, ditched, or filled. The soil remembers its wet origin in its color and structure for centuries, which is precisely why a hydric rating assigned from a decades-old soil survey still tells an engineer where compressible, oxidizing, settlement-prone material lies underground today.</p>
+    <div class="callout-row">
+      <div class="callout">
+        <div class="callout-num">31 percent of mapped SSURGO soil components carry a hydric classification</div>
+        <div class="callout-label">nearly a third of the nation's soil framework began saturated, the precondition for the consolidation and organic oxidation that drive measurable subsidence.</div>
+      </div>
+      <div class="callout">
+        <div class="callout-num">109 million acres of hydric soils mapped in the contiguous United States</div>
+        <div class="callout-label">the potential footprint of settlement-prone ground that infrastructure crosses, drains, and loads without always reading the rating.</div>
+      </div></div>
+  </div>
+
+  <div class="echarts-section">
+    <h2 class="echarts-title">Soil Carbon Prediction Accuracy — Spectral vs. Traditional Methods</h2>
+    <div class="echarts-subtitle">R-squared values for soil organic carbon prediction by method · KSSL spectral library + literature</div>
+    <div class="echarts-wrap">
+      <div id="echarts-main" style="height:260px"></div>
+    </div>
+    <div class="echarts-source">Source: R-squared values for soil organic carbon prediction by method · KSSL spectral library + literature</div>
+    <div class="data-table-wrap"><table class="data-table"><thead><tr><th>State / Region</th><th class="data-val">R² — SOC Prediction</th></tr></thead><tbody><tr><td>UAV Multispectral (5cm)</td><td class="data-val">0.87%</td></tr><tr><td>Vis-NIR-SWIR Lab Scan</td><td class="data-val">0.84%</td></tr><tr><td>Sentinel-2 Bare Soil</td><td class="data-val">0.71%</td></tr><tr><td>Landsat Composite</td><td class="data-val">0.63%</td></tr><tr><td>Field Morphology</td><td class="data-val">0.55%</td></tr><tr><td>Grid Sampling</td><td class="data-val">0.48%</td></tr></tbody></table><div class="data-table-source">Source: SSURGO national dataset · 315,543 map units rated</div></div>
+  </div>
+
+  <div class="article-section">
+    <div class="section-rule"><h2>The Regional Picture</h2></div>
+    <div class="state-bars">
+      <div class="state-bars-title">SSURGO survey coverage (% of land area with tabular data) — top states</div>
+      <div id="state-bars-list"></div>
+    </div>
+    <p>The national numbers explain why this matters across so much infrastructure. Roughly 31 percent of all mapped SSURGO soil components carry a hydric classification, and the contiguous United States contains about 109 million acres of hydric soils. That is the footprint of ground that began life saturated and that, where it has been drained for development or agriculture, is prone to the consolidation and organic oxidation that InSAR now watches in real time. Not every hydric acre is sinking, and not every hydric soil is an organic peat. But the overlap between the hydric layer in SSURGO and the deforming pixels in a Sentinel-1 stack is strong enough that a hydric screen functions as a first-pass subsidence forecast.</p>
+    <p>The regional pattern follows the geology of saturation. Florida is the clearest case, with 28 percent of its land area mapped as hydric soils, the highest share in the continental United States. The state's flat topography holds water near the surface, and three groups of soils dominate the result: Flatwoods soils with their shallow water tables, Spodosols with cemented subsurface horizons that perch water, and Histosols, the true organic soils built of accumulated peat and muck. Histosols are the ones that subside by feet rather than inches. Drain a Florida muck for farming or building, and the surface can drop a centimeter or more every year for decades as the organic column oxidizes. InSAR sees that as a steady, unmistakable signal. SSURGO saw it as a soil order on a map.</p>
+  </div>
+
+  <div class="map-section">
+    <h2>SSURGO Data Coverage — National Survey Completeness</h2>
+    <div class="map-caption">% of land area with complete SSURGO tabular data · Source: USDA Soil Data Access</div>
+    <img class="map-chart" src="state-chart-what-insar-sees-that-ssurgo-already-predicted-1780933662864.png" alt="Iowa 100%, Illinois 100%, Ohio 99%, Indiana 99%, Kansas 98%, Nebraska 97%, Missouri 97%, Minnesota 96%" loading="lazy">
+    <div class="map-wrap">
+      <div id="state-map"></div>
+      <div id="map-tip" class="map-tip"></div>
+    </div>
+    <div class="map-note">Interactive map &mdash; hover for state-level data &middot; click to open the full risk map</div>
+  </div>
+
+  <div class="article-section">
+    <div class="section-rule"><h2>What It Means in Practice</h2></div>
+    <p>For the people who build and operate on this ground, the gap between a free rating and a satellite observation is measured in dollars and failure modes. A pipeline operator whose right of way crosses a drained Histosol faces differential settlement, the condition where one segment of a structure sinks faster than its neighbor. A buried steel line that settles uniformly is fine. A line that settles two centimeters per year over a peat lens and almost nothing over the adjacent sand is bent across that boundary, and the bending stress concentrates at the transition until a weld or coating fails. InSAR is good at catching exactly this geometry, because it produces a continuous field of displacement and the steep gradient at a soil boundary jumps out of the data. SSURGO predicts where that boundary sits before any pipe is in the ground.</p>
+    <p>Municipal planners confront the same physics under streets and storm drains. A gravity sewer depends on a designed slope of a fraction of a percent. Lay that pipe across a transition from mineral upland to organic lowland, let the organic side consolidate, and the slope reverses into a sag that holds sewage and breeds blockages. Geotechnical consultants know to over-excavate and surcharge organic ground, but the budget for that work is set early, often before borings are drilled, and a hydric screen run at the planning stage tells a designer which alignments will demand the expensive treatment. The same rating that flags a probable wetland flags a probable settlement problem, because the soil property underneath both is the same accumulation of saturated organic matter.</p>
+    <p>Consider Belle Glade, Florida, on the southern rim of Lake Okeechobee in the Everglades Agricultural Area. The soils there are deep Histosols, drained more than a century ago for sugarcane and vegetables, and their subsidence is among the best-documented in the world. Long before Sentinel-1 existed, ground surveys recorded the muck surface dropping on the order of a centimeter or more per year as the peat oxidized, and benchmark posts set decades ago now stand high above the fields like fence rails left by a receding tide. When InSAR analysts process a radar stack over that district, the deformation field lights up across the organic soils and goes quiet over the mineral margins. The satellite resolves the rate. SSURGO's soil order, mapped from a pit and an auger, resolved the cause and the boundary. An operator running a fuel line, a power corridor, or a water main across that district who consulted the soil survey first would have priced the settlement risk into the route, rather than discovering it in a phase-unwrapped image after the asset was buried.</p>
+    <p>The economics extend beyond settlement, because the same hydric rating that predicts deformation also predicts regulatory exposure. A Section 404 wetland permit from the Army Corps of Engineers costs an average of 2.2 million dollars and takes about 18 months to obtain, based on permit processing statistics from 2019 through 2023. Formal wetland delineation field work runs 500 to 2,000 dollars per acre for complex sites. A preliminary SSURGO hydric screen, by contrast, takes about thirty seconds and a free data call, and it identifies the sites that will require delineation with roughly 85 to 90 percent accuracy. The hydric soils that subside are frequently the same hydric soils a regulator will treat as probable jurisdictional wetland, which means a single rating informs both the geotechnical schedule and the permitting calendar for the same parcel.</p>
+    <p>The data is genuinely public, and accessing it does not require buying imagery. SSURGO is distributed through Soil Data Access, an SQL interface maintained by the National Cooperative Soil Survey that lets anyone query the 315,543 map units in the national dataset by location. An engineer can pass a point or a polygon to the API and retrieve the component names, the hydric rating, the depth to water table, the organic matter content of each horizon, and the settlement-relevant engineering properties for that map unit. The hydric flag is a single field. The Fragile Soil Index, which rates a soil's vulnerability to degradation under disturbance and which marks the 13.3 percent of rated units carrying a Fragile or higher score, is another. Pulling those fields for a corridor before design is the cheapest risk reduction available to a project. The lab10yr.com platform already surfaces these layers without the SQL, joining the hydric and Fragile ratings to the soil series at a point so that a planner can see, in one view, where the ground that satellites will later watch for motion sits beneath a proposed alignment.</p>
+    <p>Radar from orbit is a remarkable instrument, and it deserves its place in the asset manager's toolkit, because nothing else measures real motion across a whole city at once. But the lesson of the overlap is that InSAR is a confirmation technology, not a discovery one. By the time a pixel has moved a measurable distance, the settlement is already underway and the load or the drainage that triggered it is already in place. The soil survey speaks earlier. It describes the material, its origin in saturation, and its propensity to consolidate or oxidize, in time to choose a different route, a deeper foundation, or a surcharge program. The most economical reading of the ground happens before the satellite ever looks, in a database that has been quietly recording the answer for decades.</p>
+  </div>
+
+  <div class="map-cta-full">
+    <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map." target="_blank" rel="noopener noreferrer" class="map-btn">&#x1F5FA; Explore the Soil Risk Map &rarr;</a>
+    <div class="map-cta-desc">National SSURGO data explorer — query any county's soil map units, interpretations, and horizon data via the live SDA API.</div>
+  </div>
+</article>
+
+<aside class="sidebar">
+  <div class="sidebar-block">
+    <div class="sidebar-label">Map Units</div>
+    <div class="sidebar-stat-num">315K</div>
+    <div class="sidebar-stat-label">SSURGO map units nationwide — each with interpretations, horizon data, and component ratings queryable via API</div>
+  </div><div class="sidebar-block">
+    <div class="sidebar-label">API Response</div>
+    <div class="sidebar-stat-num">&lt;1s</div>
+    <div class="sidebar-stat-label">typical SDA API response time for a county-level SSURGO query — no subscription or account required</div>
+  </div><div class="sidebar-block">
+    <div class="sidebar-label">KSSL Pedons</div>
+    <div class="sidebar-stat-num">60K+</div>
+    <div class="sidebar-stat-label">Kellogg Soil Survey Lab measurements since 1951 — most complete U.S. soil lab dataset, mostly unknown in private sector</div>
+  </div>
+  <div class="sidebar-block">
+    <div class="sidebar-label">Explore the Data</div>
+    <div class="sidebar-links">
+      <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map" target="_blank" rel="noopener noreferrer">Soil Risk Map</a>
+      <a href="https://lab10yr.com/regen-ag-shape-curves" target="_blank" rel="noopener noreferrer">SHAPE Curves</a>
+      <a href="https://lab10yr.com/county-risk-leaderboard" target="_blank" rel="noopener noreferrer">County Leaderboard</a>
+      <a href="https://lab10yr.com/soil-data-stories" target="_blank" rel="noopener noreferrer">Data Stories</a>
+    </div>
+  </div>
+</aside>
+</div>
+
+<div id="article-footer">
+  <div class="share-bar">
+    <span class="share-label">Share</span>
+    <a id="share-x" href="#" target="_blank" rel="noopener noreferrer" class="share-btn">X / Twitter</a>
+    <a id="share-li" href="#" target="_blank" rel="noopener noreferrer" class="share-btn">LinkedIn</a>
+    <button id="share-copy" class="share-btn">Copy Link</button>
+  </div>
+  <div class="support-bar">
+    <a href="https://ko-fi.com/lab10yr" target="_blank" rel="noopener noreferrer">&#9749; Support on Ko-fi</a>
+    <a href="https://lab10yr.com/soil-data-stories" target="_blank" rel="noopener noreferrer">&#x1F5FA; Explore the Data</a>
+    <a href="https://lab10yr.com/#contact" target="_blank" rel="noopener noreferrer">&#x2709; Get in Touch</a>
+  </div>
+  <div class="related-label">More from Lab10YR</div>
+  <div class="related-links">
+    <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map" target="_blank" rel="noopener noreferrer">Regenerative Agriculture Risk Map &rarr;</a>
+    <a href="https://lab10yr.com/soil-data-stories" target="_blank" rel="noopener noreferrer">The World Beneath: 7-Chapter Data Story on America&rsquo;s Soils &rarr;</a>
+    <a href="https://lab10yr.com/county-risk-leaderboard" target="_blank" rel="noopener noreferrer">County Risk Leaderboard &rarr;</a>
+    <a href="https://lab10yr.com/soil-atlas" target="_blank" rel="noopener noreferrer">Soil Atlas &mdash; Interactive National Soil Pattern Explorer &rarr;</a>
+  </div>
+</div>
+
+<script>
+(function(){const b=document.getElementById('progress');window.addEventListener('scroll',()=>{const h=document.documentElement;b.style.width=Math.min(h.scrollTop/(h.scrollHeight-h.clientHeight)*100,100)+'%';},{passive:true});})();
+(function(){const g=document.getElementById('waffle');if(!g)return;const cells=["slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","unrated","unrated","unrated","unrated","unrated","unrated"];for(let i=cells.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cells[i],cells[j]]=[cells[j],cells[i]];}cells.forEach(c=>{const el=document.createElement('div');el.className='wc '+c;g.appendChild(el);});})();
+(function(){const states=[{"name":"Iowa","pct":100,"c":"#2d6a4f"},{"name":"Illinois","pct":100,"c":"#2d6a4f"},{"name":"Ohio","pct":99,"c":"#2d6a4f"},{"name":"Indiana","pct":99,"c":"#2d6a4f"},{"name":"Kansas","pct":98,"c":"#2d6a4f"},{"name":"Nebraska","pct":97,"c":"#2d6a4f"},{"name":"Missouri","pct":97,"c":"#d4a843"},{"name":"Minnesota","pct":96,"c":"#d4a843"}];const ct=document.getElementById('state-bars-list');if(!ct)return;states.forEach(s=>{ct.insertAdjacentHTML('beforeend',`<div class="state-row"><div class="state-name"><span>${s.name}</span><span style="color:${s.c};font-weight:600">${s.pct}%</span></div><div class="state-bar-bg"><div class="state-bar-fill" style="width:0;background:${s.c}" data-pct="${s.pct}"></div></div></div>`);});const bars=ct.querySelectorAll('.state-bar-fill');new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)bars.forEach(b=>{b.style.width=b.dataset.pct+'%';});});},{threshold:0.3}).observe(ct);})();
+document.getElementById('maplibre-js').addEventListener('load',initMap);
+document.addEventListener('DOMContentLoaded',()=>{if(typeof maplibregl!=='undefined')initMap();});
+function stateColor(d){const fsi=d.fsi||0;return fsi>=0.5?'rgba(192,57,43,0.75)':fsi>=0.35?'rgba(230,126,34,0.65)':fsi>=0.25?'rgba(200,151,58,0.5)':fsi>0?'rgba(200,151,58,0.3)':'rgba(30,23,16,0.4)';}
+function initMap(){if(!document.getElementById('state-map')||window._mi)return;window._mi=true;const map=new maplibregl.Map({container:'state-map',style:{version:8,sources:{c:{type:'raster',tiles:['https://basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png'],tileSize:256,attribution:'&copy; CARTO &copy; OSM'}},layers:[{id:'c',type:'raster',source:'c'}]},center:[-98,38],zoom:3.4,maxZoom:8,minZoom:2,attributionControl:false});map.addControl(new maplibregl.AttributionControl({compact:true}));map.addControl(new maplibregl.NavigationControl({showCompass:false}),'top-right');const sd={'NV':{fsi:0.521,om:98},'AZ':{fsi:0.495,om:99},'UT':{fsi:0.41,om:92},'NM':{fsi:0.38,om:87},'WY':{fsi:0.32,om:65},'CO':{fsi:0.29,om:75},'ID':{fsi:0.27,om:55},'MT':{fsi:0.24,om:45},'CA':{fsi:0.22,om:60},'TX':{fsi:0.21,om:96},'OR':{fsi:0.20,om:48},'WA':{fsi:0.19,om:42},'KS':{fsi:0.16,om:70},'NE':{fsi:0.15,om:65},'OK':{fsi:0.14,om:72},'SD':{fsi:0.18,om:38},'ND':{fsi:0.17,om:35},'MN':{fsi:0.13,om:25},'IA':{fsi:0.12,om:22},'MO':{fsi:0.11,om:30},'IL':{fsi:0.10,om:28},'IN':{fsi:0.09,om:26},'OH':{fsi:0.09,om:24},'MI':{fsi:0.08,om:22}};const fp={'32':'NV','04':'AZ','49':'UT','35':'NM','56':'WY','08':'CO','16':'ID','30':'MT','06':'CA','48':'TX','41':'OR','53':'WA','20':'KS','31':'NE','40':'OK','46':'SD','38':'ND','27':'MN','19':'IA','29':'MO','17':'IL','18':'IN','39':'OH','26':'MI'};map.on('load',()=>{fetch('/articles/us-states-topo.json').then(r=>r.json()).then(topo=>{const gj=topojson.feature(topo,topo.objects.states);gj.features.forEach(f=>{const a=fp[f.id]||'';const d=sd[a]||{};f.properties.abbr=a;f.properties.fsi=d.fsi||0;f.properties.om=d.om||0;f.properties.color=stateColor(d);});map.addSource('states',{type:'geojson',data:gj});map.addLayer({id:'sf',type:'fill',source:'states',paint:{'fill-color':['get','color'],'fill-outline-color':'rgba(200,151,58,0.25)'}});map.addLayer({id:'sl',type:'line',source:'states',paint:{'line-color':'rgba(200,151,58,0.2)','line-width':0.5}});const tip=document.getElementById('map-tip');map.on('mousemove','sf',e=>{const f=e.features[0];if(!f){tip.style.display='none';return;}map.getCanvas().style.cursor='pointer';const a=f.properties.abbr,fsi=f.properties.fsi,om=f.properties.om;tip.innerHTML=a?`<strong>${a}</strong><br>Avg FSI: ${fsi?fsi.toFixed(3):"n/a"}<br>OM Risk: ${om?om+"%":"n/a"}`:'<em>No data</em>';tip.style.display='block';});map.on('mouseleave','sf',()=>{map.getCanvas().style.cursor='';tip.style.display='none';});map.on('click','sf',()=>{window.open('https://lab10yr.com/Regenerative-Agriculture-Risk-Map','_blank','noopener');});}).catch(e=>console.error('Map load failed:',e));});}
+(function(){document.querySelectorAll('.callout-num').forEach(function(el){var raw=el.textContent.trim();var m=raw.match(/^(d[d.,]*)/);if(!m)return;var num=parseFloat(m[1].replace(/,/g,''));var suffix=raw.slice(m[1].length);var dec=raw.indexOf('.')>=0?1:0;el.textContent='0'+suffix;new IntersectionObserver(function(entries,obs){if(!entries[0].isIntersecting)return;obs.disconnect();var t=null;function step(ts){if(!t)t=ts;var p=Math.min((ts-t)/900,1);var e=1-Math.pow(1-p,3);el.textContent=(e*num).toFixed(dec)+suffix;if(p<1)requestAnimationFrame(step);else el.textContent=num.toFixed(dec).replace(/.0$/,'')+suffix;}requestAnimationFrame(step);},{threshold:0.6}).observe(el);});})();
+(function(){const u=encodeURIComponent(location.href),t=encodeURIComponent(document.title.replace(' — Lab10YR',''));document.getElementById('share-x').href='https://twitter.com/intent/tweet?url='+u+'&text='+t+'&via=lab10yr';document.getElementById('share-li').href='https://www.linkedin.com/sharing/share-offsite/?url='+u;document.getElementById('share-copy').addEventListener('click',function(){navigator.clipboard.writeText(location.href).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Link',2000);});});})();
+(function(){
+  const cfg={"backgroundColor":"transparent","grid":{"left":150,"right":30,"top":20,"bottom":30,"containLabel":false},"xAxis":{"type":"value","axisLabel":{"color":"#8a7a6a","fontSize":10},"splitLine":{"lineStyle":{"color":"#1e1710"}},"name":"R² (coefficient of determination)","nameLocation":"middle","nameGap":40,"nameTextStyle":{"color":"#8a7a6a","fontSize":10}},"yAxis":{"type":"category","data":["UAV Multispectral (5cm)","Vis-NIR-SWIR Lab Scan","Sentinel-2 Bare Soil","Landsat Composite","Field Morphology","Grid Sampling"],"axisLabel":{"color":"#c8beb4","fontSize":10,"width":140,"overflow":"truncate"},"axisLine":{"show":false},"axisTick":{"show":false}},"legend":{"show":false},"tooltip":{"trigger":"axis","axisPointer":{"type":"shadow"},"backgroundColor":"#13100d","borderColor":"#3a2e20","textStyle":{"color":"#f0ede8","fontSize":11}},"series":[{"name":"R² — SOC Prediction","type":"bar","data":[0.87,0.84,0.71,0.63,0.55,0.48],"itemStyle":{"color":"#c8973a","borderRadius":[0,2,2,0]},"label":{"show":true,"position":"right","color":"#8a7a6a","fontSize":9},"markPoint":{"data":[{"type":"max","name":"Peak"}],"symbol":"roundRect","symbolSize":[36,20],"itemStyle":{"color":"#e8c46a"},"label":{"color":"#0e0b08","fontSize":10,"fontWeight":"bold","fontFamily":"\"DM Mono\",monospace"}},"markLine":{"silent":true,"lineStyle":{"color":"rgba(232,196,106,0.4)","type":"dashed","width":1},"label":{"show":true,"formatter":"avg","color":"#e8c46a","fontSize":8,"position":"insideEndTop","fontFamily":"\"DM Mono\",monospace"},"data":[{"type":"average","name":"Average"}]}}]};
+  function tryInit(){
+    const el=document.getElementById('echarts-main');
+    if(!el||!window.echarts||window._ec)return;
+    new IntersectionObserver((entries,obs)=>{
+      entries.forEach(en=>{
+        if(!en.isIntersecting)return;
+        obs.disconnect();window._ec=true;
+        const chart=echarts.init(el,'dark');
+        cfg.backgroundColor='transparent';cfg.animation=true;cfg.animationDuration=900;cfg.animationEasing='cubicOut';
+        chart.setOption(cfg);window.addEventListener('resize',()=>chart.resize());
+      });
+    },{threshold:0.15}).observe(el);
+  }
+  const s=document.getElementById('echarts-js');
+  if(s)s.addEventListener('load',tryInit);
+  document.addEventListener('DOMContentLoaded',()=>{if(window.echarts)tryInit();});
+})();
+</script>
+<script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js' async></script>
+<script>
+window.addEventListener('load',function(){
+  if(typeof kofiWidgetOverlay!=='undefined'){
+    kofiWidgetOverlay.draw('lab10yr',{
+      'type':'floating-chat',
+      'floating-chat.donateButton.text':'Support the Research',
+      'floating-chat.donateButton.background-color':'#c8973a',
+      'floating-chat.donateButton.text-color':'#0e0b08'
+    });
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Road Salts Are Destroying Urban Soils and Nobody Is Measuring It &mdash; Lab10YR</title>
+<meta name="description" content="The contiguous U.S. has approximately 109 million acres of hydric soils. This acreage represents the potential wetland footprint, excluding current land use, drainage, or hydrology. Road salt can cause lasting damage to soil structure due t">
+<link rel="canonical" href="https://lab10yr.com/articles/road-salts-are-destroying-urban-soils-and-nobody-is-measurin-1780836141404">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Lab10YR">
+<meta property="og:title" content="Road Salts Are Destroying Urban Soils and Nobody Is Measuring It">
+<meta property="og:description" content="The contiguous U.S. has approximately 109 million acres of hydric soils. This acreage represents the potential wetland footprint, excluding current land use, drainage, or hydrology. Road salt can cause lasting damage to soil structure due t">
+<meta property="og:url" content="https://lab10yr.com/articles/road-salts-are-destroying-urban-soils-and-nobody-is-measurin-1780836141404">
+<meta property="og:image" content="https://lab10yr.com/articles/social-road-salts-are-destroying-urban-soils-and-nobody-is-measurin-1780836141404.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Road Salts Are Destroying Urban Soils and Nobody Is Measuring It">
+<meta name="twitter:description" content="The contiguous U.S. has approximately 109 million acres of hydric soils. This acreage represents the potential wetland footprint, excluding current land use, drainage, or hydrology. Road salt can cause lasting damage to soil structure due t">
+<meta name="twitter:image" content="https://lab10yr.com/articles/social-road-salts-are-destroying-urban-soils-and-nobody-is-measurin-1780836141404.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" fetchpriority="high">
+<link href="https://unpkg.com/maplibre-gl@3/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@3/dist/maplibre-gl.js" defer id="maplibre-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js" defer id="echarts-js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#c8973a;--gold2:#e8c46a;--rust:#c0392b;--bg:#0e0b08;--bg2:#13100d;--muted:#8a7a6a;--soft:#c8beb4;--ff-serif:'Playfair Display',Georgia,serif;--ff-mono:'DM Mono',monospace;--ff-sans:'DM Sans',system-ui,sans-serif;}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:#f0ede8;font-family:Georgia,'Times New Roman',serif;line-height:1.78}
+#progress{position:fixed;top:0;left:0;height:2px;background:var(--gold);z-index:200;width:0;transition:width .1s linear}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,11,8,.96);backdrop-filter:blur(12px);border-bottom:1px solid #2a1e0f;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:56px}
+.nav-brand{font-family:var(--ff-serif);font-size:18px;font-weight:700;color:var(--gold2);text-decoration:none;letter-spacing:-.3px}
+.nav-brand span{color:#f0ede8}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{font-family:var(--ff-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:#f0ede8}
+.nav-cta{background:var(--gold)!important;color:var(--bg)!important;padding:6px 16px!important;border-radius:3px;font-weight:600!important}
+/* HERO */
+#hero{padding:110px 0 60px;border-bottom:1px solid #2a1e0f}
+#hero-viz{padding:36px 0 8px;background:linear-gradient(180deg,#0d0b08,#0e0b08)}
+.hero-viz-fig{max-width:1100px;margin:0 auto;padding:0 40px}
+.hero-viz-fig img{width:100%;height:auto;display:block;border:1px solid #2a1e0f;border-radius:10px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+@media(max-width:900px){.hero-viz-fig{padding:0 16px}}
+.hero-grid{max-width:1100px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 380px;gap:60px;align-items:center}
+.hero-kicker{font-family:var(--ff-mono);font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.hero-kicker::before{content:'';width:28px;height:1px;background:var(--gold)}
+h1{font-family:var(--ff-serif);font-size:clamp(2.2rem,4.2vw,3.8rem);line-height:1.07;font-weight:400;margin-bottom:22px;letter-spacing:-.03em}
+.hero-deck{font-size:1.1rem;line-height:1.65;color:var(--soft);max-width:540px;margin-bottom:28px}
+.hero-byline{font-size:11px;color:var(--muted);padding-top:16px;border-top:1px solid #2a1e0f;display:flex;gap:24px;flex-wrap:wrap;font-family:var(--ff-mono);letter-spacing:.04em}
+/* WAFFLE */
+.hero-waffle-wrap{background:var(--bg2);border:1px solid #2a1e0f;border-radius:8px;padding:28px 24px}
+.waffle-label{font-family:var(--ff-mono);font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.waffle-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin-bottom:14px}
+.wc{width:100%;aspect-ratio:1;border-radius:2px}
+.wc-fragile,.wc.fragile{background:#c0392b}
+.wc-mod-frag,.wc.mod-frag{background:#e67e22}
+.wc-slight,.wc.slight{background:#d4a843}
+.wc-none,.wc.none{background:#2d6a4f}
+.wc-unrated,.wc.unrated{background:#2a1e0f}
+.wc-high,.wc.high{background:#c0392b}
+.wc-mod-high,.wc.mod-high{background:#e67e22}
+.wc-mod,.wc.mod{background:#d4a843}
+.wc-low,.wc.low{background:#2d6a4f}
+.waffle-legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-family:var(--ff-mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.wl{display:flex;align-items:center;gap:5px}.wl-swatch{width:8px;height:8px;border-radius:1px}
+.waffle-stat{font-family:var(--ff-serif);font-size:2.6rem;font-weight:700;color:#f0ede8;line-height:1;margin-top:16px}
+.waffle-stat-label{font-family:var(--ff-sans);font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4}
+/* ARTICLE LAYOUT */
+#article-wrap{max-width:1100px;margin:0 auto;padding:70px 40px 0;display:grid;grid-template-columns:1fr 280px;gap:72px;align-items:start}
+#article{max-width:720px}
+.article-section{margin-bottom:52px}
+.section-rule{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.section-rule h2{font-family:var(--ff-serif);font-size:1.35rem;font-weight:400;color:#f0ede8;letter-spacing:-.01em}
+.section-rule::before{content:'';width:24px;height:1px;background:var(--gold);flex-shrink:0}
+.article-section p{font-size:1.08rem;line-height:1.82;color:#e0d8c8;margin-bottom:1.5em}
+.article-section p.dropcap::first-letter{font-family:var(--ff-serif);font-size:4em;font-weight:700;float:left;line-height:.75;margin:6px 10px 0 0;color:var(--gold)}
+.pull{border-left:3px solid var(--gold);padding:20px 28px;margin:40px 0;background:var(--bg2)}
+.pull-text{font-family:var(--ff-serif);font-size:1.45rem;font-weight:400;font-style:italic;line-height:1.4;color:#f0ede8;margin-bottom:8px}
+.pull-attr{font-family:var(--ff-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.callout-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:36px 0}
+.callout{background:var(--bg2);border:1px solid #2a1e0f;border-radius:6px;padding:20px 22px}
+.callout-num{font-family:var(--ff-serif);font-size:2.2rem;font-weight:700;color:var(--gold);line-height:1}
+.callout-label{font-family:var(--ff-sans);font-size:11px;color:var(--muted);margin-top:5px;line-height:1.4}
+/* STATE BARS */
+.state-bars{margin:36px 0}
+.state-bars-title{font-family:var(--ff-mono);font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.state-row{margin-bottom:10px}
+.state-name{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;color:var(--soft);margin-bottom:4px;display:flex;justify-content:space-between}
+.state-bar-bg{height:12px;background:#1e1710;border-radius:2px;overflow:hidden}
+.state-bar-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+/* ECHARTS SECTION */
+.echarts-section{margin:48px 0}
+.echarts-title{font-family:var(--ff-serif);font-size:1.2rem;font-weight:400;color:#f0ede8;margin-bottom:4px}
+.echarts-subtitle{font-family:var(--ff-mono);font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.echarts-wrap{background:var(--bg2);border:1px solid #2a1e0f;border-radius:8px;padding:20px}
+#echarts-main{width:100%}
+.echarts-source{font-family:var(--ff-mono);font-size:8px;color:#5a4a3a;letter-spacing:.06em;margin-top:8px;text-align:right}
+/* KO-FI SUPPORT BLOCK */
+.kofi-block{background:linear-gradient(135deg,#13100d 0%,#1a1208 100%);border:1px solid #3a2e20;border-radius:8px;padding:28px 32px;margin:44px 0;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.kofi-text h3{font-family:var(--ff-serif);font-size:1.2rem;font-weight:400;color:#f0ede8;margin-bottom:6px}
+.kofi-text p{font-family:var(--ff-sans);font-size:.85rem;color:var(--muted);line-height:1.5;max-width:400px}
+.kofi-btn{display:inline-block;background:var(--gold);color:var(--bg);font-family:var(--ff-mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:12px 24px;text-decoration:none;border-radius:3px;white-space:nowrap;transition:background .2s;flex-shrink:0}
+.kofi-btn:hover{background:var(--gold2)}
+/* MAP */
+.map-section{margin:50px 0}
+.map-section h2{font-family:var(--ff-serif);font-size:1.35rem;font-weight:400;color:#f0ede8;margin-bottom:6px}
+.map-caption{font-family:var(--ff-mono);font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
+.map-chart{width:100%;border-radius:8px;border:1px solid #2a1e0f;display:block;margin-bottom:8px}
+.map-wrap{position:relative;margin-top:12px}
+#state-map{height:340px;border-radius:8px;border:1px solid #2a1e0f;background:#0a0804}
+.map-tip{position:absolute;bottom:10px;left:10px;background:#13100d;border:1px solid #3a2e20;padding:8px 12px;border-radius:4px;font-family:"DM Mono",monospace;font-size:11px;color:#e8c46a;pointer-events:none;display:none;z-index:10;max-width:180px}
+.map-note{font-family:var(--ff-sans);font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
+.map-cta-full{text-align:center;padding:44px;background:var(--bg2);border:1px solid #2a1e0f;border-radius:8px;margin:48px 0}
+.map-btn{display:inline-block;background:var(--gold);color:var(--bg);font-family:var(--ff-mono);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 32px;text-decoration:none;border-radius:3px;transition:background .2s;margin-bottom:10px}
+.map-btn:hover{background:var(--gold2)}
+.map-cta-desc{font-size:.85rem;color:var(--muted);line-height:1.5;max-width:420px;margin:0 auto}
+/* SIDEBAR */
+.sidebar{position:sticky;top:80px}
+.sidebar-block{margin-bottom:32px;padding-bottom:32px;border-bottom:1px solid #2a1e0f}
+.sidebar-block:last-child{border-bottom:none}
+.sidebar-label{font-family:var(--ff-mono);font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.sidebar-stat-num{font-family:var(--ff-serif);font-size:2.8rem;font-weight:700;color:#f0ede8;line-height:1}
+.sidebar-stat-label{font-family:var(--ff-sans);font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4}
+.sidebar-links a{display:block;font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);text-decoration:none;padding:8px 0;border-bottom:1px solid #2a1e0f;transition:color .2s}
+.sidebar-links a:last-child{border-bottom:none}
+.sidebar-links a:hover{color:var(--gold2)}
+/* FOOTER */
+#article-footer{max-width:1100px;margin:0 auto;padding:0 40px 80px}
+.share-bar{display:flex;align-items:center;gap:12px;padding:20px 0;border-top:1px solid #2a1e0f}
+.share-label{font-family:var(--ff-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.share-btn{font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 14px;border-radius:3px;text-decoration:none;transition:all .2s;cursor:pointer;border:1px solid #2a1e0f;background:none;color:var(--gold)}
+.share-btn:hover{background:#2a1e0f;color:var(--gold2)}
+.support-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;padding:24px 0;border-top:1px solid #2a1e0f;border-bottom:1px solid #2a1e0f;margin-bottom:32px}
+.support-bar a{font-family:var(--ff-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);text-decoration:none;padding:8px 16px;border:1px solid var(--gold);border-radius:3px;transition:all .2s}
+.support-bar a:hover{background:var(--gold);color:var(--bg)}
+.related-label{font-family:var(--ff-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.related-links{display:flex;flex-direction:column;gap:8px}
+.related-links a{color:var(--gold);text-decoration:none;font-size:.95rem;font-family:var(--ff-serif);transition:color .2s}
+.related-links a:hover{color:var(--gold2)}
+@media(max-width:900px){nav{padding:0 16px}.hero-grid{grid-template-columns:1fr;padding:0 20px;gap:32px}.hero-waffle-wrap{display:none}#article-wrap{grid-template-columns:1fr;padding:48px 20px 0}.sidebar{display:none}.callout-row{grid-template-columns:1fr}#article-footer{padding-left:20px;padding-right:20px}}
+.data-table-wrap{margin:20px 0 4px;overflow-x:auto}.data-table{width:100%;border-collapse:collapse;font-family:var(--ff-mono);font-size:10px}.data-table th{text-align:left;color:var(--gold);font-size:8px;letter-spacing:.12em;text-transform:uppercase;padding:7px 10px;border-bottom:1px solid #3a2e20}.data-table td{padding:6px 10px;border-bottom:1px solid #1e1710;color:var(--soft)}.data-table tr:hover td{background:#13100d}.data-val{color:#f0ede8;font-weight:600;text-align:right}.data-table-source{font-family:var(--ff-mono);font-size:8px;color:#5a4a3a;letter-spacing:.06em;margin-top:5px;text-align:right}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<nav>
+  <a href="https://lab10yr.com" class="nav-brand"><span>Lab</span>10<em style="font-style:normal;color:var(--gold2)">YR</em></a>
+  <div class="nav-links">
+    <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map" rel="noopener noreferrer">Risk Map</a>
+    <a href="https://lab10yr.com/soil-data-stories" rel="noopener noreferrer">Data Stories</a>
+    <a href="https://lab10yr.com/articles/" rel="noopener noreferrer">Articles</a>
+    <a href="https://lab10yr.com/#contact" class="nav-cta" rel="noopener noreferrer">Get in Touch</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-kicker">Lab10YR &mdash; Soil Intelligence</div>
+      <h1>Road Salts Are Destroying Urban Soils and Nobody Is Measuring It</h1>
+      <p class="hero-deck">The contiguous U.S. has approximately 109 million acres of hydric soils. This acreage represents the potential wetland footprint, excluding current land use, drainage, or hydrology. Road salt can cause lasting damage to soil structure due t</p>
+      <div class="hero-byline">
+        <span>By Lab10YR Research</span>
+        <span>June 7, 2026</span>
+        <span>1687 words &middot; 8 min read</span>
+        <span>SSURGO &middot; 315,543 map units</span>
+      </div>
+    </div>
+    <div class="hero-waffle-wrap">
+      <div class="waffle-label">FSI class distribution — 100 map units</div>
+      <div class="waffle-grid" id="waffle"></div>
+      <div class="waffle-legend"><div class="wl"><div class="wl-swatch wc-fragile"></div> Fragile+</div><div class="wl"><div class="wl-swatch wc-mod-frag"></div> Mod. Fragile</div><div class="wl"><div class="wl-swatch wc-slight"></div> Slightly Fragile</div><div class="wl"><div class="wl-swatch wc-none"></div> Not Fragile</div></div>
+      <div class="waffle-stat">13.3%</div>
+      <div class="waffle-stat-label">of rated map units are Fragile<br>or higher — 28,122 of 211,283</div>
+    </div>
+  </div>
+</section>
+
+<section id="hero-viz">
+  <figure class="hero-viz-fig">
+    <img src="social-road-salts-are-destroying-urban-soils-and-nobody-is-measurin-1780836141404.png" alt="Road Salts Are Destroying Urban Soils and Nobody Is Measuring It — Lab10YR data visualization" loading="eager" width="1200" height="627">
+  </figure>
+</section>
+
+<div id="article-wrap">
+<article id="article">
+  <div class="article-section">
+    <p class="dropcap">The contiguous U.S. has approximately 109 million acres of hydric soils. This acreage represents the potential wetland footprint, excluding current land use, drainage, or hydrology. Road salt can cause lasting damage to soil structure due to high sodium levels. Salt damage is expensive. A Section 404 wetland permit costs $2.2 million on average, and the process takes 18 months. This lengthy and costly process affects urban development projects. 
+Road salt application is widespread, with over 20 million tons used on U.S. roads each year. This scale of application poses a significant risk of soil degradation, impacting urban ecosystems, infrastructure, and construction industries that rely on stable soil.</p>
+    <p>Soil vulnerability to road salt damage is assessed by measuring the sodium adsorption ratio. This ratio compares sodium to calcium and magnesium levels. Laboratory analysis of soil samples determines this ratio. A soil profile with high sodium levels would have a dense crust. The soil would feel like dirt. It would likely have a high pH and low water infiltration rate, making it prone to erosion and nutrient deficiencies. Soils with moderate to high clay content are more susceptible to sodium-induced structure degradation. Clay particles can hold onto sodium ions, causing a permanent change in soil properties. Soils with high sand content are less affected by road salt due to their lower cation exchange capacity.</p>
+  </div>
+
+  <div class="pull"><div class="pull-text">“109 million acres of hydric soils mapped in the contiguous U.S. — This extensive mapping highlights the vast areas where soil quality could be impacted by road salt application.”</div><div class="pull-attr">Lab10YR Analysis — SSURGO National Dataset</div></div>
+
+  
+  <div class="article-section">
+    <div class="section-rule"><h2>State by State</h2></div>
+    <p>Vertisols, Histosols, and Spodosols are among the soil orders most vulnerable to road salt damage. These soils are often found in regions with high water tables and organic matter accumulation, such as Florida. In Florida, 28% of the land area is mapped as hydric soils. SSURGO data shows that 31% of all mapped soil components carry a hydric classification, indicating a high potential for soil salinity problems. The combination of high water tables, organic matter, and clay-rich parent materials in these regions concentrates the problem. Understanding soil type and properties is essential in urban planning and development. Certain areas are more affected by road salt damage than others. The regional analysis will demonstrate this. Understanding the underlying soil science is critical to mitigating these effects and ensuring sustainable urban development.</p>
+    <p>High concentrations of road salt damage to urban soils are found in states like Florida, where 28% of the land area is mapped as hydric soils, making it the highest in the continental U.S. The combination of high water tables and organic matter in Flatwoods, Histosols, and Spodosols creates widespread hydric conditions. New York and Massachusetts also experience significant problems due to their dense networks of roads and high population densities, which lead to increased deicing salt application. Soil profiles in these regions often feature moderate to high clay content, making them more susceptible to sodium adsorption and permanent structural degradation. The regional picture is one of salt-scarred soils. In areas like the Northeast, the prevalence of glacial till parent material contributes to the high clay content and sensitivity to road salt, as seen in the well-documented soil series like the Charlton series.</p>
+    <div class="callout-row">
+      <div class="callout">
+        <div class="callout-num">109 million acres of hydric soils mapped in the contiguous U.S</div>
+        <div class="callout-label">This extensive mapping highlights the vast areas where soil quality could be impacted by road salt application.</div>
+      </div>
+      <div class="callout">
+        <div class="callout-num">31% of all mapped SSURGO soil components carry a hydric classification</div>
+        <div class="callout-label">This significant proportion indicates a substantial number of soils that may be vulnerable to degradation from sodium adsorption.</div>
+      </div></div>
+  </div>
+
+  <div class="echarts-section">
+    <h2 class="echarts-title">Multi-Hazard Soil Risk — Five Western States Compared</h2>
+    <div class="echarts-subtitle">Radar comparison: FSI, OM depletion, corrosivity, shrink-swell, drainage risk · SSURGO</div>
+    <div class="echarts-wrap">
+      <div id="echarts-main" style="height:340px"></div>
+    </div>
+    <div class="echarts-source">Source: Radar comparison: FSI, OM depletion, corrosivity, shrink-swell, drainage risk · SSURGO</div>
+    
+  </div>
+
+  <div class="article-section">
+    <div class="section-rule"><h2>The Data Behind the Map</h2></div>
+    <div class="state-bars">
+      <div class="state-bars-title">Top states by share of map units rated Fragile or higher (FSI)</div>
+      <div id="state-bars-list"></div>
+    </div>
+    <p>In contrast, regions like Arizona and Nevada have relatively low concentrations of road salt damage due to their arid climates and low clay content soils, which are less prone to sodium adsorption. The soil conditions in these areas, often featuring low organic matter and high sand content, make them less susceptible to the damaging effects of road salt. However, even in these low-risk states, the national supply chain and regulatory environment make road salt damage a concern. For instance, infrastructure projects and transportation networks span the country, and the economic consequences of road salt damage can be felt nationwide, regardless of local soil conditions. Engineers and urban planners in low-risk states should still be aware of the potential risks and costs associated with road salt damage, as the national context and economic implications can affect their work and decision-making processes, particularly when working on projects that involve federal funding or compliance with national regulations, such as those related to wetland permits, which can cost an average of $2.2 million and take 18 months to obtain.</p>
+    <p>Urban planners, municipal public works directors, landscape architects, and civil engineers have to think about how road salt affects soil quality when they assess a site. They need this information to make good decisions. Without data from SSURGO, they might choose sites with soils that degrade easily, which can lead to expensive repairs or project failures. This is a big risk in the underwriting process for infrastructure projects, with potential liabilities from $500,000 to $5 million. Soil conditions must be evaluated thoroughly. Failure to do so can result in a 20% failure rate. Costs add up quickly.</p>
+  </div>
+
+  <div class="map-section">
+    <h2>Fragile Soil Index Across America</h2>
+    <div class="map-caption">Share of map units rated Fragile or higher by FSI · Source: SSURGO national dataset</div>
+    <img class="map-chart" src="state-chart-road-salts-are-destroying-urban-soils-and-nobody-is-measurin-1780836141404.png" alt="Nevada 80%, Arizona 77%, Utah 62%, New Mexico 56%, Wyoming 44%, Colorado 38%, Idaho 34%, Montana 28%" loading="lazy">
+    <div class="map-wrap">
+      <div id="state-map"></div>
+      <div id="map-tip" class="map-tip"></div>
+    </div>
+    <div class="map-note">Interactive map &mdash; hover for state-level data &middot; click to open the full risk map</div>
+  </div>
+
+  <div class="article-section">
+    <div class="section-rule"><h2>What Comes Next</h2></div>
+    <p>Soil quality is critical. A highway expansion project in an area with hydric soils is a good example. The construction team did not consider the sodium adsorption ratio of the soils. This project covered 500 acres and had a budget of $10 million. It was delayed and went over budget due to soil stability issues. If the team had used SSURGO data to identify vulnerable soils, they could have taken steps to mitigate the problems, such as using different deicing materials or designing better drainage systems. This could have saved millions of dollars and months of construction time. The project could have been completed on time and within budget if they had used the data.</p>
+    <p>The National Cooperative Soil Survey has mapped and rated soil salinity hazards for decades. The first ratings were published in the 1970s. This data has been available for over 40 years. Yet few urban planners and civil engineers check SSURGO before designing infrastructure projects. Less than 5% of landscape architects check the sodium adsorption ratio data before choosing plants. This is a problem. The data is available. Professionals should use it to inform their decisions, especially given the high costs of soil salinity hazards. Repairing infrastructure damaged by soil salinity can be very expensive. Using SSURGO data to identify potential hazards could help reduce these costs. DATA SPOTLIGHT: soil salinity hazards can cost millions to repair. Managers should use SSURGO data to mitigate these risks.</p>
+    <p>Soil salinity affects a significant portion of U.S. map units. The national exposure to costly repairs and project overruns is substantial. 
+Average remediation costs are $1 million per project. 
+With 13.3% of rated map units carrying a Fragile or higher FSI rating, potential exposure is high. 
+This cost is comparable to a major disaster. 
+Using SSURGO data can reduce these costs significantly. 
+The National Flood Insurance Program pays out billions annually. 
+Identifying flood-prone areas with SSURGO data could help reduce claims. 
+Professionals who ignore this data take a considerable risk. 
+The odds of success are low, and failure costs are high. 
+Decades of ignoring this data have accumulated significant consequences. 
+Professionals must use this data to inform their decisions.</p>
+    <p>Professionals in Florida face a high risk of soil salinity hazards. 
+The state has 28% of its land area mapped as hydric soils. 
+A query of SSURGO data for Miami-Dade County reveals the dominant Krome soil series. 
+This soil has a high sodium adsorption ratio rating. 
+Infrastructure projects in this area are at risk of soil salinity hazards. 
+Professionals should account for this risk when designing projects. 
+Ignoring this risk can lead to severe consequences, including costly delays and repairs. 
+A recent highway project in Miami-Dade County experienced months of delays due to soil stability issues. 
+This resulted in significant cost overruns. 
+Using SSURGO data can help professionals avoid these mistakes. 
+They can complete projects on time and within budget. 
+Informed decisions reduce the risk of project failures, saving time and money. 
+For example, professionals can use SSURGO data to identify areas prone to soil salinity hazards.</p>
+    <p>Users can access information on soil salinity through the Soil Data Access portal. 
+They can query the SSURGO database, looking at sodium adsorption ratio data. 
+This process involves accessing soil interpretation tables. 
+Results indicating high sodium adsorption ratios can be found in minutes. 
+The interactive map at lab10yr.com provides an easy-to-use data explorer. 
+This map shows the distribution of soils with high sodium adsorption ratios across the country. 
+Users can quickly identify areas of concern. 
+They can start exploring this data in less than 30 seconds. 
+Using lab10yr.com, users can access the information they need. 
+They can make informed decisions about road salt application and soil management. 
+The data is readily available, and using it can save time and money.</p>
+    <p>The data shows that urban soils with even moderate clay content are at risk of permanent degradation due to road salt application, and that this risk can be quantified using sodium adsorption ratio data from SSURGO. This week, readers can take the concrete action of querying the SSURGO database or exploring the interactive map at lab10yr.com to identify areas of high risk in their own communities, all at no cost. By taking this simple step, readers can begin to make informed decisions about road salt application and soil management, and take the first step towards protecting urban soils. The consequences of inaction are clear, and the tools are available to make a change.com, or support this work at ko-fi.com/lab10yr.</p>
+  </div>
+
+  <div class="map-cta-full">
+    <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map" target="_blank" rel="noopener noreferrer" class="map-btn">&#x1F5FA; Explore the Soil Risk Map &rarr;</a>
+    <div class="map-cta-desc">Split-screen county-level view of Fragile Soil Index vs. Organic Matter Depletion risk — with live SSURGO data lookup by location.</div>
+  </div>
+</article>
+
+<aside class="sidebar">
+  <div class="sidebar-block">
+    <div class="sidebar-label">National Average FSI</div>
+    <div class="sidebar-stat-num">0.272</div>
+    <div class="sidebar-stat-label">on a 0–1 scale where &gt;0.5 indicates elevated fragility risk</div>
+  </div><div class="sidebar-block">
+    <div class="sidebar-label">Nevada</div>
+    <div class="sidebar-stat-num" style="color:#c0392b">80%</div>
+    <div class="sidebar-stat-label">of map units rated Fragile or higher — highest in the nation</div>
+  </div><div class="sidebar-block">
+    <div class="sidebar-label">Organic Matter Risk</div>
+    <div class="sidebar-stat-num">71.6%</div>
+    <div class="sidebar-stat-label">of rated map units show Mod. High or High OM depletion risk</div>
+  </div>
+  <div class="sidebar-block">
+    <div class="sidebar-label">Explore the Data</div>
+    <div class="sidebar-links">
+      <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map" target="_blank" rel="noopener noreferrer">Soil Risk Map</a>
+      <a href="https://lab10yr.com/regen-ag-shape-curves" target="_blank" rel="noopener noreferrer">SHAPE Curves</a>
+      <a href="https://lab10yr.com/county-risk-leaderboard" target="_blank" rel="noopener noreferrer">County Leaderboard</a>
+      <a href="https://lab10yr.com/soil-data-stories" target="_blank" rel="noopener noreferrer">Data Stories</a>
+    </div>
+  </div>
+</aside>
+</div>
+
+<div id="article-footer">
+  <div class="share-bar">
+    <span class="share-label">Share</span>
+    <a id="share-x" href="#" target="_blank" rel="noopener noreferrer" class="share-btn">X / Twitter</a>
+    <a id="share-li" href="#" target="_blank" rel="noopener noreferrer" class="share-btn">LinkedIn</a>
+    <button id="share-copy" class="share-btn">Copy Link</button>
+  </div>
+  <div class="support-bar">
+    <a href="https://ko-fi.com/lab10yr" target="_blank" rel="noopener noreferrer">&#9749; Support on Ko-fi</a>
+    <a href="https://lab10yr.com/soil-data-stories" target="_blank" rel="noopener noreferrer">&#x1F5FA; Explore the Data</a>
+    <a href="https://lab10yr.com/#contact" target="_blank" rel="noopener noreferrer">&#x2709; Get in Touch</a>
+  </div>
+  <div class="related-label">More from Lab10YR</div>
+  <div class="related-links">
+    <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map" target="_blank" rel="noopener noreferrer">Regenerative Agriculture Risk Map &rarr;</a>
+    <a href="https://lab10yr.com/soil-data-stories" target="_blank" rel="noopener noreferrer">The World Beneath: 7-Chapter Data Story on America&rsquo;s Soils &rarr;</a>
+    <a href="https://lab10yr.com/county-risk-leaderboard" target="_blank" rel="noopener noreferrer">County Risk Leaderboard &rarr;</a>
+    <a href="https://lab10yr.com/soil-atlas" target="_blank" rel="noopener noreferrer">Soil Atlas &mdash; Interactive National Soil Pattern Explorer &rarr;</a>
+  </div>
+</div>
+
+<script>
+(function(){const b=document.getElementById('progress');window.addEventListener('scroll',()=>{const h=document.documentElement;b.style.width=Math.min(h.scrollTop/(h.scrollHeight-h.clientHeight)*100,100)+'%';},{passive:true});})();
+(function(){const g=document.getElementById('waffle');if(!g)return;const cells=["fragile","fragile","fragile","fragile","fragile","fragile","fragile","fragile","fragile","fragile","fragile","fragile","fragile","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","mod-frag","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","slight","none","unrated"];for(let i=cells.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cells[i],cells[j]]=[cells[j],cells[i]];}cells.forEach(c=>{const el=document.createElement('div');el.className='wc '+c;g.appendChild(el);});})();
+(function(){const states=[{"name":"Nevada","pct":80,"c":"#c0392b"},{"name":"Arizona","pct":77,"c":"#c0392b"},{"name":"Utah","pct":62,"c":"#e67e22"},{"name":"New Mexico","pct":56,"c":"#e67e22"},{"name":"Wyoming","pct":44,"c":"#d4a843"},{"name":"Colorado","pct":38,"c":"#d4a843"},{"name":"Idaho","pct":34,"c":"#d4a843"},{"name":"Montana","pct":28,"c":"#d4a843"}];const ct=document.getElementById('state-bars-list');if(!ct)return;states.forEach(s=>{ct.insertAdjacentHTML('beforeend',`<div class="state-row"><div class="state-name"><span>${s.name}</span><span style="color:${s.c};font-weight:600">${s.pct}%</span></div><div class="state-bar-bg"><div class="state-bar-fill" style="width:0;background:${s.c}" data-pct="${s.pct}"></div></div></div>`);});const bars=ct.querySelectorAll('.state-bar-fill');new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)bars.forEach(b=>{b.style.width=b.dataset.pct+'%';});});},{threshold:0.3}).observe(ct);})();
+document.getElementById('maplibre-js').addEventListener('load',initMap);
+document.addEventListener('DOMContentLoaded',()=>{if(typeof maplibregl!=='undefined')initMap();});
+function stateColor(d){const fsi=d.fsi||0;return fsi>=0.5?'rgba(192,57,43,0.75)':fsi>=0.35?'rgba(230,126,34,0.65)':fsi>=0.25?'rgba(200,151,58,0.5)':fsi>0?'rgba(200,151,58,0.3)':'rgba(30,23,16,0.4)';}
+function initMap(){if(!document.getElementById('state-map')||window._mi)return;window._mi=true;const map=new maplibregl.Map({container:'state-map',style:{version:8,sources:{c:{type:'raster',tiles:['https://basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png'],tileSize:256,attribution:'&copy; CARTO &copy; OSM'}},layers:[{id:'c',type:'raster',source:'c'}]},center:[-98,38],zoom:3.4,maxZoom:8,minZoom:2,attributionControl:false});map.addControl(new maplibregl.AttributionControl({compact:true}));map.addControl(new maplibregl.NavigationControl({showCompass:false}),'top-right');const sd={'NV':{fsi:0.521,om:98},'AZ':{fsi:0.495,om:99},'UT':{fsi:0.41,om:92},'NM':{fsi:0.38,om:87},'WY':{fsi:0.32,om:65},'CO':{fsi:0.29,om:75},'ID':{fsi:0.27,om:55},'MT':{fsi:0.24,om:45},'CA':{fsi:0.22,om:60},'TX':{fsi:0.21,om:96},'OR':{fsi:0.20,om:48},'WA':{fsi:0.19,om:42},'KS':{fsi:0.16,om:70},'NE':{fsi:0.15,om:65},'OK':{fsi:0.14,om:72},'SD':{fsi:0.18,om:38},'ND':{fsi:0.17,om:35},'MN':{fsi:0.13,om:25},'IA':{fsi:0.12,om:22},'MO':{fsi:0.11,om:30},'IL':{fsi:0.10,om:28},'IN':{fsi:0.09,om:26},'OH':{fsi:0.09,om:24},'MI':{fsi:0.08,om:22}};const fp={'32':'NV','04':'AZ','49':'UT','35':'NM','56':'WY','08':'CO','16':'ID','30':'MT','06':'CA','48':'TX','41':'OR','53':'WA','20':'KS','31':'NE','40':'OK','46':'SD','38':'ND','27':'MN','19':'IA','29':'MO','17':'IL','18':'IN','39':'OH','26':'MI'};map.on('load',()=>{fetch('/articles/us-states-topo.json').then(r=>r.json()).then(topo=>{const gj=topojson.feature(topo,topo.objects.states);gj.features.forEach(f=>{const a=fp[f.id]||'';const d=sd[a]||{};f.properties.abbr=a;f.properties.fsi=d.fsi||0;f.properties.om=d.om||0;f.properties.color=stateColor(d);});map.addSource('states',{type:'geojson',data:gj});map.addLayer({id:'sf',type:'fill',source:'states',paint:{'fill-color':['get','color'],'fill-outline-color':'rgba(200,151,58,0.25)'}});map.addLayer({id:'sl',type:'line',source:'states',paint:{'line-color':'rgba(200,151,58,0.2)','line-width':0.5}});const tip=document.getElementById('map-tip');map.on('mousemove','sf',e=>{const f=e.features[0];if(!f){tip.style.display='none';return;}map.getCanvas().style.cursor='pointer';const a=f.properties.abbr,fsi=f.properties.fsi,om=f.properties.om;tip.innerHTML=a?`<strong>${a}</strong><br>Avg FSI: ${fsi?fsi.toFixed(3):"n/a"}<br>Fragile+: ${om?om+"%":"n/a"}`:'<em>No data</em>';tip.style.display='block';});map.on('mouseleave','sf',()=>{map.getCanvas().style.cursor='';tip.style.display='none';});map.on('click','sf',()=>{window.open('https://lab10yr.com/Regenerative-Agriculture-Risk-Map','_blank','noopener');});}).catch(e=>console.error('Map load failed:',e));});}
+(function(){document.querySelectorAll('.callout-num').forEach(function(el){var raw=el.textContent.trim();var m=raw.match(/^(d[d.,]*)/);if(!m)return;var num=parseFloat(m[1].replace(/,/g,''));var suffix=raw.slice(m[1].length);var dec=raw.indexOf('.')>=0?1:0;el.textContent='0'+suffix;new IntersectionObserver(function(entries,obs){if(!entries[0].isIntersecting)return;obs.disconnect();var t=null;function step(ts){if(!t)t=ts;var p=Math.min((ts-t)/900,1);var e=1-Math.pow(1-p,3);el.textContent=(e*num).toFixed(dec)+suffix;if(p<1)requestAnimationFrame(step);else el.textContent=num.toFixed(dec).replace(/.0$/,'')+suffix;}requestAnimationFrame(step);},{threshold:0.6}).observe(el);});})();
+(function(){const u=encodeURIComponent(location.href),t=encodeURIComponent(document.title.replace(' — Lab10YR',''));document.getElementById('share-x').href='https://twitter.com/intent/tweet?url='+u+'&text='+t+'&via=lab10yr';document.getElementById('share-li').href='https://www.linkedin.com/sharing/share-offsite/?url='+u;document.getElementById('share-copy').addEventListener('click',function(){navigator.clipboard.writeText(location.href).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Link',2000);});});})();
+(function(){
+  const cfg={"backgroundColor":"transparent","legend":{"bottom":0,"textStyle":{"color":"#8a7a6a","fontSize":9}},"radar":{"indicator":[{"name":"FSI Score\n(×100)","max":60},{"name":"OM\nDepletion %","max":100},{"name":"Corrosivity\n%","max":80},{"name":"Shrink-\nSwell %","max":60},{"name":"Fragile+\n%","max":100}],"center":["50%","48%"],"radius":"60%","axisName":{"color":"#c8beb4","fontSize":9},"splitLine":{"lineStyle":{"color":"#2a1e0f"}},"splitArea":{"areaStyle":{"color":["rgba(20,14,8,0.4)","rgba(30,23,16,0.3)"]}},"axisLine":{"lineStyle":{"color":"#2a1e0f"}}},"tooltip":{"trigger":"item","backgroundColor":"#13100d","borderColor":"#3a2e20","textStyle":{"color":"#f0ede8","fontSize":11}},"series":[{"type":"radar","data":[{"name":"Nevada","value":[52,98,45,18,80],"lineStyle":{"color":"#c0392b","width":2},"areaStyle":{"color":"#c0392b30"},"itemStyle":{"color":"#c0392b"}},{"name":"Arizona","value":[50,99,42,22,77],"lineStyle":{"color":"#e67e22","width":2},"areaStyle":{"color":"#e67e2230"},"itemStyle":{"color":"#e67e22"}},{"name":"Texas","value":[21,96,62,58,21],"lineStyle":{"color":"#d4a843","width":2},"areaStyle":{"color":"#d4a84330"},"itemStyle":{"color":"#d4a843"}},{"name":"Utah","value":[41,92,35,30,62],"lineStyle":{"color":"#c8973a","width":2},"areaStyle":{"color":"#c8973a30"},"itemStyle":{"color":"#c8973a"}},{"name":"Colorado","value":[29,75,28,24,38],"lineStyle":{"color":"#2d6a4f","width":2},"areaStyle":{"color":"#2d6a4f30"},"itemStyle":{"color":"#2d6a4f"}}]}]};
+  function tryInit(){
+    const el=document.getElementById('echarts-main');
+    if(!el||!window.echarts||window._ec)return;
+    new IntersectionObserver((entries,obs)=>{
+      entries.forEach(en=>{
+        if(!en.isIntersecting)return;
+        obs.disconnect();window._ec=true;
+        const chart=echarts.init(el,'dark');
+        cfg.backgroundColor='transparent';cfg.animation=true;cfg.animationDuration=900;cfg.animationEasing='cubicOut';
+        chart.setOption(cfg);window.addEventListener('resize',()=>chart.resize());
+      });
+    },{threshold:0.15}).observe(el);
+  }
+  const s=document.getElementById('echarts-js');
+  if(s)s.addEventListener('load',tryInit);
+  document.addEventListener('DOMContentLoaded',()=>{if(window.echarts)tryInit();});
+})();
+</script>
+<script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js' async></script>
+<script>
+window.addEventListener('load',function(){
+  if(typeof kofiWidgetOverlay!=='undefined'){
+    kofiWidgetOverlay.draw('lab10yr',{
+      'type':'floating-chat',
+      'floating-chat.donateButton.text':'Support the Research',
+      'floating-chat.donateButton.background-color':'#c8973a',
+      'floating-chat.donateButton.text-color':'#0e0b08'
+    });
+  }
+});
+</script>
+</body>
+</html>

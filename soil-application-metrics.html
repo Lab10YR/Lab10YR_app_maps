@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://lab10yr.com/soil-application-metrics">
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="Lab10YR">
+<meta property="og:title"       content="Soil Data Metrics — Proving the Value of Soil Information">
+<meta property="og:description" content="121 million SDA requests in FY2023. Nearly doubled in 2025. CART, WSS, and SDA usage metrics — the numbers that prove soil data matters.">
+<meta property="og:url"         content="https://lab10yr.com/soil-application-metrics.html">
+<meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="Soil Data Metrics — Proving the Value of Soil Information">
+<meta name="twitter:description" content="121 million SDA requests in FY2023. Nearly doubled in 2025.">
+<title>Soil Data Metrics — Proving the Value of Soil Information</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.3.3/echarts.min.js"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="js/shared.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--panel3:#181e30;
+  --border:#1e2640;--text:#d4daf0;--dim:#5a6490;--dimmer:#2e3560;
+  --accent:#38bdf8;--accent2:#a78bfa;--green:#22c55e;
+  --gold:#f59e0b;--red:#ef4444;--orange:#f97316;
+  --soil:#c8a84b;--soil2:#8b5e2a;
+  --sage:#7aaf6e;--earth:#9a7040;--teal:#5a9aa5;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --serif:Georgia,'Times New Roman',serif;
+}
+html,body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden;line-height:1.6}
+
+/* ── NAV ─────────────────────────────────────────────── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;height:46px;
+  display:flex;align-items:center;padding:0 20px;gap:4px;
+  background:rgba(4,6,12,.97);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(12px);overflow-x:auto;
+}
+#nav::-webkit-scrollbar{display:none}
+.nav-logo{font-family:var(--serif);font-size:14px;font-style:italic;
+  color:var(--soil);text-decoration:none;font-weight:700;flex-shrink:0;margin-right:8px}
+.nav-link{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--dim);text-decoration:none;padding:0 9px;height:46px;
+  display:flex;align-items:center;transition:color .15s;white-space:nowrap;flex-shrink:0;
+  border-bottom:2px solid transparent}
+.nav-link:hover{color:var(--text)}
+.nav-link.active{color:var(--soil);border-bottom-color:var(--soil)}
+.nav-link.hot{color:var(--accent)}
+.nav-link.hot2{color:var(--accent2)}
+.nav-spacer{flex:1}
+
+/* ── HERO ────────────────────────────────────────────── */
+#hero{
+  min-height:100vh;padding:120px min(8vw,100px) 80px;
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 55% at 70% 20%, rgba(200,168,75,.08) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 60% at 10% 80%, rgba(154,112,64,.09) 0%, transparent 55%),
+    linear-gradient(180deg,#04060c 0%,#080706 40%,#04060c 100%);
+}
+.hero-grid{
+  position:absolute;inset:0;z-index:1;
+  background-image:
+    linear-gradient(rgba(200,168,75,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(200,168,75,.025) 1px,transparent 1px);
+  background-size:56px 56px;
+}
+.hero-content{position:relative;z-index:2;max-width:900px}
+.hero-eyebrow{
+  font-size:10px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--soil);margin-bottom:20px;display:flex;align-items:center;gap:12px;
+}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--soil)}
+.hero-h1{
+  font-family:var(--serif);font-size:clamp(2.8rem,5.5vw,5rem);
+  line-height:1.05;font-weight:400;color:#fff;letter-spacing:-.02em;margin-bottom:20px;
+}
+.hero-h1 strong{color:var(--soil);font-weight:400}
+.hero-sub{
+  font-size:clamp(1rem,1.5vw,1.18rem);color:rgba(212,218,240,.68);
+  max-width:60ch;line-height:1.78;margin-bottom:36px;
+}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:56px}
+.btn-soil{
+  display:inline-flex;align-items:center;gap:8px;padding:11px 22px;
+  border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;
+  letter-spacing:.05em;border:1px solid var(--soil);
+  background:rgba(200,168,75,.12);color:var(--soil);transition:all .18s;
+}
+.btn-soil:hover{background:rgba(200,168,75,.22);box-shadow:0 0 24px rgba(200,168,75,.2)}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;padding:11px 22px;
+  border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;
+  letter-spacing:.05em;border:1px solid var(--border);color:var(--dim);transition:all .18s;
+}
+.btn-ghost:hover{background:var(--panel2);border-color:var(--dimmer);color:var(--text)}
+
+/* ── HERO STAT GRID ──────────────────────────────────── */
+.hero-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;
+}
+@media(max-width:700px){.hero-stats{grid-template-columns:1fr 1fr}}
+.hs-box{background:rgba(10,14,26,.94);padding:22px 18px;display:flex;flex-direction:column;gap:5px}
+.hs-val{font-family:var(--serif);font-size:2rem;color:#fff;line-height:1;font-weight:400}
+.hs-val.soil{color:var(--soil)}
+.hs-val.sage{color:var(--sage)}
+.hs-val.teal{color:var(--teal)}
+.hs-val.gold{color:var(--gold)}
+.hs-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--dim)}
+.hs-sub{font-size:10px;color:var(--dimmer)}
+
+/* ── SECTIONS ────────────────────────────────────────── */
+.section{padding:80px min(6vw,80px);max-width:1280px;margin:0 auto}
+.dark-band{
+  background:rgba(8,12,22,.7);border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:80px min(6vw,80px);
+}
+.dark-band .inner{max-width:1280px;margin:0 auto}
+.section-eyebrow{
+  font-size:10px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--soil);margin-bottom:14px;display:flex;align-items:center;gap:12px;
+}
+.section-eyebrow::before{content:'';width:24px;height:1px;background:var(--soil)}
+.section-h2{
+  font-family:var(--serif);font-size:clamp(1.9rem,3.8vw,3rem);
+  line-height:1.12;font-weight:400;color:#fff;letter-spacing:-.02em;margin-bottom:18px;
+}
+.section-h2 em{font-style:italic;color:var(--soil)}
+.section-lead{
+  font-size:1rem;color:rgba(212,218,240,.62);
+  max-width:64ch;line-height:1.78;margin-bottom:44px;
+}
+
+/* ── CHAPTER MARKERS ─────────────────────────────────── */
+.chapter-mark{display:flex;align-items:center;gap:16px;margin-bottom:28px}
+.ch-num{font-family:var(--serif);font-size:4.5rem;font-weight:400;color:rgba(200,168,75,.1);line-height:1;user-select:none}
+.ch-label{font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.ch-hed{font-family:var(--serif);font-size:1.5rem;font-weight:400;color:rgba(212,218,240,.7);line-height:1.2}
+
+/* ── STAT CARDS ──────────────────────────────────────── */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px}
+@media(max-width:800px){.stat-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.stat-grid{grid-template-columns:1fr}}
+.stat-card{
+  background:var(--panel2);border:1px solid var(--border);border-radius:8px;
+  padding:24px;position:relative;overflow:hidden;
+}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0}
+.stat-card.cs::before{background:var(--soil)}
+.stat-card.cg::before{background:var(--sage)}
+.stat-card.ct::before{background:var(--teal)}
+.stat-card.ce::before{background:var(--earth)}
+.stat-num{font-family:var(--serif);font-size:2.4rem;color:#fff;line-height:1;font-weight:400;margin-bottom:6px}
+.stat-num span{font-size:1.1rem;color:var(--soil)}
+.stat-lbl{font-size:.78rem;font-weight:700;color:var(--dim);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em}
+.stat-desc{font-size:.75rem;color:var(--dimmer);line-height:1.6}
+
+/* ── CONTEXT CARDS ───────────────────────────────────── */
+.ctx-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:36px}
+@media(max-width:720px){.ctx-grid{grid-template-columns:1fr}}
+.ctx-card{
+  background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:22px;
+}
+.ctx-icon{font-size:1.5rem;margin-bottom:10px;display:block}
+.ctx-title{font-size:.85rem;font-weight:700;color:#fff;margin-bottom:6px}
+.ctx-body{font-size:.78rem;color:var(--dim);line-height:1.65}
+.ctx-metric{
+  font-family:monospace;font-size:.72rem;color:var(--soil);
+  background:rgba(200,168,75,.08);border:1px solid rgba(200,168,75,.2);
+  padding:3px 8px;border-radius:3px;display:inline-block;margin-top:8px;
+}
+
+/* ── PULLQUOTE ────────────────────────────────────────── */
+.pullquote{
+  font-family:var(--serif);font-size:clamp(1.3rem,2.4vw,1.85rem);
+  font-style:italic;color:var(--soil);line-height:1.45;
+  border-left:3px solid var(--soil);padding:14px 0 14px 24px;
+  margin:40px 0;max-width:660px;
+}
+.pullquote cite{display:block;font-size:.78rem;font-style:normal;color:var(--dimmer);margin-top:10px;letter-spacing:.04em}
+
+/* ── TWO COL ─────────────────────────────────────────── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+@media(max-width:800px){.two-col{grid-template-columns:1fr}}
+/* ── MAP METRIC BUTTONS ──────────────────────────────── */
+.res-map-btn{padding:7px 16px;font-size:11px;font-weight:700;letter-spacing:.05em;
+  background:var(--panel2);border:1px solid var(--border);color:var(--dim);
+  border-radius:5px;cursor:pointer;transition:all .15s}
+.res-map-btn:hover{background:var(--panel3);color:var(--text)}
+.res-map-btn.active{background:var(--soil);color:#000;border-color:var(--soil)}
+/* ── RANK LIST ───────────────────────────────────────── */
+.rank-item{display:flex;align-items:center;gap:8px;padding:5px 0;
+  border-bottom:1px solid rgba(30,38,64,.35);cursor:pointer}
+.rank-item:hover{opacity:.8}
+.rank-num{width:20px;font-size:.65rem;color:var(--dimmer);text-align:center;flex-shrink:0}
+.rank-st{font-size:.76rem;font-weight:700;color:#fff;width:30px;flex-shrink:0}
+.rank-bar-wrap{flex:1;height:7px;background:var(--panel3);border-radius:3px;overflow:hidden}
+.rank-bar{height:100%;border-radius:3px;background:var(--soil);transition:width .5s ease}
+.rank-val{font-size:.65rem;color:var(--dim);min-width:48px;text-align:right;flex-shrink:0;font-family:monospace}
+
+/* ── CHARTS ──────────────────────────────────────────── */
+.chart-wrap{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:24px}
+.chart-title{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:3px}
+.chart-sub{font-size:.7rem;color:var(--dimmer);margin-bottom:18px}
+.chart-spinner{
+  display:flex;align-items:center;justify-content:center;
+  height:260px;color:var(--dimmer);font-size:.82rem;gap:10px;
+}
+.chart-spinner::after{
+  content:'';width:16px;height:16px;border:2px solid var(--border);
+  border-top-color:var(--soil);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── LIVE BADGE ──────────────────────────────────────── */
+.live-badge{
+  display:inline-flex;align-items:center;gap:5px;font-size:9px;
+  font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--green);background:rgba(34,197,94,.08);
+  border:1px solid rgba(34,197,94,.22);padding:3px 9px;border-radius:20px;
+}
+.live-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ── SEASONAL HEATMAP ────────────────────────────────── */
+.heatmap-grid{display:grid;gap:3px}
+.hm-row{display:flex;align-items:center;gap:3px}
+.hm-lbl{width:28px;font-size:9px;color:var(--dim);text-align:right;flex-shrink:0;font-family:monospace}
+.hm-cell{
+  flex:1;height:28px;border-radius:2px;
+  background:var(--panel3);position:relative;cursor:default;
+  transition:opacity .15s;
+}
+.hm-cell:hover{opacity:.8}
+.hm-month-labels{display:flex;padding-left:31px;margin-bottom:4px}
+.hm-month-labels span{flex:1;font-size:8px;color:var(--dimmer);text-align:center}
+
+/* ── INTERACTIVE SECTION ─────────────────────────────── */
+.ctrl-row{display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+.ctrl-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+select{
+  background:var(--panel3);border:1px solid var(--border);color:var(--text);
+  padding:8px 32px 8px 12px;border-radius:6px;font-size:13px;cursor:pointer;
+  outline:none;transition:border-color .15s;min-width:140px;
+  -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a6490'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;
+}
+select:hover,select:focus{border-color:var(--soil)}
+.spin-label{font-size:11px;color:var(--soil);display:none}
+
+/* ── DATA TABLE ──────────────────────────────────────── */
+.tbl-wrap{overflow-x:auto;border-radius:6px;border:1px solid var(--border);max-height:400px;overflow-y:auto}
+.tbl-wrap::-webkit-scrollbar{width:5px;height:5px}
+.tbl-wrap::-webkit-scrollbar-track{background:var(--panel3)}
+.tbl-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.dtbl{width:100%;border-collapse:collapse;font-size:.76rem}
+.dtbl th{
+  background:var(--panel3);color:var(--dim);padding:9px 11px;text-align:left;
+  font-weight:600;letter-spacing:.06em;font-size:.69rem;text-transform:uppercase;
+  white-space:nowrap;position:sticky;top:0;border-bottom:1px solid var(--border);z-index:1;
+}
+.dtbl td{padding:8px 11px;border-bottom:1px solid rgba(30,38,64,.4);color:var(--text);white-space:nowrap}
+.dtbl tr:hover td{background:rgba(255,255,255,.015)}
+.dtbl .num{text-align:right;font-family:monospace;color:var(--soil);font-size:.75rem}
+
+/* ── INTERPRETATION TABLE ────────────────────────────── */
+.interp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px}
+@media(max-width:720px){.interp-grid{grid-template-columns:1fr}}
+.interp-row{
+  background:var(--panel2);border:1px solid var(--border);border-radius:6px;
+  padding:16px 18px;display:flex;flex-direction:column;gap:5px;
+}
+.interp-name{font-size:.78rem;font-weight:700;color:var(--soil);font-family:monospace}
+.interp-desc{font-size:.75rem;color:var(--dim);line-height:1.6}
+.interp-unit{font-size:.69rem;color:var(--dimmer)}
+
+/* ── FOOTNOTE ────────────────────────────────────────── */
+.footnote{
+  font-size:.75rem;color:var(--dimmer);line-height:1.65;
+  border-top:1px solid var(--border);padding-top:16px;margin-top:32px;
+}
+.footnote a{color:var(--soil);text-decoration:none}
+.footnote a:hover{text-decoration:underline}
+
+/* ── FOOTER ──────────────────────────────────────────── */
+footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6vw,80px) 32px;color:var(--dim);font-size:.82rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:36px}
+@media(max-width:680px){.footer-grid{grid-template-columns:1fr}}
+.footer-brand{font-family:var(--serif);font-size:1.1rem;font-style:italic;color:var(--soil);margin-bottom:8px}
+.footer-desc{font-size:.78rem;line-height:1.65;color:var(--dimmer);max-width:38ch}
+.footer-col h4{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--dimmer);margin-bottom:12px}
+.footer-col a{display:block;color:var(--dim);text-decoration:none;font-size:.8rem;margin-bottom:6px;transition:color .15s}
+.footer-col a:hover{color:var(--soil)}
+.footer-rule{border:none;border-top:1px solid var(--border);margin-bottom:18px}
+.footer-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.73rem;color:var(--dimmer)}
+
+/* ── REVEAL ──────────────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+.reveal.on{opacity:1;transform:none}
+
+/* ── NYT MILESTONE ROW ───────────────────────────────── */
+.nyt-milestone-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:16px}
+@media(max-width:700px){.nyt-milestone-row{grid-template-columns:1fr 1fr}}
+.nyt-milestone{background:var(--panel2);padding:24px 20px;display:flex;flex-direction:column;gap:4px}
+.nyt-milestone-num{font-family:var(--serif);font-size:2.6rem;color:#fff;line-height:1;letter-spacing:-.02em}
+.nyt-milestone-num span{font-size:1.1rem;color:var(--soil)}
+.nyt-milestone-yr{font-size:.68rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--soil);margin-top:3px}
+.nyt-milestone-note{font-size:.72rem;color:var(--dimmer);line-height:1.55;margin-top:4px}
+
+/* ── NYT UNIT CHART ──────────────────────────────────── */
+.nyt-unit-wrap{margin:28px 0}
+.nyt-unit-grid{display:flex;flex-wrap:wrap;gap:6px;max-width:560px;margin-bottom:14px}
+.nyt-unit-sq{width:34px;height:34px;border-radius:3px;background:var(--panel3);border:1px solid var(--border)}
+.nyt-unit-sq.cart{background:#c8a84b;border-color:#c8a84b;box-shadow:0 0 14px rgba(200,168,75,.35)}
+.nyt-unit-legend{font-size:.75rem;color:var(--dim);display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.nyt-unit-dot{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:middle;flex-shrink:0}
+.nyt-unit-dot.cart-dot{background:#c8a84b}
+.nyt-unit-dot.other-dot{background:var(--panel3);border:1px solid var(--border)}
+.nyt-unit-caption{font-size:.75rem;color:var(--dimmer);line-height:1.6;max-width:54ch}
+
+/* ── NYT CALLOUT ─────────────────────────────────────── */
+.nyt-callout{background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--soil);border-radius:0 6px 6px 0;padding:24px 24px 24px 20px}
+.nyt-callout-num{font-family:var(--serif);font-size:2.8rem;color:var(--soil);line-height:1;margin-bottom:5px}
+.nyt-callout-lbl{font-size:.68rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.nyt-callout-body{font-size:.77rem;color:var(--dimmer);line-height:1.6}
+
+/* ── NYT BAR ROWS ────────────────────────────────────── */
+.nyt-bar-row{display:flex;align-items:center;gap:10px}
+.nyt-bar-lbl{font-size:.72rem;color:var(--dim);width:140px;flex-shrink:0;text-align:right;line-height:1.4}
+.nyt-bar-track{flex:1;height:22px;background:var(--panel3);border-radius:2px;overflow:hidden}
+.nyt-bar-fill{height:100%;border-radius:2px}
+.nyt-bar-val{font-size:.72rem;font-family:monospace;color:var(--soil);min-width:58px;flex-shrink:0}
+
+/* ── NYT SEASON CARDS ────────────────────────────────── */
+.nyt-season-card{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:22px}
+.nyt-season-card+.nyt-season-card{margin-top:16px}
+.nyt-season-card.spring{border-top:3px solid #7aaf6e}
+.nyt-season-card.fall{border-top:3px solid #f59e0b}
+.nyt-season-icon{font-size:1.2rem;margin-bottom:8px;display:block}
+.nyt-season-month{font-family:var(--serif);font-size:1.6rem;color:#fff;line-height:1;margin-bottom:4px}
+.nyt-season-label{font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.nyt-season-body{font-size:.75rem;color:var(--dimmer);line-height:1.6}
+
+/* ── NYT GEO STATS ───────────────────────────────────── */
+.nyt-geo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+@media(max-width:700px){.nyt-geo-grid{grid-template-columns:1fr}}
+.nyt-geo-stat{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:24px}
+.nyt-geo-num{font-family:var(--serif);font-size:2rem;color:#f59e0b;line-height:1;margin-bottom:5px}
+.nyt-geo-lbl{font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+.nyt-geo-note{font-size:.73rem;color:var(--dimmer);line-height:1.55}
+
+/* ── CHART SOURCE LINE ───────────────────────────────── */
+.chart-source{font-size:.7rem;color:var(--dimmer);margin-top:8px;padding:0 2px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="index.html">Soil Intelligence</a>
+  <a class="nav-link hot"    href="soil-atlas.html">Soil Atlas</a>
+  <a class="nav-link hot2"   href="soil-data-stories.html">Data Stories</a>
+  <a class="nav-link" href="https://lab10yr.com/articles/" target="_blank" rel="noopener noreferrer">Articles</a>
+  <a class="nav-link"        href="data-models.html">Data Models</a>
+  <a class="nav-link"        href="Regenerative-Agriculture-Risk-Map.html">Regen Ag Map</a>
+  <a class="nav-link"        href="carbon-risk-map.html">Carbon Risk</a>
+  <a class="nav-link"        href="county-risk-leaderboard.html">Risk Leaderboard</a>
+  <a class="nav-link"        href="soil-risk-explorer.html">Risk Explorer</a>
+  <a class="nav-link"        href="regen-ag-shape-curves.html">SHAPE Curves</a>
+  <a class="nav-link"        href="sql-explorer.html">SQL Explorer</a>
+  <a class="nav-link active" href="soil-application-metrics.html">Soil Metrics</a>
+  <a class="nav-link"        href="examples.html">Examples</a>
+  <a class="nav-link"        href="governance-status.html">Governance</a>
+  <div class="nav-spacer"></div>
+  <a class="nav-link" href="https://sdmdataaccess.nrcs.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer" style="color:var(--soil)">Run SDA Query</a>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Soil Intelligence · Prove It · Soil Data Metrics</div>
+    <h1 class="hero-h1">Proving the Value<br>of <strong>Soil Data</strong></h1>
+    <p class="hero-sub">In 2025, Soil Data Access requests nearly doubled from the year prior. In FY2023, SDA received 121 million requests — 4.6 million from CART alone. Web Soil Survey created 3.4 million Areas of Interest. These aren't just statistics. They're the measured impact of national soil data on every conservation decision in America.</p>
+    <div class="hero-cta">
+      <a class="btn-soil" href="soil-data-stories.html">Explore Data Stories ↗</a>
+      <a class="btn-ghost" href="regen-ag-shape-curves.html">SHAPE Curves</a>
+      <a class="btn-ghost" href="regen-ag-shape-curves.html">SHAPE Curves</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hs-box">
+        <div class="hs-val soil" id="hSDA2023">121M</div>
+        <div class="hs-lbl">SDA Requests</div>
+        <div class="hs-sub">FY2023 · Distinct queries</div>
+      </div>
+      <div class="hs-box">
+        <div class="hs-val sage" id="hWSS2023">3.4M</div>
+        <div class="hs-lbl">WSS Areas of Interest</div>
+        <div class="hs-sub">FY2023 · AOIs created</div>
+      </div>
+      <div class="hs-box">
+        <div class="hs-val teal">4.6M</div>
+        <div class="hs-lbl">CART SDA Requests</div>
+        <div class="hs-sub">FY2023 · Conservation planning</div>
+      </div>
+      <div class="hs-box">
+        <div class="hs-val gold">2×</div>
+        <div class="hs-lbl">SDA Growth</div>
+        <div class="hs-sub">2025 vs. prior year</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CHAPTER 1: WHAT THE NUMBERS MEAN ═══ -->
+<section class="section">
+  <div class="chapter-mark reveal">
+    <div class="ch-num">1</div>
+    <div>
+      <div class="ch-label">Chapter One</div>
+      <div class="ch-hed">How to Read the Metrics</div>
+    </div>
+  </div>
+
+  <div class="section-eyebrow">Interpretation Guide · Not Straightforward</div>
+  <h2 class="section-h2">The numbers tell a story.<br><em>If you know how to read them.</em></h2>
+  <p class="section-lead">Comparing metric counts from year to year requires context. Each metric type measures a different user action, at a different scale. SDA traffic is always higher than WSS because SDA's API is embedded in dozens of external applications and GIS tools — each of those generates many API requests per user action.</p>
+
+  <div class="interp-grid reveal">
+    <div class="interp-row">
+      <div class="interp-name">Soil Data Access API Requests</div>
+      <div class="interp-desc">Distinct queries submitted to the Soil Data Access web service. Includes direct queries, application-embedded calls (CART, ArcGIS, web apps), and automated pipelines. One user action in CART may generate multiple SDA queries.</div>
+      <div class="interp-unit">Unit: distinct query submissions · Scale: millions per year</div>
+    </div>
+    <div class="interp-row">
+      <div class="interp-name">Web Soil Survey — Areas of Interest Created</div>
+      <div class="interp-desc">Areas of Interest created in Web Soil Survey — each represents a farm field, parcel, or project area that a user drew or imported. The best proxy for "unique soil questions answered" because it directly counts user intent.</div>
+      <div class="interp-unit">Unit: AOIs created · Scale: millions per year · Peaks: March & October</div>
+    </div>
+    <div class="interp-row">
+      <div class="interp-name">Web Soil Survey — Sessions Started</div>
+      <div class="interp-desc">WSS sessions initiated. Higher than AOI counts because users browse WSS without always setting an AOI — reading soil maps, looking at reports, or downloading data directly without drawing a field boundary.</div>
+      <div class="interp-unit">Unit: sessions · Always &gt; AOI count · Not directly comparable to SDA</div>
+    </div>
+    <div class="interp-row">
+      <div class="interp-name">Top Soil Reports Generated</div>
+      <div class="interp-desc">The top 100 soil reports generated from Web Soil Survey by survey area and year. Shows which report types matter most to users — Engineering Properties, Physical Properties, Map Unit Description are typically dominant.</div>
+      <div class="interp-unit">Unit: report generations · Category = report name</div>
+    </div>
+    <div class="interp-row">
+      <div class="interp-name">Top Soil Ratings Viewed</div>
+      <div class="interp-desc">The top 100 soil ratings (interpretations) viewed. Hydrologic Soil Group, Hydric Rating, Farmland Classification, and NCCPI consistently rank highest — these are the interpretations driving the most land use decisions.</div>
+      <div class="interp-unit">Unit: rating views · Category = interpretation name</div>
+    </div>
+    <div class="interp-row">
+      <div class="interp-name">AOI Size Range &amp; How Users Set Areas</div>
+      <div class="interp-desc">Who is setting areas and how big are they? Definition Type shows whether users drew their own field boundary vs. selected an entire soil survey area. Size distribution reveals whether users are planning at the farm, watershed, or county scale.</div>
+      <div class="interp-unit">Unit: AOI count by type/size class · Use together for full picture</div>
+    </div>
+  </div>
+
+  <div class="pullquote reveal">
+    "Comparing chart numbers from year to year doesn't mean much. It just shows the impact soils data has on conservation. Soils is integral to every aspect of conservation assessments."
+  </div>
+</section>
+
+<!-- ═══ CHAPTER 2: ANNUAL TRENDS ═══ -->
+<section class="dark-band">
+  <div class="inner">
+    <div class="chapter-mark reveal">
+      <div class="ch-num">2</div>
+      <div>
+        <div class="ch-label">Chapter Two</div>
+        <div class="ch-hed">Annual Trends — SDA &amp; WSS</div>
+      </div>
+    </div>
+
+    <div class="section-eyebrow">Live Data · wss_metric_query_results</div>
+    <h2 class="section-h2">Year over year.<br><em>The growth is real.</em></h2>
+    <p class="section-lead">Monthly counts aggregated annually. SDA traffic reflects both direct user queries and all external applications embedding soil data into their workflows. The 2025 near-doubling reflects growing API adoption by conservation technology partners.</p>
+
+    <div class="two-col" style="margin-bottom:32px">
+      <div class="chart-wrap">
+        <div class="chart-title">SDA API Requests — Annual (CY)</div>
+        <div class="chart-sub">Distinct queries · National · Monthly counts summed by calendar year</div>
+        <div id="annSDAspinner" class="chart-spinner">Loading live data</div>
+        <div style="position:relative;height:260px;display:none" id="annSDAbox">
+          <canvas id="annSDAchart"></canvas>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">WSS Activity — Annual (CY)</div>
+        <div class="chart-sub">AOIs created and Session Starts · National</div>
+        <div id="annWSSspinner" class="chart-spinner">Loading live data</div>
+        <div style="position:relative;height:260px;display:none" id="annWSSbox">
+          <canvas id="annWSSchart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:12px">
+      <span class="live-badge">Live SDA Data</span>
+      <p style="font-size:.75rem;color:var(--dimmer);max-width:72ch">Source: <code style="color:var(--soil)">wss_metric_query_results</code> · query_frequency='M' summed by year · National (state='xnational').</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CHAPTER 3: PARAMETRIC QUERY ═══ -->
+<section class="section">
+  <div class="chapter-mark reveal">
+    <div class="ch-num">3</div>
+    <div>
+      <div class="ch-label">Chapter Three</div>
+      <div class="ch-hed">Soil Application Metrics — Interactive</div>
+    </div>
+  </div>
+
+  <div class="section-eyebrow">SDA Soil Application Metrics · All Query Types</div>
+  <h2 class="section-h2">Select your metric.<br><em>See the data.</em></h2>
+  <p class="section-lead">Query any metric type, any year, any frequency. The <code style="font-size:.9em;color:var(--soil);background:rgba(200,168,75,.08);padding:1px 5px;border-radius:3px">wss_metric_query_results</code> table stores all platform activity — API calls, WSS actions, downloads, AOI definitions, and what soil data users are actually viewing.</p>
+
+  <div class="ctrl-row reveal">
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <span class="ctrl-lbl">Metric Type</span>
+      <select id="selQueryName" onchange="runMetricQuery()">
+        <option value="SDA_Usage">Soil Data Access API Requests</option>
+        <option value="wss_ActivityCounts">Web Soil Survey Activity</option>
+        <option value="wss_AOIDefinition">AOI Type — How Users Set Areas</option>
+        <option value="wss_AOISizeRange">AOI Size Range</option>
+        <option value="wss_ExportCounts">Data Downloads</option>
+        <option value="wss_PrintableOutput">Printable Reports</option>
+        <option value="wss_top100AOIs">Top Soil Survey Areas</option>
+        <option value="wss_top100ratings">Top Soil Ratings Viewed</option>
+        <option value="wss_top100reports">Top Soil Reports Generated</option>
+      </select>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <span class="ctrl-lbl">Frequency</span>
+      <select id="selFreq" onchange="runMetricQuery()">
+        <option value="M">Monthly</option>
+        <option value="CY">Calendar Year (Jan–Dec)</option>
+        <option value="FY">Fiscal Year (Oct–Sep)</option>
+      </select>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <span class="ctrl-lbl">Year</span>
+      <select id="selYear" onchange="runMetricQuery()">
+        <option value="2026">2026</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+        <option value="2023" selected>2023</option>
+        <option value="2022">2022</option>
+        <option value="2021">2021</option>
+        <option value="2020">2020</option>
+        <option value="2019">2019</option>
+        <option value="2018">2018</option>
+        <option value="2017">2017</option>
+        <option value="2016">2016</option>
+        <option value="2015">2015</option>
+      </select>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <span class="ctrl-lbl">State</span>
+      <select id="selState" onchange="runMetricQuery()">
+        <option value="xnational">National</option>
+      </select>
+    </div>
+    <span class="spin-label" id="metricSpinLbl">Loading…</span>
+  </div>
+
+  <div id="metricChartBox" class="chart-wrap" style="margin-bottom:24px">
+    <div class="chart-title" id="metricChartTitle">Soil Data Access API Requests · 2023 · National · Monthly</div>
+    <div class="chart-sub" id="metricChartSub">Select parameters above to update</div>
+    <div id="metricEchart" style="height:360px"></div>
+  </div>
+
+  <div class="tbl-wrap reveal" id="metricTblWrap" style="display:none">
+    <table class="dtbl">
+      <thead><tr id="metricTblHead"></tr></thead>
+      <tbody id="metricTblBody"></tbody>
+    </table>
+  </div>
+  <div id="metricNoData" style="display:none;font-size:.85rem;color:var(--dimmer);padding:16px 0">No data found for this selection.</div>
+</section>
+
+<!-- ═══ CHAPTER 4: SEASONAL PATTERNS ═══ -->
+<section class="dark-band">
+  <div class="inner">
+    <div class="chapter-mark reveal">
+      <div class="ch-num">4</div>
+      <div>
+        <div class="ch-label">Chapter Four</div>
+        <div class="ch-hed">Seasonal Patterns</div>
+      </div>
+    </div>
+
+    <div class="section-eyebrow">Web Soil Survey — Monthly Area of Interest Patterns · Live Data</div>
+    <h2 class="section-h2">Spring planting.<br><em>Fall harvest.</em></h2>
+    <p class="section-lead">WSS usage peaks in March and October — driven by planting season soil assessments and fall conservation planning deadlines. The January and June dips reflect winter dormancy and summer field-season gaps. This heatmap shows the monthly pattern year over year.</p>
+
+    <div id="seasonalWrap" class="chart-wrap" style="margin-bottom:24px">
+      <div class="chart-title">Web Soil Survey — Areas of Interest Created Monthly by Year</div>
+      <div class="chart-sub">Relative intensity (darker = more areas) · National · All years on record</div>
+      <div id="seasonalSpinner" class="chart-spinner">Loading live data</div>
+      <div id="seasonalEchart" style="height:380px;display:none"></div>
+    </div>
+
+    <div class="two-col reveal">
+      <div class="ctx-card">
+        <span class="ctx-icon"></span>
+        <div class="ctx-title">Spring Peak — March</div>
+        <div class="ctx-body">The largest annual spike in WSS usage aligns with spring planting deadlines. Farmers and conservation planners need soil drainage class, flooding frequency, and crop suitability data before field operations begin.</div>
+        <span class="ctx-metric">Top Ratings: Hydrologic Soil Group · Drainage Class</span>
+      </div>
+      <div class="ctx-card">
+        <span class="ctx-icon"></span>
+        <div class="ctx-title">Fall Peak — October</div>
+        <div class="ctx-body">The second annual peak corresponds to fall program enrollment deadlines (CSP, EQIP, CRP). Conservation planners and field staff run the most soil assessments in October as applications and resource concern evaluations peak.</div>
+        <span class="ctx-metric">Top Reports: Map Unit Description · Engineering Properties</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CHAPTER 5: CART & APPLICATION CONTEXT ═══ -->
+<section class="section">
+  <div class="chapter-mark reveal">
+    <div class="ch-num">5</div>
+    <div>
+      <div class="ch-label">Chapter Five</div>
+      <div class="ch-hed">CART &amp; Application Usage</div>
+    </div>
+  </div>
+
+  <div class="section-eyebrow">Conservation Assessment Ranking Tool · FY2023</div>
+  <h2 class="section-h2">4.6 million CART queries.<br><em>Out of 121 million.</em></h2>
+  <p class="section-lead">Of FY2023's 121 million SDA requests, approximately 4.6 million came from CART — the Conservation Assessment Ranking Tool used by conservation planners to assess resource concerns and rank program applications. That's 1 in every 26 SDA queries serving a direct conservation planning decision.</p>
+
+  <div class="stat-grid reveal">
+    <div class="stat-card cs">
+      <div class="stat-num">121<span>M</span></div>
+      <div class="stat-lbl">Total SDA Requests</div>
+      <div class="stat-desc">FY2023 distinct queries to the Soil Data Access API from all sources — CART, external GIS tools, automated pipelines, and direct queries.</div>
+    </div>
+    <div class="stat-card cg">
+      <div class="stat-num">4.6<span>M</span></div>
+      <div class="stat-lbl">CART Requests</div>
+      <div class="stat-desc">FY2023 SDA requests originating from CART conservation planning workflows. Each represents a soil-informed conservation assessment.</div>
+    </div>
+    <div class="stat-card ct">
+      <div class="stat-num">3.8<span>%</span></div>
+      <div class="stat-lbl">CART Share of SDA</div>
+      <div class="stat-desc">CART accounts for 3.8% of all SDA traffic — but represents 100% of the soil data powering conservation program ranking decisions.</div>
+    </div>
+  </div>
+
+  <div class="ctx-grid reveal">
+    <div class="ctx-card">
+      <span class="ctx-icon"></span>
+      <div class="ctx-title">SoilWeb: 409,021 visits · FY2023</div>
+      <div class="ctx-body">The standard SoilWeb application received 409,021 visits, with Soil Data Explorer at 199,152 visits and Series Extent Explorer at 55,240 visits. Roughly 50% of visits were from mobile devices. SoilWeb logged 4,000–5,000 unique data requests per day.</div>
+      <span class="ctx-metric">~500 mobile requests/day from the field</span>
+    </div>
+    <div class="ctx-card">
+      <span class="ctx-icon"></span>
+      <div class="ctx-title">Rural demand, not urban</div>
+      <div class="ctx-body">WSS AOI density analysis shows peak usage in areas with population density similar to Nebraska — distinctly rural. Most customers using soil survey data are making land management decisions on working lands, not in cities.</div>
+      <span class="ctx-metric">AOI centroid density peaks at ~Nebraska population density</span>
+    </div>
+    <div class="ctx-card">
+      <span class="ctx-icon"></span>
+      <div class="ctx-title">Why SDA &gt;&gt; WSS Traffic</div>
+      <div class="ctx-body">SDA receives far more requests than WSS because SDA's REST API is embedded in CART, ArcGIS tools, state agency GIS systems, university research pipelines, and commercial applications. Each of those generates multiple API calls per user action.</div>
+      <span class="ctx-metric">Many-to-one: apps → SDA queries → user decisions</span>
+    </div>
+    <div class="ctx-card">
+      <span class="ctx-icon"></span>
+      <div class="ctx-title">2025: Nearly Doubled</div>
+      <div class="ctx-body">In 2025, the number of SDA requests nearly doubled from the year prior — demonstrating a continued trend of more organizations streaming soils data into their applications to make informed decisions for land management.</div>
+      <span class="ctx-metric">2025 growth reflects new API adoption by technology partners</span>
+    </div>
+  </div>
+
+  <div class="pullquote reveal">
+    "The clear and consistent demand for soil data, across a wide variety of geographic settings, demonstrates that Web Soil Survey, Soil Data Access, and SoilWeb play an important role in sustainable land management."
+  </div>
+
+  <div class="footnote">
+    <strong>Data note:</strong> SDA metrics are sourced from the <code style="color:var(--soil)">wss_metric_query_results</code> table via the public Soil Data Access API. CART request counts (FY2023 = 4.6M) are derived from the SDA BAFLOG audit log database, which filters on <code style="color:var(--soil)">application="CART"</code> in the SDA audit trail. These internal counts are not directly queryable via the public API but are derived from the SDA BAFLOG audit log database.
+  </div>
+</section>
+
+<!-- ═══ CHAPTER 6: THE DEMAND CURVE ═══ -->
+<section class="section">
+  <div class="chapter-mark reveal">
+    <div class="ch-num">6</div>
+    <div>
+      <div class="ch-label">Chapter Six</div>
+      <div class="ch-hed">The Demand Curve</div>
+    </div>
+  </div>
+
+  <div class="section-eyebrow">SDA Annual Requests · Every Year on Record · Live Data</div>
+  <h2 class="section-h2">From millions to<br><em>hundreds of millions.</em></h2>
+  <p class="section-lead">Soil Data Access has become infrastructure. In FY2023, it fielded 121 million queries. In 2025, requests nearly doubled again. What began as a specialized federal data service now flows into farm management software, conservation planning tools, university research pipelines, and state GIS systems across the country.</p>
+
+  <div style="margin-bottom:28px">
+    <div id="growthSpinner" class="chart-spinner">Loading live data</div>
+    <div id="growthEchart" style="height:400px;display:none"></div>
+    <p class="chart-source">Source: <code style="color:var(--soil)">wss_metric_query_results</code> · query_frequency='M' · SDA_Usage · National · Summed by calendar year</p>
+  </div>
+
+  <div class="nyt-milestone-row reveal">
+    <div class="nyt-milestone">
+      <div class="nyt-milestone-num">121<span>M</span></div>
+      <div class="nyt-milestone-yr">FY2023</div>
+      <div class="nyt-milestone-note">The year the Soil Data Metrics article first formally quantified the impact of national soil data</div>
+    </div>
+    <div class="nyt-milestone">
+      <div class="nyt-milestone-num">~2<span>×</span></div>
+      <div class="nyt-milestone-yr">2025 growth</div>
+      <div class="nyt-milestone-note">SDA requests nearly doubled from the prior year as API adoption accelerated among technology partners</div>
+    </div>
+    <div class="nyt-milestone">
+      <div class="nyt-milestone-num">3.4<span>M</span></div>
+      <div class="nyt-milestone-yr">WSS AOIs · FY2023</div>
+      <div class="nyt-milestone-note">Areas of Interest created in Web Soil Survey — the best proxy for unique soil questions answered by a real user</div>
+    </div>
+    <div class="nyt-milestone">
+      <div class="nyt-milestone-num">4–5<span>K</span></div>
+      <div class="nyt-milestone-yr">daily requests</div>
+      <div class="nyt-milestone-note">Unique SoilWeb data requests every day; ~500 from mobile devices actively in the field</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CHAPTER 7: ONE IN 26 ═══ -->
+<section class="dark-band">
+  <div class="inner">
+    <div class="chapter-mark reveal">
+      <div class="ch-num">7</div>
+      <div>
+        <div class="ch-label">Chapter Seven</div>
+        <div class="ch-hed">One in Every 26</div>
+      </div>
+    </div>
+
+    <div class="section-eyebrow">CART Share of SDA Traffic · FY2023 · Conservation Program Planning</div>
+    <h2 class="section-h2">3.8% of the traffic.<br><em>100% of the conservation decisions.</em></h2>
+    <p class="section-lead">Of FY2023's 121 million SDA queries, CART contributed 4.6 million — roughly one in every 26. That fraction powers the conservation planning tool used by field staff in every county to rank program applicants and justify resource investments on working lands.</p>
+
+    <div class="nyt-unit-wrap reveal">
+      <div class="nyt-unit-grid" id="cartUnitGrid"></div>
+      <div class="nyt-unit-legend">
+        <span class="nyt-unit-dot cart-dot"></span>
+        <span style="color:var(--soil)">1 CART query — a conservation planning decision</span>
+        &nbsp;&nbsp;
+        <span class="nyt-unit-dot other-dot"></span>
+        <span>25 other SDA queries — GIS tools, pipelines, applications, research</span>
+      </div>
+      <p class="nyt-unit-caption">Each square above represents one unit of SDA traffic. The gold square is CART. The other 25 represent every other application streaming soil data: ArcGIS extensions, state systems, universities, and commercial platforms.</p>
+    </div>
+
+    <div class="two-col reveal" style="margin-top:44px;gap:32px">
+      <div>
+        <div class="nyt-callout">
+          <div class="nyt-callout-num">409,021</div>
+          <div class="nyt-callout-lbl">SoilWeb visits · FY2023</div>
+          <div class="nyt-callout-body">The standard SoilWeb application logged over 400,000 visits — roughly half from mobile devices. Farmers checking drainage class and flooding frequency before field operations begin.</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;justify-content:center">
+        <p style="font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dimmer);margin-bottom:2px">SoilWeb Application Family · FY2023 Visits</p>
+        <div class="nyt-bar-row">
+          <div class="nyt-bar-lbl">SoilWeb</div>
+          <div class="nyt-bar-track"><div class="nyt-bar-fill" style="width:100%;background:#c8a84b"></div></div>
+          <div class="nyt-bar-val">409,021</div>
+        </div>
+        <div class="nyt-bar-row">
+          <div class="nyt-bar-lbl">Soil Data Explorer</div>
+          <div class="nyt-bar-track"><div class="nyt-bar-fill" style="width:48.7%;background:#7aaf6e"></div></div>
+          <div class="nyt-bar-val">199,152</div>
+        </div>
+        <div class="nyt-bar-row">
+          <div class="nyt-bar-lbl">Series Extent Explorer</div>
+          <div class="nyt-bar-track"><div class="nyt-bar-fill" style="width:13.5%;background:#5a9aa5"></div></div>
+          <div class="nyt-bar-val">55,240</div>
+        </div>
+        <div class="nyt-bar-row" style="margin-top:6px;padding-top:10px;border-top:1px solid var(--border)">
+          <div class="nyt-bar-lbl">Mobile share</div>
+          <div class="nyt-bar-track"><div class="nyt-bar-fill" style="width:50%;background:rgba(167,139,250,.65)"></div></div>
+          <div class="nyt-bar-val">~50%</div>
+        </div>
+        <p class="chart-source">Source: USDA Soil Data Metrics article · FY2023</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CHAPTER 8: SOIL DATA HAS SEASONS ═══ -->
+<section class="section">
+  <div class="chapter-mark reveal">
+    <div class="ch-num">8</div>
+    <div>
+      <div class="ch-label">Chapter Eight</div>
+      <div class="ch-hed">Soil Data Has Seasons</div>
+    </div>
+  </div>
+
+  <div class="section-eyebrow">Monthly Demand Pattern · WSS AOI · All Years Averaged · Live SDA Data</div>
+  <h2 class="section-h2">March. October.<br><em>The farm calendar, written in queries.</em></h2>
+  <p class="section-lead">Every year, without exception, WSS usage spikes in March and again in October. Spring planting drives the first wave. Fall conservation program enrollment deadlines drive the second. The chart below shows average monthly AOI creation across all years on record — the agricultural rhythm encoded in data.</p>
+
+  <div class="two-col" style="margin-bottom:40px;align-items:start;gap:28px">
+    <div>
+      <div id="seasonSpinner2" class="chart-spinner">Loading live data</div>
+      <div id="seasonEchart2" style="height:300px;display:none"></div>
+      <p class="chart-source">Average monthly AOI count across all years · National · wss_ActivityCounts AOI</p>
+    </div>
+    <div>
+      <div class="nyt-season-card spring">
+        <span class="nyt-season-icon"></span>
+        <div class="nyt-season-month">March</div>
+        <div class="nyt-season-label">Spring planting peak</div>
+        <div class="nyt-season-body">Farmers and planners need drainage class, flooding frequency, and crop suitability before field operations begin. March consistently records the highest monthly AOI count of any year.</div>
+      </div>
+      <div class="nyt-season-card fall">
+        <span class="nyt-season-icon"></span>
+        <div class="nyt-season-month">October</div>
+        <div class="nyt-season-label">Fall enrollment deadline</div>
+        <div class="nyt-season-body">CSP, EQIP, and CRP application windows close in October. Field staff and conservation planners run their peak soil assessments as program enrollment closes nationwide.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CHAPTER 9: WHERE THE DEMAND COMES FROM ═══ -->
+<section class="dark-band">
+  <div class="inner">
+    <div class="chapter-mark reveal">
+      <div class="ch-num">9</div>
+      <div>
+        <div class="ch-label">Chapter Nine</div>
+        <div class="ch-hed">Where the Demand Comes From</div>
+      </div>
+    </div>
+
+    <div class="section-eyebrow">Geographic Demand · Top States · WSS AOI Activity · Live SDA Data</div>
+    <h2 class="section-h2">Not the cities.<br><em>Where the soil is.</em></h2>
+    <p class="section-lead">AOI centroid analysis shows peak WSS usage in areas with the population density of rural Nebraska — not metropolitan centers. The users asking soil questions are making real land management decisions on working lands. The chart below ranks states by total cumulative WSS AOI activity across all years on record.</p>
+
+    <div class="nyt-geo-grid reveal">
+      <div class="nyt-geo-stat">
+        <div class="nyt-geo-num">~Nebraska</div>
+        <div class="nyt-geo-lbl">Peak AOI density profile</div>
+        <div class="nyt-geo-note">WSS AOI centroids cluster in rural agricultural counties — the same population density as rural Nebraska, not suburban or urban zones</div>
+      </div>
+      <div class="nyt-geo-stat">
+        <div class="nyt-geo-num">50%</div>
+        <div class="nyt-geo-lbl">SoilWeb mobile visits</div>
+        <div class="nyt-geo-note">Half of all SoilWeb sessions come from mobile devices — users are in the field, on the land, making decisions in real time</div>
+      </div>
+      <div class="nyt-geo-stat">
+        <div class="nyt-geo-num">500<span style="font-size:1rem;color:var(--dim)">/day</span></div>
+        <div class="nyt-geo-lbl">Field mobile requests</div>
+        <div class="nyt-geo-note">Of 4,000–5,000 daily SoilWeb data requests, ~500 come from mobile devices actively out in the field</div>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-title">Top 20 States — Cumulative WSS AOI Activity</div>
+      <div class="chart-sub">Total AOIs by state · All years on record · wss_ActivityCounts AOI · M frequency · Live SDA data</div>
+      <div id="stateSpinner" class="chart-spinner">Loading live data</div>
+      <div id="stateEchart" style="height:440px;display:none"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CHAPTER 10: USAGE MAP ═══ -->
+<section class="section">
+  <div class="chapter-mark reveal">
+    <div class="ch-num">10</div>
+    <div>
+      <div class="ch-label">Chapter Ten</div>
+      <div class="ch-hed">Where Soil Data Is Being Used</div>
+    </div>
+  </div>
+
+  <div class="section-eyebrow">Geographic Demand · All States · Live SDA Data</div>
+  <h2 class="section-h2">Every county.<br><em>Every decision.</em></h2>
+  <p class="section-lead">Soil data requests don't cluster in cities — they trace working lands. The map below shows cumulative Web Soil Survey and SDA usage by state across all years on record. Select a metric to see where the demand is strongest.</p>
+
+  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap" class="reveal">
+    <button class="res-map-btn active" id="mapBtn-wss" onclick="showMap('wss')">WSS AOI Activity</button>
+    <button class="res-map-btn" id="mapBtn-sda" onclick="showMap('sda')">SDA API Requests</button>
+  </div>
+
+  <div class="two-col reveal" style="gap:24px;align-items:start">
+    <div>
+      <div id="ch10MapSpinner" class="chart-spinner">Loading map data…</div>
+      <div id="ch10Map" style="height:480px;display:none"></div>
+    </div>
+    <div>
+      <div class="chart-title" id="ch10RankTitle">Top States — WSS AOI Activity</div>
+      <div class="chart-sub">Click a state on the map to highlight · All years on record</div>
+      <div id="ch10RankList" style="margin-top:12px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Soil Intelligence</div>
+      <div class="footer-desc">Interactive maps, 254 production SQL scripts, and data journalism for SSURGO national soil data — built on Soil Data Access.</div>
+    </div>
+    <div class="footer-col">
+      <h4>Applications</h4>
+      <a href="soil-atlas.html">Soil Atlas</a>
+      <a href="soil-data-stories.html">Data Stories</a>
+      <a href="Regenerative-Agriculture-Risk-Map.html">Regen Ag Map</a>
+      <a href="regen-ag-shape-curves.html">SHAPE Curves</a>
+      <a href="soil-application-metrics.html">Soil Metrics</a>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <a href="sql-explorer.html">SQL Explorer</a>
+      <a href="data-models.html">Data Models</a>
+      <a href="soil-data-stories.html">Data Stories</a>
+      <a href="https://sdmdataaccess.nrcs.usda.gov/" target="_blank" rel="noopener noreferrer">Soil Data Access</a>
+    </div>
+  </div>
+  <hr class="footer-rule">
+  <div class="footer-bottom">
+    <span>USDA Soil Data Access · Public domain data</span>
+    <span>jneme910 · GitHub Pages</span>
+  </div>
+</footer>
+
+<script>
+/* ── GLOBALS ──────────────────────────────────────────── */
+const SDA = 'https://sdmdataaccess.sc.egov.usda.gov/tabular/post.rest';
+Chart.defaults.color = '#5a6490';
+Chart.defaults.borderColor = '#1e2640';
+
+function post(q, tag) {
+  var t = tag || 'SDA';
+  var t0 = performance.now();
+  SoilLog.debug(t, q.slice(0,100));
+  var deferred = $.ajax({ type:'POST', url:SDA, data:{ query:q, format:'json+columnname' }, dataType:'json', timeout:30000 });
+  deferred.done(function(d){
+    var ms = Math.round(performance.now()-t0);
+    var rows = d&&d.Table ? d.Table.length-1 : 0;
+    SoilLog.info(t, 'OK '+ms+'ms · '+rows+' row(s)');
+  });
+  deferred.fail(function(xhr,status){
+    var ms = Math.round(performance.now()-t0);
+    SoilLog.error(t, 'Failed ('+status+') after '+ms+'ms');
+  });
+  return deferred;
+}
+
+function fmtN(n) {
+  if (!n || isNaN(n)) return '—';
+  n = +n;
+  if (n >= 1e9) return (n/1e9).toFixed(1)+'B';
+  if (n >= 1e6) return (n/1e6).toFixed(1)+'M';
+  if (n >= 1e3) return Math.round(n/1e3)+'K';
+  return n.toLocaleString();
+}
+
+/* ── ANNUAL TREND CHARTS ──────────────────────────────── */
+post(
+  "SELECT query_year," +
+  " SUM(CASE WHEN query_name='SDA_Usage' THEN [count] ELSE 0 END) AS sda_calls," +
+  " SUM(CASE WHEN query_name='wss_ActivityCounts' AND query_header='SESSION_START' THEN [count] ELSE 0 END) AS wss_sess," +
+  " SUM(CASE WHEN query_name='wss_ActivityCounts' AND query_header='AOI' THEN [count] ELSE 0 END) AS wss_aoi" +
+  " FROM wss_metric_query_results" +
+  " WHERE query_frequency='M' AND state LIKE '%NAT%'" +
+  " GROUP BY query_year ORDER BY query_year ASC"
+).done(function(d){
+  if (!d.Table || d.Table.length < 2) return;
+  var cols = d.Table[0], rows = d.Table.slice(1);
+  var years=[], sda=[], sess=[], aoi=[];
+  rows.forEach(function(r){ var o={}; cols.forEach(function(c,i){o[c]=r[i];}); years.push(o.query_year); sda.push(+o.sda_calls||0); sess.push(+o.wss_sess||0); aoi.push(+o.wss_aoi||0); });
+
+  document.getElementById('annSDAspinner').style.display='none';
+  document.getElementById('annSDAbox').style.display='block';
+  var c1=document.getElementById('annSDAchart');
+  new Chart(c1,{
+    type:'bar',
+    data:{ labels:years, datasets:[{ label:'SDA Requests', data:sda, backgroundColor:'rgba(200,168,75,.72)', borderColor:'rgba(200,168,75,.9)', borderWidth:1, borderRadius:3 }]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:function(c){return ' '+fmtN(c.raw);} }}},
+      scales:{ x:{grid:{color:'rgba(30,38,64,.5)'},ticks:{color:'#5a6490'}},
+               y:{grid:{color:'rgba(30,38,64,.5)'},ticks:{color:'#5a6490',callback:function(v){return fmtN(v);}}} }
+    }
+  });
+
+  document.getElementById('annWSSspinner').style.display='none';
+  document.getElementById('annWSSbox').style.display='block';
+  var c2=document.getElementById('annWSSchart');
+  new Chart(c2,{
+    type:'bar',
+    data:{ labels:years, datasets:[
+      { label:'Session Starts', data:sess, backgroundColor:'rgba(122,175,110,.68)', borderColor:'rgba(122,175,110,.88)', borderWidth:1, borderRadius:3 },
+      { label:'AOIs Created', data:aoi, backgroundColor:'rgba(90,154,165,.55)', borderColor:'rgba(90,154,165,.8)', borderWidth:1, borderRadius:3 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{labels:{color:'#5a6490',font:{size:11},boxWidth:12}}, tooltip:{ callbacks:{ label:function(c){return ' '+c.dataset.label+': '+fmtN(c.raw);} }}},
+      scales:{ x:{grid:{color:'rgba(30,38,64,.5)'},ticks:{color:'#5a6490'}},
+               y:{grid:{color:'rgba(30,38,64,.5)'},ticks:{color:'#5a6490',callback:function(v){return fmtN(v);}}} }
+    }
+  });
+});
+
+/* ── STATE SELECTOR ───────────────────────────────────── */
+post(
+  "SELECT CASE WHEN [STATE]='xnational' THEN 'National' ELSE [STATE] END AS st," +
+  " CASE WHEN [STATE]='xnational' THEN 'xnational' ELSE [STATE] END AS sid" +
+  " FROM [wss_metric_query_results] GROUP BY [state]" +
+  " ORDER BY CASE WHEN [state]='xnational' THEN 'aaaaaa' ELSE [state] END ASC"
+).done(function(d){
+  if (!d.Table) return;
+  var sel=document.getElementById('selState');
+  d.Table.forEach(function(r){ var o=document.createElement('option'); o.value=r[1]; o.textContent=r[0]; if(r[1]==='xnational') o.selected=true; sel.appendChild(o); });
+  // Auto-run initial query on load
+  runMetricQuery();
+});
+
+/* ── PARAMETRIC METRIC QUERY ──────────────────────────── */
+var metricEchart = null;
+var QNAME_LABELS = {
+  SDA_Usage:'Soil Data Access API Requests',
+  wss_ActivityCounts:'Web Soil Survey Activity',
+  wss_AOIDefinition:'AOI Type — How Users Set Areas',
+  wss_AOISizeRange:'AOI Size Range',
+  wss_ExportCounts:'Data Downloads',
+  wss_PrintableOutput:'Printable Reports',
+  wss_top100AOIs:'Top Soil Survey Areas',
+  wss_top100ratings:'Top Soil Ratings Viewed',
+  wss_top100reports:'Top Soil Reports Generated'
+};
+
+function runMetricQuery(){
+  var qname  = document.getElementById('selQueryName').value;
+  var freq   = document.getElementById('selFreq').value;
+  var yr     = document.getElementById('selYear').value;
+  var state  = document.getElementById('selState').value;
+
+  // Safety: sanitize state (from our own dropdown, but be careful)
+  state = state.replace(/['";<>]/g,'');
+
+  document.getElementById('metricSpinLbl').style.display='inline';
+  document.getElementById('metricTblWrap').style.display='none';
+  document.getElementById('metricNoData').style.display='none';
+
+  var yrInt = parseInt(yr);
+  var q;
+  if (freq === 'FY') {
+    // Fiscal Year: Oct 1 of prior year through Sep 30 of selected year
+    q = "SELECT TOP 500 [query_name],[query_frequency],[query_month],[query_year],[state]," +
+      "[query_title],[query_header],[count]" +
+      " FROM [wss_metric_query_results]" +
+      " WHERE [query_name]='" + qname + "'" +
+      " AND [query_frequency]='M'" +
+      " AND [state]='" + state + "'" +
+      " AND (([query_year]=" + (yrInt-1) + " AND [query_month]>=10)" +
+      " OR ([query_year]=" + yrInt + " AND [query_month]<=9))" +
+      " ORDER BY [query_year] ASC, [query_month] ASC";
+  } else {
+    // M or CY: all monthly records for the calendar year
+    q = "SELECT TOP 500 [query_name],[query_frequency],[query_month],[query_year],[state]," +
+      "[query_title],[query_header],[count]" +
+      " FROM [wss_metric_query_results]" +
+      " WHERE [query_name]='" + qname + "'" +
+      " AND [query_frequency]='M'" +
+      " AND [query_year]=" + yrInt +
+      " AND [state]='" + state + "'" +
+      " ORDER BY [query_month] ASC, [count] DESC";
+  }
+
+  post(q).done(function(d){
+    document.getElementById('metricSpinLbl').style.display='none';
+
+    // Update chart title
+    var freqLabel = {M:'Monthly',CY:'Calendar Year',FY:'Fiscal Year'}[freq]||freq;
+    var stateLabel = state==='xnational'?'National':state;
+    var yearLabel = freq==='FY' ? 'FY'+yr+' (Oct '+(yrInt-1)+'–Sep '+yr+')' : yr;
+    var qnameDisplay = QNAME_LABELS[qname] || qname;
+    document.getElementById('metricChartTitle').textContent = qnameDisplay + ' · ' + yearLabel + ' · ' + stateLabel + ' · ' + freqLabel;
+
+    if (!d.Table || d.Table.length < 2) {
+      document.getElementById('metricNoData').style.display='block';
+      document.getElementById('metricChartSub').textContent = 'No data for this selection.';
+      return;
+    }
+    var cols=d.Table[0], rows=d.Table.slice(1);
+
+    // Chart data — use query_header as category, count as value
+    // Group by month if M, otherwise by query_header
+    var labels=[], values=[];
+    var monthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    var fyMonths=[10,11,12,1,2,3,4,5,6,7,8,9];
+    var fyMNames=['Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'];
+
+    if (freq==='FY') {
+      // Fiscal Year: show months Oct–Sep in FY order
+      var byMonth={};
+      rows.forEach(function(r){
+        var o={}; cols.forEach(function(c,i){o[c]=r[i];});
+        var m=+o.query_month;
+        byMonth[m]=(byMonth[m]||0)+(+o.count||0);
+      });
+      fyMonths.forEach(function(m,i){ labels.push(fyMNames[i]); values.push(byMonth[m]||0); });
+    } else if (freq==='M') {
+      // Monthly: Jan–Dec of selected year
+      var byMonth={};
+      rows.forEach(function(r){
+        var o={}; cols.forEach(function(c,i){o[c]=r[i];});
+        var m=+o.query_month;
+        byMonth[m]=(byMonth[m]||0)+(+o.count||0);
+      });
+      for(var m=1;m<=12;m++){ labels.push(monthNames[m-1]); values.push(byMonth[m]||0); }
+    } else {
+      // CY: top 20 by query_header, summed across Jan–Dec
+      var byHeader={};
+      rows.forEach(function(r){
+        var o={}; cols.forEach(function(c,i){o[c]=r[i];});
+        var h=o.query_header||o.query_name||'(none)';
+        byHeader[h]=(byHeader[h]||0)+(+o.count||0);
+      });
+      var sorted=Object.entries(byHeader).sort(function(a,b){return b[1]-a[1];}).slice(0,20);
+      sorted.forEach(function(e){ labels.push(e[0].length>35?e[0].slice(0,33)+'…':e[0]); values.push(e[1]); });
+    }
+
+    var subText;
+    if (freq==='FY') subText='FY'+yr+' (Oct '+(yrInt-1)+'–Sep '+yr+') · Monthly totals from M records · Click bars for detail';
+    else if (freq==='CY') subText='CY'+yr+' (Jan–Dec '+yr+') · Top categories summed from M records · Click bars for detail';
+    else subText='Monthly counts · Jan–Dec '+yr+' · Click bars for detail';
+    document.getElementById('metricChartSub').textContent = subText;
+
+    if (metricEchart) metricEchart.dispose();
+    metricEchart = echarts.init(document.getElementById('metricEchart'));
+    var isHoriz = freq==='CY' && labels.length > 8;
+    metricEchart.setOption({
+      backgroundColor:'transparent',
+      tooltip:{ trigger:'axis', axisPointer:{type:'shadow'}, backgroundColor:'#0a0e1a', borderColor:'#1e2640', textStyle:{color:'#d4daf0'} },
+      grid: isHoriz ? {left:200,right:60,bottom:40,top:20} : {left:64,right:20,bottom:40,top:20},
+      [isHoriz?'yAxis':'xAxis']:{
+        type:'category', data:labels,
+        axisLabel:{color:'#5a6490', fontSize:isHoriz?10:11,
+          formatter:function(v){return v.length>30?v.slice(0,28)+'…':v;}}
+      },
+      [isHoriz?'xAxis':'yAxis']:{
+        type:'value',
+        axisLabel:{color:'#5a6490',formatter:function(v){return fmtN(v);}},
+        splitLine:{lineStyle:{color:'#1e2640'}}
+      },
+      series:[{
+        type:'bar', data:values, barMaxWidth:40,
+        itemStyle:{
+          color:function(p){
+            var pct=p.dataIndex/Math.max(labels.length-1,1);
+            var r=Math.round(200-(200-154)*pct);
+            var g=Math.round(168-(168-112)*pct);
+            var b=Math.round(75-(75-64)*pct);
+            return 'rgba('+r+','+g+','+b+',.75)';
+          }
+        }
+      }]
+    });
+
+    // Table
+    var colLabels={
+      query_name:'Metric', query_frequency:'Frequency', query_month:'Month',
+      query_year:'Year', state:'State', query_title:'Title',
+      query_header:'Category', count:'Count'
+    };
+    var thead=document.getElementById('metricTblHead');
+    thead.innerHTML='';
+    cols.forEach(function(c){var th=document.createElement('th');th.textContent=colLabels[c]||c;thead.appendChild(th);});
+    var tbody=document.getElementById('metricTblBody');
+    tbody.innerHTML='';
+    rows.forEach(function(r){
+      var tr=document.createElement('tr');
+      r.forEach(function(v,i){
+        var td=document.createElement('td');
+        var col=cols[i];
+        var disp=(v!==null&&v!=='')?v:'—';
+        if (col==='state' && disp==='xnational') disp='National';
+        if (col==='query_name' && QNAME_LABELS[disp]) disp=QNAME_LABELS[disp];
+        if (col==='query_frequency') disp={M:'Monthly',CY:'Calendar Year',FY:'Fiscal Year'}[disp]||disp;
+        if (col==='query_month'&&+v>=1&&+v<=12) disp=['January','February','March','April','May','June','July','August','September','October','November','December'][+v-1];
+        if (col==='count') td.className='num';
+        td.textContent=disp;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    document.getElementById('metricTblWrap').style.display='block';
+  }).fail(function(){
+    document.getElementById('metricSpinLbl').style.display='none';
+    document.getElementById('metricNoData').style.display='block';
+  });
+}
+
+/* ── SEASONAL HEATMAP ─────────────────────────────────── */
+post(
+  "SELECT query_year, query_month," +
+  " SUM([count]) AS monthly_aoi" +
+  " FROM wss_metric_query_results" +
+  " WHERE query_frequency='M' AND state LIKE '%NAT%'" +
+  " AND query_name='wss_ActivityCounts' AND query_header='AOI'" +
+  " GROUP BY query_year, query_month" +
+  " ORDER BY query_year, query_month"
+).done(function(d){
+  if (!d.Table || d.Table.length < 2) return;
+  var cols=d.Table[0], rows=d.Table.slice(1);
+  var byYearMonth={};
+  var allVals=[];
+  rows.forEach(function(r){
+    var o={}; cols.forEach(function(c,i){o[c]=r[i];});
+    var key=o.query_year+'_'+o.query_month;
+    var v=+o.monthly_aoi||0;
+    byYearMonth[key]=v;
+    allVals.push(v);
+  });
+  var maxVal=Math.max.apply(null,allVals)||1;
+
+  // Get years
+  var years=[...new Set(rows.map(function(r){return r[cols.indexOf('query_year')];}))].sort();
+  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // Build ECharts heatmap data
+  var heatData=[];
+  years.forEach(function(yr,yi){
+    for(var m=1;m<=12;m++){
+      var v=byYearMonth[yr+'_'+m]||0;
+      heatData.push([m-1, yi, v]);
+    }
+  });
+
+  document.getElementById('seasonalSpinner').style.display='none';
+  var el=document.getElementById('seasonalEchart');
+  el.style.display='block';
+
+  var sc=echarts.init(el);
+  sc.setOption({
+    backgroundColor:'transparent',
+    tooltip:{
+      position:'top',
+      formatter:function(p){ return months[p.data[0]]+' '+years[p.data[1]]+': <b>'+fmtN(p.data[2])+'</b> AOIs'; }
+    },
+    grid:{height:'82%',left:48,right:20,top:30,bottom:30},
+    xAxis:{
+      type:'category', data:months, splitArea:{show:true},
+      axisLabel:{color:'#5a6490',fontSize:11}, axisLine:{lineStyle:{color:'#1e2640'}}
+    },
+    yAxis:{
+      type:'category', data:years, splitArea:{show:true},
+      axisLabel:{color:'#5a6490',fontSize:10}, axisLine:{lineStyle:{color:'#1e2640'}}
+    },
+    visualMap:{
+      min:0, max:maxVal, calculable:true, orient:'horizontal',
+      left:'center', bottom:5,
+      inRange:{color:['#0a1408','#1e3a1a','#2e5c28','#4a8c3a','#7aaf6e','#c8a84b','#f59e0b']},
+      textStyle:{color:'#5a6490',fontSize:9}
+    },
+    series:[{
+      name:'WSS AOI', type:'heatmap', data:heatData,
+      label:{show:false},
+      emphasis:{itemStyle:{shadowBlur:4,shadowColor:'rgba(0,0,0,.5)'}}
+    }]
+  });
+});
+
+/* ── CH6: ANNUAL GROWTH LINE CHART ───────────────────── */
+(function(){
+  post(
+    "SELECT query_year, SUM([count]) AS total" +
+    " FROM wss_metric_query_results" +
+    " WHERE query_frequency='M' AND state LIKE '%NAT%'" +
+    " AND query_name='SDA_Usage'" +
+    " GROUP BY query_year ORDER BY query_year ASC"
+  ).done(function(d){
+    if(!d.Table||d.Table.length<2){document.getElementById('growthSpinner').style.display='none';return;}
+    var cols=d.Table[0],rows=d.Table.slice(1);
+    var yrs=[],vals=[];
+    rows.forEach(function(r){
+      var o={};cols.forEach(function(c,i){o[c]=r[i];});
+      yrs.push(String(o.query_year)); vals.push(+o.total||0);
+    });
+
+    document.getElementById('growthSpinner').style.display='none';
+    document.getElementById('growthEchart').style.display='block';
+    var gc=echarts.init(document.getElementById('growthEchart'));
+
+    // Build annotated markPoint for key years
+    var mkd=[];
+    var i23=yrs.indexOf('2023');
+    if(i23>=0) mkd.push({coord:[yrs[i23],vals[i23]],name:'FY2023\n'+fmtN(vals[i23]),
+      symbol:'circle',symbolSize:9,itemStyle:{color:'#c8a84b',borderColor:'#fff',borderWidth:2}});
+    var iL=vals.length-1;
+    if(iL>=0&&iL!==i23) mkd.push({coord:[yrs[iL],vals[iL]],name:yrs[iL]+'\n'+fmtN(vals[iL]),
+      symbol:'circle',symbolSize:9,itemStyle:{color:'#38bdf8',borderColor:'#fff',borderWidth:2}});
+    if(yrs.length>0) mkd.push({coord:[yrs[0],vals[0]],name:yrs[0]+'\n'+fmtN(vals[0]),
+      symbol:'circle',symbolSize:7,itemStyle:{color:'#5a6490',borderColor:'#fff',borderWidth:1.5}});
+
+    gc.setOption({
+      backgroundColor:'transparent',
+      tooltip:{trigger:'axis',backgroundColor:'#0a0e1a',borderColor:'#1e2640',textStyle:{color:'#d4daf0'},
+        formatter:function(p){return '<b>'+p[0].axisValue+'</b><br/>'+fmtN(p[0].value)+' SDA requests';}},
+      grid:{left:72,right:28,top:60,bottom:36},
+      xAxis:{type:'category',data:yrs,boundaryGap:false,
+        axisLabel:{color:'#5a6490',fontSize:11},
+        axisLine:{lineStyle:{color:'#1e2640'}},axisTick:{show:false}},
+      yAxis:{type:'value',
+        axisLabel:{color:'#5a6490',formatter:function(v){return fmtN(v);}},
+        splitLine:{lineStyle:{color:'#1e2640',type:'dashed'}},
+        axisLine:{show:false},axisTick:{show:false}},
+      series:[{
+        type:'line',data:vals,smooth:0.35,
+        symbol:'circle',symbolSize:5,
+        lineStyle:{color:'#c8a84b',width:2.5},
+        itemStyle:{color:'#c8a84b',borderColor:'#04060c',borderWidth:2},
+        areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,
+          colorStops:[{offset:0,color:'rgba(200,168,75,.22)'},{offset:1,color:'rgba(200,168,75,.01)'}]}},
+        markPoint:{
+          data:mkd,
+          label:{show:true,position:'top',offset:[0,-12],
+            formatter:function(p){return p.name;},
+            color:'#d4daf0',fontSize:10,lineHeight:15,
+            backgroundColor:'rgba(10,14,26,.9)',padding:[5,8],borderRadius:4,
+            borderWidth:1,borderColor:'#1e2640'}
+        }
+      }]
+    });
+  }).fail(function(){document.getElementById('growthSpinner').style.display='none';});
+})();
+
+/* ── CH7: CART UNIT GRID (STATIC) ────────────────────── */
+(function(){
+  var g=document.getElementById('cartUnitGrid');
+  if(!g) return;
+  for(var i=0;i<26;i++){
+    var s=document.createElement('div');
+    s.className='nyt-unit-sq'+(i===0?' cart':'');
+    g.appendChild(s);
+  }
+})();
+
+/* ── CH8: SEASONAL RHYTHM ────────────────────────────── */
+(function(){
+  post(
+    "SELECT query_month, AVG(CAST([count] AS FLOAT)) AS avg_count" +
+    " FROM wss_metric_query_results" +
+    " WHERE query_frequency='M' AND state LIKE '%NAT%'" +
+    " AND query_name='wss_ActivityCounts' AND query_header='AOI'" +
+    " GROUP BY query_month ORDER BY query_month ASC"
+  ).done(function(d){
+    if(!d.Table||d.Table.length<2){document.getElementById('seasonSpinner2').style.display='none';return;}
+    var cols=d.Table[0],rows=d.Table.slice(1);
+    var mNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var avgs=new Array(12).fill(0);
+    rows.forEach(function(r){
+      var o={};cols.forEach(function(c,i){o[c]=r[i];});
+      var m=+o.query_month; if(m>=1&&m<=12) avgs[m-1]=+o.avg_count||0;
+    });
+
+    document.getElementById('seasonSpinner2').style.display='none';
+    document.getElementById('seasonEchart2').style.display='block';
+    var sc2=echarts.init(document.getElementById('seasonEchart2'));
+
+    var clrs=avgs.map(function(v,i){
+      if(i===2)  return 'rgba(122,175,110,.92)';  // March  — spring green
+      if(i===9)  return 'rgba(245,158,11,.88)';   // October — fall gold
+      return 'rgba(200,168,75,.38)';
+    });
+
+    sc2.setOption({
+      backgroundColor:'transparent',
+      tooltip:{trigger:'axis',axisPointer:{type:'none'},backgroundColor:'#0a0e1a',borderColor:'#1e2640',textStyle:{color:'#d4daf0'},
+        formatter:function(p){
+          var notes={2:'Spring planting peak',9:'Fall enrollment deadline'};
+          var n=notes[p[0].dataIndex]?'<br/><span style="color:#5a6490;font-size:.85em">'+notes[p[0].dataIndex]+'</span>':'';
+          return '<b>'+mNames[p[0].dataIndex]+'</b><br/>'+fmtN(Math.round(p[0].value))+' avg AOIs'+n;
+        }},
+      grid:{left:64,right:16,bottom:28,top:20},
+      xAxis:{type:'category',data:mNames,
+        axisLabel:{color:'#5a6490',fontSize:11},
+        axisLine:{lineStyle:{color:'#1e2640'}},axisTick:{show:false}},
+      yAxis:{type:'value',
+        axisLabel:{color:'#5a6490',formatter:function(v){return fmtN(v);}},
+        splitLine:{lineStyle:{color:'#1e2640',type:'dashed'}},
+        axisLine:{show:false},axisTick:{show:false}},
+      series:[{
+        type:'bar',data:avgs,barMaxWidth:44,
+        itemStyle:{color:function(p){return clrs[p.dataIndex];},borderRadius:[3,3,0,0]},
+        label:{show:true,position:'top',color:'#d4daf0',fontSize:9,
+          formatter:function(p){return (p.dataIndex===2)?'Peak':'';}}
+      },{
+        type:'bar',data:avgs.map(function(v,i){return i===9?v:null;}),barMaxWidth:44,
+        barGap:'-100%',
+        itemStyle:{color:'rgba(245,158,11,.88)',borderRadius:[3,3,0,0]},
+        label:{show:true,position:'top',color:'#d4daf0',fontSize:9,
+          formatter:function(p){return (p.value!==null)?'Peak':'';}},
+        tooltip:{show:false}
+      }]
+    });
+  }).fail(function(){document.getElementById('seasonSpinner2').style.display='none';});
+})();
+
+/* ── CH9: TOP STATES ─────────────────────────────────── */
+(function(){
+  post(
+    "SELECT TOP 20 [state], SUM([count]) AS total_aoi" +
+    " FROM [wss_metric_query_results]" +
+    " WHERE [query_frequency]='M'" +
+    " AND [query_name]='wss_ActivityCounts' AND [query_header]='AOI'" +
+    " AND [state]!='xnational' AND [state] IS NOT NULL" +
+    " AND LEN(LTRIM(RTRIM([state])))>0" +
+    " GROUP BY [state] ORDER BY total_aoi DESC"
+  ).done(function(d){
+    if(!d.Table||d.Table.length<2){document.getElementById('stateSpinner').style.display='none';return;}
+    var cols=d.Table[0],rows=d.Table.slice(1);
+    var sts=[],tots=[];
+    rows.forEach(function(r){var o={};cols.forEach(function(c,i){o[c]=r[i];});sts.push(o.state);tots.push(+o.total_aoi||0);});
+    sts=sts.reverse(); tots=tots.reverse();
+
+    document.getElementById('stateSpinner').style.display='none';
+    document.getElementById('stateEchart').style.display='block';
+    var sc3=echarts.init(document.getElementById('stateEchart'));
+
+    sc3.setOption({
+      backgroundColor:'transparent',
+      tooltip:{trigger:'axis',axisPointer:{type:'none'},backgroundColor:'#0a0e1a',borderColor:'#1e2640',textStyle:{color:'#d4daf0'},
+        formatter:function(p){return '<b>'+sts[p[0].dataIndex]+'</b><br/>'+fmtN(p[0].value)+' cumulative AOIs';}},
+      grid:{left:46,right:80,bottom:16,top:10},
+      xAxis:{type:'value',
+        axisLabel:{color:'#5a6490',formatter:function(v){return fmtN(v);}},
+        splitLine:{lineStyle:{color:'#1e2640',type:'dashed'}},
+        axisLine:{show:false},axisTick:{show:false}},
+      yAxis:{type:'category',data:sts,
+        axisLabel:{color:'#5a6490',fontSize:10},
+        axisLine:{lineStyle:{color:'#1e2640'}},axisTick:{show:false}},
+      series:[{
+        type:'bar',data:tots,barMaxWidth:22,
+        label:{show:true,position:'right',formatter:function(p){return fmtN(p.value);},color:'#5a6490',fontSize:9},
+        itemStyle:{
+          color:function(p){
+            var t=p.dataIndex/Math.max(sts.length-1,1);
+            return 'rgba('+(Math.round(200-(110*t)))+','+(Math.round(168-(14*t)))+','+(Math.round(75+(90*t)))+',.75)';
+          },
+          borderRadius:[0,3,3,0]
+        }
+      }]
+    });
+  }).fail(function(){document.getElementById('stateSpinner').style.display='none';});
+})();
+
+/* ── CH10: USAGE MAP ─────────────────────────────────── */
+var ch10WSSData={}, ch10SDAData={}, ch10MapInst=null, ch10ActiveMetric='wss';
+var STATE_ABBR={
+  AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',
+  CO:'Colorado',CT:'Connecticut',DE:'Delaware',FL:'Florida',GA:'Georgia',
+  HI:'Hawaii',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',
+  KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',
+  MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',
+  MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',
+  NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',
+  OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',
+  SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',
+  VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming',
+  DC:'District of Columbia',PR:'Puerto Rico',GU:'Guam',VI:'Virgin Islands'
+};
+
+(function(){
+  var wssQ = post(
+    "SELECT [state], SUM([count]) AS total_aoi" +
+    " FROM [wss_metric_query_results]" +
+    " WHERE [query_frequency]='M'" +
+    " AND [query_name]='wss_ActivityCounts' AND [query_header]='AOI'" +
+    " AND [state]!='xnational' AND [state] IS NOT NULL AND LEN(LTRIM(RTRIM([state])))>0" +
+    " GROUP BY [state] ORDER BY total_aoi DESC"
+  );
+  var sdaQ = post(
+    "SELECT [state], SUM([count]) AS total_sda" +
+    " FROM [wss_metric_query_results]" +
+    " WHERE [query_frequency]='M' AND [query_name]='SDA_Usage'" +
+    " AND [state]!='xnational' AND [state] IS NOT NULL AND LEN(LTRIM(RTRIM([state])))>0" +
+    " GROUP BY [state] ORDER BY total_sda DESC"
+  );
+
+  $.when(wssQ, sdaQ).done(function(wd, sd){
+    if(wd[0].Table&&wd[0].Table.length>1){
+      var cols=wd[0].Table[0],rows=wd[0].Table.slice(1);
+      rows.forEach(function(r){var o={};cols.forEach(function(c,i){o[c]=r[i];});if(o.state)ch10WSSData[o.state]=+o.total_aoi||0;});
+    }
+    if(sd[0].Table&&sd[0].Table.length>1){
+      var cols=sd[0].Table[0],rows=sd[0].Table.slice(1);
+      rows.forEach(function(r){var o={};cols.forEach(function(c,i){o[c]=r[i];});if(o.state)ch10SDAData[o.state]=+o.total_sda||0;});
+    }
+    // Load US states GeoJSON
+    fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(function(r){return r.json();}).then(function(topo){
+      var geo=topojson.feature(topo,topo.objects.states);
+      // Add abbreviation lookup by FIPS
+      var FIPS_ABBR={'01':'AL','02':'AK','04':'AZ','05':'AR','06':'CA','08':'CO','09':'CT','10':'DE','11':'DC',
+        '12':'FL','13':'GA','15':'HI','16':'ID','17':'IL','18':'IN','19':'IA','20':'KS','21':'KY','22':'LA',
+        '23':'ME','24':'MD','25':'MA','26':'MI','27':'MN','28':'MS','29':'MO','30':'MT','31':'NE','32':'NV',
+        '33':'NH','34':'NJ','35':'NM','36':'NY','37':'NC','38':'ND','39':'OH','40':'OK','41':'OR','42':'PA',
+        '44':'RI','45':'SC','46':'SD','47':'TN','48':'TX','49':'UT','50':'VT','51':'VA','53':'WA','54':'WV',
+        '55':'WI','56':'WY','60':'AS','66':'GU','72':'PR','78':'VI'};
+      geo.features.forEach(function(f){
+        var fips=String(f.id).padStart(2,'0');
+        f.properties.abbr=FIPS_ABBR[fips]||'';
+        f.properties.name=f.properties.name||STATE_ABBR[f.properties.abbr]||f.properties.abbr;
+      });
+      echarts.registerMap('US_STATES',geo);
+      document.getElementById('ch10MapSpinner').style.display='none';
+      document.getElementById('ch10Map').style.display='block';
+      ch10MapInst=echarts.init(document.getElementById('ch10Map'));
+      renderCh10Map('wss');
+      ch10MapInst.on('click',function(p){
+        if(p.data) flyToStateRank(p.data.abbr||p.name);
+      });
+    }).catch(function(){document.getElementById('ch10MapSpinner').textContent='Map unavailable.';});
+  });
+})();
+
+function renderCh10Map(metric){
+  if(!ch10MapInst)return;
+  ch10ActiveMetric=metric;
+  var data=metric==='wss'?ch10WSSData:ch10SDAData;
+  var label=metric==='wss'?'WSS AOI Activity':'SDA API Requests';
+  var color=metric==='wss'?['#1a2a0a','#7aaf6e','#c8a84b']:['#0a1a2a','#38bdf8','#a78bfa'];
+
+  var mapData=Object.keys(data).map(function(abbr){
+    return{name:STATE_ABBR[abbr]||abbr,value:data[abbr],abbr:abbr};
+  });
+  var maxVal=Math.max.apply(null,mapData.map(function(d){return d.value;}));
+
+  ch10MapInst.setOption({
+    backgroundColor:'transparent',
+    tooltip:{trigger:'item',backgroundColor:'#0a0e1a',borderColor:'#1e2640',textStyle:{color:'#d4daf0'},
+      formatter:function(p){
+        var abbr=p.data&&p.data.abbr?p.data.abbr:'';
+        return '<b>'+(abbr?abbr+' — ':'')+p.name+'</b><br/>'+fmtN(p.value||0)+' '+label;
+      }},
+    visualMap:{min:0,max:maxVal,show:false,
+      inRange:{color:color}},
+    series:[{
+      type:'map',map:'US_STATES',roam:true,
+      nameProperty:'name',
+      data:mapData,
+      emphasis:{itemStyle:{areaColor:'rgba(245,158,11,.6)'},label:{show:false}},
+      itemStyle:{areaColor:'#111625',borderColor:'rgba(30,38,64,.8)',borderWidth:0.5},
+      label:{show:false}
+    }]
+  },true);
+
+  buildCh10Rank(data,label);
+  document.getElementById('ch10RankTitle').textContent='Top States — '+label;
+}
+
+function buildCh10Rank(data,label){
+  var sorted=Object.keys(data).sort(function(a,b){return data[b]-data[a];}).slice(0,20);
+  var maxV=data[sorted[0]]||1;
+  document.getElementById('ch10RankList').innerHTML=sorted.map(function(abbr,i){
+    var pct=Math.round(data[abbr]/maxV*100);
+    return '<div class="rank-item" onclick="flyToStateRank(\''+abbr+'\')">' +
+      '<div class="rank-num">'+(i+1)+'</div>' +
+      '<div class="rank-st">'+abbr+'</div>' +
+      '<div class="rank-bar-wrap"><div class="rank-bar" style="width:'+pct+'%"></div></div>' +
+      '<div class="rank-val">'+fmtN(data[abbr])+'</div>' +
+    '</div>';
+  }).join('');
+}
+
+function flyToStateRank(abbr){
+  if(!ch10MapInst||!abbr)return;
+  var data=ch10ActiveMetric==='wss'?ch10WSSData:ch10SDAData;
+  var name=STATE_ABBR[abbr]||abbr;
+  ch10MapInst.dispatchAction({type:'highlight',seriesIndex:0,name:name});
+  setTimeout(function(){ch10MapInst.dispatchAction({type:'downplay',seriesIndex:0,name:name});},1200);
+}
+
+function showMap(metric){
+  document.querySelectorAll('.res-map-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('mapBtn-'+metric).classList.add('active');
+  renderCh10Map(metric);
+}
+
+/* ── SCROLL REVEAL ────────────────────────────────────── */
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');obs.unobserve(e.target);}});
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+</script>
+</body>
+</html>

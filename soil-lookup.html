@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="canonical" href="https://lab10yr.com/soil-lookup">
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="Lab10YR">
+<meta property="og:title"       content="Site Soil Lookup — Soil Intelligence">
+<meta property="og:description" content="Enter any coordinate or use your location and get the soil hazard profile at that exact point: drainage, wetland status, shrink-swell, corrosion, slope, and organic matter, live from the national soil survey.">
+<meta property="og:url"         content="https://lab10yr.com/soil-lookup.html">
+<meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="Site Soil Lookup — Soil Intelligence">
+<meta name="twitter:description" content="The soil hazard profile at any coordinate, live from the national soil survey via Soil Data Access.">
+<title>Site Soil Lookup &middot; Soil Intelligence</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#0d1220;--border:#1e2640;
+  --text:#d4daf0;--dim:#8892b0;--dimmer:#4a5270;
+  --accent:#38bdf8;--accent2:#7c3aed;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;
+  --soil:#c8a84b;--font:'Inter',system-ui,sans-serif;
+  --shadow:0 8px 24px rgba(0,0,0,.6)
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+nav{background:rgba(4,6,12,.97);border-bottom:1px solid var(--border);
+    padding:0 20px;height:48px;display:flex;align-items:center;gap:16px;
+    position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nav-logo{font-weight:800;font-size:14px;color:#fff;white-space:nowrap;flex-shrink:0}
+.nav-logo em{color:var(--soil);font-style:normal}
+.nav-links{display:flex;gap:12px;margin-left:auto}
+.nav-links a{font-size:11px;font-weight:600;color:var(--dim);transition:color .15s;white-space:nowrap;flex-shrink:0}
+.nav-links a:hover{color:var(--text);text-decoration:none}
+
+.hero{padding:48px 24px 28px;max-width:960px;margin:0 auto}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+         color:var(--soil);margin-bottom:10px}
+h1{font-size:clamp(22px,4vw,36px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px}
+h1 em{color:var(--soil);font-style:normal}
+.lead{font-size:14px;color:var(--dim);max-width:660px;line-height:1.7}
+
+.controls{max-width:960px;margin:0 auto;padding:0 24px 8px;
+          display:flex;gap:10px;align-items:end;flex-wrap:wrap}
+.ctl{display:flex;flex-direction:column;gap:5px}
+.ctl label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+input{background:var(--panel2);border:1px solid var(--border);color:var(--text);
+       border-radius:6px;padding:9px 12px;font-size:13px;width:150px;
+       font-family:var(--font);outline:none}
+input:focus{border-color:var(--accent)}
+.btn{background:var(--accent);color:#04060c;border:none;border-radius:6px;
+     padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn:hover{filter:brightness(1.08)}
+
+.report{max-width:960px;margin:0 auto;padding:18px 24px 60px}
+.status{color:var(--dim);font-size:13px;padding:30px 0;text-align:center}
+.rpt-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.rpt-title{font-size:20px;font-weight:800;color:#fff}
+.rpt-sym{font-size:12px;color:var(--dimmer);font-weight:600}
+.rpt-sub{font-size:12px;color:var(--dim);margin-bottom:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:24px}
+.metric{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px}
+.metric-l{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.metric-v{font-size:24px;font-weight:800;color:#fff;line-height:1.15;font-variant-numeric:tabular-nums}
+.metric-v small{font-size:13px;color:var(--soil);font-weight:700}
+.metric-d{font-size:11px;color:var(--dim);margin-top:9px;line-height:1.5}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:9px}
+.tag.low{background:rgba(34,197,94,.16);color:var(--green)}
+.tag.mid{background:rgba(245,158,11,.16);color:var(--amber)}
+.tag.high{background:rgba(239,68,68,.16);color:var(--red)}
+h3{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:12px;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+th{text-align:left;color:var(--dim);font-weight:700;padding:9px 12px;border-bottom:1px solid var(--border);font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+td{padding:9px 12px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.note{margin-top:22px;font-size:11px;color:var(--dimmer);line-height:1.6;max-width:680px}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:s .8s linear infinite;vertical-align:-3px;margin-right:8px}
+@keyframes s{to{transform:rotate(360deg)}}
+footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:var(--dimmer);font-size:11px}
+.pdf-btn{margin-left:auto;background:var(--accent);color:#04060c;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font)}
+.pdf-btn:hover{filter:brightness(1.08)}
+.print-only-head{display:none}
+@media print{
+  nav,.controls,.hero .lead,.hero .eyebrow,.hero h1,.pdf-btn{display:none!important}
+  body{background:#fff;color:#111;font-size:12px}
+  .hero{padding:0}
+  .report{padding:0;max-width:none}
+  .print-only-head{display:block;border-bottom:2px solid #c8a84b;padding-bottom:8px;margin-bottom:16px;
+    font-weight:800;font-size:13px;color:#111;letter-spacing:.04em}
+  .print-only-head span{font-weight:500;color:#666}
+  .rpt-title{color:#111}.rpt-sym,.rpt-sub{color:#555}
+  h3{color:#444}
+  .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .metric{background:#fff;border:1px solid #bbb;break-inside:avoid;page-break-inside:avoid;padding:12px}
+  .metric-v{color:#111}.metric-v small{color:#8a6d1f}.metric-l,.metric-d{color:#444}
+  .tag{border:1px solid #aaa}
+  table{background:#fff;border-color:#bbb}
+  th{color:#555;border-color:#ccc}td{border-color:#eee}
+  .note{color:#555}
+  footer{border-color:#ccc;color:#666;text-align:left;padding:16px 0 0}
+  a{color:#111;text-decoration:none}
+  @page{margin:1.4cm}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo"><em>Soil</em> Intelligence</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="county-report.html">County Report</a>
+    <a href="Regenerative-Agriculture-Risk-Map.html">Risk Map</a>
+    <a href="soil-data-stories.html">Data Stories</a>
+    <a href="sql-explorer.html">SQL Explorer</a>
+    <a href="data-models.html">Data Models</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">Site Soil Lookup</div>
+  <h1>The soil hazard profile at <em>any point on the map</em></h1>
+  <p class="lead">Enter a latitude and longitude, or use your current location. This finds the exact
+  map unit at that coordinate in the national soil survey and reports what its soils mean for building,
+  drainage, wetlands, and buried infrastructure. Every value is live from Soil Data Access.</p>
+</div>
+
+<div class="controls">
+  <div class="ctl"><label for="lat">Latitude</label><input id="lat" placeholder="42.0300" inputmode="decimal"></div>
+  <div class="ctl"><label for="lng">Longitude</label><input id="lng" placeholder="-93.6200" inputmode="decimal"></div>
+  <button class="btn" id="go">Look up soil</button>
+  <button class="btn ghost" id="geo">Use my location</button>
+</div>
+
+<div class="report" id="report">
+  <div class="status">Enter a coordinate (or use your location) to read the soil at that point.</div>
+</div>
+
+<footer>
+  Data: National Cooperative Soil Survey (SSURGO) via Soil Data Access. Profiles reflect the mapped
+  components of the map unit at the coordinate; map-unit boundaries are generalized, so verify on the
+  ground for site-specific decisions. &middot; <a href="index.html">Soil Intelligence</a>
+</footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const latI=$("#lat"),lngI=$("#lng"),report=$("#report");
+const SDA="https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest";
+async function sda(query){
+  const body=new URLSearchParams();body.set("query",query);body.set("format","JSON+COLUMNNAME");
+  const r=await fetch(SDA,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body});
+  if(!r.ok) throw new Error("Soil Data Access returned "+r.status);
+  const j=await r.json();const t=(j&&j.Table)?j.Table:[];
+  if(t.length<2) return [];const cols=t[0];
+  return t.slice(1).map(row=>{const o={};cols.forEach((c,i)=>o[c]=row[i]);return o;});
+}
+const num=(v,d)=>{const n=parseFloat(v);return isFinite(n)?n.toFixed(d==null?1:d):null;};
+function tag(level,text){return '<span class="tag '+level+'">'+text+'</span>';}
+
+$("#go").onclick=()=>{
+  const lat=parseFloat(latI.value),lng=parseFloat(lngI.value);
+  if(!isFinite(lat)||!isFinite(lng)||lat<-90||lat>90||lng<-180||lng>180){
+    report.innerHTML='<div class="status">Enter a valid latitude (-90 to 90) and longitude (-180 to 180).</div>';return;
+  }
+  runLookup(lat,lng);
+};
+$("#geo").onclick=()=>{
+  if(!navigator.geolocation){report.innerHTML='<div class="status">Geolocation is not available in this browser.</div>';return;}
+  report.innerHTML='<div class="status"><span class="spin"></span>Getting your location...</div>';
+  navigator.geolocation.getCurrentPosition(
+    p=>{latI.value=p.coords.latitude.toFixed(4);lngI.value=p.coords.longitude.toFixed(4);runLookup(p.coords.latitude,p.coords.longitude);},
+    ()=>{report.innerHTML='<div class="status">Could not get your location. Enter a coordinate instead.</div>';}
+  );
+};
+
+async function runLookup(lat,lng){
+  report.innerHTML='<div class="status"><span class="spin"></span>Reading the soil survey at '+lat.toFixed(4)+', '+lng.toFixed(4)+'...</div>';
+  const wkt="point("+lng+" "+lat+")";
+  const q="SELECT mu.muname, mu.mukey, c.compname, c.comppct_r, c.drainagecl, c.hydricrating, c.taxorder, c.slope_r, c.corsteel, "+
+    "(SELECT TOP 1 ch.om_r FROM chorizon ch WHERE ch.cokey=c.cokey AND ch.hzdept_r=0) om, "+
+    "(SELECT TOP 1 ch.lep_r FROM chorizon ch WHERE ch.cokey=c.cokey AND ch.hzdept_r=0) lep "+
+    "FROM mapunit mu JOIN component c ON c.mukey=mu.mukey "+
+    "WHERE mu.mukey IN (SELECT mukey FROM SDA_Get_Mukey_from_intersection_with_WktWgs84('"+wkt+"')) "+
+    "ORDER BY c.comppct_r DESC";
+  let rows;
+  try{ rows=await sda(q); }
+  catch(e){ report.innerHTML='<div class="status">Could not complete the lookup: '+e.message+'. Try again.</div>';return; }
+  if(!rows.length){
+    report.innerHTML='<div class="status">No mapped soil at that coordinate. It may be open water or outside the surveyed area. Try a nearby land point.</div>';return;
+  }
+  const muname=rows[0].muname||"Map unit",mukey=rows[0].mukey||"";
+  const dom=rows[0]; // highest comppct_r
+  const om=num(dom.om,1),lep=num(dom.lep,1),slope=num(dom.slope_r,0);
+  const cards=[];
+  cards.push(metric("Dominant Soil",(dom.compname||"&mdash;")+' <small>'+(dom.comppct_r||0)+'%</small>',
+    (dom.taxorder?dom.taxorder+'. ':'')+'The most extensive soil in this map unit.',null));
+  cards.push(metric("Drainage",dom.drainagecl||"&mdash;",
+    "How readily water moves through this soil. Drives wetness, trafficability, and septic suitability.",null));
+  cards.push(metric("Wetland (Hydric)",dom.hydricrating==="Yes"?"Yes":(dom.hydricrating||"No"),
+    "Whether this soil is rated hydric, which can trigger wetland regulation and permitting.",
+    dom.hydricrating==="Yes"?["high","Hydric"]:["low","Not hydric"]));
+  cards.push(metric("Shrink-Swell (LEP)",lep!=null?lep:"&mdash;",
+    "Surface linear extensibility. Above 6 means swelling clays that crack foundations, slabs, and pipes.",
+    lep==null?null:(lep>=6?["high","High"]:lep>=3?["mid","Moderate"]:["low","Low"])));
+  cards.push(metric("Steel Corrosion",dom.corsteel||"&mdash;",
+    "Corrosion rating to uncoated steel for buried utilities, pilings, and tanks.",
+    !dom.corsteel?null:(dom.corsteel==="High"?["high","High"]:dom.corsteel==="Moderate"?["mid","Moderate"]:["low","Low"])));
+  cards.push(metric("Slope",slope!=null?slope+'<small>%</small>':"&mdash;",
+    "Representative slope of the dominant soil. Steeper ground means more erosion and runoff risk.",
+    slope==null?null:(slope>=15?["high","Steep"]:slope>=6?["mid","Rolling"]:["low","Gentle"])));
+  cards.push(metric("Organic Matter",om!=null?om+'<small>%</small>':"&mdash;",
+    "Surface-horizon organic matter: fertility, structure, and water-holding in the topsoil.",
+    om==null?null:(om>=4?["low","Rich"]:om>=2?["mid","Moderate"]:["high","Depleted"])));
+  const compRows=rows.map(r=>'<tr><td>'+(r.compname||"")+'</td><td class="num">'+(r.comppct_r||0)+'%</td><td>'+
+    (r.drainagecl||"")+'</td><td>'+(r.taxorder||"")+'</td><td class="num">'+(num(r.om,1)||"&mdash;")+'</td><td class="num">'+
+    (num(r.lep,1)||"&mdash;")+'</td><td>'+(r.hydricrating||"")+'</td></tr>').join("");
+  report.innerHTML=
+    '<div class="print-only-head">LAB10YR &nbsp;&middot;&nbsp; SITE SOIL REPORT <span>&nbsp;&middot;&nbsp; '+new Date().toLocaleDateString()+'</span></div>'+
+    '<div class="rpt-head"><div class="rpt-title">'+muname+'</div><div class="rpt-sym">'+lat.toFixed(4)+', '+lng.toFixed(4)+' &middot; mukey '+mukey+'</div><button class="pdf-btn" onclick="window.print()">Save PDF</button></div>'+
+    '<div class="rpt-sub">Soil hazard profile from the dominant component, with the full component breakdown below.</div>'+
+    '<div class="grid">'+cards.join("")+'</div>'+
+    '<h3>Components in this map unit</h3>'+
+    '<table><thead><tr><th>Component</th><th class="num">Extent</th><th>Drainage</th><th>Taxonomic order</th><th class="num">OM %</th><th class="num">LEP</th><th>Hydric</th></tr></thead><tbody>'+compRows+'</tbody></table>'+
+    '<div class="note">Tags are quick context, not regulatory determinations. Surface metrics use the top horizon of each component. '+
+    'For the full county picture see the <a href="county-report.html">County Soil Report</a>; to map it visually open the <a href="soil-atlas.html">Soil Atlas</a>.</div>';
+}
+function metric(label,value,desc,lvl){
+  return '<div class="metric"><div class="metric-l">'+label+'</div>'+
+    '<div class="metric-v">'+value+'</div>'+
+    '<div class="metric-d">'+desc+'</div>'+
+    (lvl?tag(lvl[0],lvl[1]):'')+'</div>';
+}
+</script>
+</body>
+</html>

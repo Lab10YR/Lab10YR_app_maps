@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://lab10yr.com/carbon-risk-map">
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="Lab10YR">
+<meta property="og:title"       content="Carbon Risk Map — Where Soil Carbon is Being Lost">
+<meta property="og:description" content="78% of US counties face significant soil carbon loss. See where organic matter depletion risk is highest — and where regenerative practices would have the most impact.">
+<meta property="og:url"         content="https://lab10yr.com/carbon-risk-map.html">
+<meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="Carbon Risk Map — Where Soil Carbon is Being Lost">
+<meta name="twitter:description" content="78% of US counties face significant soil carbon loss. Interactive national soil carbon risk map.">
+<meta name="twitter:image"       content="https://lab10yr.com/assets/og-preview.png">
+<title>Carbon Risk Map — Soil Organic Matter Depletion</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/pmtiles@2.11.0/dist/pmtiles.js"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="js/shared.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--panel3:#181e30;
+  --border:#1e2640;--text:#d4daf0;--dim:#5a6490;--dimmer:#2e3560;
+  --accent:#38bdf8;--accent2:#a78bfa;--green:#22c55e;
+  --gold:#f59e0b;--red:#ef4444;--orange:#f97316;
+  --soil:#c8a84b;--soil2:#8b5e2a;
+  --sage:#7aaf6e;--earth:#9a7040;--teal:#5a9aa5;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --serif:Georgia,'Times New Roman',serif;
+  --side:300px;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow:hidden}
+
+/* ── NAV ─────────────────────────────────────────────── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;height:46px;
+  display:flex;align-items:center;padding:0 14px;gap:4px;
+  background:rgba(4,6,12,.97);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(12px);overflow-x:auto;
+}
+#nav::-webkit-scrollbar{display:none}
+.nav-logo{font-family:var(--serif);font-size:14px;font-style:italic;
+  color:var(--soil);text-decoration:none;font-weight:700;flex-shrink:0;margin-right:8px}
+.nav-link{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--dim);text-decoration:none;padding:0 8px;height:46px;
+  display:flex;align-items:center;transition:color .15s;white-space:nowrap;flex-shrink:0;
+  border-bottom:2px solid transparent}
+.nav-link:hover{color:var(--text)}
+.nav-link.active{color:var(--orange);border-bottom-color:var(--orange)}
+.nav-link.hot{color:var(--accent)}
+.nav-link.hot2{color:var(--accent2)}
+.nav-spacer{flex:1}
+
+/* ── LAYOUT ──────────────────────────────────────────── */
+#app{display:flex;height:100vh;padding-top:46px}
+#map-wrap{flex:1;position:relative;min-width:0}
+#map{position:absolute;inset:0}
+
+/* ── SIDEBAR ─────────────────────────────────────────── */
+#sidebar{
+  width:var(--side);flex-shrink:0;background:var(--panel);
+  border-right:1px solid var(--border);display:flex;flex-direction:column;
+  overflow:hidden;z-index:200;
+}
+.sb-hdr{
+  padding:14px 16px 12px;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.sb-eyebrow{font-size:9px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--orange);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.sb-eyebrow::before{content:'';width:14px;height:1px;background:var(--orange)}
+.sb-title{font-family:var(--serif);font-size:1.2rem;color:#fff;font-weight:400;line-height:1.2;margin-bottom:4px}
+.sb-sub{font-size:.7rem;color:var(--dimmer);line-height:1.5}
+
+/* ── LAYER TABS ──────────────────────────────────────── */
+#layer-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.ltab{flex:1;padding:9px 4px;font-size:.67rem;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--dim);text-align:center;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .15s}
+.ltab:hover{color:var(--text);background:rgba(255,255,255,.03)}
+.ltab.active{color:var(--orange);border-bottom-color:var(--orange)}
+
+/* ── SCROLL BODY ─────────────────────────────────────── */
+#sb-body{flex:1;overflow-y:auto;padding:0}
+#sb-body::-webkit-scrollbar{width:5px}
+#sb-body::-webkit-scrollbar-track{background:transparent}
+#sb-body::-webkit-scrollbar-thumb{background:rgba(90,100,144,.45);border-radius:3px}
+#sb-body::-webkit-scrollbar-thumb:hover{background:rgba(90,100,144,.75)}
+
+/* ── KEY STATS ───────────────────────────────────────── */
+.stat-block{padding:14px 16px;border-bottom:1px solid var(--border)}
+.stat-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0}
+.stat-row:not(:last-child){border-bottom:1px solid rgba(30,38,64,.4)}
+.sr-label{font-size:.72rem;color:var(--dim);line-height:1.4}
+.sr-val{font-family:var(--serif);font-size:1.2rem;color:#fff;flex-shrink:0;margin-left:8px}
+.sr-val.risk{color:var(--red)}
+.sr-val.warn{color:var(--orange)}
+.sr-val.ok{color:var(--sage)}
+
+/* ── LEGEND ──────────────────────────────────────────── */
+.legend-block{padding:12px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+.leg-title{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--dim);margin-bottom:8px}
+.leg-row{display:flex;align-items:center;gap:8px;padding:3px 0}
+.leg-swatch{width:14px;height:14px;border-radius:2px;flex-shrink:0}
+.leg-label{font-size:.72rem;color:var(--dim);line-height:1.3}
+.leg-label strong{color:var(--text);font-weight:600}
+
+/* ── STATE RANKINGS ──────────────────────────────────── */
+.rank-block{padding:12px 16px}
+.rank-title{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--dim);margin-bottom:8px}
+.rank-row{
+  display:flex;align-items:center;gap:8px;padding:5px 0;
+  border-bottom:1px solid rgba(30,38,64,.3);cursor:pointer;transition:background .12s;
+  margin:0 -4px;padding:6px 4px;border-radius:4px;
+}
+.rank-row:hover{background:rgba(255,255,255,.04)}
+.rank-num{font-size:.65rem;color:var(--dimmer);width:16px;flex-shrink:0;text-align:center}
+.rank-st{font-size:.78rem;font-weight:700;color:#fff;width:28px;flex-shrink:0}
+.rank-bar-wrap{flex:1;height:8px;background:var(--panel3);border-radius:4px;overflow:hidden}
+.rank-bar{height:100%;border-radius:4px;transition:width .4s ease}
+.rank-pct{font-size:.68rem;color:var(--dim);min-width:34px;text-align:right;flex-shrink:0}
+
+/* ── CTA ─────────────────────────────────────────────── */
+.cta-block{padding:14px 16px;border-top:1px solid var(--border);flex-shrink:0}
+.cta-btn{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.35);
+  border-radius:7px;text-decoration:none;transition:all .18s;
+}
+.cta-btn:hover{background:rgba(249,115,22,.2)}
+.cta-icon{font-size:1.3rem;flex-shrink:0}
+.cta-label{font-size:.78rem;font-weight:700;color:var(--orange)}
+.cta-sub{font-size:.65rem;color:var(--dimmer);margin-top:2px}
+
+/* ── RIGHT DETAIL PANEL ──────────────────────────────── */
+#dp{
+  position:absolute;top:10px;right:10px;z-index:300;
+  width:280px;background:var(--panel);border:1px solid var(--border);
+  border-radius:8px;overflow:hidden;display:none;
+}
+#dp-hdr{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;border-bottom:1px solid var(--border);
+}
+.dp-title{font-size:.78rem;font-weight:700;color:#fff}
+#dp-close{background:none;border:none;color:var(--dim);cursor:pointer;font-size:16px;padding:0 2px}
+#dp-close:hover{color:var(--text)}
+#dp-body{padding:12px 14px;font-size:.75rem;line-height:1.6}
+.dp-row{display:flex;justify-content:space-between;align-items:center;
+  padding:5px 0;border-bottom:1px solid rgba(30,38,64,.35)}
+.dp-row:last-child{border-bottom:none}
+.dp-key{color:var(--dim);font-size:.7rem}
+.dp-val{color:var(--text);font-weight:600;font-size:.72rem;text-align:right;max-width:150px}
+.dp-chip{display:inline-block;padding:2px 8px;border-radius:3px;font-size:.68rem;font-weight:700}
+
+/* ── MAP HINT ────────────────────────────────────────── */
+.map-hint{
+  position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+  background:rgba(4,6,12,.88);border:1px solid var(--border);border-radius:20px;
+  padding:6px 16px;font-size:11px;color:var(--dim);letter-spacing:.06em;
+  pointer-events:none;backdrop-filter:blur(8px);white-space:nowrap;transition:opacity .3s;
+}
+.map-hint.hidden{opacity:0}
+
+/* ── MAP CONTROLS ────────────────────────────────────── */
+.maplibregl-ctrl-bottom-right,.maplibregl-ctrl-bottom-left{opacity:.4}
+.map-overlay-btns{
+  position:absolute;top:10px;left:10px;z-index:200;
+  display:flex;flex-direction:column;gap:6px;
+}
+.mo-btn{
+  background:rgba(10,14,26,.92);border:1px solid var(--border);
+  color:var(--dim);padding:6px 12px;border-radius:5px;font-size:.72rem;
+  font-weight:700;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:6px;letter-spacing:.05em;
+}
+.mo-btn:hover,.mo-btn.active{background:var(--panel2);color:var(--text)}
+.mo-btn.active{border-color:var(--orange);color:var(--orange)}
+
+@media(max-width:700px){
+  #app{flex-direction:column}
+  #sidebar{width:100%;height:40vh;border-right:none;border-bottom:1px solid var(--border)}
+  #map-wrap{flex:1}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="index.html">Soil Intelligence</a>
+  <a class="nav-link hot"    href="soil-atlas.html">Soil Atlas</a>
+  <a class="nav-link hot2"   href="soil-data-stories.html">Data Stories</a>
+  <a class="nav-link" href="https://lab10yr.com/articles/" target="_blank" rel="noopener noreferrer">Articles</a>
+  <a class="nav-link"        href="Regenerative-Agriculture-Risk-Map.html">Regen Ag Map</a>
+  <a class="nav-link active" href="carbon-risk-map.html">Carbon Risk</a>
+  <a class="nav-link"        href="regen-ag-shape-curves.html">SHAPE Curves</a>
+  <a class="nav-link"        href="soil-data-visual-lab.html">Visual Lab</a>
+  <a class="nav-link"        href="soil-application-metrics.html">Soil Metrics</a>
+  <a class="nav-link"        href="county-risk-leaderboard.html">Leaderboard</a>
+  <div class="nav-spacer"></div>
+  <a class="nav-link" href="https://sdmdataaccess.sc.egov.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer" style="color:var(--soil)">Run SDA Query</a>
+</nav>
+
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sb-hdr">
+      <div class="sb-eyebrow">Soil Carbon · Organic Matter Depletion</div>
+      <div class="sb-title">Carbon Risk Map</div>
+      <div class="sb-sub">Where soil carbon is being lost — and where regenerative practices would have the most impact.</div>
+    </div>
+
+    <div id="layer-tabs">
+      <div class="ltab active" data-layer="om" onclick="setLayer('om',this)">OM Risk</div>
+      <div class="ltab" data-layer="opportunity" onclick="setLayer('opportunity',this)">Opportunity</div>
+      <div class="ltab" data-layer="dual" onclick="setLayer('dual',this)">Dual Threat</div>
+    </div>
+
+    <div id="sb-body">
+
+      <!-- Key stats -->
+      <div class="stat-block">
+        <div class="stat-row">
+          <div class="sr-label">Counties at high or very high carbon risk</div>
+          <div class="sr-val risk" id="stat-high">—</div>
+        </div>
+        <div class="stat-row">
+          <div class="sr-label">Counties with dual-threat (fragile + high OM loss)</div>
+          <div class="sr-val warn">766</div>
+        </div>
+        <div class="stat-row">
+          <div class="sr-label">Highest-risk state</div>
+          <div class="sr-val risk" id="stat-top-state">AZ</div>
+        </div>
+        <div class="stat-row">
+          <div class="sr-label">Most carbon-resilient state</div>
+          <div class="sr-val ok" id="stat-resilient">ME</div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="legend-block" id="legend-block">
+        <div class="leg-title" id="leg-title">Organic Matter Depletion Risk</div>
+        <div id="leg-items"></div>
+      </div>
+
+      <!-- State rankings -->
+      <div class="rank-block">
+        <div class="rank-title" id="rank-title">States by Carbon Risk (highest first)</div>
+        <div id="rank-list"></div>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-block">
+      <a class="cta-btn" href="soil-data-visual-lab.html">
+        <span class="cta-icon"></span>
+        <span>
+          <div class="cta-label">Score Your Soil →</div>
+          <div class="cta-sub">Live KSSL percentiles in the Soil Data Visual Lab</div>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <!-- MAP -->
+  <div id="map-wrap">
+    <div id="map"></div>
+
+    <div class="map-overlay-btns">
+      <button class="mo-btn" onclick="togglePMTiles()" id="btn-pattern">Soil Pattern
+      </button>
+    </div>
+
+    <div class="map-hint" id="map-hint">Click a county to see details</div>
+
+    <!-- Detail panel -->
+    <div id="dp">
+      <div id="dp-hdr">
+        <span class="dp-title" id="dp-title">—</span>
+        <button id="dp-close" onclick="document.getElementById('dp').style.display='none'">✕</button>
+      </div>
+      <div id="dp-body"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ── CONSTANTS ────────────────────────────────────────── */
+const COUNTIES_CDN='https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json';
+const DATA_INTERP='data/interp_data.json';
+const MU_BASE='data/pmtiles/';
+
+const FIPS_TO_STATE={
+  '01':'AL','02':'AK','04':'AZ','05':'AR','06':'CA','08':'CO','09':'CT',
+  '10':'DE','11':'DC','12':'FL','13':'GA','15':'HI','16':'ID','17':'IL',
+  '18':'IN','19':'IA','20':'KS','21':'KY','22':'LA','23':'ME','24':'MD',
+  '25':'MA','26':'MI','27':'MN','28':'MS','29':'MO','30':'MT','31':'NE',
+  '32':'NV','33':'NH','34':'NJ','35':'NM','36':'NY','37':'NC','38':'ND',
+  '39':'OH','40':'OK','41':'OR','42':'PA','44':'RI','45':'SC','46':'SD',
+  '47':'TN','48':'TX','49':'UT','50':'VT','51':'VA','53':'WA','54':'WV',
+  '55':'WI','56':'WY','60':'AS','66':'GU','72':'PR','78':'VI'
+};
+
+const STATE_AGG={"AK":{"fsi":0.118,"om":0.4519},"AL":{"fsi":0.2688,"om":0.7206},"AR":{"fsi":0.2341,"om":0.6987},"AZ":{"fsi":0.4847,"om":0.8809},"CA":{"fsi":0.3826,"om":0.7418},"CO":{"fsi":0.2885,"om":0.6981},"CT":{"fsi":0.2003,"om":0.5224},"DC":{"fsi":0.2669,"om":0.7071},"DE":{"fsi":0.2666,"om":0.6837},"FL":{"fsi":0.158,"om":0.7102},"GA":{"fsi":0.2893,"om":0.7556},"HI":{"fsi":0.213,"om":0.6637},"IA":{"fsi":0.3044,"om":0.6047},"ID":{"fsi":0.2842,"om":0.6401},"IL":{"fsi":0.2996,"om":0.6188},"IN":{"fsi":0.303,"om":0.6198},"KS":{"fsi":0.2808,"om":0.7221},"KY":{"fsi":0.3019,"om":0.6487},"LA":{"fsi":0.2271,"om":0.6592},"MA":{"fsi":0.1488,"om":0.5033},"MD":{"fsi":0.2648,"om":0.673},"ME":{"fsi":0.0982,"om":0.4514},"MI":{"fsi":0.1643,"om":0.595},"MN":{"fsi":0.2513,"om":0.547},"MO":{"fsi":0.2013,"om":0.6257},"MS":{"fsi":0.2815,"om":0.6902},"MT":{"fsi":0.2319,"om":0.641},"NC":{"fsi":0.2945,"om":0.6679},"ND":{"fsi":0.2574,"om":0.5943},"NE":{"fsi":0.2925,"om":0.7102},"NH":{"fsi":0.1564,"om":0.4923},"NJ":{"fsi":0.218,"om":0.6195},"NM":{"fsi":0.3949,"om":0.8035},"NV":{"fsi":0.5013,"om":0.787},"NY":{"fsi":0.1794,"om":0.4606},"OH":{"fsi":0.2674,"om":0.6126},"OK":{"fsi":0.2398,"om":0.7986},"OR":{"fsi":0.2196,"om":0.6188},"PA":{"fsi":0.254,"om":0.582},"RI":{"fsi":0.1725,"om":0.522},"SC":{"fsi":0.3233,"om":0.7353},"SD":{"fsi":0.2609,"om":0.6208},"TN":{"fsi":0.2396,"om":0.6696},"TX":{"fsi":0.2847,"om":0.8333},"UT":{"fsi":0.3886,"om":0.7121},"VA":{"fsi":0.328,"om":0.7034},"VT":{"fsi":0.1735,"om":0.4749},"WA":{"fsi":0.1725,"om":0.6453},"WI":{"fsi":0.2358,"om":0.5939},"WV":{"fsi":0.232,"om":0.6272},"WY":{"fsi":0.3139,"om":0.7}};
+
+/* ── LAYER CONFIGS ────────────────────────────────────── */
+const LAYERS={
+  om:{
+    title:'Organic Matter Depletion Risk',
+    rankTitle:'States by OM Depletion (highest first)',
+    rankFn:s=>STATE_AGG[s]?STATE_AGG[s].om:0,
+    rankHighBad:true,
+    legend:[
+      {color:'#7b0007',label:'OM depletion high',desc:'Extreme carbon loss · active management critical'},
+      {color:'#f03b20',label:'OM depletion moderately high',desc:'Significant loss under tillage'},
+      {color:'#fecc5c',label:'OM depletion moderate',desc:'Measurable loss without cover'},
+      {color:'#78c679',label:'OM depletion moderately low',desc:'Modest risk · stable under good management'},
+      {color:'#1b7837',label:'OM depletion low',desc:'Carbon stable or building'},
+      {color:'#343450',label:'Not rated',desc:''},
+    ],
+    colorFn:f=>{
+      const v=f.properties.om_class||'';
+      return({'OM depletion high':'#7b0007','OM depletion moderately high':'#f03b20',
+               'OM depletion moderate':'#fecc5c','OM depletion moderately low':'#78c679',
+               'OM depletion low':'#1b7837','Not rated':'#343450'})[v]||'#1a1a30';
+    }
+  },
+  opportunity:{
+    title:'Carbon Sequestration Opportunity',
+    rankTitle:'States by Sequestration Opportunity',
+    rankFn:s=>{const d=STATE_AGG[s];return d?(d.om*0.6+(1-d.fsi)*0.4):0;},
+    rankHighBad:false,
+    legend:[
+      {color:'#08306b',label:'Highest opportunity',desc:'High loss + structurally stable = prime for cover crops'},
+      {color:'#2171b5',label:'High opportunity',desc:'Good sequestration potential with regenerative practices'},
+      {color:'#6baed6',label:'Moderate opportunity',desc:'Moderate gains from management change'},
+      {color:'#c6dbef',label:'Lower opportunity',desc:'Soil already stable or limited organic matter capacity'},
+      {color:'#343450',label:'Not rated',desc:''},
+    ],
+    colorFn:f=>{
+      const om=f.properties.om_avg||0;
+      const fsi=f.properties.fsi_avg||0;
+      if(!om&&!fsi)return'#343450';
+      const score=om*0.6+(1-fsi)*0.4;
+      if(score>0.75)return'#08306b';
+      if(score>0.65)return'#2171b5';
+      if(score>0.55)return'#6baed6';
+      return'#c6dbef';
+    }
+  },
+  dual:{
+    title:'Dual-Threat Zones',
+    rankTitle:'States with Most Dual-Threat Counties',
+    rankFn:s=>dualThreatByState[s]||0,
+    rankHighBad:true,
+    legend:[
+      {color:'#ff4500',label:'Dual threat',desc:'Both fragile structure AND high carbon loss · highest priority'},
+      {color:'#7b0007',label:'OM depletion high only',desc:'Carbon loss without structural fragility'},
+      {color:'#f03b20',label:'Fragile soils only',desc:'Structural risk without severe OM loss'},
+      {color:'#343450',label:'Neither',desc:''},
+    ],
+    colorFn:f=>{
+      const om=f.properties.om_class||'';
+      const fsi=f.properties.fsi_class||'';
+      const hiOM=om==='OM depletion high'||om==='OM depletion moderately high';
+      const hiFSI=fsi==='Highly fragile'||fsi==='Fragile'||fsi==='Extremely fragile'||fsi==='Very highly fragile';
+      if(hiOM&&hiFSI)return'#ff4500';
+      if(hiOM)return'#7b0007';
+      if(hiFSI)return'#f03b20';
+      if(!om&&!fsi)return'#343450';
+      return'#1a1a30';
+    }
+  }
+};
+
+/* ── STATE ────────────────────────────────────────────── */
+let map, geojsonData;
+let activeLayer='om', hoveredId=null;
+let muLayersAdded=new Set(), muVisible=false;
+let dualThreatByState={};
+
+/* ── MAP INIT ─────────────────────────────────────────── */
+const _proto=new pmtiles.Protocol();
+maplibregl.addProtocol('pmtiles',_proto.tile.bind(_proto));
+
+map=new maplibregl.Map({
+  container:'map',
+  style:'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json',
+  center:[-96,38],zoom:3.8,minZoom:2,maxZoom:16,
+  attributionControl:false
+});
+map.addControl(new maplibregl.AttributionControl({compact:true}),'bottom-left');
+map.addControl(new maplibregl.ScaleControl({maxWidth:70,unit:'imperial'}),'bottom-right');
+map.addControl(new maplibregl.NavigationControl({showCompass:false}),'top-right');
+
+map.on('load',async()=>{
+  // Labels overlay
+  map.addSource('labels-src',{type:'raster',tileSize:256,
+    tiles:['https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png',
+           'https://b.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png']});
+  map.addLayer({id:'labels',type:'raster',source:'labels-src',paint:{'raster-opacity':0.8}});
+  await loadData();
+});
+
+/* ── DATA LOAD ────────────────────────────────────────── */
+async function loadData(){
+  const tag='CARBON';
+  try{
+    SoilLog.info(tag,'Loading interp data');
+    const r=await fetch(DATA_INTERP);
+    if(!r.ok)throw new Error('interp_data HTTP '+r.status);
+    const interp=await r.json();
+    SoilLog.info(tag,'Interp loaded — '+Object.keys(interp).length+' entries');
+
+    const tr=await fetch(COUNTIES_CDN);
+    if(!tr.ok)throw new Error('Counties CDN HTTP '+tr.status);
+    const topo=await tr.json();
+    geojsonData=topojson.feature(topo,topo.objects.counties);
+
+    let hiCount=0;
+    geojsonData.features.forEach(f=>{
+      const fips=f.id?String(f.id).padStart(5,'0'):null;
+      if(!fips)return;
+      f.properties.fips=fips;
+      const st=FIPS_TO_STATE[fips.slice(0,2)]||'';
+      f.properties._state=st;
+
+      let ip=interp[fips]||null;
+      if(!ip&&st&&STATE_AGG[st]){
+        const sa=STATE_AGG[st];
+        const omC=sa.om>0.75?'OM depletion high':sa.om>0.65?'OM depletion moderately high':
+                  sa.om>0.55?'OM depletion moderate':sa.om>0.45?'OM depletion moderately low':'OM depletion low';
+        const fsiC=sa.fsi>0.4?'Highly fragile':sa.fsi>0.3?'Fragile':
+                   sa.fsi>0.22?'Moderately fragile':sa.fsi>0.15?'Slightly fragile':'Not fragile';
+        ip={fsi_dominant:fsiC,om_dominant:omC,fsi_avg:sa.fsi,om_avg:sa.om,name:st,areasymbol:st};
+      }
+
+      if(ip){
+        f.properties.fsi_class=ip.fc||ip.fsi_dominant||'Not rated';
+        f.properties.om_class=ip.oc||ip.om_dominant||'Not rated';
+        f.properties.fsi_avg=+(ip.fv||ip.fsi_avg)||0;
+        f.properties.om_avg=+(ip.ov||ip.om_avg)||0;
+        f.properties.name=ip.name||'';
+        f.properties.areasymbol=ip.areasymbol||'';
+        if(f.properties.om_class==='OM depletion high'||f.properties.om_class==='OM depletion moderately high') hiCount++;
+        // Count dual threats by state
+        const hiOM=f.properties.om_class==='OM depletion high'||f.properties.om_class==='OM depletion moderately high';
+        const hiFSI=['Highly fragile','Fragile','Extremely fragile','Very highly fragile'].includes(f.properties.fsi_class);
+        if(hiOM&&hiFSI){dualThreatByState[st]=(dualThreatByState[st]||0)+1;}
+      }else{
+        f.properties.fsi_class='Not rated'; f.properties.om_class='Not rated';
+      }
+    });
+
+    SoilLog.info(tag,'Data attached — '+hiCount+' high-risk counties');
+    document.getElementById('stat-high').textContent=hiCount.toLocaleString();
+
+    buildMap();
+    buildLegend();
+    buildRankings();
+
+  }catch(e){
+    SoilLog.error('CARBON','loadData failed: '+e.message);
+    showApiError('Map data could not be loaded. ('+e.message+')');
+  }
+}
+
+/* ── MAP BUILD ────────────────────────────────────────── */
+function buildMap(){
+  map.addSource('counties',{type:'geojson',data:geojsonData,generateId:true});
+  map.addLayer({id:'fill',type:'fill',source:'counties',paint:{
+    'fill-color':buildColorExpr(),
+    'fill-opacity':['case',['boolean',['feature-state','hover'],false],1,0.82]
+  }});
+  map.addLayer({id:'outline',type:'line',source:'counties',paint:{
+    'line-color':'rgba(0,0,0,.35)',
+    'line-width':['interpolate',['linear'],['zoom'],3,0.1,8,0.5,12,1]
+  }});
+  map.addLayer({id:'hover-line',type:'line',source:'counties',paint:{
+    'line-color':['case',['boolean',['feature-state','hover'],false],'#f97316','transparent'],
+    'line-width':2,'line-opacity':0.9
+  }});
+
+  map.on('mousemove','fill',e=>{
+    if(hoveredId!==null)map.setFeatureState({source:'counties',id:hoveredId},{hover:false});
+    hoveredId=e.features[0].id;
+    map.setFeatureState({source:'counties',id:hoveredId},{hover:true});
+    map.getCanvas().style.cursor='pointer';
+  });
+  map.on('mouseleave','fill',()=>{
+    if(hoveredId!==null)map.setFeatureState({source:'counties',id:hoveredId},{hover:false});
+    hoveredId=null; map.getCanvas().style.cursor='';
+  });
+  map.on('click','fill',e=>showDetail(e.features[0].properties));
+  map.on('zoom',()=>{
+    if(muVisible){
+      const z=map.getZoom();
+      const countyOp=Math.max(0.05,Math.min(0.82,0.82*(7-z)/(7-5)));
+      const muOp=Math.max(0,Math.min(0.85,0.85*(z-5)/(7-5)));
+      if(map.getLayer('fill')) map.setPaintProperty('fill','fill-opacity',
+        ['case',['boolean',['feature-state','hover'],false],1,countyOp]);
+      muLayersAdded.forEach(st=>{
+        if(map.getLayer('mu-fill-'+st)) map.setPaintProperty('mu-fill-'+st,'fill-opacity',muOp);
+      });
+    }
+  });
+}
+
+function buildColorExpr(){
+  const fn=LAYERS[activeLayer].colorFn;
+  const stops=[];
+  geojsonData.features.forEach((f,i)=>stops.push(i,fn(f)));
+  return['match',['id'],...stops,'#1a1a30'];
+}
+
+/* ── LAYER SWITCH ─────────────────────────────────────── */
+function setLayer(id,tabEl){
+  activeLayer=id;
+  document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('active'));
+  tabEl.classList.add('active');
+  if(!map.getSource('counties'))return;
+  map.setPaintProperty('fill','fill-color',buildColorExpr());
+  buildLegend();
+  buildRankings();
+}
+
+/* ── LEGEND ───────────────────────────────────────────── */
+function buildLegend(){
+  const cfg=LAYERS[activeLayer];
+  document.getElementById('leg-title').textContent=cfg.title;
+  document.getElementById('leg-items').innerHTML=cfg.legend.map(l=>
+    `<div class="leg-row">
+      <div class="leg-swatch" style="background:${l.color}"></div>
+      <div class="leg-label">${l.desc?`<strong>${l.label}</strong><br><span style="font-size:.65rem;color:var(--dimmer)">${l.desc}</span>`:l.label||'—'}</div>
+    </div>`
+  ).join('');
+}
+
+/* ── RANKINGS ─────────────────────────────────────────── */
+function buildRankings(){
+  const cfg=LAYERS[activeLayer];
+  document.getElementById('rank-title').textContent=cfg.rankTitle;
+  const OM_COLOR={'OM depletion high':'#7b0007','OM depletion moderately high':'#f03b20',
+    'OM depletion moderate':'#fecc5c','OM depletion moderately low':'#78c679','OM depletion low':'#1b7837'};
+
+  const states=Object.keys(STATE_AGG)
+    .map(s=>({state:s,score:cfg.rankFn(s)}))
+    .sort((a,b)=>cfg.rankHighBad?b.score-a.score:b.score-a.score);
+  const maxScore=Math.max(...states.map(s=>s.score))||1;
+
+  document.getElementById('rank-list').innerHTML=states.slice(0,20).map((s,i)=>{
+    const pct=Math.round(s.score/maxScore*100);
+    const barColor=activeLayer==='opportunity'?'#2171b5':
+      s.score>0.75?'#7b0007':s.score>0.65?'#f03b20':s.score>0.55?'#fecc5c':'#78c679';
+    return`<div class="rank-row" onclick="flyToState('${s.state}')">
+      <div class="rank-num">${i+1}</div>
+      <div class="rank-st">${s.state}</div>
+      <div class="rank-bar-wrap"><div class="rank-bar" style="width:${pct}%;background:${barColor}"></div></div>
+      <div class="rank-pct">${(s.score*100).toFixed(0)}%</div>
+    </div>`;
+  }).join('');
+}
+
+/* ── FLY TO STATE ─────────────────────────────────────── */
+const STATE_CENTERS={
+  AL:[32.8,-86.8],AK:[64,-153],AZ:[34.3,-111.1],AR:[34.8,-92.2],CA:[36.8,-119.4],
+  CO:[39,-105.5],CT:[41.6,-72.7],DC:[38.9,-77],DE:[39,-75.5],FL:[28.1,-82.5],
+  GA:[32.2,-83.4],HI:[20.3,-156.4],IA:[42,-93.5],ID:[44.5,-114.3],IL:[40,-89.2],
+  IN:[40,-86.3],KS:[38.5,-98.4],KY:[37.6,-84.7],LA:[30.8,-91.9],MA:[42.4,-71.8],
+  MD:[39.1,-76.8],ME:[45.4,-69.2],MI:[44.5,-84.4],MN:[46,-94.3],MO:[38.5,-92.5],
+  MS:[32.7,-89.7],MT:[47,-110],NC:[35.5,-79.2],ND:[47.5,-100.5],NE:[41.5,-99.9],
+  NH:[43.8,-71.6],NJ:[40,-74.4],NM:[34.3,-106.1],NV:[39.5,-116.9],NY:[42.7,-75.5],
+  OH:[40.1,-82.7],OK:[35.5,-97.5],OR:[44.1,-120.5],PA:[40.9,-77.8],RI:[41.7,-71.6],
+  SC:[33.8,-80.9],SD:[44.4,-100.3],TN:[35.8,-86.4],TX:[31.5,-99.3],UT:[39.3,-111.1],
+  VA:[37.7,-78.2],VT:[44.1,-72.7],WA:[47.4,-120.4],WI:[44.5,-89.6],WV:[38.6,-80.5],WY:[43,-107.6]
+};
+function flyToState(st){
+  const c=STATE_CENTERS[st];
+  if(c)map.flyTo({center:[c[1],c[0]],zoom:6,duration:1000});
+}
+
+/* ── DETAIL PANEL ─────────────────────────────────────── */
+const OM_COLOR={'OM depletion high':'#7b0007','OM depletion moderately high':'#f03b20',
+  'OM depletion moderate':'#fecc5c','OM depletion moderately low':'#78c679',
+  'OM depletion low':'#1b7837'};
+const FSI_COLOR={'Highly fragile':'#f03b20','Fragile':'#fd8d3c','Moderately fragile':'#fecc5c',
+  'Slightly fragile':'#78c679','Not fragile':'#1b7837'};
+
+function showDetail(props){
+  const dp=document.getElementById('dp');
+  const st=props._state||'';
+  const areaName=props.name||(st?st:'Unknown');
+  document.getElementById('dp-title').textContent=areaName;
+
+  const omC=props.om_class||'Not rated';
+  const fsiC=props.fsi_class||'Not rated';
+  const omColor=OM_COLOR[omC]||'#5a6490';
+  const fsiColor=FSI_COLOR[fsiC]||'#5a6490';
+  const dualThreat=['OM depletion high','OM depletion moderately high'].includes(omC)&&
+    ['Highly fragile','Fragile','Extremely fragile','Very highly fragile'].includes(fsiC);
+
+  const omVal=props.om_avg?(props.om_avg*100).toFixed(1)+'%':'—';
+  const fsiVal=props.fsi_avg?(props.fsi_avg*100).toFixed(1)+'%':'—';
+
+  document.getElementById('dp-body').innerHTML=`
+    ${dualThreat?`<div style="background:rgba(255,69,0,.12);border:1px solid rgba(255,69,0,.35);
+      border-radius:5px;padding:7px 10px;margin-bottom:8px;font-size:.72rem;color:#ff7043;font-weight:700">Dual-threat zone — fragile structure + high carbon loss
+    </div>`:''}
+    <div class="dp-row">
+      <div class="dp-key">OM Depletion Risk</div>
+      <div class="dp-val">
+        <span class="dp-chip" style="background:${omColor}22;color:${omColor};border:1px solid ${omColor}44">${omC}</span>
+      </div>
+    </div>
+    <div class="dp-row">
+      <div class="dp-key">OM Depletion Score</div>
+      <div class="dp-val" style="color:${omColor}">${omVal}</div>
+    </div>
+    <div class="dp-row">
+      <div class="dp-key">Fragile Soil Index</div>
+      <div class="dp-val">
+        <span class="dp-chip" style="background:${fsiColor}22;color:${fsiColor};border:1px solid ${fsiColor}44">${fsiC}</span>
+      </div>
+    </div>
+    <div class="dp-row">
+      <div class="dp-key">FSI Score</div>
+      <div class="dp-val" style="color:${fsiColor}">${fsiVal}</div>
+    </div>
+    <div class="dp-row">
+      <div class="dp-key">Survey Area</div>
+      <div class="dp-val" style="color:var(--accent)">${props.areasymbol||'—'}</div>
+    </div>
+    <div style="margin-top:10px">
+      <a href="soil-data-visual-lab.html" style="display:flex;align-items:center;gap:8px;padding:8px 12px;
+        background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);border-radius:5px;
+        text-decoration:none;font-size:.72rem;color:var(--orange)">Score this soil in the Visual Lab →
+      </a>
+    </div>
+  `;
+  dp.style.display='block';
+  document.getElementById('map-hint').classList.add('hidden');
+}
+
+/* ── SOIL PATTERN (PMTiles) ──────────────────────────── */
+const MU_OM_EXPR=['match',['get','om_class'],
+  'OM depletion low','#1b7837','OM depletion moderately low','#78c679',
+  'OM depletion moderate','#fecc5c','OM depletion moderately high','#f03b20',
+  'OM depletion high','#7b0007','#1a1a30'];
+const MU_FSI_EXPR=['match',['get','fsi_class'],
+  'Not fragile','#1b7837','Slightly fragile','#78c679',
+  'Moderately fragile','#fecc5c','Fragile','#fd8d3c',
+  'Highly fragile','#f03b20','Extremely fragile','#bd0026','#1a1a30'];
+
+function getMUExpr(){return activeLayer==='om'?MU_OM_EXPR:MU_FSI_EXPR;}
+
+function togglePMTiles(){
+  muVisible=!muVisible;
+  const btn=document.getElementById('btn-pattern');
+  btn.classList.toggle('active',muVisible);
+  if(muVisible){
+    loadMUTiles();
+    const z=map.getZoom();
+    const cOp=Math.max(0.05,Math.min(0.82,0.82*(7-z)/(7-5)));
+    if(map.getLayer('fill'))map.setPaintProperty('fill','fill-opacity',
+      ['case',['boolean',['feature-state','hover'],false],1,cOp]);
+    muLayersAdded.forEach(st=>{
+      if(map.getLayer('mu-fill-'+st))map.setLayoutProperty('mu-fill-'+st,'visibility','visible');
+      if(map.getLayer('mu-line-'+st))map.setLayoutProperty('mu-line-'+st,'visibility','visible');
+    });
+  }else{
+    if(map.getLayer('fill'))map.setPaintProperty('fill','fill-opacity',
+      ['case',['boolean',['feature-state','hover'],false],1,0.82]);
+    muLayersAdded.forEach(st=>{
+      if(map.getLayer('mu-fill-'+st))map.setLayoutProperty('mu-fill-'+st,'visibility','none');
+      if(map.getLayer('mu-line-'+st))map.setLayoutProperty('mu-line-'+st,'visibility','none');
+    });
+  }
+}
+
+function loadMUTiles(){
+  if(!geojsonData)return;
+  const states=new Set(geojsonData.features.map(f=>FIPS_TO_STATE[(f.properties.fips||'').slice(0,2)]).filter(Boolean));
+  states.forEach(state=>addMULayer(state));
+}
+
+function addMULayer(state){
+  if(muLayersAdded.has(state))return;
+  muLayersAdded.add(state);
+  const src='mu-'+state;
+  if(map.getSource(src))return;
+  map.addSource(src,{type:'vector',url:`pmtiles://${MU_BASE}${state}.pmtiles`});
+  const z=map.getZoom();
+  const op=muVisible&&z>=5?Math.max(0,Math.min(0.85,0.85*(z-5)/(7-5))):0;
+  map.addLayer({id:'mu-fill-'+state,type:'fill',source:src,'source-layer':state,
+    paint:{'fill-color':getMUExpr(),'fill-opacity':op},
+    layout:{visibility:muVisible?'visible':'none'}});
+  map.addLayer({id:'mu-line-'+state,type:'line',source:src,'source-layer':state,
+    paint:{'line-color':'rgba(0,0,0,.25)',
+           'line-width':['interpolate',['linear'],['zoom'],9,0.15,14,0.6]},
+    layout:{visibility:muVisible?'visible':'none'}});
+}
+</script>
+</body>
+</html>

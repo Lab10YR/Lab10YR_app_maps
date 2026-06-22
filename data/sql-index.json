@@ -1,0 +1,4115 @@
+{
+  "generatedAtUtc": "2026-06-12T14:58:04Z",
+  "totalScripts": 275,
+  "scripts": [
+    {
+      "fileName": "both_tabular_spatial_in_staging.sql",
+      "commonName": "Both Tabular Spatial In Staging",
+      "familyKey": "both-tabular-spatial-in-staging",
+      "title": "both tabular spatial in staging",
+      "path": "sandbox/REFRESH/both_tabular_spatial_in_staging.sql",
+      "category": "Data Extraction And Integration",
+      "location": "sandbox",
+      "tags": [
+        "pipeline",
+        "sandbox"
+      ],
+      "description": "Counts surveys in staging server that have both spatial and tabular data",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "extract_MWSoilsFY16_dominantComponent.sql",
+      "commonName": "Extract Mw Soils Fy 16 Dominant Component",
+      "familyKey": "extract-mw-soils-fy-dominant-component",
+      "title": "extract MWSoilsFY16 dominantComponent",
+      "path": "sandbox/ACPF/ACPF_JAMES/extract_MWSoilsFY16_dominantComponent.sql",
+      "category": "Data Extraction And Integration",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "data-extract",
+        "sandbox"
+      ],
+      "description": "Select_MWoilsFY16_DominantComponent.sql",
+      "lastUpdatedUtc": "2017-04-21",
+      "hidden": true
+    },
+    {
+      "fileName": "Forage Suitability Group Table Join.sql",
+      "commonName": "Forage Suitability Group Table Join",
+      "familyKey": "forage-suitability-group-table-join",
+      "title": "Forage Suitability Group Table Join",
+      "path": "Forage Suitability Group Table Join.sql",
+      "category": "Data Extraction And Integration",
+      "location": "root",
+      "tags": [
+        "data-join"
+      ],
+      "description": "Forage Suitability Group Table Join query in category Data Extraction And Integration.",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "KyleSSURGO_Refresh_Monitoring UPDATED..sql",
+      "commonName": "Kyle Ssurgo Refresh Monitoring Updated",
+      "familyKey": "kyle-ssurgo-refresh-monitoring",
+      "title": "KyleSSURGO Refresh Monitoring UPDATED.",
+      "path": "sandbox/REFRESH/KyleSSURGO_Refresh_Monitoring UPDATED..sql",
+      "category": "Data Extraction And Integration",
+      "location": "sandbox",
+      "tags": [
+        "pipeline",
+        "sandbox"
+      ],
+      "description": "KyleSSURGO_Refresh_Monitoring UPDATED. query in category Data Extraction And Integration.",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "Monitor-National-Interps-sdmOffline-committed_FY19.sql",
+      "commonName": "Monitor National Interps Sdm Offline Committed Fy 19",
+      "familyKey": "monitor-national-interps-sdm-offline-committed",
+      "title": "Monitor National Interps sdmOffline committed FY19",
+      "path": "sandbox/REFRESH/Monitor-National-Interps-sdmOffline-committed_FY19.sql",
+      "category": "Data Extraction And Integration",
+      "location": "sandbox",
+      "tags": [
+        "pipeline",
+        "sandbox"
+      ],
+      "description": "National Interps Status Query",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "Monitor-NON-National-Interps-sdmOffline-committed_FY19.sql",
+      "commonName": "Monitor Non National Interps Sdm Offline Committed Fy 19",
+      "familyKey": "monitor-non-national-interps-sdm-offline",
+      "title": "Monitor NON National Interps sdmOffline committed FY19",
+      "path": "sandbox/REFRESH/Monitor-NON-National-Interps-sdmOffline-committed_FY19.sql",
+      "category": "Data Extraction And Integration",
+      "location": "sandbox",
+      "tags": [
+        "pipeline",
+        "sandbox"
+      ],
+      "description": "Non-National Interps Status Query",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "postgreq_water_quality_merge_tables.sql",
+      "commonName": "Postgreq Water Quality Merge Tables",
+      "familyKey": "postgreq-water-quality-merge-tables",
+      "title": "postgreq water quality merge tables",
+      "path": "sandbox/scripts/postgreq_water_quality_merge_tables.sql",
+      "category": "Data Extraction And Integration",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS wq;",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "SDA_extract_MWSoilsFY16_dominantComponent.sql",
+      "commonName": "Extract Mw Soils Fy 16 Dominant Component",
+      "familyKey": "extract-mw-soils-fy-dominant-component",
+      "title": "SDA extract MWSoilsFY16 dominantComponent",
+      "path": "sandbox/ACPF/SDA_extract_MWSoilsFY16_dominantComponent.sql",
+      "category": "Data Extraction And Integration",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "data-extract",
+        "sandbox",
+        "sda"
+      ],
+      "description": "SDA_extract_MWSoilsFY16_dominantComponent query in category Data Extraction And Integration.",
+      "lastUpdatedUtc": "2017-03-31"
+    },
+    {
+      "fileName": "SDW_ssas_committed_by_state.sql",
+      "commonName": "Sdw Ssas Committed By State",
+      "familyKey": "sdw-ssas-committed-by-state",
+      "title": "SDW ssas committed by state",
+      "path": "sandbox/REFRESH/SDW_ssas_committed_by_state.sql",
+      "category": "Data Extraction And Integration",
+      "location": "sandbox",
+      "tags": [
+        "pipeline",
+        "sandbox"
+      ],
+      "description": "Lists number of surveys committed to SDW for each state",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "Soil_Data_Warehouse_SDAHEL_Kyle_script.sql",
+      "commonName": "Soil Data Warehouse Sdahel Kyle Script",
+      "familyKey": "soil-data-warehouse-sdahel-kyle-script",
+      "title": "Soil Data Warehouse SDAHEL Kyle script",
+      "path": "sandbox/REFRESH/Soil_Data_Warehouse_SDAHEL_Kyle_script.sql",
+      "category": "Data Extraction And Integration",
+      "location": "sandbox",
+      "tags": [
+        "pipeline",
+        "sandbox",
+        "sda"
+      ],
+      "description": "Soil_Data_Warehouse_SDAHEL_Kyle_script query in category Data Extraction And Integration.",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "staging-server-spatial.sql",
+      "commonName": "Staging Server Spatial",
+      "familyKey": "staging-server-spatial",
+      "title": "staging server spatial",
+      "path": "sandbox/REFRESH/staging-server-spatial.sql",
+      "category": "Data Extraction And Integration",
+      "location": "sandbox",
+      "tags": [
+        "pipeline",
+        "sandbox"
+      ],
+      "description": "view data in staging server  -- for counting # of SSAs in staging with spatial only",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "staging-server-surveys.sql",
+      "commonName": "Staging Server Surveys",
+      "familyKey": "staging-server-surveys",
+      "title": "staging server surveys",
+      "path": "sandbox/REFRESH/staging-server-surveys.sql",
+      "category": "Data Extraction And Integration",
+      "location": "sandbox",
+      "tags": [
+        "pipeline",
+        "sandbox"
+      ],
+      "description": "view data in staging server  -- for counting # of SSAs in staging",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "staging-server-tabular.sql",
+      "commonName": "Staging Server Tabular",
+      "familyKey": "staging-server-tabular",
+      "title": "staging server tabular",
+      "path": "sandbox/REFRESH/staging-server-tabular.sql",
+      "category": "Data Extraction And Integration",
+      "location": "sandbox",
+      "tags": [
+        "pipeline",
+        "sandbox"
+      ],
+      "description": "view data in staging server  -- for counting # of SSAs in staging with tabular only data",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "WSS_Download_link.sql",
+      "commonName": "Web Soil Survey Download Link",
+      "familyKey": "web-soil-survey-download-link",
+      "title": "WSS Download link",
+      "path": "sandbox/WSS_Download_link.sql",
+      "category": "Data Extraction And Integration",
+      "location": "sandbox",
+      "tags": [
+        "pipeline",
+        "sandbox",
+        "wss"
+      ],
+      "description": "SELECT [areasymbol]",
+      "lastUpdatedUtc": "2020-07-22"
+    },
+    {
+      "fileName": "aggtabcolconstraint Table Rows.sql",
+      "commonName": "Aggtabcolconstraint Table Rows",
+      "familyKey": "aggtabcolconstraint-table-rows",
+      "title": "aggtabcolconstraint Table Rows",
+      "path": "sandbox/SDV_engine/aggtabcolconstraint Table Rows.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "aggtabcolconstraint Table Rows query in category General Soil Data.",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "Baseball_Infield_Soil_Soruce.sql",
+      "commonName": "Baseball Infield Soil Soruce",
+      "familyKey": "baseball-infield-soil-soruce",
+      "title": "Baseball Infield Soil Soruce",
+      "path": "sandbox/Baseball_Infield_Soil_Soruce.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #map;",
+      "lastUpdatedUtc": "2020-03-23"
+    },
+    {
+      "fileName": "Baseball_Infield_Soil_Soruce.sql",
+      "commonName": "Baseball Infield Soil Soruce",
+      "familyKey": "baseball-infield-soil-soruce",
+      "title": "Baseball Infield Soil Soruce",
+      "path": "sandbox/sql_queries/component/Baseball_Infield_Soil_Soruce.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "moved from sandbox root",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "Build_table_relationships.sql",
+      "commonName": "Build Table Relationships",
+      "familyKey": "build-table-relationships",
+      "title": "Build table relationships",
+      "path": "sandbox/Build_table_relationships.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": ";WITH CTE AS",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "Build_table_relationships.sql",
+      "commonName": "Build Table Relationships",
+      "familyKey": "build-table-relationships",
+      "title": "Build table relationships",
+      "path": "sandbox/sql_queries/misc/Build_table_relationships.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "moved from sandbox root",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "CART_SoilsQuery_kitchensink_20240925.sql",
+      "commonName": "Cart Soils Query Kitchensink 20240925",
+      "familyKey": "cart-soils-query-kitchensink",
+      "title": "CART SoilsQuery kitchensink 20240925",
+      "path": "sql/conservation/CART_SoilsQuery_kitchensink_20240925.sql",
+      "category": "General Soil Data",
+      "location": "sql",
+      "tags": [
+        "curated"
+      ],
+      "description": "2021-09-23 T16:13:41",
+      "lastUpdatedUtc": "2026-06-02"
+    },
+    {
+      "fileName": "Catastrophic_Interp.sql",
+      "commonName": "Catastrophic Interp",
+      "familyKey": "catastrophic-interp",
+      "title": "Catastrophic Interp",
+      "path": "sandbox/sql_queries/misc/Catastrophic_Interp.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "moved from sandbox root",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "Catastrophic_Interp.sql",
+      "commonName": "Catastrophic Interp",
+      "familyKey": "catastrophic-interp",
+      "title": "Catastrophic Interp",
+      "path": "sandbox/Catastrophic_Interp.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Define the area",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "Cathy_Seybold_HSG_Cal_l_rv_high.sql",
+      "commonName": "Cathy Seybold Hsg Cal L Rv High",
+      "familyKey": "cathy-seybold-hsg-cal-l-rv",
+      "title": "Cathy Seybold HSG Cal l rv high",
+      "path": "sandbox/Cathy_Seybold_HSG_Cal_l_rv_high.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2020-07-22"
+    },
+    {
+      "fileName": "Cathy_Seybold_HSG_Cal_parameter_Override.sql",
+      "commonName": "Cathy Seybold Hsg Cal Parameter Override",
+      "familyKey": "cathy-seybold-hsg-cal-parameter-override",
+      "title": "Cathy Seybold HSG Cal parameter Override",
+      "path": "sandbox/Cathy_Seybold_HSG_Cal_parameter_Override.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2020-07-22"
+    },
+    {
+      "fileName": "CDSI_ORIGINAL_2014.sql",
+      "commonName": "Cdsi Original 2014",
+      "familyKey": "cdsi-original",
+      "title": "CDSI ORIGINAL 2014",
+      "path": "sandbox/CDSI_ORIGINAL_2014.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT areasymbol, areaname, mukey, musym, nationalmusym, muname, mukind, muacres",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "CEAP_Grazing_SDA.sql",
+      "commonName": "Ceap Grazing Sda",
+      "familyKey": "ceap-grazing-sda",
+      "title": "CEAP Grazing SDA",
+      "path": "sql/conservation/CEAP_Grazing_SDA.sql",
+      "category": "General Soil Data",
+      "location": "sql",
+      "tags": [
+        "curated",
+        "sda"
+      ],
+      "description": "CEAP Grazing Lands -- Comprehensive Soil Properties Query",
+      "lastUpdatedUtc": "2026-06-02"
+    },
+    {
+      "fileName": "Column_Deffinitions.sql",
+      "commonName": "Column Deffinitions",
+      "familyKey": "column-deffinitions",
+      "title": "Column Deffinitions",
+      "path": "sandbox/Column_Deffinitions.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Column_Deffinitions query in category General Soil Data.",
+      "lastUpdatedUtc": "2024-10-07"
+    },
+    {
+      "fileName": "Column_length.sql",
+      "commonName": "Column Length",
+      "familyKey": "column-length",
+      "title": "Column length",
+      "path": "sandbox/Column_length.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "[id] ,[query_id] ,[query_name],[query_frequency] ,[query_month] ,[month_abrv]\t,month_name ,[query_year],[state]  ,[seqnum] ,[query_title] ,[query_header] ,[query_header2],[count]",
+      "lastUpdatedUtc": "2020-06-03"
+    },
+    {
+      "fileName": "Component_Acres.sql",
+      "commonName": "Component Acres",
+      "familyKey": "component-acres",
+      "title": "Component Acres",
+      "path": "sandbox/Component_Acres.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #comp2262",
+      "lastUpdatedUtc": "2020-03-23"
+    },
+    {
+      "fileName": "Concat_Lab_webmap.sql",
+      "commonName": "Concat Lab Webmap",
+      "familyKey": "concat-lab-webmap",
+      "title": "Concat Lab webmap",
+      "path": "sandbox/Concat_Lab_webmap.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Script for SelectTopNRows command from SSMS  *****",
+      "lastUpdatedUtc": "2023-04-03"
+    },
+    {
+      "fileName": "Conservation_Soil_Health_Table_All_in_one.sql",
+      "commonName": "Conservation Soil Health Table All In One",
+      "familyKey": "conservation-soil-health-table-all-in",
+      "title": "Conservation Soil Health Table All in one",
+      "path": "sandbox/Conservation_Soil_Health_Table_All_in_one.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #comet_values_avg",
+      "lastUpdatedUtc": "2022-06-22",
+      "hidden": true
+    },
+    {
+      "fileName": "Dom_Condition_reasons_interp_FOR-Biomass Harvest WI.sql",
+      "commonName": "Dom Condition Reasons Interp For Biomass Harvest Wi",
+      "familyKey": "dom-condition-reasons-interp-for-biomass",
+      "title": "Dom Condition reasons interp FOR Biomass Harvest WI",
+      "path": "sandbox/Dom_Condition_reasons_interp_FOR-Biomass Harvest WI.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT areasymbol, musym, muname, mu.mukey  AS MUKEY,",
+      "lastUpdatedUtc": "2022-12-01"
+    },
+    {
+      "fileName": "Dominant_Compoent_Soil_Color_Mollic.sql",
+      "commonName": "Dominant Compoent Soil Color Mollic",
+      "familyKey": "dominant-compoent-soil-color-mollic",
+      "title": "Dominant Compoent Soil Color Mollic",
+      "path": "sandbox/Dominant_Compoent_Soil_Color_Mollic.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #ss",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "Dominant_Component_Properties.sql",
+      "commonName": "Dominant Component Properties",
+      "familyKey": "dominant-component-properties",
+      "title": "Dominant Component Properties",
+      "path": "sandbox/Dominant_Component_Properties.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Dominant_Component_Properties query in category General Soil Data.",
+      "lastUpdatedUtc": "2017-03-02"
+    },
+    {
+      "fileName": "Dominant Component. Weighted Average Property MIN MAX.sql",
+      "commonName": "Dominant Component Weighted Average Property Min Max",
+      "familyKey": "dominant-component-weighted-average-property-min",
+      "title": "Dominant Component. Weighted Average Property MIN MAX",
+      "path": "sandbox/Dominant Component. Weighted Average Property MIN MAX.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Dominant Component. Weighted Average Property MIN MAX",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "Dominant Condition.sql",
+      "commonName": "Dominant Condition",
+      "familyKey": "dominant-condition",
+      "title": "Dominant Condition",
+      "path": "sandbox/Dominant Condition.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Dominant Condition query in category General Soil Data.",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "Dominant Condition ESD and FSG.sql",
+      "commonName": "Dominant Condition Esd And Fsg",
+      "familyKey": "dominant-condition-esd-and-fsg",
+      "title": "Dominant Condition ESD and FSG",
+      "path": "sandbox/Dominant Condition ESD and FSG.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Define the area",
+      "lastUpdatedUtc": "2022-06-22"
+    },
+    {
+      "fileName": "Dominant Condition ESD and FSG by SSA or State.sql",
+      "commonName": "Dominant Condition Esd And Fsg By Ssa Or State",
+      "familyKey": "dominant-condition-esd-and-fsg-by",
+      "title": "Dominant Condition ESD and FSG by SSA or State",
+      "path": "sandbox/Dominant Condition ESD and FSG by SSA or State.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "(SELECT TOP 1 ecoclassid",
+      "lastUpdatedUtc": "2022-06-22"
+    },
+    {
+      "fileName": "Dominant Condition_taxonomy.sql",
+      "commonName": "Dominant Condition Taxonomy",
+      "familyKey": "dominant-condition-taxonomy",
+      "title": "Dominant Condition taxonomy",
+      "path": "sandbox/Dominant Condition_taxonomy.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "taxonomy"
+      ],
+      "description": "Dominant Condition_taxonomy query in category General Soil Data.",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "Dominant Condition_WEI.sql",
+      "commonName": "Dominant Condition Wei",
+      "familyKey": "dominant-condition-wei",
+      "title": "Dominant Condition WEI",
+      "path": "sandbox/Dominant Condition_WEI.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Dominant Condition_WEI query in category General Soil Data.",
+      "lastUpdatedUtc": "2023-03-29"
+    },
+    {
+      "fileName": "ESD List By MLRA.sql",
+      "commonName": "Esd List By Mlra",
+      "familyKey": "esd-list-by-mlra",
+      "title": "ESD List By MLRA",
+      "path": "sandbox/ESD List By MLRA.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT areasymbol AS MLRA_SYM, areaname AS MLRA_Name",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "ESD_MLRA.sql",
+      "commonName": "Esd Mlra",
+      "familyKey": "esd-mlra",
+      "title": "ESD MLRA",
+      "path": "sandbox/ESD_MLRA.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DECLARE @area VARCHAR(20);",
+      "lastUpdatedUtc": "2020-07-22"
+    },
+    {
+      "fileName": "Farmland_class_state_unique_list.sql",
+      "commonName": "Farmland Class State Unique List",
+      "familyKey": "farmland-class-state-unique-list",
+      "title": "Farmland class state unique list",
+      "path": "sandbox/Farmland_class_state_unique_list.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #temp_fc",
+      "lastUpdatedUtc": "2023-11-04"
+    },
+    {
+      "fileName": "FetchData_sdvcointerp_sdvmain_RUNS_WORKS.sql",
+      "commonName": "Fetch Data Sdvcointerp Sdvmain Runs Works",
+      "familyKey": "fetch-data-sdvcointerp-sdvmain-runs-works",
+      "title": "FetchData sdvcointerp sdvmain RUNS WORKS",
+      "path": "sandbox/SDV_engine/FetchData_sdvcointerp_sdvmain_RUNS_WORKS.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "FetchData_sdvcointerp_sdvmain_RUNS_WORKS query in category General Soil Data.",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "FetchDataquotequery.sql",
+      "commonName": "Fetch Dataquotequery",
+      "familyKey": "fetch-dataquotequery",
+      "title": "FetchDataquotequery",
+      "path": "sandbox/SDV_engine/FetchDataquotequery.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "FetchDataquotequery query in category General Soil Data.",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "FetchDatasdvcointerp_sdvmain.sql",
+      "commonName": "Fetch Datasdvcointerp Sdvmain",
+      "familyKey": "fetch-datasdvcointerp-sdvmain",
+      "title": "FetchDatasdvcointerp sdvmain",
+      "path": "sandbox/SDV_engine/FetchDatasdvcointerp_sdvmain.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "FetchDatasdvcointerp_sdvmain query in category General Soil Data.",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "FinishForDisplay_sdvmain_1.sql",
+      "commonName": "Finish For Display Sdvmain 1",
+      "familyKey": "finish-for-display-sdvmain",
+      "title": "FinishForDisplay sdvmain 1",
+      "path": "sandbox/SDV_engine/FinishForDisplay_sdvmain_1.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "FinishForDisplay_sdvmain_1 query in category General Soil Data.",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "Finnell_SDA_Interps_Reasons.sql",
+      "commonName": "Finnell Sda Interps Reasons",
+      "familyKey": "finnell-sda-interps-reasons",
+      "title": "Finnell SDA Interps Reasons",
+      "path": "sandbox/Finnell_SDA_Interps_Reasons.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "sda"
+      ],
+      "description": "pulls all the major components and interp rating data for the query",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "Flexible area symbol or state with declare.sql",
+      "commonName": "Flexible Area Symbol Or State With Declare",
+      "familyKey": "flexible-area-symbol-or-state-with",
+      "title": "Flexible area symbol or state with declare",
+      "path": "sandbox/Flexible area symbol or state with declare.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "use sdmOnline",
+      "lastUpdatedUtc": "2020-05-07"
+    },
+    {
+      "fileName": "Frag_Weighted_Average_Property.sql",
+      "commonName": "Frag Weighted Average Property",
+      "familyKey": "frag-weighted-average-property",
+      "title": "Frag Weighted Average Property",
+      "path": "sandbox/scripts/Frag_Weighted_Average_Property.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #main;",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "Gary_test.sql",
+      "commonName": "Gary Test",
+      "familyKey": "gary",
+      "title": "Gary test",
+      "path": "sandbox/Gary_test.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "#PARAMETER areasym PROMPT \"Enter Survey Area Symbol\" CHAR.",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "HSG_Acres.sql",
+      "commonName": "Hsg Acres",
+      "familyKey": "hsg-acres",
+      "title": "HSG Acres",
+      "path": "sandbox/HSG_Acres.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #b",
+      "lastUpdatedUtc": "2020-06-03"
+    },
+    {
+      "fileName": "HSG_Count Greater than 1.sql",
+      "commonName": "Hsg Count Greater Than 1",
+      "familyKey": "hsg-count-greater-than",
+      "title": "HSG Count Greater than 1",
+      "path": "sandbox/HSG_Count Greater than 1.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT compname,  SUBSTRING(  (  SELECT  ( ', ' +  hydgrp)",
+      "lastUpdatedUtc": "2020-06-03"
+    },
+    {
+      "fileName": "HSG_D_MWD.sql",
+      "commonName": "Hsg D Mwd",
+      "familyKey": "hsg-d-mwd",
+      "title": "HSG D MWD",
+      "path": "sandbox/HSG_D_MWD.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT areasymbol, areaname, mapunit.mukey, muname, compname,  SUBSTRING(  (  SELECT  ( ', ' +  hydgrp)",
+      "lastUpdatedUtc": "2020-06-03"
+    },
+    {
+      "fileName": "IL University of Illinois Base Yield Indices.sql",
+      "commonName": "Il University Of Illinois Base Yield Indices",
+      "familyKey": "il-university-of-illinois-base-yield",
+      "title": "IL University of Illinois Base Yield Indices",
+      "path": "sandbox/IL University of Illinois Base Yield Indices.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #ss",
+      "lastUpdatedUtc": "2024-02-07"
+    },
+    {
+      "fileName": "InventorySample.sql",
+      "commonName": "Inventory Sample",
+      "familyKey": "inventory-sample",
+      "title": "InventorySample",
+      "path": "sandbox/Phil/InventorySample.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "WSS ordering in SDA: show national symbols",
+      "lastUpdatedUtc": "2022-07-19"
+    },
+    {
+      "fileName": "InventorySample.sql",
+      "commonName": "Inventory Sample",
+      "familyKey": "inventory-sample",
+      "title": "InventorySample",
+      "path": "sandbox/InventorySample.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "WSS ordering in SDA: show national symbols",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "JASON_NEMECEK_MOD_SDM_SDMS_queryv15_FSA.sql",
+      "commonName": "Jason Nemecek Mod Sdm Sdms Queryv 15 Fsa",
+      "familyKey": "jason-nemecek-mod-sdm-sdms-queryv",
+      "title": "JASON NEMECEK MOD SDM SDMS queryv15 FSA",
+      "path": "sandbox/JASON_NEMECEK_MOD_SDM_SDMS_queryv15_FSA.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "JASON_NEMECEK_MOD_SDM_SDMS_queryv15_FSA query in category General Soil Data.",
+      "lastUpdatedUtc": "2016-05-26",
+      "hidden": true
+    },
+    {
+      "fileName": "K and T .sql",
+      "commonName": "K And T",
+      "familyKey": "k-and-t",
+      "title": "K and T",
+      "path": "sandbox/K and T .sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT mapunit.mukey, component.comppct_r, chorizon.hzdept_r, component.cokey, chorizon.chkey, component.majcompflag, chorizon.kffact",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "K_factor_thickest_Layer_by_SSA.sql",
+      "commonName": "K Factor Thickest Layer By Ssa",
+      "familyKey": "k-factor-thickest-layer-by-ssa",
+      "title": "K factor thickest Layer by SSA",
+      "path": "sandbox/scripts/K_factor_thickest_Layer_by_SSA.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "USE sdm; ---IA",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "Karst.sql",
+      "commonName": "Karst",
+      "familyKey": "karst",
+      "title": "Karst",
+      "path": "sandbox/Karst.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Define the area",
+      "lastUpdatedUtc": "2024-04-09"
+    },
+    {
+      "fileName": "KSSL_Date_Range_Count.sql",
+      "commonName": "Kssl Date Range Count",
+      "familyKey": "kssl-date-range-count",
+      "title": "KSSL Date Range Count",
+      "path": "sandbox/KSSL_Date_Range_Count.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "kssl",
+        "sandbox"
+      ],
+      "description": "SDA scripts",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "KSSL_Date_Year_Count.sql",
+      "commonName": "Kssl Date Year Count",
+      "familyKey": "kssl-date-year-count",
+      "title": "KSSL Date Year Count",
+      "path": "sandbox/KSSL_Date_Year_Count.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "kssl",
+        "sandbox"
+      ],
+      "description": "SDA scripts",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "KSSL_NASIS_Stucture_gen_color.sql",
+      "commonName": "Kssl Nasis Stucture Gen Color",
+      "familyKey": "kssl-nasis-stucture-gen-color",
+      "title": "KSSL NASIS Stucture gen color",
+      "path": "sandbox/KSSL_NASIS_Stucture_gen_color.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "kssl",
+        "nasis",
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #temp_pedon;",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "Kyle_Duplicate_Component_percent_first_second_component..sql",
+      "commonName": "Kyle Duplicate Component Percent First Second Component",
+      "familyKey": "kyle-duplicate-component-percent-first-second",
+      "title": "Kyle Duplicate Component percent first second component.",
+      "path": "sandbox/Kyle_Duplicate_Component_percent_first_second_component..sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #table1",
+      "lastUpdatedUtc": "2020-03-23"
+    },
+    {
+      "fileName": "Lab_Chemical_OUTER_combine_ncss.sql",
+      "commonName": "Lab Chemical Outer Combine Ncss",
+      "familyKey": "lab-chemical-outer-combine-ncss",
+      "title": "Lab Chemical OUTER combine ncss",
+      "path": "sandbox/Lab_Chemical_OUTER_combine_ncss.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Lab_Chemical_OUTER_combine_ncss query in category General Soil Data.",
+      "lastUpdatedUtc": "2024-10-07"
+    },
+    {
+      "fileName": "Lab_Chemical_OUTER_combine_ncss_XRAY_With_Series.sql",
+      "commonName": "Lab Chemical Outer Combine Ncss Xray With Series",
+      "familyKey": "lab-chemical-outer-combine-ncss-xray",
+      "title": "Lab Chemical OUTER combine ncss XRAY With Series",
+      "path": "sandbox/Lab_Chemical_OUTER_combine_ncss_XRAY_With_Series.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "taxonomy"
+      ],
+      "description": "SELECT DISTINCT",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "Lab Sample Counts by Date Class.sql",
+      "commonName": "Lab Sample Counts By Date Class",
+      "familyKey": "lab-sample-counts-by-date-class",
+      "title": "Lab Sample Counts by Date Class",
+      "path": "sandbox/Lab Sample Counts by Date Class.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Lab Sample Dates � Raw data",
+      "lastUpdatedUtc": "2020-06-03"
+    },
+    {
+      "fileName": "LatEffFifthStep(S').sql",
+      "commonName": "Lat Eff Fifth Step S",
+      "familyKey": "lat-eff-fifth-step-s",
+      "title": "LatEffFifthStep(S')",
+      "path": "sandbox/LatEffFifthStep(S').sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "LatEffFifthStep(S') query in category General Soil Data.",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "LESA_SSA_01162015_0355.sql",
+      "commonName": "Lesa Ssa 01162015 0355",
+      "familyKey": "lesa-ssa",
+      "title": "LESA SSA 01162015 0355",
+      "path": "sandbox/LESA_SSA_01162015_0355.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "LESA_SSA_01162015_0355 query in category General Soil Data.",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "metadata distribution .sql",
+      "commonName": "Metadata Distribution",
+      "familyKey": "metadata-distribution",
+      "title": "metadata distribution",
+      "path": "sandbox/metadata distribution .sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "metadata distribution  query in category General Soil Data.",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "mineralogy_glass_count_OUTER_combine_ncss.sql",
+      "commonName": "Mineralogy Glass Count Outer Combine Ncss",
+      "familyKey": "mineralogy-glass-count-outer-combine-ncss",
+      "title": "mineralogy glass count OUTER combine ncss",
+      "path": "sandbox/mineralogy_glass_count_OUTER_combine_ncss.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "mineralogy_glass_count_OUTER_combine_ncss query in category General Soil Data.",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "MLRA.sql",
+      "commonName": "Mlra",
+      "familyKey": "mlra",
+      "title": "MLRA",
+      "path": "sandbox/MLRA.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DECLARE @area VARCHAR(20);",
+      "lastUpdatedUtc": "2020-07-22"
+    },
+    {
+      "fileName": "MLRA_SSA.sql",
+      "commonName": "Mlra Ssa",
+      "familyKey": "mlra-ssa",
+      "title": "MLRA SSA",
+      "path": "sandbox/MLRA_SSA.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DECLARE @area VARCHAR(20);",
+      "lastUpdatedUtc": "2026-05-19"
+    },
+    {
+      "fileName": "MN_Weighted_Average_Property_DOM_COMP_JBeck.sql",
+      "commonName": "Mn Weighted Average Property Dom Comp J Beck",
+      "familyKey": "mn-weighted-average-property-dom-comp",
+      "title": "MN Weighted Average Property DOM COMP JBeck",
+      "path": "sandbox/MN_Weighted_Average_Property_DOM_COMP_JBeck.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT areasymbol, musym, muname, mukey",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "Mollisols.sql",
+      "commonName": "Mollisols",
+      "familyKey": "mollisols",
+      "title": "Mollisols",
+      "path": "sandbox/Mollisols.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2020-06-03"
+    },
+    {
+      "fileName": "Morel_Mushrooms_Suitability.sql",
+      "commonName": "Morel Mushrooms Suitability",
+      "familyKey": "morel-mushrooms-suitability",
+      "title": "Morel Mushrooms Suitability",
+      "path": "sandbox/Morel_Mushrooms_Suitability.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2025-05-07"
+    },
+    {
+      "fileName": "MUAGG_ALL.sql",
+      "commonName": "Muagg All",
+      "familyKey": "muagg-all",
+      "title": "MUAGG ALL",
+      "path": "sandbox/MUAGG_ALL.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT areasymbol, mu.musym, mu.muname, mu.mukey, hydgrpdcd",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "Muaggatt DataTable.sql",
+      "commonName": "Map Unit Aggregate Attributes Data Table",
+      "familyKey": "map-unit-aggregate-attributes-data-table",
+      "title": "Muaggatt DataTable",
+      "path": "sandbox/SDV_engine/Muaggatt DataTable.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "USE sdmOFFLINE; --939 rows",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "Muaggatt Specs.sql",
+      "commonName": "Map Unit Aggregate Attributes Specs",
+      "familyKey": "map-unit-aggregate-attributes-specs",
+      "title": "Muaggatt Specs",
+      "path": "sandbox/SDV_engine/Muaggatt Specs.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Muaggatt Specs query in category General Soil Data.",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "mupolgon_table_size_by_state.sql",
+      "commonName": "Mupolgon Table Size By State",
+      "familyKey": "mupolgon-table-size-by-state",
+      "title": "mupolgon table size by state",
+      "path": "sandbox/mupolgon_table_size_by_state.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "WITH geo AS (",
+      "lastUpdatedUtc": "2026-06-01"
+    },
+    {
+      "fileName": "mwACPF_extMUAGGATT.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Map Unit Aggregate Attributes",
+      "familyKey": "agricultural-conservation-planning-framework-ext-map",
+      "title": "mwACPF extMUAGGATT",
+      "path": "sandbox/ACPF/ACPF_JAMES/mwACPF_extMUAGGATT.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "sandbox"
+      ],
+      "description": "mwACPF_extMUAGGATT.sql",
+      "lastUpdatedUtc": "2017-04-21",
+      "hidden": true
+    },
+    {
+      "fileName": "mwACPF_extSoilProfile_v041416.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Soil Profile V 041416",
+      "familyKey": "agricultural-conservation-planning-framework-ext-soil",
+      "title": "mwACPF extSoilProfile v041416",
+      "path": "sandbox/ACPF/ACPF_JAMES/mwACPF_extSoilProfile_v041416.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "sandbox"
+      ],
+      "description": "mwACPF_extSoilProfile.sql",
+      "lastUpdatedUtc": "2017-04-21",
+      "hidden": true
+    },
+    {
+      "fileName": "NASIS_domain_lookup.sql",
+      "commonName": "Nasis Domain Lookup",
+      "familyKey": "nasis-domain-lookup",
+      "title": "NASIS domain lookup",
+      "path": "sandbox/NASIS_domain_lookup.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "nasis",
+        "sandbox"
+      ],
+      "description": "Script for SelectTopNRows command from SSMS  *****",
+      "lastUpdatedUtc": "2023-03-29"
+    },
+    {
+      "fileName": "NASIS_pedon_KSSL.sql",
+      "commonName": "Nasis Pedon Kssl",
+      "familyKey": "nasis-pedon-kssl",
+      "title": "NASIS pedon KSSL",
+      "path": "sandbox/NASIS_pedon_KSSL.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "kssl",
+        "nasis",
+        "sandbox"
+      ],
+      "description": "NASIS_pedon_KSSL query in category General Soil Data.",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "NASIS_SDA_Crop_WV.sql",
+      "commonName": "Nasis Sda Crop Wv",
+      "familyKey": "nasis-sda-crop-wv",
+      "title": "NASIS SDA Crop WV",
+      "path": "sandbox/NASIS_SDA_Crop_WV.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "nasis",
+        "sandbox",
+        "sda"
+      ],
+      "description": "USE nasis;",
+      "lastUpdatedUtc": "2021-07-30"
+    },
+    {
+      "fileName": "natmusym.sql",
+      "commonName": "Natmusym",
+      "familyKey": "natmusym",
+      "title": "natmusym",
+      "path": "sandbox/natmusym.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "natmusym query in category General Soil Data.",
+      "lastUpdatedUtc": "2026-05-19"
+    },
+    {
+      "fileName": "NCCPI-LCC.sql",
+      "commonName": "Nccpi Lcc",
+      "familyKey": "nccpi-lcc",
+      "title": "NCCPI LCC",
+      "path": "sandbox/NCCPI-LCC.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2024-10-07"
+    },
+    {
+      "fileName": "NCCPI_MLRA.sql",
+      "commonName": "Nccpi Mlra",
+      "familyKey": "nccpi-mlra",
+      "title": "NCCPI MLRA",
+      "path": "sandbox/NCCPI_MLRA.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #NCCPI",
+      "lastUpdatedUtc": "2020-06-03"
+    },
+    {
+      "fileName": "new  2.sql",
+      "commonName": "New 2",
+      "familyKey": "new",
+      "title": "new  2",
+      "path": "sandbox/new  2.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT QUOTENAME (sacatalog.areasymbol, '\"') AS AREASYMBOL,",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "new  ssss2.sql",
+      "commonName": "New Ssss 2",
+      "familyKey": "new-ssss",
+      "title": "new  ssss2",
+      "path": "sandbox/new  ssss2.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "new  ssss2 query in category General Soil Data.",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "new 1.sql",
+      "commonName": "New 1",
+      "familyKey": "new",
+      "title": "new 1",
+      "path": "sandbox/new 1.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "FROM areatype",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "new 17.sql",
+      "commonName": "New 17",
+      "familyKey": "new",
+      "title": "new 17",
+      "path": "sandbox/new 17.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT areasymbol, musym AS musymbol, muname, mukey",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "new 5.sql",
+      "commonName": "New 5",
+      "familyKey": "new",
+      "title": "new 5",
+      "path": "sandbox/new 5.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "new 5 query in category General Soil Data.",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "new 56.sql",
+      "commonName": "New 56",
+      "familyKey": "new",
+      "title": "new 56",
+      "path": "sandbox/new 56.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "#PARAMETER areasym PROMPT \"Enter Survey Area Symbol\" CHAR.",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "new 6.sql",
+      "commonName": "New 6",
+      "familyKey": "new",
+      "title": "new 6",
+      "path": "sandbox/new 6.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT l.areasymbol, tabularversion",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "new 615.sql",
+      "commonName": "New 615",
+      "familyKey": "new",
+      "title": "new 615",
+      "path": "sandbox/new 615.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT areasymbol, musym, muname, mukey",
+      "lastUpdatedUtc": "2016-05-26",
+      "hidden": true
+    },
+    {
+      "fileName": "new sss.sql",
+      "commonName": "New Sss",
+      "familyKey": "new-sss",
+      "title": "new sss",
+      "path": "sandbox/new sss.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "FROM (lmapunit INNER JOIN (mapunit LEFT JOIN correlation ON mapunit.muiid = correlation.muiidref WHERE repdmu=1) ON lmapunit.muiidref = mapunit.muiid)",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "NPAD_SH_Pratice_Acres_FY.sql",
+      "commonName": "Npad Sh Pratice Acres Fy",
+      "familyKey": "npad-sh-pratice-acres-fy",
+      "title": "NPAD SH Pratice Acres FY",
+      "path": "sandbox/NPAD_SH_Pratice_Acres_FY.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #comet_values_avg",
+      "lastUpdatedUtc": "2022-06-22",
+      "hidden": true
+    },
+    {
+      "fileName": "NR243.sql",
+      "commonName": "Nr 243",
+      "familyKey": "nr",
+      "title": "NR243",
+      "path": "sandbox/NR243.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #NRCS590;",
+      "lastUpdatedUtc": "2023-03-29"
+    },
+    {
+      "fileName": "Parent_Material.sql",
+      "commonName": "Parent Material",
+      "familyKey": "parent-material",
+      "title": "Parent Material",
+      "path": "sandbox/Parent_Material.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Parent_Material query in category General Soil Data.",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "Perched_water_table.sql",
+      "commonName": "Perched Water Table",
+      "familyKey": "perched-water-table",
+      "title": "Perched water table",
+      "path": "sandbox/Perched_water_table.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2023-03-29"
+    },
+    {
+      "fileName": "postgres_geo_water_quality_last.sql",
+      "commonName": "Postgres Geo Water Quality Last",
+      "familyKey": "postgres-geo-water-quality-last",
+      "title": "postgres geo water quality last",
+      "path": "sandbox/scripts/postgres_geo_water_quality_last.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "CREATE TABLE geo_water_quality_last AS",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "Properties Table dominant condition.sql",
+      "commonName": "Properties Table Dominant Condition",
+      "familyKey": "properties-table-dominant-condition",
+      "title": "Properties Table dominant condition",
+      "path": "sandbox/Properties Table dominant condition.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Properties Table dominant condition query in category General Soil Data.",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "ReduceMultiples_sdvmain_1.sql",
+      "commonName": "Reduce Multiples Sdvmain 1",
+      "familyKey": "reduce-multiples-sdvmain",
+      "title": "ReduceMultiples sdvmain 1",
+      "path": "sandbox/SDV_engine/ReduceMultiples_sdvmain_1.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "ReduceMultiples_sdvmain_1 query in category General Soil Data.",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "SDA Json row limitations work around.sql",
+      "commonName": "Json Row Limitations Work Around",
+      "familyKey": "json-row-limitations-work-around",
+      "title": "SDA Json row limitations work around",
+      "path": "sandbox/SDA Json row limitations work around.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "sda"
+      ],
+      "description": "SDA Json row limitations work around query in category General Soil Data.",
+      "lastUpdatedUtc": "2022-06-22"
+    },
+    {
+      "fileName": "SDA KSSL Lab Data and NASIS Soil Color.sql",
+      "commonName": "Kssl Lab Data And Nasis Soil Color",
+      "familyKey": "kssl-lab-data-and-nasis-soil",
+      "title": "SDA KSSL Lab Data and NASIS Soil Color",
+      "path": "sandbox/SDA KSSL Lab Data and NASIS Soil Color.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "kssl",
+        "nasis",
+        "sandbox",
+        "sda"
+      ],
+      "description": "SELECT TOP 1000",
+      "lastUpdatedUtc": "2021-08-31"
+    },
+    {
+      "fileName": "SDA_KSSL_Wassent.sql",
+      "commonName": "Kssl Wassent",
+      "familyKey": "kssl-wassent",
+      "title": "SDA KSSL Wassent",
+      "path": "sandbox/SDA_KSSL_Wassent.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "kssl",
+        "sandbox",
+        "sda"
+      ],
+      "description": "SDA_KSSL_Wassent query in category General Soil Data.",
+      "lastUpdatedUtc": "2024-10-07"
+    },
+    {
+      "fileName": "SDA_LDM_Alfisols_Kaolinite.sql",
+      "commonName": "Ldm Alfisols Kaolinite",
+      "familyKey": "ldm-alfisols-kaolinite",
+      "title": "SDA LDM Alfisols Kaolinite",
+      "path": "sandbox/SDA_LDM_Alfisols_Kaolinite.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "sda"
+      ],
+      "description": "Insert Dynamic Pedon Lab Sample numbers",
+      "lastUpdatedUtc": "2023-11-04"
+    },
+    {
+      "fileName": "SDA_Metadata.sql",
+      "commonName": "Metadata",
+      "familyKey": "metadata",
+      "title": "SDA Metadata",
+      "path": "sandbox/SDA_Metadata.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "sda"
+      ],
+      "description": "Script for SelectTopNRows command from SSMS  *****",
+      "lastUpdatedUtc": "2020-03-23"
+    },
+    {
+      "fileName": "SDA_mwACPF_extMUAGGATT.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Map Unit Aggregate Attributes",
+      "familyKey": "agricultural-conservation-planning-framework-ext-map",
+      "title": "SDA mwACPF extMUAGGATT",
+      "path": "sandbox/ACPF/SDA_mwACPF_extMUAGGATT.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "sandbox",
+        "sda"
+      ],
+      "description": "SDA_mwACPF_extMUAGGATT query in category General Soil Data.",
+      "lastUpdatedUtc": "2017-04-20"
+    },
+    {
+      "fileName": "SDA_mwACPF_extMUAGGATT_VAL1_PotWetandSoil.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Map Unit Aggregate Attributes Val 1 Pot Wetand Soil",
+      "familyKey": "agricultural-conservation-planning-framework-ext-map",
+      "title": "SDA mwACPF extMUAGGATT VAL1 PotWetandSoil",
+      "path": "sandbox/ACPF/SDA_mwACPF_extMUAGGATT_VAL1_PotWetandSoil.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "sandbox",
+        "sda"
+      ],
+      "description": "The report does not count for null component percents where the component was hydric. I was thinking of adding 3 percent",
+      "lastUpdatedUtc": "2017-05-25"
+    },
+    {
+      "fileName": "SDA_mwACPF_extSoilProfile_Dom_Comp_MAX_KSAT_Between_50_150.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Soil Profile Dom Comp Max Ksat Between 50 150",
+      "familyKey": "agricultural-conservation-planning-framework-ext-soil",
+      "title": "SDA mwACPF extSoilProfile Dom Comp MAX KSAT Between 50 150",
+      "path": "sandbox/ACPF/SDA_mwACPF_extSoilProfile_Dom_Comp_MAX_KSAT_Between_50_150.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "sandbox",
+        "sda"
+      ],
+      "description": "Gets the Dominant Component",
+      "lastUpdatedUtc": "2017-04-24"
+    },
+    {
+      "fileName": "SDA_mwACPF_extSoilProfile_Dom_Comp_MAXCoarse_Between_50_150.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Soil Profile Dom Comp Max Coarse Between 50 150",
+      "familyKey": "agricultural-conservation-planning-framework-ext-soil",
+      "title": "SDA mwACPF extSoilProfile Dom Comp MAXCoarse Between 50 150",
+      "path": "sandbox/ACPF/SDA_mwACPF_extSoilProfile_Dom_Comp_MAXCoarse_Between_50_150.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "sandbox",
+        "sda"
+      ],
+      "description": "Gets the Dominant Component",
+      "lastUpdatedUtc": "2017-04-24"
+    },
+    {
+      "fileName": "SDA_mwACPF_extSoilProfile_OM0_100.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Soil Profile Organic Matter 0 100",
+      "familyKey": "agricultural-conservation-planning-framework-ext-soil",
+      "title": "SDA mwACPF extSoilProfile OM0 100",
+      "path": "sandbox/ACPF/SDA_mwACPF_extSoilProfile_OM0_100.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "sandbox",
+        "sda"
+      ],
+      "description": "SELECT areasymbol, musym, muname, mukey",
+      "lastUpdatedUtc": "2017-04-28"
+    },
+    {
+      "fileName": "SDA_PROPERTY_WEIGHTED_AVERAGE_05012015.sql",
+      "commonName": "Property Weighted Average 05012015",
+      "familyKey": "property-weighted-average",
+      "title": "SDA PROPERTY WEIGHTED AVERAGE 05012015",
+      "path": "sandbox/SDA_PROPERTY_WEIGHTED_AVERAGE_05012015.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "sda"
+      ],
+      "description": "SELECT areasymbol, musym, muname, mukey",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "SDA_WV_Crop.sql",
+      "commonName": "Wv Crop",
+      "familyKey": "wv-crop",
+      "title": "SDA WV Crop",
+      "path": "sandbox/SDA_WV_Crop.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "sda"
+      ],
+      "description": "DROP TABLE IF EXISTS #ss7",
+      "lastUpdatedUtc": "2021-07-30"
+    },
+    {
+      "fileName": "SDAAgg_Stab.sql",
+      "commonName": "Agg Stab",
+      "familyKey": "agg-stab",
+      "title": "SDAAgg Stab",
+      "path": "sandbox/SDAAgg_Stab.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "sda"
+      ],
+      "description": "SELECT p.[pedlabsampnum], l.[labsampnum], cnn.[pedon_key], [estimated_organic_carbon], [hzn_desgn], [hzn_top], [hzn_bot],",
+      "lastUpdatedUtc": "2022-12-01"
+    },
+    {
+      "fileName": "SDM_Compname_and_Muname_Search.sql",
+      "commonName": "Sdm Compname And Muname Search",
+      "familyKey": "sdm-compname-and-muname-search",
+      "title": "SDM Compname and Muname Search",
+      "path": "sandbox/SDM_Compname_and_Muname_Search.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SDM_Compname_and_Muname_Search query in category General Soil Data.",
+      "lastUpdatedUtc": "2022-12-01"
+    },
+    {
+      "fileName": "SDV_DOM_COMP.sql",
+      "commonName": "Sdv Dom Comp",
+      "familyKey": "sdv-dom-comp",
+      "title": "SDV DOM COMP",
+      "path": "sandbox/SDV_DOM_COMP.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SDV_DOM_COMP query in category General Soil Data.",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "SDV_STATE_INTERP_LIST.sql",
+      "commonName": "Sdv State Interp List",
+      "familyKey": "sdv-state-interp-list",
+      "title": "SDV STATE INTERP LIST",
+      "path": "sandbox/SDV_STATE_INTERP_LIST.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SDV_STATE_INTERP_LIST query in category General Soil Data.",
+      "lastUpdatedUtc": "2017-08-03"
+    },
+    {
+      "fileName": "_sdvattribute DataRow.sql",
+      "commonName": "Sdvattribute Data Row",
+      "familyKey": "sdvattribute-data-row",
+      "title": "sdvattribute DataRow",
+      "path": "sandbox/SDV_engine/_sdvattribute DataRow.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "USE sdmmgtONLINE;",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "Series with folistic epipedon or all Mollisols that are poorly drained or wetter.sql",
+      "commonName": "Series With Folistic Epipedon Or All Mollisols That Are Poorly Drained Or Wetter",
+      "familyKey": "series-with-folistic-epipedon-or-all",
+      "title": "Series with folistic epipedon or all Mollisols that are poorly drained or wetter",
+      "path": "sandbox/Series with folistic epipedon or all Mollisols that are poorly drained or wetter.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "taxonomy"
+      ],
+      "description": "Soil Data Access https://sdmdataaccess.nrcs.usda.gov/Query.aspx",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "Soil_Data_Warehouse_SDAHEL_Kyle_script.sql",
+      "commonName": "Soil Data Warehouse Sdahel Kyle Script",
+      "familyKey": "soil-data-warehouse-sdahel-kyle-script",
+      "title": "Soil Data Warehouse SDAHEL Kyle script",
+      "path": "sandbox/Soil_Data_Warehouse_SDAHEL_Kyle_script.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "sda"
+      ],
+      "description": "Soil_Data_Warehouse_SDAHEL_Kyle_script query in category General Soil Data.",
+      "lastUpdatedUtc": "2020-03-23"
+    },
+    {
+      "fileName": "Soil_Order_by_State_Acres.sql",
+      "commonName": "Soil Order By State Acres",
+      "familyKey": "soil-order-by-state-acres",
+      "title": "Soil Order by State Acres",
+      "path": "sandbox/Soil_Order_by_State_Acres.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS  #comp2262;",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "Soil Series Count and Ranking by State.sql",
+      "commonName": "Soil Series Count And Ranking By State",
+      "familyKey": "soil-series-count-and-ranking-by",
+      "title": "Soil Series Count and Ranking by State",
+      "path": "sandbox/Soil Series Count and Ranking by State.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "taxonomy"
+      ],
+      "description": "Explanation:",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "Soil Series Divided By State Acres Ranking.sql",
+      "commonName": "Soil Series Divided By State Acres Ranking",
+      "familyKey": "soil-series-divided-by-state-acres",
+      "title": "Soil Series Divided By State Acres Ranking",
+      "path": "sandbox/Soil Series Divided By State Acres Ranking.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "taxonomy"
+      ],
+      "description": "Explanation:",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "Soil Series Extent.sql",
+      "commonName": "Soil Series Extent",
+      "familyKey": "soil-series-extent",
+      "title": "Soil Series Extent",
+      "path": "sandbox/Soil Series Extent.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "taxonomy"
+      ],
+      "description": "DECLARE @cname VARCHAR(20);",
+      "lastUpdatedUtc": "2020-07-22"
+    },
+    {
+      "fileName": "SQLQuery4.sql",
+      "commonName": "Query 4",
+      "familyKey": "query",
+      "title": "SQLQuery4",
+      "path": "sandbox/SQLQuery4.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT DISTINCT --[TableID]",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "SSURGOQT_CEAP_Grazing.sql",
+      "commonName": "Ssurgoqt Ceap Grazing",
+      "familyKey": "ssurgoqt-ceap-grazing",
+      "title": "SSURGOQT CEAP Grazing",
+      "path": "sandbox/SSURGOQT_CEAP_Grazing.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "State.sql",
+      "commonName": "State",
+      "familyKey": "state",
+      "title": "State",
+      "path": "sandbox/State.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "select statename, stateid from state  WHERE stateid IN ('DC','DE','FL','IN','MD','MI','NJ','PA','WA','WI','WY')order by statename",
+      "lastUpdatedUtc": "2020-03-23"
+    },
+    {
+      "fileName": "Surface Frags Volume Dominant Component.sql",
+      "commonName": "Surface Frags Volume Dominant Component",
+      "familyKey": "surface-frags-volume-dominant-component",
+      "title": "Surface Frags Volume Dominant Component",
+      "path": "sandbox/Surface Frags Volume Dominant Component.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "USE sdmonline",
+      "lastUpdatedUtc": "2025-06-30"
+    },
+    {
+      "fileName": "Surface Frags Volumn Dominant Comonent.sql",
+      "commonName": "Surface Frags Volumn Dominant Comonent",
+      "familyKey": "surface-frags-volumn-dominant-comonent",
+      "title": "Surface Frags Volumn Dominant Comonent",
+      "path": "sandbox/Surface Frags Volumn Dominant Comonent.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Surface Frags Volumn Dominant Comonent query in category General Soil Data.",
+      "lastUpdatedUtc": "2025-07-10"
+    },
+    {
+      "fileName": "Surface_Frags_Weighted_Average.sql",
+      "commonName": "Surface Frags Weighted Average",
+      "familyKey": "surface-frags-weighted-average",
+      "title": "Surface Frags Weighted Average",
+      "path": "sandbox/Surface_Frags_Weighted_Average.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Surface_Frags_Weighted_Average query in category General Soil Data.",
+      "lastUpdatedUtc": "2025-07-10"
+    },
+    {
+      "fileName": "Table_Column_Count.sql",
+      "commonName": "Table Column Count",
+      "familyKey": "table-column-count",
+      "title": "Table Column Count",
+      "path": "sandbox/Table_Column_Count.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Table_Column_Count query in category General Soil Data.",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "table_column_rowcount.sql",
+      "commonName": "Table Column Rowcount",
+      "familyKey": "table-column-rowcount",
+      "title": "table column rowcount",
+      "path": "sandbox/table_column_rowcount.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "table_column_rowcount query in category General Soil Data.",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "temp.sql",
+      "commonName": "Temp",
+      "familyKey": "temp",
+      "title": "temp",
+      "path": "sandbox/temp.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "temp query in category General Soil Data.",
+      "lastUpdatedUtc": "2016-05-26",
+      "hidden": true
+    },
+    {
+      "fileName": "temp_10212015.sql",
+      "commonName": "Temp 10212015",
+      "familyKey": "temp",
+      "title": "temp 10212015",
+      "path": "sandbox/temp_10212015.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT l.areaname, l.lkey, musym, muname, muacres,",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "temp_weighted_average.sql",
+      "commonName": "Temp Weighted Average",
+      "familyKey": "temp-weighted-average",
+      "title": "temp weighted average",
+      "path": "sandbox/temp_weighted_average.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "temp_weighted_average query in category General Soil Data.",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "temp1.sql",
+      "commonName": "Temp 1",
+      "familyKey": "temp",
+      "title": "temp1",
+      "path": "sandbox/temp1.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT areasymbol, musym, muname, mukey",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "temp222.sql",
+      "commonName": "Temp 222",
+      "familyKey": "temp",
+      "title": "temp222",
+      "path": "sandbox/temp222.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "#cdsiFROM area, lmapunit, mapunit, correlation, datamapunit, area_type, legend",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "tempssss.sql",
+      "commonName": "Tempssss",
+      "familyKey": "tempssss",
+      "title": "tempssss",
+      "path": "sandbox/tempssss.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "tempssss query in category General Soil Data.",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "tempwqwqw.sql",
+      "commonName": "Tempwqwqw",
+      "familyKey": "tempwqwqw",
+      "title": "tempwqwqw",
+      "path": "sandbox/tempwqwqw.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "tempwqwqw query in category General Soil Data.",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "tenp.sql",
+      "commonName": "Tenp",
+      "familyKey": "tenp",
+      "title": "tenp",
+      "path": "sandbox/tenp.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT QUOTENAME (sacatalog.areasymbol, '\"') AS AREASYMBOL,",
+      "lastUpdatedUtc": "2019-11-27",
+      "hidden": true
+    },
+    {
+      "fileName": "test.sql",
+      "commonName": "Test",
+      "familyKey": "general",
+      "title": "test",
+      "path": "sandbox/test.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "test query in category General Soil Data.",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "Top 10 Vertice Count.sql",
+      "commonName": "Top 10 Vertice Count",
+      "familyKey": "top-vertice-count",
+      "title": "Top 10 Vertice Count",
+      "path": "sandbox/Top 10 Vertice Count.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT TOP 10  MAX (m.vertex_count) AS max_vertex_count, m.mukey",
+      "lastUpdatedUtc": "2020-05-07"
+    },
+    {
+      "fileName": "Typic_Haploargids.sql",
+      "commonName": "Typic Haploargids",
+      "familyKey": "typic-haploargids",
+      "title": "Typic Haploargids",
+      "path": "sandbox/Typic_Haploargids.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "USE sdmONLINE;",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "UofIBasePI_Yields_MU_Maj_Component..sql",
+      "commonName": "Uof I Base Pi Yields Map Unit Maj Component",
+      "familyKey": "uof-i-base-pi-yields-map",
+      "title": "UofIBasePI Yields MU Maj Component.",
+      "path": "sandbox/UofIBasePI_Yields_MU_Maj_Component..sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #ss",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "VT_Parent_Material.sql",
+      "commonName": "Vt Parent Material",
+      "familyKey": "vt-parent-material",
+      "title": "VT Parent Material",
+      "path": "sandbox/VT_Parent_Material.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "VT_Parent_Material query in category General Soil Data.",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "water_table_kind_perched_apparent.sql",
+      "commonName": "Water Table Kind Perched Apparent",
+      "familyKey": "water-table-kind-perched-apparent",
+      "title": "water table kind perched apparent",
+      "path": "sql/hydrology/water_table_kind_perched_apparent.sql",
+      "category": "General Soil Data",
+      "location": "sql",
+      "tags": [
+        "curated"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "WEI_GreaterThan134.sql",
+      "commonName": "Wei Greater Than 134",
+      "familyKey": "wei-greater-than",
+      "title": "WEI GreaterThan134",
+      "path": "sandbox/WEI_GreaterThan134.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "WEI_GreaterThan134 query in category General Soil Data.",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "Weighted_Average_Interp.sql",
+      "commonName": "Weighted Average Interp",
+      "familyKey": "weighted-average-interp",
+      "title": "Weighted Average Interp",
+      "path": "sandbox/Weighted_Average_Interp.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Weighted_Average_Interp query in category General Soil Data.",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "Weighted_Average_Productivity_Dom_Condition_ESD.sql",
+      "commonName": "Weighted Average Productivity Dom Condition Esd",
+      "familyKey": "weighted-average-productivity-dom-condition-esd",
+      "title": "Weighted Average Productivity Dom Condition ESD",
+      "path": "sandbox/Weighted_Average_Productivity_Dom_Condition_ESD.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2020-07-22"
+    },
+    {
+      "fileName": "Weighted_Average_Property_09182015.sql",
+      "commonName": "Weighted Average Property 09182015",
+      "familyKey": "weighted-average-property",
+      "title": "Weighted Average Property 09182015",
+      "path": "sandbox/Weighted_Average_Property_09182015.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Weighted_Average_Property_09182015 query in category General Soil Data.",
+      "lastUpdatedUtc": "2025-07-10"
+    },
+    {
+      "fileName": "Weighted_Average_Property_202404009.sql",
+      "commonName": "Weighted Average Property 202404009",
+      "familyKey": "weighted-average-property",
+      "title": "Weighted Average Property 202404009",
+      "path": "sandbox/Weighted_Average_Property_202404009.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #main;",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "Weighted_Average_Property_DOM_COMP_10112015.sql",
+      "commonName": "Weighted Average Property Dom Comp 10112015",
+      "familyKey": "weighted-average-property-dom-comp",
+      "title": "Weighted Average Property DOM COMP 10112015",
+      "path": "sandbox/Weighted_Average_Property_DOM_COMP_10112015.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT areasymbol, musym, muname, mukey",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "Weighted_dom_condition_Fragments.sql",
+      "commonName": "Weighted Dom Condition Fragments",
+      "familyKey": "weighted-dom-condition-fragments",
+      "title": "Weighted dom condition Fragments",
+      "path": "sandbox/scripts/Weighted_dom_condition_Fragments.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Define the area",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "WEP_WEPPS1.sql",
+      "commonName": "Wep Wepps 1",
+      "familyKey": "wep-wepps",
+      "title": "WEP WEPPS1",
+      "path": "sandbox/WEP_WEPPS/WEP_WEPPS1.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT component.mukey, component.cokey, component.compname,",
+      "lastUpdatedUtc": "2021-02-20"
+    },
+    {
+      "fileName": "WEP_WEPPS2.sql",
+      "commonName": "Wep Wepps 2",
+      "familyKey": "wep-wepps",
+      "title": "WEP WEPPS2",
+      "path": "sandbox/WEP_WEPPS/WEP_WEPPS2.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT component.mukey, component.cokey, component.compname,",
+      "lastUpdatedUtc": "2021-02-20"
+    },
+    {
+      "fileName": "WI-Critical and Sensitive Area Assessmen.sql",
+      "commonName": "Wi Critical And Sensitive Area Assessmen",
+      "familyKey": "wi-critical-and-sensitive-area-assessmen",
+      "title": "WI Critical and Sensitive Area Assessmen",
+      "path": "sandbox/WI-Critical and Sensitive Area Assessmen.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "WI-Critical and Sensitive Area Assessmen query in category General Soil Data.",
+      "lastUpdatedUtc": "2026-05-19"
+    },
+    {
+      "fileName": "WI_DATCP_04232015.sql",
+      "commonName": "Wi Datcp 04232015",
+      "familyKey": "wi-datcp",
+      "title": "WI DATCP 04232015",
+      "path": "sandbox/WI_DATCP_04232015.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "WI_DATCP_04232015 query in category General Soil Data.",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "WI_LE_WGT_AVG_Spreadsheet.sql",
+      "commonName": "Wi Le Wgt Avg Spreadsheet",
+      "familyKey": "wi-le-wgt-avg-spreadsheet",
+      "title": "WI LE WGT AVG Spreadsheet",
+      "path": "sandbox/WI_LE_WGT_AVG_Spreadsheet.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "USE sdmOnline;",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "WI_Madison_Component_Aggatt.sql",
+      "commonName": "Wi Madison Component Aggatt",
+      "familyKey": "wi-madison-component-aggatt",
+      "title": "WI Madison Component Aggatt",
+      "path": "sandbox/WI_Madison_Component_Aggatt.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT QUOTENAME (sacatalog.areasymbol, '\"') AS AREASYMBOL,",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "WI_Soil_Moisture_Condition.sql",
+      "commonName": "Wi Soil Moisture Condition",
+      "familyKey": "wi-soil-moisture-condition",
+      "title": "WI Soil Moisture Condition",
+      "path": "sandbox/WI_Soil_Moisture_Condition.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "WI_Soil_Moisture_Condition query in category General Soil Data.",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "WQM21_Leaching&runoff_4_7_2023_draft2.sql",
+      "commonName": "Wqm 21 Leaching Runoff 4 7 2023 Draft 2",
+      "familyKey": "wqm-leaching-runoff",
+      "title": "WQM21 Leaching&runoff 4 7 2023 draft2",
+      "path": "sandbox/scripts/WQM21_Leaching&runoff_4_7_2023_draft2.sql",
+      "category": "General Soil Data",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "Author: Andrew Paolucci and Jason Nemecek",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "Baflog SDA CART Usage.sql",
+      "commonName": "Baflog Sda Cart Usage",
+      "familyKey": "baflog-sda-cart-usage",
+      "title": "Baflog SDA CART Usage",
+      "path": "sandbox/metrics/Baflog SDA CART Usage.sql",
+      "category": "Metrics And Reporting",
+      "location": "sandbox",
+      "tags": [
+        "metrics",
+        "sandbox",
+        "sda"
+      ],
+      "description": "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "CART_Metric_State_Count_Acres_by-FY.sql",
+      "commonName": "Cart Metric State Count Acres By Fy",
+      "familyKey": "cart-metric-state-count-acres-by",
+      "title": "CART Metric State Count Acres by FY",
+      "path": "sandbox/metrics/CART_Metric_State_Count_Acres_by-FY.sql",
+      "category": "Metrics And Reporting",
+      "location": "sandbox",
+      "tags": [
+        "metrics",
+        "sandbox"
+      ],
+      "description": "CART_Metric_State_Count_Acres_by-FY query in category Metrics And Reporting.",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "Crop_Index_legumeyeild_Interp.sql",
+      "commonName": "Crop Index Legumeyeild Interp",
+      "familyKey": "crop-index-legumeyeild-interp",
+      "title": "Crop Index legumeyeild Interp",
+      "path": "sandbox/Crop_Index_legumeyeild_Interp.sql",
+      "category": "Metrics And Reporting",
+      "location": "sandbox",
+      "tags": [
+        "metrics",
+        "sandbox"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2020-06-03"
+    },
+    {
+      "fileName": "SDA_Soil_App_Metrics_Declare_statements.sql",
+      "commonName": "Soil App Metrics Declare Statements",
+      "familyKey": "soil-app-metrics-declare-statements",
+      "title": "SDA Soil App Metrics Declare statements",
+      "path": "sandbox/SDA_Soil_App_Metrics_Declare_statements.sql",
+      "category": "Metrics And Reporting",
+      "location": "sandbox",
+      "tags": [
+        "metrics",
+        "sandbox",
+        "sda"
+      ],
+      "description": "SDA Soil Application Metrics  *****",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "SDA_soil_application_metric.sql",
+      "commonName": "Soil Application Metric",
+      "familyKey": "soil-application-metric",
+      "title": "SDA soil application metric",
+      "path": "sandbox/SDA_soil_application_metric.sql",
+      "category": "Metrics And Reporting",
+      "location": "sandbox",
+      "tags": [
+        "metrics",
+        "sandbox",
+        "sda"
+      ],
+      "description": "DROP TABLE IF EXISTS #metric",
+      "lastUpdatedUtc": "2020-06-03"
+    },
+    {
+      "fileName": "SDA_soil_application_metricWSS_Count.sql",
+      "commonName": "Soil Application Metric Web Soil Survey Count",
+      "familyKey": "soil-application-metric-web-soil-survey",
+      "title": "SDA soil application metricWSS Count",
+      "path": "sandbox/SDA_soil_application_metricWSS_Count.sql",
+      "category": "Metrics And Reporting",
+      "location": "sandbox",
+      "tags": [
+        "metrics",
+        "sandbox",
+        "sda",
+        "wss"
+      ],
+      "description": "DROP TABLE IF EXISTS #metric",
+      "lastUpdatedUtc": "2020-06-03"
+    },
+    {
+      "fileName": "SDA_STATE_LE_INDEX_LAND_EVALUATION_INDEX_AND_FPPA_BY_COUNTY_OVERLAP_01152015_1243.sql",
+      "commonName": "State Le Index Land Evaluation Index And Fppa By County Overlap 01152015 1243",
+      "familyKey": "state-le-index-land-evaluation-index",
+      "title": "SDA STATE LE INDEX LAND EVALUATION INDEX AND FPPA BY COUNTY OVERLAP 01152015 1243",
+      "path": "sandbox/SDA_STATE_LE_INDEX_LAND_EVALUATION_INDEX_AND_FPPA_BY_COUNTY_OVERLAP_01152015_1243.sql",
+      "category": "Metrics And Reporting",
+      "location": "sandbox",
+      "tags": [
+        "metrics",
+        "sandbox",
+        "sda"
+      ],
+      "description": "SDA_STATE_LE_INDEX_LAND_EVALUATION_INDEX_AND_FPPA_BY_COUNTY_OVERLAP_01152015_1243 query in category Metrics And Reporting.",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "SDA_STATE_LE_INDEX_LAND_EVALUATION_INDEX_AND_FPPA_BY_COUNTY_OVERLAP_01202015_1039.sql",
+      "commonName": "State Le Index Land Evaluation Index And Fppa By County Overlap 01202015 1039",
+      "familyKey": "state-le-index-land-evaluation-index",
+      "title": "SDA STATE LE INDEX LAND EVALUATION INDEX AND FPPA BY COUNTY OVERLAP 01202015 1039",
+      "path": "sandbox/SDA_STATE_LE_INDEX_LAND_EVALUATION_INDEX_AND_FPPA_BY_COUNTY_OVERLAP_01202015_1039.sql",
+      "category": "Metrics And Reporting",
+      "location": "sandbox",
+      "tags": [
+        "metrics",
+        "sandbox",
+        "sda"
+      ],
+      "description": "SDA_STATE_LE_INDEX_LAND_EVALUATION_INDEX_AND_FPPA_BY_COUNTY_OVERLAP_01202015_1039 query in category Metrics And Reporting.",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "SDA_STATE_LE_INDEX_LAND_EVALUATION_INDEX_AND_FPPA_BY_COUNTY_OVERLAP_02202015_1025_With_Misc_Area.sql",
+      "commonName": "State Le Index Land Evaluation Index And Fppa By County Overlap 02202015 1025 With Misc Area",
+      "familyKey": "state-le-index-land-evaluation-index",
+      "title": "SDA STATE LE INDEX LAND EVALUATION INDEX AND FPPA BY COUNTY OVERLAP 02202015 1025 With Misc Area",
+      "path": "sandbox/SDA_STATE_LE_INDEX_LAND_EVALUATION_INDEX_AND_FPPA_BY_COUNTY_OVERLAP_02202015_1025_With_Misc_Area.sql",
+      "category": "Metrics And Reporting",
+      "location": "sandbox",
+      "tags": [
+        "metrics",
+        "sandbox",
+        "sda"
+      ],
+      "description": "SDA_STATE_LE_INDEX_LAND_EVALUATION_INDEX_AND_FPPA_BY_COUNTY_OVERLAP_02202015_1025_With_Misc_Area query in category Metrics And Reporting.",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "Soil Moisture Regime Site Assessment Report updatated 20260202.sql",
+      "commonName": "Soil Moisture Regime Site Assessment Report Updatated 20260202",
+      "familyKey": "soil-moisture-regime-site-assessment-report",
+      "title": "Soil Moisture Regime Site Assessment Report updatated 20260202",
+      "path": "sandbox/Soil Moisture Regime Site Assessment Report updatated 20260202.sql",
+      "category": "Metrics And Reporting",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #main",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "WSS_Metrics_Pivot_by_state.sql",
+      "commonName": "Web Soil Survey Metrics Pivot By State",
+      "familyKey": "web-soil-survey-metrics-pivot-by",
+      "title": "WSS Metrics Pivot by state",
+      "path": "sandbox/WSS_Metrics_Pivot_by_state.sql",
+      "category": "Metrics And Reporting",
+      "location": "sandbox",
+      "tags": [
+        "metrics",
+        "sandbox",
+        "wss"
+      ],
+      "description": "DROP TABLE IF EXISTS #wss_metrics",
+      "lastUpdatedUtc": "2023-04-06"
+    },
+    {
+      "fileName": "WSS_Metrics_Pivot_by_state._reports_ratings_AOIs.sql",
+      "commonName": "Web Soil Survey Metrics Pivot By State Reports Ratings Ao Is",
+      "familyKey": "web-soil-survey-metrics-pivot-by",
+      "title": "WSS Metrics Pivot by state. reports ratings AOIs",
+      "path": "sandbox/WSS_Metrics_Pivot_by_state._reports_ratings_AOIs.sql",
+      "category": "Metrics And Reporting",
+      "location": "sandbox",
+      "tags": [
+        "aoi-polygon",
+        "metrics",
+        "sandbox",
+        "wss"
+      ],
+      "description": "DROP TABLE IF EXISTS #wss_metrics",
+      "lastUpdatedUtc": "2023-04-06"
+    },
+    {
+      "fileName": "wss_sda_calendar_year_20260219.sql",
+      "commonName": "Web Soil Survey Sda Calendar Year 20260219",
+      "familyKey": "web-soil-survey-sda-calendar-year",
+      "title": "wss sda calendar year 20260219",
+      "path": "sql/metrics/wss_sda_calendar_year_20260219.sql",
+      "category": "Metrics And Reporting",
+      "location": "sql",
+      "tags": [
+        "curated",
+        "metrics",
+        "sda",
+        "wss"
+      ],
+      "description": "drop table if exists #sda3;",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "wss_sda_fiscal_year_20260219.sql",
+      "commonName": "Web Soil Survey Sda Fiscal Year 20260219",
+      "familyKey": "web-soil-survey-sda-fiscal-year",
+      "title": "wss sda fiscal year 20260219",
+      "path": "sql/metrics/wss_sda_fiscal_year_20260219.sql",
+      "category": "Metrics And Reporting",
+      "location": "sql",
+      "tags": [
+        "curated",
+        "metrics",
+        "sda",
+        "wss"
+      ],
+      "description": "SDA (monthly rows, with fiscal columns)",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "C or R Factor Null.sql",
+      "commonName": "C Or R Factor Null",
+      "familyKey": "c-or-r-factor-null",
+      "title": "C or R Factor Null",
+      "path": "sandbox/C or R Factor Null.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #cr",
+      "lastUpdatedUtc": "2022-06-22"
+    },
+    {
+      "fileName": "C_or_R_Factor_Null.sql",
+      "commonName": "C Or R Factor Null",
+      "familyKey": "c-or-r-factor-null",
+      "title": "C or R Factor Null",
+      "path": "sandbox/sql_queries/misc/C_or_R_Factor_Null.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "moved from sandbox root",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "CHECK - Compname Agg Sum Component Percent.sql",
+      "commonName": "Check Compname Agg Sum Component Percent",
+      "familyKey": "check-compname-agg-sum-component-percent",
+      "title": "CHECK   Compname Agg Sum Component Percent",
+      "path": "sandbox/CHECK - Compname Agg Sum Component Percent.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "validation"
+      ],
+      "description": "DROP TABLE IF EXISTS #comp2",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "CHECK - Major Component Checked and less than 10 percent .sql",
+      "commonName": "Check Major Component Checked And Less Than 10 Percent",
+      "familyKey": "check-major-component-checked-and-less",
+      "title": "CHECK   Major Component Checked and less than 10 percent",
+      "path": "sandbox/CHECK - Major Component Checked and less than 10 percent .sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "validation"
+      ],
+      "description": "Aggregates Component Name and sums component percent",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "CHECK_-_Compname_Agg_Sum_Component_Percent.sql",
+      "commonName": "Check Compname Agg Sum Component Percent",
+      "familyKey": "check-compname-agg-sum-component-percent",
+      "title": "CHECK Compname Agg Sum Component Percent",
+      "path": "sandbox/sql_queries/component/CHECK_-_Compname_Agg_Sum_Component_Percent.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "validation"
+      ],
+      "description": "moved from sandbox root",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "CHECK-Component Name and Local Phase with more than 1 T factor class.sql",
+      "commonName": "Check Component Name And Local Phase With More Than 1 T Factor Class",
+      "familyKey": "check-component-name-and-local-phase",
+      "title": "CHECK Component Name and Local Phase with more than 1 T factor class",
+      "path": "sandbox/CHECK-Component Name and Local Phase with more than 1 T factor class.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "validation"
+      ],
+      "description": "SELECT CASE WHEN localphase IS NULL THEN compname ELSE CONCAT(compname, ', ', localphase)  END AS compname_localphase,  SUBSTRING(  (  SELECT  ( ', ' +  CAST (tfact AS varchar))",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "CHECK-Histic Epipedon and Not Histosols.sql",
+      "commonName": "Check Histic Epipedon And Not Histosols",
+      "familyKey": "check-histic-epipedon-and-not-histosols",
+      "title": "CHECK Histic Epipedon and Not Histosols",
+      "path": "sandbox/CHECK-Histic Epipedon and Not Histosols.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "validation"
+      ],
+      "description": "SELECT   areasymbol, compname, taxorder, taxclname,  taxsubgrp , featkind, mapunit.mukey, component.cokey",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "Check_Lat_long_decimal_precision.sql",
+      "commonName": "Check Lat Long Decimal Precision",
+      "familyKey": "check-lat-long-decimal-precision",
+      "title": "Check Lat long decimal precision",
+      "path": "sandbox/Check_Lat_long_decimal_precision.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "validation"
+      ],
+      "description": "Check_Lat_long_decimal_precision query in category Quality Assurance.",
+      "lastUpdatedUtc": "2022-07-19"
+    },
+    {
+      "fileName": "CHECK_-_Major_Component_Checked_and_less_than_10_percent.sql",
+      "commonName": "Check Major Component Checked And Less Than 10 Percent",
+      "familyKey": "check-major-component-checked-and-less",
+      "title": "CHECK Major Component Checked and less than 10 percent",
+      "path": "sandbox/sql_queries/component/CHECK_-_Major_Component_Checked_and_less_than_10_percent.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "validation"
+      ],
+      "description": "moved from sandbox root",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "Check Mismatch Count by SSA and County Overlap.sql",
+      "commonName": "Check Mismatch Count By Ssa And County Overlap",
+      "familyKey": "check-mismatch-count-by-ssa-and",
+      "title": "Check Mismatch Count by SSA and County Overlap",
+      "path": "sandbox/Check Mismatch Count by SSA and County Overlap.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "validation"
+      ],
+      "description": "WITH ssa_mu AS (",
+      "lastUpdatedUtc": "2026-06-01"
+    },
+    {
+      "fileName": "check_script_water_quality.sql",
+      "commonName": "Check Script Water Quality",
+      "familyKey": "check-script-water-quality",
+      "title": "check script water quality",
+      "path": "sandbox/scripts/check_script_water_quality.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "validation"
+      ],
+      "description": "DROP TABLE IF EXISTS check_wq;",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "nasis_to_staging_check_completeness.sql",
+      "commonName": "Nasis To Staging Check Completeness",
+      "familyKey": "nasis-to-staging-check-completeness",
+      "title": "nasis to staging check completeness",
+      "path": "sql/operations/nasis_to_staging_check_completeness.sql",
+      "category": "Quality Assurance",
+      "location": "sql",
+      "tags": [
+        "curated",
+        "nasis",
+        "pipeline",
+        "validation"
+      ],
+      "description": "USE [SDWStaging]",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "nasis_to_staging_check_warnings.sql",
+      "commonName": "Nasis To Staging Check Warnings",
+      "familyKey": "nasis-to-staging-check-warnings",
+      "title": "nasis to staging check warnings",
+      "path": "sql/operations/nasis_to_staging_check_warnings.sql",
+      "category": "Quality Assurance",
+      "location": "sql",
+      "tags": [
+        "curated",
+        "nasis",
+        "pipeline",
+        "validation"
+      ],
+      "description": "USE [SDWStaging]",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "NasisToStaging_CheckCompleteness.sql",
+      "commonName": "Nasis To Staging Check Completeness",
+      "familyKey": "nasis-to-staging-check-completeness",
+      "title": "NasisToStaging CheckCompleteness",
+      "path": "sandbox/REFRESH/NasisToStaging_CheckCompleteness.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "nasis",
+        "pipeline",
+        "sandbox",
+        "validation"
+      ],
+      "description": "USE [SDWStaging]",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "NasisToStaging_CheckFatalErrors.sql",
+      "commonName": "Nasis To Staging Check Fatal Errors",
+      "familyKey": "nasis-to-staging-check-fatal-errors",
+      "title": "NasisToStaging CheckFatalErrors",
+      "path": "sandbox/REFRESH/NasisToStaging_CheckFatalErrors.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "nasis",
+        "pipeline",
+        "sandbox",
+        "validation"
+      ],
+      "description": "USE [SDWStaging]",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "NasisToStaging_CheckWarnings.sql",
+      "commonName": "Nasis To Staging Check Warnings",
+      "familyKey": "nasis-to-staging-check-warnings",
+      "title": "NasisToStaging CheckWarnings",
+      "path": "sandbox/REFRESH/NasisToStaging_CheckWarnings.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "nasis",
+        "pipeline",
+        "sandbox",
+        "validation"
+      ],
+      "description": "USE [SDWStaging]",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "SDA_Check_Interp_Name_by_state.sql",
+      "commonName": "Check Interp Name By State",
+      "familyKey": "check-interp-name-by-state",
+      "title": "SDA Check Interp Name by state",
+      "path": "sandbox/SDA_Check_Interp_Name_by_state.sql",
+      "category": "Quality Assurance",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "sda",
+        "validation"
+      ],
+      "description": "SDA_Check_Interp_Name_by_state query in category Quality Assurance.",
+      "lastUpdatedUtc": "2026-06-01"
+    },
+    {
+      "fileName": "sdm_qa.sql",
+      "commonName": "Sdm Quality Assurance",
+      "familyKey": "sdm-quality-assurance",
+      "title": "sdm qa",
+      "path": "sql/qa/sdm_qa.sql",
+      "category": "Quality Assurance",
+      "location": "sql",
+      "tags": [
+        "curated",
+        "validation"
+      ],
+      "description": "select TOP 100",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "Bedrock_class_dominant_condition.sql",
+      "commonName": "Bedrock Class Dominant Condition",
+      "familyKey": "bedrock-class-dominant-condition",
+      "title": "Bedrock class dominant condition",
+      "path": "sandbox/Bedrock_class_dominant_condition.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-restrictions"
+      ],
+      "description": "Robust error handling for SDA SQL",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "Bedrock_class_dominant_condition.sql",
+      "commonName": "Bedrock Class Dominant Condition",
+      "familyKey": "bedrock-class-dominant-condition",
+      "title": "Bedrock class dominant condition",
+      "path": "sandbox/sql_queries/bedrock/Bedrock_class_dominant_condition.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-restrictions"
+      ],
+      "description": "moved from sandbox root",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "Bedrock_class_dominant_condition_2026.sql",
+      "commonName": "Bedrock Class Dominant Condition 2026",
+      "familyKey": "bedrock-class-dominant-condition",
+      "title": "Bedrock class dominant condition 2026",
+      "path": "sandbox/Bedrock_class_dominant_condition_2026.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-restrictions"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "Bedrock_class_dominant_condition_2026.sql",
+      "commonName": "Bedrock Class Dominant Condition 2026",
+      "familyKey": "bedrock-class-dominant-condition",
+      "title": "Bedrock class dominant condition 2026",
+      "path": "sandbox/sql_queries/bedrock/Bedrock_class_dominant_condition_2026.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-restrictions"
+      ],
+      "description": "moved from sandbox root",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "Check - Fragipan with more than one restriction.sql",
+      "commonName": "Check Fragipan With More Than One Restriction",
+      "familyKey": "check-fragipan-with-more-than-one",
+      "title": "Check   Fragipan with more than one restriction",
+      "path": "sandbox/Check - Fragipan with more than one restriction.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-restrictions",
+        "validation"
+      ],
+      "description": "DROP TABLE IF EXISTS #tempfragipan",
+      "lastUpdatedUtc": "2022-12-01"
+    },
+    {
+      "fileName": "Dominant_Component_Depth_Kfactor.sql",
+      "commonName": "Dominant Component Depth Kfactor",
+      "familyKey": "dominant-component-depth-kfactor",
+      "title": "Dominant Component Depth Kfactor",
+      "path": "sandbox/Dominant_Component_Depth_Kfactor.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-restrictions"
+      ],
+      "description": "Define the area",
+      "lastUpdatedUtc": "2024-02-07"
+    },
+    {
+      "fileName": "Dominant_Component_Restriction.sql",
+      "commonName": "Dominant Component Restriction",
+      "familyKey": "dominant-component-restriction",
+      "title": "Dominant Component Restriction",
+      "path": "sandbox/Dominant_Component_Restriction.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-restrictions"
+      ],
+      "description": "SELECT QUOTENAME (sacatalog.areasymbol, '\"') AS AREASYMBOL,",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "rating_restriction_Finnell.sql",
+      "commonName": "Rating Restriction Finnell",
+      "familyKey": "rating-restriction-finnell",
+      "title": "rating restriction Finnell",
+      "path": "sandbox/rating_restriction_Finnell.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-restrictions"
+      ],
+      "description": "Official Method #3 - adding Rating and restrictions to build a geospatial database link",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "SDA_ACPF_extMUAGGATT_VAL1_RootZnAWS_Droughty.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Map Unit Aggregate Attributes Val 1 Root Zn Available Water Storage Droughty",
+      "familyKey": "agricultural-conservation-planning-framework-ext-map",
+      "title": "SDA ACPF extMUAGGATT VAL1 RootZnAWS Droughty",
+      "path": "sandbox/ACPF/SDA_ACPF_extMUAGGATT_VAL1_RootZnAWS_Droughty.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "available-water-storage",
+        "root-zone",
+        "sandbox",
+        "sda"
+      ],
+      "description": "The available water storage for the standard depth ranges is calculated using ALL",
+      "lastUpdatedUtc": "2017-04-20"
+    },
+    {
+      "fileName": "SDA_ACPF_extMUAGGATT_VAL1_ROOTZNEMC.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Map Unit Aggregate Attributes Val 1 Root Zone Effective Moisture Capacity",
+      "familyKey": "agricultural-conservation-planning-framework-ext-map",
+      "title": "SDA ACPF extMUAGGATT VAL1 ROOTZNEMC",
+      "path": "sandbox/ACPF/SDA_ACPF_extMUAGGATT_VAL1_ROOTZNEMC.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "root-zone",
+        "sandbox",
+        "sda"
+      ],
+      "description": "-ROOTZNEMC",
+      "lastUpdatedUtc": "2017-04-20"
+    },
+    {
+      "fileName": "SDA_ACPF_extSoilProfile_VAL1_AWS.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Soil Profile Val 1 Available Water Storage",
+      "familyKey": "agricultural-conservation-planning-framework-ext-soil",
+      "title": "SDA ACPF extSoilProfile VAL1 AWS",
+      "path": "sandbox/ACPF/SDA_ACPF_extSoilProfile_VAL1_AWS.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "available-water-storage",
+        "sandbox",
+        "sda"
+      ],
+      "description": "The available water storage for the standard depth ranges is calculated using ALL",
+      "lastUpdatedUtc": "2017-04-20"
+    },
+    {
+      "fileName": "SDA_ACPF_extSoilProfile_VAL1_AWS_102024.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Soil Profile Val 1 Available Water Storage 102024",
+      "familyKey": "agricultural-conservation-planning-framework-ext-soil",
+      "title": "SDA ACPF extSoilProfile VAL1 AWS 102024",
+      "path": "documents/SDA_ACPF_extSoilProfile_VAL1_AWS_102024.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "documents",
+      "tags": [
+        "acpf",
+        "available-water-storage",
+        "documentation",
+        "sda"
+      ],
+      "description": "The available water storage for the standard depth ranges is calculated using ALL",
+      "lastUpdatedUtc": "2024-10-07"
+    },
+    {
+      "fileName": "WI Soil and Slope Restriction 590.sql",
+      "commonName": "Wi Soil And Slope Restriction 590",
+      "familyKey": "wi-soil-and-slope-restriction",
+      "title": "WI Soil and Slope Restriction 590",
+      "path": "sandbox/WI Soil and Slope Restriction 590.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-restrictions"
+      ],
+      "description": "WI Soil and Slope Restriction 590 query in category Root Zone And Restrictions.",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "WI Soil and Slope Restriction 590 v2.sql",
+      "commonName": "Wi Soil And Slope Restriction 590 V 2",
+      "familyKey": "wi-soil-and-slope-restriction",
+      "title": "WI Soil and Slope Restriction 590 v2",
+      "path": "sandbox/WI Soil and Slope Restriction 590 v2.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-restrictions"
+      ],
+      "description": "WI Soil and Slope Restriction 590 v2 query in category Root Zone And Restrictions.",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "WI Soil and Slope Restriction Leaching.sql",
+      "commonName": "Wi Soil And Slope Restriction Leaching",
+      "familyKey": "wi-soil-and-slope-restriction-leaching",
+      "title": "WI Soil and Slope Restriction Leaching",
+      "path": "sandbox/WI Soil and Slope Restriction Leaching.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-restrictions"
+      ],
+      "description": "WI Soil and Slope Restriction Leaching query in category Root Zone And Restrictions.",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "WI Soil and Slope Restriction NR243  v2.sql",
+      "commonName": "Wi Soil And Slope Restriction Nr 243 V 2",
+      "familyKey": "wi-soil-and-slope-restriction-nr",
+      "title": "WI Soil and Slope Restriction NR243  v2",
+      "path": "sandbox/WI Soil and Slope Restriction NR243  v2.sql",
+      "category": "Root Zone And Restrictions",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-restrictions"
+      ],
+      "description": "WI Soil and Slope Restriction NR243  v2 query in category Root Zone And Restrictions.",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "DSP_KSSL_SOC.sql",
+      "commonName": "Dsp Kssl Soil Organic Carbon",
+      "familyKey": "dsp-kssl-soil-organic-carbon",
+      "title": "DSP KSSL SOC",
+      "path": "sandbox/DSP_KSSL_SOC.sql",
+      "category": "Soil Chemistry And Fertility",
+      "location": "sandbox",
+      "tags": [
+        "kssl",
+        "sandbox",
+        "soil-organic-carbon"
+      ],
+      "description": "USE sdmONLINE;",
+      "lastUpdatedUtc": "2026-06-03"
+    },
+    {
+      "fileName": "Nutrient Managment.sql",
+      "commonName": "Nutrient Managment",
+      "familyKey": "nutrient-managment",
+      "title": "Nutrient Managment",
+      "path": "sandbox/Nutrient Managment.sql",
+      "category": "Soil Chemistry And Fertility",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "SELECT mapunit.musym, cointerp.mrulename, cointerp.ruledepth, Max(cointerp.interplr) AS MaxOfinterplr, component.majcompflag, mapunit.mukey",
+      "lastUpdatedUtc": "2016-05-26"
+    },
+    {
+      "fileName": "organic_depletion_risk_map.sql",
+      "commonName": "Organic Depletion Risk Map",
+      "familyKey": "organic-depletion-risk-map",
+      "title": "organic depletion risk map",
+      "path": "sandbox/soil_interpretations/organic_depletion_risk_map.sql",
+      "category": "Soil Chemistry And Fertility",
+      "location": "sandbox",
+      "tags": [
+        "risk-mapping",
+        "sandbox",
+        "soil-organic-carbon"
+      ],
+      "description": "Organic Matter Depletion Risk (CONUS, AK, HI, Territories)",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "SDA_mwACPF_extSoilProfile_VAL1_SOC.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Soil Profile Val 1 Soil Organic Carbon",
+      "familyKey": "agricultural-conservation-planning-framework-ext-soil",
+      "title": "SDA mwACPF extSoilProfile VAL1 SOC",
+      "path": "sandbox/ACPF/SDA_mwACPF_extSoilProfile_VAL1_SOC.sql",
+      "category": "Soil Chemistry And Fertility",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "sandbox",
+        "sda",
+        "soil-organic-carbon"
+      ],
+      "description": "SDA_mwACPF_extSoilProfile_VAL1_SOC query in category Soil Chemistry And Fertility.",
+      "lastUpdatedUtc": "2017-04-25"
+    },
+    {
+      "fileName": "sda_soc_soil_organic_carbon_stock.sql",
+      "commonName": "Soil Organic Carbon Soil Organic Carbon Stock",
+      "familyKey": "soil-organic-carbon-soil-organic-carbon",
+      "title": "sda soc soil organic carbon stock",
+      "path": "sql/soil-properties/sda_soc_soil_organic_carbon_stock.sql",
+      "category": "Soil Chemistry And Fertility",
+      "location": "sql",
+      "tags": [
+        "curated",
+        "sda",
+        "soil-organic-carbon"
+      ],
+      "description": "sda_soc_soil_organic_carbon_stock query in category Soil Chemistry And Fertility.",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "sda_soc_weighted_mean_soil_organic_carbon_stock.sql",
+      "commonName": "Soil Organic Carbon Weighted Mean Soil Organic Carbon Stock",
+      "familyKey": "soil-organic-carbon-weighted-mean-soil",
+      "title": "sda soc weighted mean soil organic carbon stock",
+      "path": "sql/soil-properties/sda_soc_weighted_mean_soil_organic_carbon_stock.sql",
+      "category": "Soil Chemistry And Fertility",
+      "location": "sql",
+      "tags": [
+        "curated",
+        "sda",
+        "soil-organic-carbon"
+      ],
+      "description": "sda_soc_weighted_mean_soil_organic_carbon_stock query in category Soil Chemistry And Fertility.",
+      "lastUpdatedUtc": "2026-06-02"
+    },
+    {
+      "fileName": "SDA_SOC_Weighted_Mean_Soil_Organic_Carbon_Stock_L-H_Range.sql",
+      "commonName": "Soil Organic Carbon Weighted Mean Soil Organic Carbon Stock L H Range",
+      "familyKey": "soil-organic-carbon-weighted-mean-soil",
+      "title": "SDA SOC Weighted Mean Soil Organic Carbon Stock L H Range",
+      "path": "sandbox/SDA_SOC_Weighted_Mean_Soil_Organic_Carbon_Stock_L-H_Range.sql",
+      "category": "Soil Chemistry And Fertility",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "sda",
+        "soil-organic-carbon"
+      ],
+      "description": "SDA_SOC_Weighted_Mean_Soil_Organic_Carbon_Stock_L-H_Range query in category Soil Chemistry And Fertility.",
+      "lastUpdatedUtc": "2020-06-03"
+    },
+    {
+      "fileName": "SDA_SOC_Weighted_Mean_Soil_Organic_Carbon_Stock_Soil_Order.sql",
+      "commonName": "Soil Organic Carbon Weighted Mean Soil Organic Carbon Stock Soil Order",
+      "familyKey": "soil-organic-carbon-weighted-mean-soil",
+      "title": "SDA SOC Weighted Mean Soil Organic Carbon Stock Soil Order",
+      "path": "sandbox/SDA_SOC_Weighted_Mean_Soil_Organic_Carbon_Stock_Soil_Order.sql",
+      "category": "Soil Chemistry And Fertility",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "sda",
+        "soil-organic-carbon"
+      ],
+      "description": "DROP TABLE IF EXISTS #acpf",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "SOC_MU_Weighted_Average_Texture_Dom_Cond.sql",
+      "commonName": "Soil Organic Carbon Map Unit Weighted Average Texture Dom Cond",
+      "familyKey": "soil-organic-carbon-map-unit-weighted",
+      "title": "SOC MU Weighted Average Texture Dom Cond",
+      "path": "sandbox/SOC_MU_Weighted_Average_Texture_Dom_Cond.sql",
+      "category": "Soil Chemistry And Fertility",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-organic-carbon",
+        "texture"
+      ],
+      "description": "SOC_MU_Weighted_Average_Texture_Dom_Cond query in category Soil Chemistry And Fertility.",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "SOCS.sql",
+      "commonName": "Socs",
+      "familyKey": "socs",
+      "title": "SOCS",
+      "path": "sandbox/SOCS.sql",
+      "category": "Soil Chemistry And Fertility",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-organic-carbon"
+      ],
+      "description": "SOCS query in category Soil Chemistry And Fertility.",
+      "lastUpdatedUtc": "2020-06-03"
+    },
+    {
+      "fileName": "Top_Combined_Estimated_Organic_Carbon.sql",
+      "commonName": "Top Combined Estimated Organic Carbon",
+      "familyKey": "top-combined-estimated-organic-carbon",
+      "title": "Top Combined Estimated Organic Carbon",
+      "path": "sandbox/Top_Combined_Estimated_Organic_Carbon.sql",
+      "category": "Soil Chemistry And Fertility",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-organic-carbon"
+      ],
+      "description": "Top_Combined_Estimated_Organic_Carbon query in category Soil Chemistry And Fertility.",
+      "lastUpdatedUtc": "2026-06-03"
+    },
+    {
+      "fileName": "Aggregate_Stability_US_MU_weighted_Average.sql",
+      "commonName": "Aggregate Stability Us Map Unit Weighted Average",
+      "familyKey": "aggregate-stability-us-map-unit-weighted",
+      "title": "Aggregate Stability US MU weighted Average",
+      "path": "sandbox/sql_queries/stability/Aggregate_Stability_US_MU_weighted_Average.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "moved from sandbox root",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "Aggregate_Stability_US_MU_weighted_Average.sql",
+      "commonName": "Aggregate Stability Us Map Unit Weighted Average",
+      "familyKey": "aggregate-stability-us-map-unit-weighted",
+      "title": "Aggregate Stability US MU weighted Average",
+      "path": "sandbox/Aggregate_Stability_US_MU_weighted_Average.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #M2",
+      "lastUpdatedUtc": "2021-02-20"
+    },
+    {
+      "fileName": "Aggregate_Stability_US_MU_weighted_Average2.sql",
+      "commonName": "Aggregate Stability Us Map Unit Weighted Average 2",
+      "familyKey": "aggregate-stability-us-map-unit-weighted",
+      "title": "Aggregate Stability US MU weighted Average2",
+      "path": "sandbox/sql_queries/stability/Aggregate_Stability_US_MU_weighted_Average2.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "moved from sandbox root",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "Aggregate_Stability_US_MU_weighted_Average2.sql",
+      "commonName": "Aggregate Stability Us Map Unit Weighted Average 2",
+      "familyKey": "aggregate-stability-us-map-unit-weighted",
+      "title": "Aggregate Stability US MU weighted Average2",
+      "path": "sandbox/Aggregate_Stability_US_MU_weighted_Average2.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "CREATE TABLE #agg1",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "AggregateData_sdvmain_1.sql",
+      "commonName": "Aggregate Data Sdvmain 1",
+      "familyKey": "aggregate-data-sdvmain",
+      "title": "AggregateData sdvmain 1",
+      "path": "sandbox/SDV_engine/AggregateData_sdvmain_1.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "AggregateData_sdvmain_1 query in category Soil Physical Properties.",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "chorizon.sql",
+      "commonName": "Chorizon",
+      "familyKey": "chorizon",
+      "title": "chorizon",
+      "path": "sandbox/gSSURGO_tools/chorizon.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "horizon",
+        "sandbox"
+      ],
+      "description": "chorizon query in category Soil Physical Properties.",
+      "lastUpdatedUtc": "2017-04-05"
+    },
+    {
+      "fileName": "currentsurveys_interps_w_horizoncounts_FY19.sql",
+      "commonName": "Currentsurveys Interps W Horizoncounts Fy 19",
+      "familyKey": "currentsurveys-interps-w-horizoncounts-fy",
+      "title": "currentsurveys interps w horizoncounts FY19",
+      "path": "sandbox/REFRESH/currentsurveys_interps_w_horizoncounts_FY19.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "horizon",
+        "pipeline",
+        "sandbox"
+      ],
+      "description": "Lists surveys committed for sdmOFFLINE",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "Dominant_Component_Depth_structure.sql",
+      "commonName": "Dominant Component Depth Structure",
+      "familyKey": "dominant-component-depth-structure",
+      "title": "Dominant Component Depth structure",
+      "path": "sandbox/Dominant_Component_Depth_structure.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "soil-restrictions"
+      ],
+      "description": "Define the area",
+      "lastUpdatedUtc": "2024-02-07"
+    },
+    {
+      "fileName": "fragile_soil_index_map.sql",
+      "commonName": "Fragile Soil Index Map",
+      "familyKey": "fragile-soil-index-map",
+      "title": "fragile soil index map",
+      "path": "sandbox/soil_interpretations/fragile_soil_index_map.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "metrics",
+        "sandbox"
+      ],
+      "description": "Fragile Soil Index by Dominant Condition (CONUS, AK, HI, Territories)",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "mwACPF_extSurfaceHorizon.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Surface Horizon",
+      "familyKey": "agricultural-conservation-planning-framework-ext-surface",
+      "title": "mwACPF extSurfaceHorizon",
+      "path": "sandbox/ACPF/ACPF_JAMES/mwACPF_extSurfaceHorizon.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "horizon",
+        "sandbox"
+      ],
+      "description": "ACPF_extSurfaceHorizon.sql",
+      "lastUpdatedUtc": "2017-04-21",
+      "hidden": true
+    },
+    {
+      "fileName": "mwACPF_extSurfaceTexture.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Surface Texture",
+      "familyKey": "agricultural-conservation-planning-framework-ext-surface",
+      "title": "mwACPF extSurfaceTexture",
+      "path": "sandbox/ACPF/ACPF_JAMES/mwACPF_extSurfaceTexture.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "sandbox",
+        "texture"
+      ],
+      "description": "mwACPF_extSurfaceTexture.sql",
+      "lastUpdatedUtc": "2017-04-21",
+      "hidden": true
+    },
+    {
+      "fileName": "RUSLE2 Related AttributesSurfaceHorizon.sql",
+      "commonName": "Rusle 2 Related Attributes Surface Horizon",
+      "familyKey": "rusle-related-attributes-surface-horizon",
+      "title": "RUSLE2 Related AttributesSurfaceHorizon",
+      "path": "sandbox/RUSLE2 Related AttributesSurfaceHorizon.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "horizon",
+        "sandbox"
+      ],
+      "description": "RUSLE2 Related AttributesSurfaceHorizon query in category Soil Physical Properties.",
+      "lastUpdatedUtc": "2020-07-22"
+    },
+    {
+      "fileName": "SDA_mwACPF_extSurfaceHorizon.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Surface Horizon",
+      "familyKey": "agricultural-conservation-planning-framework-ext-surface",
+      "title": "SDA mwACPF extSurfaceHorizon",
+      "path": "sandbox/ACPF/SDA_mwACPF_extSurfaceHorizon.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "horizon",
+        "sandbox",
+        "sda"
+      ],
+      "description": "SDA_mwACPF_extSurfaceHorizon query in category Soil Physical Properties.",
+      "lastUpdatedUtc": "2017-04-19"
+    },
+    {
+      "fileName": "SDA_mwACPF_extSurfaceTexture.sql",
+      "commonName": "Agricultural Conservation Planning Framework Ext Surface Texture",
+      "familyKey": "agricultural-conservation-planning-framework-ext-surface",
+      "title": "SDA mwACPF extSurfaceTexture",
+      "path": "sandbox/ACPF/SDA_mwACPF_extSurfaceTexture.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "acpf",
+        "sandbox",
+        "sda",
+        "texture"
+      ],
+      "description": "SDA_mwACPF_extSurfaceTexture query in category Soil Physical Properties.",
+      "lastUpdatedUtc": "2017-06-20"
+    },
+    {
+      "fileName": "structure.sql",
+      "commonName": "Structure",
+      "familyKey": "structure",
+      "title": "structure",
+      "path": "sandbox/structure.sql",
+      "category": "Soil Physical Properties",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #structure;",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "cartSDAGeometries_with_x_y.sql",
+      "commonName": "Cart Sda Geometries With X Y",
+      "familyKey": "cart-sda-geometries-with-x-y",
+      "title": "cartSDAGeometries with x y",
+      "path": "sandbox/metrics/cartSDAGeometries_with_x_y.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "geometry",
+        "metrics",
+        "sandbox",
+        "sda"
+      ],
+      "description": "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "DSP_Point_SDA_intersect.sql",
+      "commonName": "Dsp Point Sda Intersect",
+      "familyKey": "dsp-point-sda-intersect",
+      "title": "DSP Point SDA intersect",
+      "path": "sandbox/DSP_Point_SDA_intersect.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "point-query",
+        "sandbox",
+        "sda",
+        "spatial-overlay"
+      ],
+      "description": "USE sdmONLINE",
+      "lastUpdatedUtc": "2026-06-03"
+    },
+    {
+      "fileName": "Farmland_class_mukey.sql",
+      "commonName": "Farmland Class Map Unit Key",
+      "familyKey": "farmland-class-map-unit-key",
+      "title": "Farmland class mukey",
+      "path": "sandbox/Farmland_class_mukey.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "map-unit",
+        "sandbox"
+      ],
+      "description": "SELECT mukey, LEFT (areasymbol,2) AS state_sym, CASE WHEN farmlndcl IS NULL  THEN 'Not rated'",
+      "lastUpdatedUtc": "2023-11-04"
+    },
+    {
+      "fileName": "FetchDataDBRawRelationsParent_Mapunit.sql",
+      "commonName": "Fetch Data Db Raw Relations Parent Mapunit",
+      "familyKey": "fetch-data-db-raw-relations-parent",
+      "title": "FetchDataDBRawRelationsParent Mapunit",
+      "path": "sandbox/SDV_engine/FetchDataDBRawRelationsParent_Mapunit.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "map-unit",
+        "sandbox"
+      ],
+      "description": "FetchDataDBRawRelationsParent_Mapunit query in category Spatial And Mapping.",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "Fundament Query as a Shape Command.sql",
+      "commonName": "Fundament Query As A Shape Command",
+      "familyKey": "fundament-query-as-a-shape-command",
+      "title": "Fundament Query as a Shape Command",
+      "path": "sandbox/Fundament Query as a Shape Command.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "geometry",
+        "sandbox"
+      ],
+      "description": "Fundament Query as a Shape Command query in category Spatial And Mapping.",
+      "lastUpdatedUtc": "2016-07-19"
+    },
+    {
+      "fileName": "Mapunit Component Intersect.sql",
+      "commonName": "Mapunit Component Intersect",
+      "familyKey": "mapunit-component-intersect",
+      "title": "Mapunit Component Intersect",
+      "path": "sandbox/Mapunit Component Intersect.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "map-unit",
+        "sandbox",
+        "spatial-overlay"
+      ],
+      "description": "USE sdmONLINE",
+      "lastUpdatedUtc": "2023-11-04"
+    },
+    {
+      "fileName": "Mapunit Count Ranking by SSA.sql",
+      "commonName": "Mapunit Count Ranking By Ssa",
+      "familyKey": "mapunit-count-ranking-by-ssa",
+      "title": "Mapunit Count Ranking by SSA",
+      "path": "sandbox/Mapunit Count Ranking by SSA.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "map-unit",
+        "sandbox"
+      ],
+      "description": "SELECT areasymbol, areaname, COUNT (mukey) AS map_unit_count",
+      "lastUpdatedUtc": "2021-02-20"
+    },
+    {
+      "fileName": "mupolygon-count-kyle.sql",
+      "commonName": "Mupolygon Count Kyle",
+      "familyKey": "mupolygon-count-kyle",
+      "title": "mupolygon count kyle",
+      "path": "sandbox/REFRESH/mupolygon-count-kyle.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "aoi-polygon",
+        "pipeline",
+        "sandbox"
+      ],
+      "description": "mupolygon-count-kyle query in category Spatial And Mapping.",
+      "lastUpdatedUtc": "2022-05-09"
+    },
+    {
+      "fileName": "NOTCOM_MUPOLYGONS.sql",
+      "commonName": "Notcom Mupolygons",
+      "familyKey": "notcom-mupolygons",
+      "title": "NOTCOM MUPOLYGONS",
+      "path": "sandbox/NOTCOM_MUPOLYGONS.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "aoi-polygon",
+        "sandbox"
+      ],
+      "description": "SELECT   legend.areasymbol, muname ,",
+      "lastUpdatedUtc": "2025-05-07"
+    },
+    {
+      "fileName": "Peaslee_SDA_PointQuery.sql",
+      "commonName": "Peaslee Sda Point Query",
+      "familyKey": "peaslee-sda-point-query",
+      "title": "Peaslee SDA PointQuery",
+      "path": "sandbox/Peaslee_SDA_PointQuery.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "point-query",
+        "sandbox",
+        "sda"
+      ],
+      "description": "SDA Query application=\"ArcMap\" rule=\"Sample Points\" version=\"0.1\" *",
+      "lastUpdatedUtc": "2021-02-20"
+    },
+    {
+      "fileName": "SDA_MUKEY_Fractual_Deminsion_Intersect.sql",
+      "commonName": "Map Unit Key Fractual Deminsion Intersect",
+      "familyKey": "map-unit-key-fractual-deminsion-intersect",
+      "title": "SDA MUKEY Fractual Deminsion Intersect",
+      "path": "sandbox/SDA_MUKEY_Fractual_Deminsion_Intersect.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "map-unit",
+        "sandbox",
+        "sda",
+        "spatial-overlay"
+      ],
+      "description": "DROP TABLE IF EXISTS #temp2;",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "SDA_Soil_Application_Metrics_YR_WSS-AOI_WSS-SS_SDA..sql",
+      "commonName": "Soil Application Metrics Yr Web Soil Survey Aoi Web Soil Survey Ss Sda",
+      "familyKey": "soil-application-metrics-yr-web-soil",
+      "title": "SDA Soil Application Metrics YR WSS AOI WSS SS SDA.",
+      "path": "sandbox/SDA_Soil_Application_Metrics_YR_WSS-AOI_WSS-SS_SDA..sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "aoi-polygon",
+        "metrics",
+        "sandbox",
+        "sda",
+        "wss"
+      ],
+      "description": "SELECT DISTINCT",
+      "lastUpdatedUtc": "2022-07-19"
+    },
+    {
+      "fileName": "Select Mukey from Point Macro.sql",
+      "commonName": "Select Map Unit Key From Point Macro",
+      "familyKey": "select-map-unit-key-from-point",
+      "title": "Select Mukey from Point Macro",
+      "path": "sandbox/Select Mukey from Point Macro.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "map-unit",
+        "point-query",
+        "sandbox"
+      ],
+      "description": "SELECT mukey, muname",
+      "lastUpdatedUtc": "2024-10-07"
+    },
+    {
+      "fileName": "sql_server_spatial_point_polygon_example.sql",
+      "commonName": "Server Spatial Point Polygon Example",
+      "familyKey": "server-spatial-point-polygon-example",
+      "title": "sql server spatial point polygon example",
+      "path": "sql/spatial/sql_server_spatial_point_polygon_example.sql",
+      "category": "Spatial And Mapping",
+      "location": "sql",
+      "tags": [
+        "aoi-polygon",
+        "curated",
+        "point-query"
+      ],
+      "description": "DECLARE @bounds geography;",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "SSURGO_OnDemand_Geometry_example.sql",
+      "commonName": "Ssurgo On Demand Geometry Example",
+      "familyKey": "ssurgo-on-demand-geometry-example",
+      "title": "SSURGO OnDemand Geometry example",
+      "path": "sandbox/SSURGO_OnDemand_Geometry_example.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "geometry",
+        "sandbox"
+      ],
+      "description": "~DeclareGeometry(@aoi)~",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "Taxonomy_Flag_Mapunit.sql",
+      "commonName": "Taxonomy Flag Mapunit",
+      "familyKey": "taxonomy-flag-mapunit",
+      "title": "Taxonomy Flag Mapunit",
+      "path": "sandbox/Taxonomy_Flag_Mapunit.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "map-unit",
+        "sandbox",
+        "taxonomy"
+      ],
+      "description": "USE sdmONLINE;",
+      "lastUpdatedUtc": "2021-07-28"
+    },
+    {
+      "fileName": "Top 20 polygons vertex count.sql",
+      "commonName": "Top 20 Polygons Vertex Count",
+      "familyKey": "top-polygons-vertex-count",
+      "title": "Top 20 polygons vertex count",
+      "path": "sandbox/Top 20 polygons vertex count.sql",
+      "category": "Spatial And Mapping",
+      "location": "sandbox",
+      "tags": [
+        "aoi-polygon",
+        "sandbox"
+      ],
+      "description": "select top 20 areasymbol, mukey, mupolygonkey, mupolygongeo.STNumPoints() [vertex count]",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "writing_sda_queries_return_geometry.sql",
+      "commonName": "Writing Sda Queries Return Geometry",
+      "familyKey": "writing-sda-queries-return-geometry",
+      "title": "writing sda queries return geometry",
+      "path": "sql/spatial/writing_sda_queries_return_geometry.sql",
+      "category": "Spatial And Mapping",
+      "location": "sql",
+      "tags": [
+        "curated",
+        "geometry",
+        "sda"
+      ],
+      "description": "select G.MupolygonWktWgs84 as geom, mapunit.mukey, muname",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "1_Year_Flooding_and_Ponding_Frequency_and_Duration.sql",
+      "commonName": "1 Year Flooding And Ponding Frequency And Duration",
+      "familyKey": "year-flooding-and-ponding-frequency-and",
+      "title": "1 Year Flooding and Ponding Frequency and Duration",
+      "path": "sandbox/sql_queries/flooding/1_Year_Flooding_and_Ponding_Frequency_and_Duration.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "flooding",
+        "ponding",
+        "sandbox"
+      ],
+      "description": "moved from sandbox root",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "1 Year Flooding and Ponding Frequency and Duration.sql",
+      "commonName": "1 Year Flooding And Ponding Frequency And Duration",
+      "familyKey": "year-flooding-and-ponding-frequency-and",
+      "title": "1 Year Flooding and Ponding Frequency and Duration",
+      "path": "sandbox/1 Year Flooding and Ponding Frequency and Duration.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "flooding",
+        "ponding",
+        "sandbox"
+      ],
+      "description": "Add a month count",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "6_month_Flooding_and_Ponding_Frequency_and_Duration.sql",
+      "commonName": "6 Month Flooding And Ponding Frequency And Duration",
+      "familyKey": "month-flooding-and-ponding-frequency-and",
+      "title": "6 month Flooding and Ponding Frequency and Duration",
+      "path": "sandbox/sql_queries/flooding/6_month_Flooding_and_Ponding_Frequency_and_Duration.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "flooding",
+        "ponding",
+        "sandbox"
+      ],
+      "description": "moved from sandbox root",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "6 month Flooding and Ponding Frequency and Duration.sql",
+      "commonName": "6 Month Flooding And Ponding Frequency And Duration",
+      "familyKey": "month-flooding-and-ponding-frequency-and",
+      "title": "6 month Flooding and Ponding Frequency and Duration",
+      "path": "sandbox/6 month Flooding and Ponding Frequency and Duration.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "flooding",
+        "ponding",
+        "sandbox"
+      ],
+      "description": "Waters of the U.S.",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "Drainage.sql",
+      "commonName": "Drainage",
+      "familyKey": "drainage",
+      "title": "Drainage",
+      "path": "sandbox/Drainage.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #main;",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "Flooding and Ponding Frequency and Duration.sql",
+      "commonName": "Flooding And Ponding Frequency And Duration",
+      "familyKey": "flooding-and-ponding-frequency-and-duration",
+      "title": "Flooding and Ponding Frequency and Duration",
+      "path": "sandbox/Flooding and Ponding Frequency and Duration.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "flooding",
+        "ponding",
+        "sandbox"
+      ],
+      "description": "Waters of the U.S.",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "Geom_Acres_Map_Unit_Hydric.sql",
+      "commonName": "Geom Acres Map Unit Hydric",
+      "familyKey": "geom-acres-map-unit-hydric",
+      "title": "Geom Acres Map Unit Hydric",
+      "path": "sandbox/Geom_Acres_Map_Unit_Hydric.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "geometry",
+        "hydric",
+        "sandbox"
+      ],
+      "description": "~DeclareGeometry(@aoi)~",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "hydric.sql",
+      "commonName": "Hydric",
+      "familyKey": "hydric",
+      "title": "hydric",
+      "path": "sql/hydrology/hydric.sql",
+      "category": "Water And Wetness",
+      "location": "sql",
+      "tags": [
+        "curated",
+        "hydric"
+      ],
+      "description": "hydric query in category Water And Wetness.",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "Hydric_Rating_Class_Count.sql",
+      "commonName": "Hydric Rating Class Count",
+      "familyKey": "hydric-rating-class-count",
+      "title": "Hydric Rating Class Count",
+      "path": "sandbox/Hydric_Rating_Class_Count.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "hydric",
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS main_query3;",
+      "lastUpdatedUtc": "2022-12-01"
+    },
+    {
+      "fileName": "Hydric_Soils_List_By_State.sql",
+      "commonName": "Hydric Soils List By State",
+      "familyKey": "hydric-soils-list-by-state",
+      "title": "Hydric Soils List By State",
+      "path": "sandbox/Hydric_Soils_List_By_State.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "hydric",
+        "sandbox"
+      ],
+      "description": "SELECT areasymbol, areaname, muname, mapunit.mukey/1 AS mukey , musym, compname, component.cokey/1 AS cokey, comppct_r, drainagecl AS drainage_class",
+      "lastUpdatedUtc": "2017-02-02"
+    },
+    {
+      "fileName": "hydric_soils_mlra.sql",
+      "commonName": "Hydric Soils Mlra",
+      "familyKey": "hydric-soils-mlra",
+      "title": "hydric soils mlra",
+      "path": "sandbox/hydric_soils_mlra.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "hydric",
+        "sandbox"
+      ],
+      "description": "DROP TABLE IF EXISTS #comp",
+      "lastUpdatedUtc": "2023-11-04"
+    },
+    {
+      "fileName": "Latest_Water Table Kind _Perched-Apparent_03182023.sql",
+      "commonName": "Latest Water Table Kind Perched Apparent 03182023",
+      "familyKey": "latest-water-table-kind-perched-apparent",
+      "title": "Latest Water Table Kind  Perched Apparent 03182023",
+      "path": "sandbox/Latest_Water Table Kind _Perched-Apparent_03182023.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "water-table"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2023-04-11"
+    },
+    {
+      "fileName": "Latest_Water Table Kind _Perched-Apparent_03182023.sql",
+      "commonName": "Latest Water Table Kind Perched Apparent 03182023",
+      "familyKey": "latest-water-table-kind-perched-apparent",
+      "title": "Latest Water Table Kind  Perched Apparent 03182023",
+      "path": "sandbox/scripts/Latest_Water Table Kind _Perched-Apparent_03182023.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "water-table"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2026-05-05"
+    },
+    {
+      "fileName": "MIN Water table and HSG.sql",
+      "commonName": "Min Water Table And Hsg",
+      "familyKey": "min-water-table-and-hsg",
+      "title": "MIN Water table and HSG",
+      "path": "sandbox/MIN Water table and HSG.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "water-table"
+      ],
+      "description": "DROP TABLE IF EXISTS #b;",
+      "lastUpdatedUtc": "2020-06-03"
+    },
+    {
+      "fileName": "qa_ponding_and_flooding_checks.sql",
+      "commonName": "Quality Assurance Ponding And Flooding Checks",
+      "familyKey": "quality-assurance-ponding-and-flooding-checks",
+      "title": "qa ponding and flooding checks",
+      "path": "sql/qa/qa_ponding_and_flooding_checks.sql",
+      "category": "Water And Wetness",
+      "location": "sql",
+      "tags": [
+        "curated",
+        "flooding",
+        "ponding",
+        "validation"
+      ],
+      "description": "qa_ponding_and_flooding_checks query in category Water And Wetness.",
+      "lastUpdatedUtc": "2026-05-29"
+    },
+    {
+      "fileName": "Series_Drainage_Parse.sql",
+      "commonName": "Series Drainage Parse",
+      "familyKey": "series-drainage-parse",
+      "title": "Series Drainage Parse",
+      "path": "sandbox/Series_Drainage_Parse.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "taxonomy"
+      ],
+      "description": "DROP TABLE IF EXISTS #ss",
+      "lastUpdatedUtc": "2019-11-27"
+    },
+    {
+      "fileName": "Test_Water Table Kind _Perched-Apparent.sql",
+      "commonName": "Test Water Table Kind Perched Apparent",
+      "familyKey": "water-table-kind-perched-apparent",
+      "title": "Test Water Table Kind  Perched Apparent",
+      "path": "sandbox/Test_Water Table Kind _Perched-Apparent.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "water-table"
+      ],
+      "description": "SET STATISTICS IO ON",
+      "lastUpdatedUtc": "2023-03-29"
+    },
+    {
+      "fileName": "Water Table 0 and wet.sql",
+      "commonName": "Water Table 0 And Wet",
+      "familyKey": "water-table-and-wet",
+      "title": "Water Table 0 and wet",
+      "path": "sandbox/Water Table 0 and wet.sql",
+      "category": "Water And Wetness",
+      "location": "sandbox",
+      "tags": [
+        "sandbox",
+        "water-table"
+      ],
+      "description": "DECLARE @area VARCHAR(20);",
+      "lastUpdatedUtc": "2020-06-03"
+    }
+  ]
+}

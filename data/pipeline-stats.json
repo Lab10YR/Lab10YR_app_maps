@@ -1,0 +1,274 @@
+{
+  "totalArticles": 30,
+  "lastUpdated": "2026-06-12T16:16:24.824Z",
+  "articles": [
+    {
+      "title": "Computer Vision Is Now Classifying Soil Texture From Field Photos",
+      "angle": "computer vision",
+      "format": "short",
+      "wordCount": 557,
+      "generatedAt": "2026-06-12T16:16:21.640Z",
+      "topicIndex": 40,
+      "url": "https://lab10yr.com/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1781280981640"
+    },
+    {
+      "title": "Soil Depth Prediction From LiDAR: What the Terrain Tells You Before You Dig",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 511,
+      "generatedAt": "2026-06-11T16:51:47.799Z",
+      "topicIndex": 39,
+      "url": "https://lab10yr.com/articles/soil-depth-prediction-from-lidar-what-the-terrain-tells-you--1781196707799"
+    },
+    {
+      "title": "Topographic Wetness Index: The Terrain Derivative That Predicts Soil Drainage",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 467,
+      "generatedAt": "2026-06-10T16:34:13.100Z",
+      "topicIndex": 38,
+      "url": "https://lab10yr.com/articles/topographic-wetness-index-the-terrain-derivative-that-predic-1781109253100"
+    },
+    {
+      "title": "The Ground Under Data Center Alley Was Never Meant to Hold It",
+      "angle": "data center siting",
+      "format": "long",
+      "wordCount": 831,
+      "generatedAt": "2026-06-10T00:16:28.274084+00:00",
+      "topicIndex": 60,
+      "url": "https://lab10yr.com/articles/the-ground-under-data-center-alley-was-never-meant-to-hold-i-1781050588274"
+    },
+    {
+      "title": "The Ground Under Data Center Alley Was Never Meant to Hold It",
+      "angle": "data center siting",
+      "format": "long",
+      "wordCount": 808,
+      "generatedAt": "2026-06-09T23:42:41.067743Z",
+      "topicIndex": 60,
+      "url": "https://lab10yr.com/articles/the-ground-under-data-center-alley-was-never-meant-to-hold-i-1781048561067"
+    },
+    {
+      "title": "Multispectral Drones Are Measuring What Soil Labs Miss",
+      "angle": "remote sensing",
+      "format": "long",
+      "wordCount": 1624,
+      "generatedAt": "2026-06-09T00:18:16.753Z",
+      "topicIndex": 37,
+      "url": "https://lab10yr.com/articles/multispectral-drones-are-measuring-what-soil-labs-miss-1780964296753"
+    },
+    {
+      "title": "What InSAR Sees That SSURGO Already Predicted",
+      "angle": "remote sensing",
+      "format": "long",
+      "wordCount": 1796,
+      "generatedAt": "2026-06-08T15:47:42.864Z",
+      "topicIndex": 36,
+      "url": "https://lab10yr.com/articles/what-insar-sees-that-ssurgo-already-predicted-1780933662864"
+    },
+    {
+      "title": "LiDAR Terrain Derivatives Are the Best Soil Survey Tool Nobody Uses",
+      "angle": "remote sensing",
+      "format": "long",
+      "wordCount": 1597,
+      "generatedAt": "2026-06-07T12:58:18.173Z",
+      "topicIndex": 35,
+      "url": "https://lab10yr.com/articles/lidar-terrain-derivatives-are-the-best-soil-survey-tool-nobo-1780837098173"
+    },
+    {
+      "title": "The Carbon Beneath America's Peatlands Is Not Accounted for in Any Climate Budget",
+      "angle": "conservation",
+      "format": "long",
+      "wordCount": 1758,
+      "generatedAt": "2026-06-07T12:47:53.740Z",
+      "topicIndex": 34,
+      "url": "https://lab10yr.com/articles/the-carbon-beneath-america-s-peatlands-is-not-accounted-for--1780836473740"
+    },
+    {
+      "title": "Road Salts Are Destroying Urban Soils and Nobody Is Measuring It",
+      "angle": "geospatial",
+      "format": "long",
+      "wordCount": 1687,
+      "generatedAt": "2026-06-07T12:42:21.404Z",
+      "topicIndex": 33,
+      "url": "https://lab10yr.com/articles/road-salts-are-destroying-urban-soils-and-nobody-is-measurin-1780836141404"
+    },
+    {
+      "title": "The Septic System Failure Map Nobody Publishes",
+      "angle": "infrastructure",
+      "format": "long",
+      "wordCount": 1835,
+      "generatedAt": "2026-06-07T12:37:07.784Z",
+      "topicIndex": 32,
+      "url": "https://lab10yr.com/articles/the-septic-system-failure-map-nobody-publishes-1780835827784"
+    },
+    {
+      "title": "Forest Soil Compaction Is an Invisible Tax on Timber Productivity",
+      "angle": "conservation",
+      "format": "long",
+      "wordCount": 1871,
+      "generatedAt": "2026-06-07T12:28:20.006Z",
+      "topicIndex": 31,
+      "url": "https://lab10yr.com/articles/forest-soil-compaction-is-an-invisible-tax-on-timber-product-1780835300006"
+    },
+    {
+      "title": "Precision Agriculture Without Soil Data Is Just Precision Guessing",
+      "angle": "technical",
+      "format": "long",
+      "wordCount": 1644,
+      "generatedAt": "2026-06-07T12:15:08.696Z",
+      "topicIndex": 30,
+      "url": "https://lab10yr.com/articles/precision-agriculture-without-soil-data-is-just-precision-gu-1780834508696"
+    },
+    {
+      "title": "Hydric Soils and Wetland Regulation: The Map That Determines Your Permit",
+      "angle": "land finance",
+      "format": "long",
+      "wordCount": 1681,
+      "generatedAt": "2026-06-07T12:00:13.256Z",
+      "topicIndex": 29,
+      "url": "https://lab10yr.com/articles/hydric-soils-and-wetland-regulation-the-map-that-determines--1780833613256"
+    },
+    {
+      "title": "Nevada and Arizona Are Running Out of Stable Ground",
+      "angle": "geospatial",
+      "format": "long",
+      "wordCount": 1469,
+      "generatedAt": "2026-06-06T19:55:41.405Z",
+      "topicIndex": 9,
+      "url": "https://lab10yr.com/articles/nevada-and-arizona-are-running-out-of-stable-ground-1780775741405"
+    },
+    {
+      "title": "How to Query 967,000 Soil Records in 30 Seconds",
+      "angle": "technical",
+      "format": "long",
+      "wordCount": 1604,
+      "generatedAt": "2026-06-06T18:51:38.117Z",
+      "topicIndex": 3,
+      "url": "https://lab10yr.com/articles/how-to-query-967-000-soil-records-in-30-seconds-1780771898117"
+    },
+    {
+      "title": "What Pipeline Operators Don't Know About Soil Corrosivity",
+      "angle": "infrastructure",
+      "format": "long",
+      "wordCount": 1150,
+      "generatedAt": "2026-06-06T17:20:12.454Z",
+      "topicIndex": 0,
+      "url": "https://lab10yr.com/articles/what-pipeline-operators-don-t-know-about-soil-corrosivity-1780766412454"
+    },
+    {
+      "title": "Why Wind Farm Micrositing Needs Soil Science",
+      "angle": "energy",
+      "format": "long",
+      "wordCount": 631,
+      "generatedAt": "2026-06-06T01:14:54.506Z",
+      "topicIndex": 19,
+      "url": "https://lab10yr.com/articles/why-wind-farm-micrositing-needs-soil-science-1780708494506"
+    },
+    {
+      "title": "The Data Behind Shrink-Swell Soils and Foundation Failure",
+      "angle": "insurance",
+      "format": "short",
+      "wordCount": 282,
+      "generatedAt": "2026-06-05T15:56:51.234Z",
+      "topicIndex": 18,
+      "url": "https://lab10yr.com/articles/the-data-behind-shrink-swell-soils-and-foundation-failure-1780675011234"
+    },
+    {
+      "title": "How Organic Matter Loss Is Priced Into Farmland Without Anyone Knowing",
+      "angle": "conservation",
+      "format": "long",
+      "wordCount": 477,
+      "generatedAt": "2026-06-05T01:10:32.620Z",
+      "topicIndex": 17,
+      "url": "https://lab10yr.com/articles/how-organic-matter-loss-is-priced-into-farmland-without-anyo-1780621832620"
+    },
+    {
+      "title": "What Pipeline Operators Don't Know About Soil Corrosivity",
+      "angle": "infrastructure",
+      "generatedAt": "2026-06-04T04:24:23.193Z",
+      "topicIndex": 0,
+      "url": "https://lab10yr.com/articles/what-pipeline-operators-don-t-know-about-soil-corrosivity-1780547063193"
+    },
+    {
+      "title": "Fragile Soils and the Infrastructure Debt Nobody Is Counting",
+      "angle": "infrastructure",
+      "format": "long",
+      "wordCount": 367,
+      "generatedAt": "2026-06-04T21:17:48.672Z",
+      "topicIndex": 8,
+      "url": "https://lab10yr.com/articles/fragile-soils-and-the-infrastructure-debt-nobody-is-counting-1780607868672"
+    },
+    {
+      "title": "Karst Country: Mapping Sinkhole Risk Before You Build",
+      "angle": "infrastructure",
+      "format": "long",
+      "wordCount": 349,
+      "generatedAt": "2026-06-04T20:23:56.008Z",
+      "topicIndex": 4,
+      "url": "https://lab10yr.com/articles/karst-country-mapping-sinkhole-risk-before-you-build-1780604636008"
+    },
+    {
+      "title": "Soil Data Is the Cheapest Form of Geotechnical Intelligence",
+      "angle": "land finance",
+      "format": "long",
+      "wordCount": 461,
+      "generatedAt": "2026-06-04T17:51:07.955Z",
+      "topicIndex": 16,
+      "url": "https://lab10yr.com/articles/soil-data-is-the-cheapest-form-of-geotechnical-intelligence-1780595467955"
+    },
+    {
+      "title": "Soil Data Is the Cheapest Form of Geotechnical Intelligence",
+      "angle": "land finance",
+      "format": "long",
+      "wordCount": 401,
+      "generatedAt": "2026-06-04T15:17:18.406Z",
+      "topicIndex": 16,
+      "url": "https://lab10yr.com/articles/soil-data-is-the-cheapest-form-of-geotechnical-intelligence-1780586238406"
+    },
+    {
+      "title": "Fragile Soils and the Infrastructure Debt Nobody Is Counting",
+      "angle": "infrastructure",
+      "format": "long",
+      "wordCount": 483,
+      "generatedAt": "2026-06-04T14:16:25.399Z",
+      "topicIndex": 8,
+      "url": "https://lab10yr.com/articles/fragile-soils-and-the-infrastructure-debt-nobody-is-counting-1780582585399"
+    },
+    {
+      "title": "Nevada and Arizona Are Running Out of Stable Ground",
+      "angle": "geospatial",
+      "format": "long",
+      "wordCount": 639,
+      "generatedAt": "2026-06-04T14:04:18.471Z",
+      "topicIndex": 9,
+      "url": "https://lab10yr.com/articles/nevada-and-arizona-are-running-out-of-stable-ground-1780581858471"
+    },
+    {
+      "title": "Soil Data Is the Cheapest Form of Geotechnical Intelligence",
+      "angle": "land finance",
+      "format": "long",
+      "wordCount": 535,
+      "generatedAt": "2026-06-04T14:00:29.225Z",
+      "topicIndex": 16,
+      "url": "https://lab10yr.com/articles/soil-data-is-the-cheapest-form-of-geotechnical-intelligence-1780581629225"
+    },
+    {
+      "title": "Soil Data Is the Cheapest Form of Geotechnical Intelligence",
+      "angle": "land finance",
+      "format": "long",
+      "wordCount": 547,
+      "generatedAt": "2026-06-04T13:53:03.629Z",
+      "topicIndex": 16,
+      "url": "https://lab10yr.com/articles/soil-data-is-the-cheapest-form-of-geotechnical-intelligence-1780581183629"
+    },
+    {
+      "title": "Soil Data Is the Cheapest Form of Geotechnical Intelligence",
+      "angle": "land finance",
+      "format": "long",
+      "wordCount": 516,
+      "generatedAt": "2026-06-04T13:48:02.361Z",
+      "topicIndex": 16,
+      "url": "https://lab10yr.com/articles/soil-data-is-the-cheapest-form-of-geotechnical-intelligence-1780580882361"
+    }
+  ]
+}

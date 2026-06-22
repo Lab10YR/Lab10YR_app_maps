@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lab10yr.com/sitemap.xml

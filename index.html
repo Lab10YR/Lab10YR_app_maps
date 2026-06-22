@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://lab10yr.com/index">
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="Lab10YR">
+  <meta property="og:title"       content="Soil Intelligence — Data Access, Maps & SQL Library">
+  <meta property="og:description" content="Interactive maps, 258 production SQL scripts, and data journalism for SSURGO national soil data. Explore fragile soil risk, organic matter depletion, and conservation metrics.">
+  <meta property="og:url"         content="https://lab10yr.com/index.html">
+  <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Soil Intelligence — Data Access, Maps & SQL Library">
+  <meta name="twitter:description" content="Interactive maps, 258 production SQL scripts, and data journalism for SSURGO national soil data. Explore fragile soil risk, organic matter depletion, and conservation metrics.">
+  <meta name="twitter:image"       content="https://lab10yr.com/assets/og-preview.png">
+<title>Soil Intelligence — Data Access, Maps &amp; SQL Library</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="js/shared.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--panel3:#181e30;
+  --border:#1e2640;--text:#d4daf0;--dim:#5a6490;--dimmer:#2e3560;
+  --accent:#38bdf8;--accent2:#a78bfa;--green:#22c55e;--gold:#f59e0b;
+  --red:#ef4444;--orange:#f97316;
+  --soil:#c8a84b;--soil2:#8b5e2a;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --serif:Georgia,'Times New Roman',serif;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden}
+
+/* ── HERO ─────────────────────────────────────────────────────── */
+#hero{position:relative;height:100vh;min-height:600px;overflow:hidden}
+#hero-map{position:absolute;inset:0;z-index:0}
+.hero-veil{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(to bottom, rgba(4,6,12,.55) 0%, rgba(4,6,12,.15) 40%, rgba(4,6,12,.6) 80%, rgba(4,6,12,.97) 100%),
+    linear-gradient(to right, rgba(4,6,12,.8) 0%, transparent 50%);
+}
+.hero-content{
+  position:absolute;inset:0;z-index:2;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 min(8vw,100px);max-width:900px;
+}
+.hero-eyebrow{
+  font-size:10px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--soil);margin-bottom:20px;display:flex;align-items:center;gap:12px;
+}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--soil)}
+.hero-eyebrow::after{content:'';flex:0 0 1px;height:28px;background:var(--soil);margin-left:4px}
+.hero-h1{
+  font-family:var(--serif);font-size:clamp(3rem,6vw,5.5rem);
+  line-height:1.05;font-weight:400;color:#fff;letter-spacing:-.02em;
+  margin-bottom:20px;
+}
+.hero-h1 strong{color:var(--soil);font-weight:400}
+.hero-sub{
+  font-size:clamp(1rem,1.6vw,1.25rem);color:rgba(212,218,240,.75);
+  max-width:52ch;line-height:1.7;margin-bottom:36px;
+}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-hero{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 24px;border-radius:6px;font-size:13px;font-weight:700;
+  text-decoration:none;letter-spacing:.04em;transition:all .18s;
+  border:1px solid transparent;
+}
+.btn-primary{background:var(--soil);color:#000;border-color:var(--soil)}
+.btn-primary:hover{background:#d9b85c;box-shadow:0 0 24px rgba(200,168,75,.4)}
+.btn-ghost{background:transparent;color:var(--text);border-color:var(--border)}
+.btn-ghost:hover{background:var(--panel2);border-color:var(--dimmer)}
+
+/* stat strip at bottom of hero */
+.hero-stats{
+  position:absolute;bottom:0;left:0;right:0;z-index:3;
+  display:flex;border-top:1px solid var(--border);
+  background:rgba(4,6,12,.92);backdrop-filter:blur(12px);
+}
+.hs-item{
+  flex:1;padding:20px 24px;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;gap:4px;
+}
+.hs-item:last-child{border-right:none}
+.hs-val{font-family:var(--serif);font-size:2.2rem;color:#fff;line-height:1;font-weight:400}
+.hs-val span{font-size:.9rem;color:var(--soil);margin-left:2px}
+.hs-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--dim)}
+.hs-sub{font-size:11px;color:var(--dimmer)}
+@media(max-width:700px){.hero-stats{display:grid;grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.hero-stats{grid-template-columns:1fr}}
+
+/* ── FIXED NAV ────────────────────────────────────────────────── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;height:46px;
+  display:flex;align-items:center;padding:0 24px;gap:6px;
+  background:rgba(4,6,12,0);border-bottom:1px solid transparent;
+  transition:background .3s,border-color .3s;backdrop-filter:blur(0);
+  overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+#nav::-webkit-scrollbar{display:none;}
+#nav.scrolled{
+  background:rgba(4,6,12,.96);border-bottom-color:var(--border);
+  backdrop-filter:blur(14px);
+}
+.nav-logo{
+  font-family:var(--serif);font-size:13px;font-style:italic;
+  color:var(--soil);font-weight:700;margin-right:12px;white-space:nowrap;flex-shrink:0;
+  text-decoration:none;
+}
+.nav-link{
+  font-size:11px;font-weight:600;color:var(--dim);text-decoration:none;
+  padding:0 8px;height:46px;display:flex;align-items:center;
+  border-bottom:2px solid transparent;transition:color .15s,border-color .15s;
+  white-space:nowrap;flex-shrink:0;
+}
+.nav-link:hover{color:var(--text)}
+.nav-link.hot{color:var(--green);font-weight:700}
+.nav-link.hot:hover{color:#4ade80}
+.nav-link.hot2{color:var(--accent);font-weight:700}
+.nav-spacer{flex:1}
+
+/* ── SECTION SCAFFOLDING ──────────────────────────────────────── */
+.section{padding:96px min(8vw,100px)}
+.section.dark{background:var(--panel)}
+.section.darker{background:#020408}
+.section-inner{max-width:1280px;margin:0 auto}
+.section-eyebrow{
+  font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--soil);margin-bottom:14px;display:flex;align-items:center;gap:10px;
+}
+.section-eyebrow::before{content:'';width:20px;height:1px;background:var(--soil)}
+.section-h2{
+  font-family:var(--serif);font-size:clamp(2rem,3.5vw,3rem);
+  font-weight:400;letter-spacing:-.02em;color:#fff;line-height:1.1;
+  margin-bottom:16px;
+}
+.section-h2 em{color:var(--soil);font-style:normal}
+.section-lead{font-size:1.1rem;color:rgba(212,218,240,.65);max-width:60ch;line-height:1.75;margin-bottom:48px}
+
+/* ── APP CARDS ────────────────────────────────────────────────── */
+.app-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+@media(max-width:900px){.app-grid{grid-template-columns:1fr}}
+.app-card{
+  position:relative;overflow:hidden;aspect-ratio:4/3;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:28px;cursor:pointer;text-decoration:none;
+  transition:transform .25s cubic-bezier(.4,0,.2,1);
+}
+.app-card:hover{transform:scale(1.015);z-index:2}
+.app-card::before{
+  content:'';position:absolute;inset:0;z-index:0;
+  transition:opacity .25s;
+}
+.app-card:hover::before{opacity:.6}
+.app-card .bg{position:absolute;inset:0;z-index:0;object-fit:cover}
+.ac-regen::before{background:linear-gradient(135deg,#0d1821 0%,#1a0808 50%,#2d0a0a 100%)}
+.ac-regen .bg{background:linear-gradient(135deg,#060e18,#1a0810,#2d1006)}
+.ac-atlas::before{background:linear-gradient(135deg,#060c1a 0%,#0a1828 50%,#0c2238 100%)}
+.ac-atlas .bg{background:linear-gradient(135deg,#060c1a,#0a1828,#081e30)}
+.ac-stories::before{background:linear-gradient(135deg,#0a0806 0%,#1a1208 50%,#2a1e0a 100%)}
+.ac-stories .bg{background:linear-gradient(135deg,#0a0806,#1a1208,#2a1e10)}
+
+.app-card-inner{position:relative;z-index:2}
+.ac-tag{
+  font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--soil);margin-bottom:10px;display:flex;align-items:center;gap:6px;
+}
+.ac-tag::before{content:'';width:16px;height:1px;background:var(--soil)}
+.ac-title{
+  font-family:var(--serif);font-size:1.8rem;color:#fff;
+  line-height:1.1;margin-bottom:8px;
+}
+.ac-desc{font-size:.85rem;color:rgba(212,218,240,.65);line-height:1.6;margin-bottom:20px}
+.ac-cta{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--soil);border-bottom:1px solid var(--soil);
+  padding-bottom:2px;transition:gap .15s;
+}
+.app-card:hover .ac-cta{gap:10px}
+
+/* mini canvas previews inside app cards */
+.ac-preview{
+  position:absolute;inset:0;z-index:1;opacity:0.28;pointer-events:none;
+}
+.ac-preview canvas{width:100%;height:100%}
+
+/* ── DATA VISUALIZATION STRIP ─────────────────────────────────── */
+.viz-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px}
+@media(max-width:900px){.viz-strip{grid-template-columns:1fr}}
+.viz-panel{background:var(--panel2);border:1px solid var(--border);padding:28px;position:relative;overflow:hidden}
+.viz-panel-title{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+                 color:var(--soil);margin-bottom:16px}
+.viz-panel-headline{font-family:var(--serif);font-size:1.6rem;color:#fff;line-height:1.15;margin-bottom:8px}
+.viz-panel-body{font-size:.85rem;color:var(--dim);line-height:1.65;margin-bottom:20px}
+
+/* State FSI bars */
+.state-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.sb-label{width:24px;font-size:10px;color:var(--dim);flex-shrink:0;font-weight:700}
+.sb-track{flex:1;height:10px;background:var(--panel3);border-radius:2px;overflow:hidden}
+.sb-fill{height:100%;border-radius:2px;transition:width 1.5s cubic-bezier(.4,0,.2,1);width:0}
+.sb-val{width:36px;font-size:9px;color:var(--dim);text-align:right;flex-shrink:0}
+
+/* SOC horizon viz */
+.hz-mini{display:flex;flex-direction:column;gap:2px;margin-top:8px}
+.hz-mini-row{display:flex;align-items:center;gap:8px}
+.hz-mini-label{width:28px;font-size:9px;color:var(--dim);flex-shrink:0}
+.hz-mini-bar-wrap{flex:1;height:16px;background:var(--panel3);border-radius:2px;overflow:hidden}
+.hz-mini-bar{height:100%;border-radius:2px;transition:width 1.5s cubic-bezier(.4,0,.2,1);width:0}
+.hz-mini-depth{width:64px;font-size:9px;color:var(--dim);flex-shrink:0;font-family:monospace}
+.hz-mini-val{width:56px;font-size:9px;color:var(--soil);text-align:right;flex-shrink:0;font-family:monospace}
+
+/* conservation practice bars */
+.prac-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.prac-name{width:100px;font-size:10px;color:var(--dim);flex-shrink:0;line-height:1.3}
+.prac-track{flex:1;height:12px;background:var(--panel3);border-radius:2px;overflow:hidden}
+.prac-fill{height:100%;border-radius:2px;background:linear-gradient(to right,#166534,#22c55e);
+           transition:width 1.5s cubic-bezier(.4,0,.2,1);width:0}
+.prac-co2{width:52px;font-size:9px;color:var(--green);text-align:right;flex-shrink:0;font-family:monospace}
+
+/* ── DISCOVERY GRID ───────────────────────────────────────────── */
+.disc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:900px){.disc-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.disc-grid{grid-template-columns:1fr}}
+.disc-item{
+  background:var(--panel2);border:1px solid var(--border);border-radius:8px;
+  padding:22px;transition:all .18s;cursor:default;
+}
+.disc-item:hover{border-color:var(--accent);transform:translateY(-3px);
+                 box-shadow:0 12px 32px rgba(0,0,0,.4)}
+.disc-icon{font-size:1.8rem;margin-bottom:12px;display:block}
+.disc-title{font-size:.95rem;font-weight:700;color:#fff;margin-bottom:6px}
+.disc-body{font-size:.8rem;color:var(--dim);line-height:1.6}
+.disc-data{margin-top:10px;font-family:monospace;font-size:.75rem;
+           background:var(--panel3);padding:8px 10px;border-radius:4px;
+           color:var(--soil);line-height:1.8}
+
+/* ── SQL STORIES ──────────────────────────────────────────────── */
+.sql-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+@media(max-width:800px){.sql-grid{grid-template-columns:1fr}}
+.sql-card{background:var(--panel2);border:1px solid var(--border);padding:32px;
+           position:relative;overflow:hidden}
+.sql-card::after{
+  content:'';position:absolute;top:0;left:0;width:3px;bottom:0;
+}
+.sql-card.c-red::after{background:var(--red)}
+.sql-card.c-green::after{background:var(--green)}
+.sql-card.c-gold::after{background:var(--gold)}
+.sql-card.c-purple::after{background:var(--accent2)}
+.sql-eyebrow{font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+             color:var(--dim);margin-bottom:10px}
+.sql-title{font-family:var(--serif);font-size:1.4rem;color:#fff;line-height:1.2;margin-bottom:10px}
+.sql-body{font-size:.85rem;color:var(--dim);line-height:1.65;margin-bottom:16px}
+.sql-snippet{
+  font-family:monospace;font-size:.75rem;
+  background:rgba(0,0,0,.4);border:1px solid var(--border);
+  padding:12px 14px;border-radius:4px;color:#7dd3fc;line-height:1.7;
+  overflow-x:auto;white-space:pre;
+}
+.sql-snippet .kw{color:#c084fc}
+.sql-snippet .fn{color:#86efac}
+.sql-snippet .co{color:#64748b}
+.sql-snippet .st{color:#fbbf24}
+
+/* ── FOOTER ───────────────────────────────────────────────────── */
+footer{background:#020408;border-top:1px solid var(--border);
+       padding:48px min(8vw,100px) 32px;color:var(--dim);font-size:.85rem}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px;margin-bottom:40px}
+@media(max-width:700px){.footer-grid{grid-template-columns:1fr}}
+.footer-brand{font-family:var(--serif);font-size:1.2rem;font-style:italic;
+              color:var(--soil);margin-bottom:10px}
+.footer-desc{font-size:.8rem;line-height:1.65;color:var(--dimmer);max-width:36ch}
+.footer-col h4{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+               color:var(--dimmer);margin-bottom:12px}
+.footer-col a{display:block;color:var(--dim);text-decoration:none;
+              font-size:.82rem;margin-bottom:7px;transition:color .15s}
+.footer-col a:hover{color:var(--soil)}
+.footer-rule{border:none;border-top:1px solid var(--border);margin-bottom:20px}
+.footer-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.78rem;color:var(--dimmer)}
+
+/* ── TICKER ───────────────────────────────────────────────────── */
+.ticker-bar{
+  background:rgba(4,6,12,.95);border-top:1px solid var(--border);
+  height:36px;display:flex;align-items:center;overflow:hidden;
+  position:sticky;bottom:0;z-index:100;
+}
+.ticker-label{
+  flex-shrink:0;padding:0 14px;font-size:9px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.14em;color:var(--soil);
+  border-right:1px solid var(--border);height:100%;display:flex;align-items:center;
+}
+.ticker-scroll{flex:1;overflow:hidden;height:100%}
+.ticker-inner{
+  display:flex;white-space:nowrap;height:100%;align-items:center;
+  animation:tick 80s linear infinite;
+}
+.ticker-inner:hover{animation-play-state:paused}
+.tick-item{padding:0 28px;font-size:10px;color:var(--dim);
+           border-right:1px solid var(--border);height:100%;display:flex;align-items:center;gap:6px}
+.tick-item strong{color:var(--text)}
+.tick-item .ti{font-size:13px}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── UTILITIES ────────────────────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.on{opacity:1;transform:none}
+.maplibregl-ctrl-bottom-right,.maplibregl-ctrl-bottom-left{display:none}
+</style>
+</head>
+<body>
+
+<!-- FIXED NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="index.html">Soil Intelligence</a>
+  <a class="nav-link hot" href="soil-atlas.html">Soil Atlas</a>
+  <a class="nav-link hot2" href="soil-data-stories.html">Data Stories</a>
+  <a class="nav-link" href="https://lab10yr.com/articles/" target="_blank" rel="noopener noreferrer">Articles</a>
+  <a class="nav-link" href="county-report.html" style="color:var(--green);font-weight:700">County Report</a>
+  <a class="nav-link" href="soil-lookup.html" style="color:var(--green);font-weight:700">Site Lookup</a>
+  <a class="nav-link" href="analyze.html" style="color:var(--green);font-weight:700">AOI Analyzer</a>
+  <a class="nav-link" href="data-center-suitability.html" style="color:var(--soil);font-weight:700">Data Centers</a>
+  <a class="nav-link" href="interpretations.html">Interpretations</a>
+  <a class="nav-link" href="services.html" style="color:var(--soil);font-weight:700">Services</a>
+  <a class="nav-link" href="about.html">About</a>
+  <a class="nav-link" href="data-models.html">Data Models</a>
+  <a class="nav-link" href="Regenerative-Agriculture-Risk-Map.html">Regen Ag Map</a>
+  <a class="nav-link" href="carbon-risk-map.html">Carbon Risk</a>
+  <a class="nav-link" href="county-risk-leaderboard.html">Risk Leaderboard</a>
+  <a class="nav-link" href="soil-risk-explorer.html">Risk Explorer</a>
+  <a class="nav-link" href="soil-data-visual-lab.html">Visual Lab</a>
+  <a class="nav-link" href="sql-explorer.html">SQL Explorer</a>
+  <a class="nav-link" href="regen-ag-shape-curves.html">SHAPE Curves</a>
+  <a class="nav-link" href="kssl-lab-data.html">KSSL Lab Data</a>
+  <a class="nav-link" href="soil-application-metrics.html">Soil Metrics</a>
+  <a class="nav-link" href="examples.html">Examples</a>
+  <a class="nav-link" href="governance-status.html">Governance</a>
+  <div class="nav-spacer"></div>
+  <a class="nav-link" href="https://sdmdataaccess.nrcs.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer" style="color:var(--soil)">Run SDA Query</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div id="hero-map"></div>
+  <div class="hero-veil"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">USDA · SSURGO · Soil Data Access</div>
+    <h1 class="hero-h1">America's Soil,<br><strong>Mapped & Queryable</strong></h1>
+    <p class="hero-sub">300,000+ soil components. 3,143 counties. 254 SQL scripts. One open platform connecting the nation's most comprehensive soil database to interactive maps, data journalism, and conservation science.</p>
+    <div class="hero-actions">
+      <a class="btn-hero btn-primary" href="soil-atlas.html">Open Soil Atlas →</a>
+      <a class="btn-hero btn-ghost" href="Regenerative-Agriculture-Risk-Map.html">Regen Ag Risk Map</a>
+      <a class="btn-hero btn-ghost" href="soil-data-stories.html">Read Data Stories</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hs-item">
+      <div class="hs-val" id="cnt1">0<span>K</span></div>
+      <div class="hs-lbl">Soil Components</div>
+      <div class="hs-sub">Mapped across US</div>
+    </div>
+    <div class="hs-item">
+      <div class="hs-val" id="cnt2">0</div>
+      <div class="hs-lbl">Counties Mapped</div>
+      <div class="hs-sub">All 50 states + territories</div>
+    </div>
+    <div class="hs-item">
+      <div class="hs-val" id="cnt3">0</div>
+      <div class="hs-lbl">SQL Scripts</div>
+      <div class="hs-sub">Production-ready</div>
+    </div>
+    <div class="hs-item">
+      <div class="hs-val"><span style="font-size:1.4rem">NV</span> <span style="font-size:.9rem;color:var(--red)">0.50</span></div>
+      <div class="hs-lbl">Most Fragile State</div>
+      <div class="hs-sub">Mean FSI score</div>
+    </div>
+    <div class="hs-item">
+      <div class="hs-val"><span style="font-size:1.4rem">AZ</span> <span style="font-size:.9rem;color:var(--red)">88%</span></div>
+      <div class="hs-lbl">OM Depletion Risk</div>
+      <div class="hs-sub">Highest state mean</div>
+    </div>
+  </div>
+</section>
+
+<!-- APP CARDS -->
+<section class="section darker">
+  <div class="section-inner">
+    <div class="section-eyebrow">Interactive Applications</div>
+    <h2 class="section-h2">Three ways to explore<br><em>the same data</em></h2>
+    <p class="section-lead">From full-screen interactive maps to scroll-driven data journalism, each application reveals a different dimension of the SSURGO soil database.</p>
+    <div class="app-grid">
+      <!-- Regen Ag Map -->
+      <a class="app-card ac-regen" href="Regenerative-Agriculture-Risk-Map.html">
+        <div class="bg"></div>
+        <div class="ac-preview" id="prev-regen"></div>
+        <div class="app-card-inner">
+          <div class="ac-tag">Split-screen comparison map</div>
+          <div class="ac-title">Regenerative Ag Risk Map</div>
+          <div class="ac-desc">Side-by-side county-level Fragile Soil Index vs. Organic Matter Depletion. 3D terrain, PMTiles polygon detail, live SDA queries.</div>
+          <div class="ac-cta">Open Map →</div>
+        </div>
+      </a>
+      <!-- Soil Atlas -->
+      <a class="app-card ac-atlas" href="soil-atlas.html">
+        <div class="bg"></div>
+        <div class="ac-preview" id="prev-atlas"></div>
+        <div class="app-card-inner">
+          <div class="ac-tag">5-mode intelligence explorer</div>
+          <div class="ac-title">Soil Intelligence Explorer</div>
+          <div class="ac-desc">Click any county for animated horizon bars, texture triangle, NCCPI gauge, Munsell colors, and live SDA soil profile. 5 discovery story modes.</div>
+          <div class="ac-cta">Open Atlas →</div>
+        </div>
+      </a>
+      <!-- Data Stories -->
+      <a class="app-card ac-stories" href="soil-data-stories.html">
+        <div class="bg"></div>
+        <div class="ac-preview" id="prev-stories"></div>
+        <div class="app-card-inner">
+          <div class="ac-tag">Scroll-driven data journalism</div>
+          <div class="ac-title">The World Beneath</div>
+          <div class="ac-desc">7 chapters. Soil carbon banks, drought architecture, the fragility crisis, and unexpected science — morel mushrooms, baseball infield soil, karst sinkhole risk, all from real SSURGO data.</div>
+          <div class="ac-cta">Read Stories →</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- DATA VISUALIZATION STRIP -->
+<section class="section dark">
+  <div class="section-inner">
+    <div class="section-eyebrow">Real Data · Right Now</div>
+    <h2 class="section-h2">Three stories from<br><em>real SSURGO data</em></h2>
+    <p class="section-lead">Every number below comes from the SSURGO soil database — aggregated from county surveys across 56 states and territories, queried directly via the SDA REST API.</p>
+    <div class="viz-strip reveal" id="vizStrip">
+
+      <!-- FSI by State -->
+      <div class="viz-panel">
+        <div class="viz-panel-title">Fragile Soil Index — Top 12 States</div>
+        <div class="viz-panel-headline">Nevada leads at 0.50</div>
+        <div class="viz-panel-body">Mean FSI score from soil surveys. Higher = more fragile, more erosion-prone, higher conservation need.</div>
+        <div id="fsi-bars"></div>
+      </div>
+
+      <!-- SOC Horizons -->
+      <div class="viz-panel">
+        <div class="viz-panel-title">Soil Carbon Stock — Dane County WI</div>
+        <div class="viz-panel-headline">3,327 g/m² total profile</div>
+        <div class="viz-panel-body">Horizon-by-horizon organic carbon calculated from OM%, bulk density, thickness, and fragment correction.</div>
+        <div class="hz-mini" id="hz-mini"></div>
+        <div style="margin-top:14px;font-size:10px;color:var(--dimmer)">
+          Formula: <span style="color:var(--soil);font-family:monospace;font-size:9px">(Hz_cm × (OM/1.724 × Db)/100) × (1−frag/100) × compPct</span>
+        </div>
+      </div>
+
+      <!-- Conservation Math -->
+      <div class="viz-panel">
+        <div class="viz-panel-title">Conservation Carbon Math</div>
+        <div class="viz-panel-headline">–0.22 t CO₂eq/acre/yr</div>
+        <div class="viz-panel-body">GHG reduction rates from land management. Land Decisions per year.</div>
+        <div id="prac-bars" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DISCOVERY GRID -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-eyebrow">What the Database Knows</div>
+    <h2 class="section-h2">Unexpected science<br><em>in the SQL scripts</em></h2>
+    <p class="section-lead">254 production SQL scripts span far beyond conventional soil science. These are a few of the stories waiting inside SSURGO.</p>
+    <div class="disc-grid">
+      <div class="disc-item reveal">
+        <span class="disc-icon"></span>
+        <div class="disc-title">Morel Mushroom Habitat</div>
+        <div class="disc-body">Exact soil chemistry — sand, silt, OM, pH, drainage — that predicts where morels fruit. Queryable for any map unit in the US.</div>
+        <div class="disc-data">Sand 30–80% · Silt 30–50%<br>Clay 8–25% · OM 2.8–5%<br>pH 6.0–7.5 · Well drained</div>
+      </div>
+      <div class="disc-item reveal">
+        <span class="disc-icon"></span>
+        <div class="disc-title">Baseball Infield Soil</div>
+        <div class="disc-body">The precise sand content, silt-to-clay ratio, and medium-sand fraction that defines a legal infield mix exists in SSURGO and can be queried nationwide.</div>
+        <div class="disc-data">Sand 60–65% · Silt:Clay 0.75–1<br>Med-sand fraction ≥ 50%</div>
+      </div>
+      <div class="disc-item reveal">
+        <span class="disc-icon"></span>
+        <div class="disc-title">Karst Sinkhole Risk</div>
+        <div class="disc-body">Probability scoring from parent material origin and soil taxonomy. Where limestone dissolves beneath your feet.</div>
+        <div class="disc-data">Residuum limestone = 0.5<br>+ karst local phase = 0.8<br>Rock gypsum / halite = 1.0</div>
+      </div>
+      <div class="disc-item reveal">
+        <span class="disc-icon"></span>
+        <div class="disc-title">NCCPI Food Score</div>
+        <div class="disc-body">The National Commodity Crop Productivity Index scores every soil's ability to grow corn and soybeans from 0–100. The Corn Belt's agricultural destiny, encoded.</div>
+        <div class="disc-data">Fargo Clay ND = 87<br>Arizona desert = 3<br>Range: 0–100 per map unit</div>
+      </div>
+      <div class="disc-item reveal">
+        <span class="disc-icon"></span>
+        <div class="disc-title">Drought Resilience</div>
+        <div class="disc-body">Available Water Storage measures plant-available water held in soil from 0–150 cm depth. The hydraulic buffer that saved crops in 2012.</div>
+        <div class="disc-data">Fine loam: 10.0" (0–150 cm)<br>0–20 cm: 1.6" · 20–50: 2.4"<br>50–100: 3.2" · 100–150: 2.8"</div>
+      </div>
+      <div class="disc-item reveal">
+        <span class="disc-icon"></span>
+        <div class="disc-title">Mollisol Prairies</div>
+        <div class="disc-body">The great dark prairie soils of the Midwest — formed over millennia under native grasslands — hold the world's deepest organic matter profiles. Queryable by taxonomy.</div>
+        <div class="disc-data">taxorder = 'mollisols'<br>majcompflag = 'Yes'<br>22% of US cropland acres</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SQL STORIES -->
+<section class="section darker">
+  <div class="section-inner">
+    <div class="section-eyebrow">SQL as Storytelling</div>
+    <h2 class="section-h2">The queries behind<br><em>the science</em></h2>
+    <p class="section-lead">Every map, chart, and discovery in this project starts as a SQL query against SSURGO's 150+ table schema. These are four of the most powerful.</p>
+    <div class="sql-grid reveal" id="sqlGrid">
+      <div class="sql-card c-red">
+        <div class="sql-eyebrow">Fragile Soil Index · Dominant Condition</div>
+        <div class="sql-title">Which soils are breaking down under management?</div>
+        <div class="sql-body">Returns the dominant condition fragility class per county survey area — the core query behind the Regen Ag Risk Map and Soil Atlas layer 1.</div>
+        <pre class="sql-snippet"><span class="kw">SELECT</span> mu.musym, mu.muname,
+  <span class="co">-- dominant condition fragility class</span>
+  (<span class="kw">SELECT TOP</span> 1 ci.interphrc
+   <span class="kw">FROM</span> component c
+   <span class="kw">INNER JOIN</span> cointerp ci <span class="kw">ON</span> ci.cokey=c.cokey
+   <span class="kw">WHERE</span> ci.mrulename=<span class="st">'Fragile Soil Index'</span>
+     <span class="kw">AND</span> ci.ruledepth=0
+     <span class="kw">AND</span> c.majcompflag=<span class="st">'Yes'</span>
+   <span class="kw">ORDER BY</span> c.comppct_r <span class="kw">DESC</span>) <span class="kw">AS</span> fsi_class
+<span class="kw">FROM</span> legend l
+<span class="kw">INNER JOIN</span> mapunit mu <span class="kw">ON</span> mu.lkey=l.lkey
+<span class="kw">WHERE</span> l.areasymbol=<span class="st">'IA001'</span></pre>
+      </div>
+      <div class="sql-card c-green">
+        <div class="sql-eyebrow">Soil Organic Carbon · Horizon by Horizon</div>
+        <div class="sql-title">Where is the carbon stored — and how deep?</div>
+        <div class="sql-body">The definitive SOC calculation: organic matter converted to carbon via Van Bemmelen factor, weighted by bulk density, horizon thickness, and rock fragment correction.</div>
+        <pre class="sql-snippet"><span class="co">-- SOC per horizon [g/m²]</span>
+<span class="fn">ROUND</span>(
+  (((hzdepb_r - hzdept_r)
+    * ((om_r / 1.724) * dbthirdbar_r))
+   / 100.0)
+  * ((100.0 - fragvol) / 100.0)
+  * (comppct_r * 100), 3
+) <span class="kw">AS</span> HZ_SOC</pre>
+      </div>
+      <div class="sql-card c-gold">
+        <div class="sql-eyebrow">NCCPI · Normalized Productivity Index</div>
+        <div class="sql-title">Which soils feed America — scored 0 to 100?</div>
+        <div class="sql-body">Joins SSURGO cointerp to compute the National Commodity Crop Productivity Index per map unit, normalized within each MLRA using 20 equal productivity breakpoints.</div>
+        <pre class="sql-snippet"><span class="kw">SELECT</span> mu.mukey, mu.muname,
+  (<span class="kw">SELECT MAX</span>(interphr)
+   <span class="kw">FROM</span> component c
+   <span class="kw">INNER JOIN</span> cointerp ci
+     <span class="kw">ON</span> ci.cokey=c.cokey
+   <span class="kw">WHERE</span> ci.mrulename <span class="kw">LIKE</span>
+     <span class="st">'NCCPI%Ver 3.0%'</span>
+     <span class="kw">AND</span> ci.ruledepth=1
+  ) <span class="kw">AS</span> NCCPI_score
+<span class="kw">FROM</span> mapunit mu</pre>
+      </div>
+      <div class="sql-card c-purple">
+        <div class="sql-eyebrow">GHG Reduction · Soil Carbon · Land Use</div>
+        <div class="sql-title">How many tons of CO₂ does land management generally reduce?</div>
+        <div class="sql-body">Joins chorizon emission factors to applied acres by land class — building a county-level GHG ledger tied to soil and land use rather than program tracking.</div>
+        <pre class="sql-snippet"><span class="kw">SELECT</span>
+  land_class,
+  <span class="fn">SUM</span>(Applied_Amount) <span class="kw">AS</span> acres,
+  <span class="fn">SUM</span>(avg_co2_mean * Applied_Amount)
+    <span class="kw">AS</span> total_co2_reduction,
+  <span class="fn">SUM</span>(avg_n2o_mean * Applied_Amount)
+    <span class="kw">AS</span> total_n2o_reduction
+<span class="kw">FROM</span> #chorizon_agg_lite
+<span class="kw">GROUP BY</span> land_class, state_abbr</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONSERVATION PLANNING SCRIPTS -->
+<section class="section" style="background:var(--panel);border-top:1px solid var(--border)">
+  <div class="section-inner">
+    <div class="section-eyebrow">Conservation Planning · CART · CEAP</div>
+    <h2 class="section-h2">Production Planning<br><em>SQL Scripts</em></h2>
+    <p class="section-lead">Full-scale conservation planning queries — CART regenerative ag scoring and CEAP Grazing Lands soil properties — converted to SDA macro syntax and ready to run.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px">
+      <div class="sql-card c-green" style="border-radius:8px">
+        <div class="sql-eyebrow">CART · Generalized Resource Assessment · FY22</div>
+        <div class="sql-title">Regenerative Ag Class Scoring by Landunit</div>
+        <div class="sql-body">CART full query: scores Cropland Regenerative Ag (CS), Organic Matter Depletion (OMD), and Hydric (HYD) indices from SSURGO using pAOI geometry macros — returns Class 1–3 ratings per land unit.</div>
+        <pre class="sql-snippet"><span class="kw">~DeclareGeometry</span>(@aoiGeom)~
+<span class="kw">~DeclareGeometry</span>(@aoiGeomFixed)~
+<span class="kw">~DeclareChar</span>(@attributeName,60)~
+<span class="kw">SELECT</span> LRC.landunit,
+  LRC.attributename <span class="kw">AS</span> rating_name,
+  LRC.rating_value,
+  LRC.rating_class
+<span class="kw">FROM</span> #LandunitRatingsCART</pre>
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+          <a href="sql-explorer.html?q=CART" style="padding:7px 14px;background:var(--green);color:#000;border-radius:5px;font-size:11px;font-weight:700;text-decoration:none">View in Explorer →</a>
+          <a href="https://github.com/jneme910/CART/blob/master/SQL-Library/CART_SoilsQuery_kitchensink_20240925.sql" target="_blank" rel="noopener noreferrer" style="padding:7px 14px;border:1px solid var(--border2);color:var(--dim);border-radius:5px;font-size:11px;font-weight:600;text-decoration:none">Source Repo ↗</a>
+        </div>
+      </div>
+      <div class="sql-card c-gold" style="border-radius:8px">
+        <div class="sql-eyebrow">CEAP Grazing Lands · SDA Macro Syntax</div>
+        <div class="sql-title">Comprehensive Grazing Land Soil Properties</div>
+        <div class="sql-body">CEAP Grazing Lands full query converted to SDA macros — returns surface horizon texture, structure, flooding, water table, restrictions, AWS, and ACPF attributes for a state or survey area.</div>
+        <pre class="sql-snippet"><span class="kw">~DeclareVarchar</span>(@area,20)~
+<span class="kw">~DeclareInt</span>(@domc)~
+<span class="kw">~DeclareInt</span>(@major)~
+<span class="kw">SELECT</span> @area = <span class="st">'AR097'</span>;
+<span class="co">-- 0=dominant, 1=all components</span>
+<span class="kw">SELECT</span> @domc = 1;</pre>
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+          <a href="sql-explorer.html?q=CEAP" style="padding:7px 14px;background:var(--gold);color:#000;border-radius:5px;font-size:11px;font-weight:700;text-decoration:none">View in Explorer →</a>
+          <a href="https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/SQL-Library/CEAP_Grazing.sql" target="_blank" rel="noopener noreferrer" style="padding:7px 14px;border:1px solid var(--border2);color:var(--dim);border-radius:5px;font-size:11px;font-weight:600;text-decoration:none">Source Repo ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="section-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Soil Intelligence</div>
+        <p class="footer-desc">A living SQL library and visualization platform built on USDA SSURGO — America's most comprehensive soil database. Open source, open data.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Applications</h4>
+        <a href="soil-atlas.html">Soil Intelligence Explorer</a>
+        <a href="soil-data-stories.html">The World Beneath (Data Stories)</a>
+        <a href="Regenerative-Agriculture-Risk-Map.html">Regenerative Ag Risk Map</a>
+        <a href="soil-data-visual-lab.html">Visual Lab</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="sql-explorer.html">SQL Explorer (272 scripts)</a>
+        <a href="examples.html">Examples &amp; Guidance</a>
+        <a href="governance-status.html">Governance &amp; CI Status</a>
+        <a href="https://sdmdataaccess.nrcs.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer">SDA Query Interface</a>
+        <a href="https://jneme910.github.io/Soil-Data-Access-Training-Resources/" target="_blank" rel="noopener noreferrer">SDA SQL Training ↗</a>
+        <a href="https://jneme910.github.io/Soil-Data-Access-Training-Resources/soil-model.html" target="_blank" rel="noopener noreferrer">Interactive Data Model ↗</a>
+        <a href="https://github.com/jneme910/NRCS-Soil-Data-Access" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+      </div>
+    </div>
+    <hr class="footer-rule">
+    <div class="footer-bottom">
+      <span>USDA · Soil Data Access · SSURGO · 300,000+ soil components · 56 states &amp; territories</span>
+      <span>© 2026 Jason Nemecek · Soil Data Access Project</span>
+    </div>
+  </div>
+</footer>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-label">Soil Facts</div>
+  <div class="ticker-scroll">
+    <div class="ticker-inner" id="ticker"></div>
+  </div>
+</div>
+
+<script>
+// ── HERO MAP ────────────────────────────────────────────────────────────
+const FIPS_ST = {'01':'AL','02':'AK','04':'AZ','05':'AR','06':'CA','08':'CO','09':'CT','10':'DE','11':'DC','12':'FL','13':'GA','15':'HI','16':'ID','17':'IL','18':'IN','19':'IA','20':'KS','21':'KY','22':'LA','23':'ME','24':'MD','25':'MA','26':'MI','27':'MN','28':'MS','29':'MO','30':'MT','31':'NE','32':'NV','33':'NH','34':'NJ','35':'NM','36':'NY','37':'NC','38':'ND','39':'OH','40':'OK','41':'OR','42':'PA','44':'RI','45':'SC','46':'SD','47':'TN','48':'TX','49':'UT','50':'VT','51':'VA','53':'WA','54':'WV','55':'WI','56':'WY'};
+const STATE_AGG = {"AK":{"fsi":0.118,"om":0.4519},"AL":{"fsi":0.2688,"om":0.7206},"AR":{"fsi":0.2341,"om":0.6987},"AZ":{"fsi":0.4847,"om":0.8809},"CA":{"fsi":0.3826,"om":0.7418},"CO":{"fsi":0.2885,"om":0.6981},"CT":{"fsi":0.2003,"om":0.5224},"DC":{"fsi":0.2669,"om":0.7071},"DE":{"fsi":0.2666,"om":0.6837},"FL":{"fsi":0.158,"om":0.7102},"GA":{"fsi":0.2893,"om":0.7556},"HI":{"fsi":0.213,"om":0.6637},"IA":{"fsi":0.3044,"om":0.6047},"ID":{"fsi":0.2842,"om":0.6401},"IL":{"fsi":0.2996,"om":0.6188},"IN":{"fsi":0.303,"om":0.6198},"KS":{"fsi":0.2808,"om":0.7221},"KY":{"fsi":0.3019,"om":0.6487},"LA":{"fsi":0.2271,"om":0.6592},"MA":{"fsi":0.1488,"om":0.5033},"MD":{"fsi":0.2648,"om":0.673},"ME":{"fsi":0.0982,"om":0.4514},"MI":{"fsi":0.1643,"om":0.595},"MN":{"fsi":0.2513,"om":0.547},"MO":{"fsi":0.2013,"om":0.6257},"MS":{"fsi":0.2815,"om":0.6902},"MT":{"fsi":0.2319,"om":0.641},"NC":{"fsi":0.2945,"om":0.6679},"ND":{"fsi":0.2574,"om":0.5943},"NE":{"fsi":0.2925,"om":0.7102},"NH":{"fsi":0.1564,"om":0.4923},"NJ":{"fsi":0.218,"om":0.6195},"NM":{"fsi":0.3949,"om":0.8035},"NV":{"fsi":0.5013,"om":0.787},"NY":{"fsi":0.1794,"om":0.4606},"OH":{"fsi":0.2674,"om":0.6126},"OK":{"fsi":0.2398,"om":0.7986},"OR":{"fsi":0.2196,"om":0.6188},"PA":{"fsi":0.254,"om":0.582},"RI":{"fsi":0.1725,"om":0.522},"SC":{"fsi":0.3233,"om":0.7353},"SD":{"fsi":0.2609,"om":0.6208},"TN":{"fsi":0.2396,"om":0.6696},"TX":{"fsi":0.2847,"om":0.8333},"UT":{"fsi":0.3886,"om":0.7121},"VA":{"fsi":0.328,"om":0.7034},"VT":{"fsi":0.1735,"om":0.4749},"WA":{"fsi":0.1725,"om":0.6453},"WI":{"fsi":0.2358,"om":0.5939},"WV":{"fsi":0.232,"om":0.6272},"WY":{"fsi":0.3139,"om":0.7}};
+
+function fsiColor(fsi){
+  if(fsi>0.42)return'#7b0007';
+  if(fsi>0.35)return'#f03b20';
+  if(fsi>0.28)return'#fd8d3c';
+  if(fsi>0.22)return'#fecc5c';
+  if(fsi>0.16)return'#78c679';
+  return'#1b7837';
+}
+
+const heroMap = new maplibregl.Map({
+  container:'hero-map',
+  style:'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json',
+  center:[-96,38],zoom:3.3,minZoom:2,maxZoom:8,
+  interactive:false,attributionControl:false
+});
+
+heroMap.on('load',async()=>{
+  // Add terrain
+  heroMap.addSource('terrain',{type:'raster-dem',
+    tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+    encoding:'terrarium',tileSize:256});
+  heroMap.setTerrain({source:'terrain',exaggeration:1.2});
+
+  // Load county TopoJSON and color by state FSI
+  const tr=await fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json');
+  const topo=await tr.json();
+  const gj=topojson.feature(topo,topo.objects.counties);
+  gj.features.forEach(f=>{
+    const fips=f.id?String(f.id).padStart(5,'0'):'';
+    const st=FIPS_ST[fips.slice(0,2)]||'';
+    const d=STATE_AGG[st];
+    f.properties._color=d?fsiColor(d.fsi):'#1a1a30';
+  });
+  heroMap.addSource('counties',{type:'geojson',data:gj});
+  heroMap.addLayer({id:'county-fill',type:'fill',source:'counties',paint:{
+    'fill-color':['get','_color'],'fill-opacity':0.75
+  }});
+  heroMap.addLayer({id:'county-line',type:'line',source:'counties',paint:{
+    'line-color':'rgba(0,0,0,0.25)','line-width':0.4
+  }});
+  heroMap.addSource('labels',{type:'raster',tileSize:256,tiles:[
+    'https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png',
+    'https://b.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png'
+  ]});
+  heroMap.addLayer({id:'labels',type:'raster',source:'labels',paint:{'raster-opacity':0.7}});
+
+  // Gentle fly animation
+  setTimeout(()=>{
+    heroMap.easeTo({center:[-96,38],zoom:4.2,bearing:8,pitch:28,duration:8000,easing:t=>t<0.5?2*t*t:1-2*(1-t)*(1-t)});
+  },1200);
+});
+
+// ── NAV SCROLL BEHAVIOR ─────────────────────────────────────────────────
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
+},{ passive:true });
+
+// ── COUNTERS ────────────────────────────────────────────────────────────
+function animCount(el,target,suffix='',duration=1800){
+  const start=Date.now();
+  function step(){
+    const p=Math.min((Date.now()-start)/duration,1);
+    const ease=1-Math.pow(1-p,3);
+    el.textContent=Math.round(target*ease).toLocaleString()+suffix;
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+const obs=new IntersectionObserver(entries=>{
+  if(!entries[0].isIntersecting)return;
+  obs.disconnect();
+  animCount(document.getElementById('cnt1'),300,'K+');
+  setTimeout(()=>animCount(document.getElementById('cnt2'),3143),200);
+  setTimeout(()=>animCount(document.getElementById('cnt3'),254),400);
+},{ threshold:.3 });
+obs.observe(document.getElementById('cnt1'));
+
+// ── VIZ PANELS ──────────────────────────────────────────────────────────
+const FSI_TOP=[
+  ['NV',0.501],['AZ',0.485],['NM',0.395],['UT',0.389],['CA',0.383],
+  ['VA',0.328],['SC',0.323],['WY',0.314],['IA',0.304],['IN',0.303],
+  ['KY',0.302],['IL',0.300]
+];
+const HZ=[
+  {name:'Ap',depth:'0–18',soc:1874.7,color:'#3d2010'},
+  {name:'Bt1',depth:'18–25',soc:260.4,color:'#5a3820'},
+  {name:'2Bt2',depth:'25–48',soc:374.0,color:'#6b4828'},
+  {name:'3Bt3',depth:'48–89',soc:441.5,color:'#7a5830'},
+  {name:'BC',depth:'89–114',soc:152.2,color:'#8a6840'},
+  {name:'C',depth:'114–150',soc:42.0,color:'#9a7850'},
+];
+const PRACS=[
+  {code:'329',name:'No-Till (329)',rate:0.22},
+  {code:'327',name:'Conserv. Cover (327)',rate:0.20},
+  {code:'340',name:'Cover Crop (340)',rate:0.18},
+  {code:'590',name:'Nutrient Mgmt (590)',rate:0.15},
+  {code:'528',name:'Presc. Grazing (528)',rate:0.12},
+];
+
+const vizObs=new IntersectionObserver(entries=>{
+  if(!entries[0].isIntersecting)return;
+  vizObs.disconnect();
+  entries[0].target.classList.add('on');
+  buildFSIBars();
+  buildHZBars();
+  buildPracBars();
+},{ threshold:.1 });
+vizObs.observe(document.getElementById('vizStrip'));
+
+function buildFSIBars(){
+  const el=document.getElementById('fsi-bars');
+  el.innerHTML=FSI_TOP.map(([st,v])=>`
+    <div class="state-bar-row">
+      <div class="sb-label">${st}</div>
+      <div class="sb-track"><div class="sb-fill" data-w="${Math.round(v/0.501*100)}" style="background:${fsiColor(v)}"></div></div>
+      <div class="sb-val">${v.toFixed(3)}</div>
+    </div>`).join('');
+  setTimeout(()=>el.querySelectorAll('.sb-fill').forEach(b=>b.style.width=b.dataset.w+'%'),50);
+}
+
+function buildHZBars(){
+  const el=document.getElementById('hz-mini');
+  const max=Math.max(...HZ.map(h=>h.soc));
+  el.innerHTML=HZ.map(h=>`
+    <div class="hz-mini-row">
+      <div class="hz-mini-label">${h.name}</div>
+      <div class="hz-mini-bar-wrap">
+        <div class="hz-mini-bar" data-w="${Math.round(h.soc/max*100)}" style="background:${h.color}"></div>
+      </div>
+      <div class="hz-mini-depth">${h.depth} cm</div>
+      <div class="hz-mini-val">${h.soc.toFixed(0)} g/m²</div>
+    </div>`).join('');
+  setTimeout(()=>el.querySelectorAll('.hz-mini-bar').forEach(b=>b.style.width=b.dataset.w+'%'),50);
+}
+
+function buildPracBars(){
+  const el=document.getElementById('prac-bars');
+  const max=0.22;
+  el.innerHTML=PRACS.map(p=>`
+    <div class="prac-row">
+      <div class="prac-name">${p.name}</div>
+      <div class="prac-track"><div class="prac-fill" data-w="${Math.round(p.rate/max*100)}"></div></div>
+      <div class="prac-co2">−${p.rate.toFixed(2)} t</div>
+    </div>`).join('');
+  setTimeout(()=>el.querySelectorAll('.prac-fill').forEach(b=>b.style.width=b.dataset.w+'%'),50);
+}
+
+// ── SCROLL REVEALS ──────────────────────────────────────────────────────
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});
+},{ threshold:.1 });
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+// ── APP CARD CANVAS PREVIEWS ────────────────────────────────────────────
+function drawRegenPreview(){
+  const wrap=document.getElementById('prev-regen');
+  const c=document.createElement('canvas');
+  wrap.appendChild(c);
+  const W=c.width=wrap.offsetWidth||400,H=c.height=wrap.offsetHeight||300;
+  const ctx=c.getContext('2d');
+  const colors=['#1b7837','#78c679','#fecc5c','#fd8d3c','#f03b20','#7b0007'];
+  for(let i=0;i<800;i++){
+    ctx.fillStyle=colors[Math.floor(Math.random()*colors.length)];
+    const x=Math.random()*W,y=Math.random()*H,w=8+Math.random()*24,h=5+Math.random()*14;
+    ctx.globalAlpha=0.25+Math.random()*.4;
+    ctx.fillRect(x,y,w,h);
+  }
+}
+function drawAtlasPreview(){
+  const wrap=document.getElementById('prev-atlas');
+  const c=document.createElement('canvas');
+  wrap.appendChild(c);
+  const W=c.width=wrap.offsetWidth||400,H=c.height=wrap.offsetHeight||300;
+  const ctx=c.getContext('2d');
+  // Draw horizon bars
+  const hzColors=['#2d1a06','#4a3018','#6b4a28','#8b6040','#a07848'];
+  hzColors.forEach((col,i)=>{
+    ctx.fillStyle=col;
+    ctx.globalAlpha=0.6;
+    const y=i*(H/hzColors.length);
+    ctx.fillRect(W*0.1,y,W*0.5*(i*0.15+0.4),H/hzColors.length-2);
+  });
+  // Draw texture triangle hint
+  ctx.strokeStyle='rgba(56,189,248,0.4)';ctx.lineWidth=1;
+  ctx.globalAlpha=0.5;
+  ctx.beginPath();ctx.moveTo(W*.7,H*.1);ctx.lineTo(W*.95,H*.9);ctx.lineTo(W*.45,H*.9);ctx.closePath();ctx.stroke();
+  ctx.beginPath();ctx.arc(W*.72,H*.35,4,0,Math.PI*2);
+  ctx.fillStyle='#38bdf8';ctx.globalAlpha=0.8;ctx.fill();
+}
+function drawStoriesPreview(){
+  const wrap=document.getElementById('prev-stories');
+  const c=document.createElement('canvas');
+  wrap.appendChild(c);
+  const W=c.width=wrap.offsetWidth||400,H=c.height=wrap.offsetHeight||300;
+  const ctx=c.getContext('2d');
+  // Draw bar chart hint
+  const data=[0.501,0.485,0.395,0.389,0.383,0.328,0.323];
+  const bw=Math.floor(W/data.length*0.6);
+  data.forEach((v,i)=>{
+    const x=i*(W/data.length)+W/data.length*0.2;
+    const bh=v/0.501*(H*0.7);
+    const grad=ctx.createLinearGradient(0,H,0,H-bh);
+    grad.addColorStop(0,'rgba(200,168,75,.6)');
+    grad.addColorStop(1,'rgba(239,68,68,.5)');
+    ctx.fillStyle=grad;ctx.globalAlpha=0.7;
+    ctx.fillRect(x,H-bh,bw,bh);
+  });
+}
+window.addEventListener('load',()=>{
+  try{drawRegenPreview();}catch(e){}
+  try{drawAtlasPreview();}catch(e){}
+  try{drawStoriesPreview();}catch(e){}
+});
+
+// ── TICKER ──────────────────────────────────────────────────────────────
+const FACTS=[
+  {i:'',t:'<strong>Morel mushrooms</strong> grow where sand 30–80%, OM 2.8–5%, pH 6–7.5 — queryable in SSURGO for any US map unit'},
+  {i:'',t:'<strong>Baseball infield soil</strong> — 60–65% sand, silt:clay ratio 0.75–1.0 — mapped and queryable across every US survey area'},
+  {i:'',t:'<strong>Fargo Clay (ND)</strong> scores 87 on the NCCPI food productivity index. Arizona desert soils score 3. Geological time in a number.'},
+  {i:'',t:'<strong>Available Water Storage</strong> — fine loam holds 10+ inches plant-available water to 150 cm depth — the drought buffer that saved corn in 2012'},
+  {i:'',t:'<strong>Soil carbon formula:</strong> (OM/1.724 × Db × Hz_cm)/100 × (1−frag/100) × compPct — WI Dane County Ap horizon: 1,874 g/m²'},
+  {i:'',t:'<strong>Karst sinkhole risk</strong> = 0.5 for residuum from limestone; 1.0 for rock gypsum or halite. The probability beneath your feet, in SQL.'},
+  {i:'',t:'<strong>Nevada</strong> has the nation\'s highest mean Fragile Soil Index at 0.50 — half the state\'s soils at the brink of degradation'},
+  {i:'',t:'<strong>Cover Crop (340)</strong> sequesters –0.18 t CO₂eq/acre/yr. No-Till (329) delivers –0.22. Derived from chorizon emission factors by land class.'},
+  {i:'',t:'<strong>Mollisols</strong> — the great prairie soils — cover 22% of US cropland and hold the world\'s deepest organic matter profiles'},
+  {i:'',t:'<strong>KSSL lab data</strong> holds 800,000+ measured samples — pH, CEC, carbon, particle size — waiting to merge with SSURGO field maps'},
+];
+const ticker=document.getElementById('ticker');
+const items=[...FACTS,...FACTS];
+ticker.innerHTML=items.map(f=>`<div class="tick-item"><span class="ti">${f.i}</span><span>${f.t}</span></div>`).join('');
+</script>
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/NRCS-Soil-Data-Access/sw.js',{scope:'/NRCS-Soil-Data-Access/'})
+    .catch(()=>{});
+}
+</script>
+</body>
+</html>

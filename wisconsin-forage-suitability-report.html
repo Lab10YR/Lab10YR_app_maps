@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="canonical" href="https://lab10yr.com/wisconsin-forage-suitability-report">
+  <title>Wisconsin Forage Suitability Group Guide</title>
+  <style>
+    :root {
+      --bg:#04060c; --panel:#0a0e1a; --panel2:#111625; --panel3:#181e30;
+      --border:#1e2640; --text:#d4daf0; --dim:#5a6490; --accent:#38bdf8;
+      --soil:#c8a84b; --green:#22c55e; --red:#ef4444;
+      --font:'Inter',system-ui,sans-serif; --serif:Georgia,serif;
+      --blue:#38bdf8; --blue2:#0ea5d6; --gray:#1e2640; --light:#04060c;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:var(--font); background:var(--bg); color:var(--text); }
+    .header { background:linear-gradient(135deg,#0a1628 0%,#0a0e1a 100%); color:var(--text); padding:2rem; border-bottom:1px solid var(--border); }
+    .header h1 { margin:0 0 .5rem; font-size:2.2rem; color:var(--text); }
+    .header p { color:var(--dim); margin:.25rem 0 0; }
+    .container { max-width:1400px; margin:0 auto; padding:0 1.5rem; }
+    .section { background:var(--panel); margin:1.5rem 0; padding:1.5rem; border-radius:8px; border:1px solid var(--border); }
+    .control-group { display:flex; flex-wrap:wrap; align-items:center; gap:.75rem; }
+    label { font-weight:700; color:var(--accent); }
+    select { padding:.6rem .8rem; border:1px solid var(--border); border-radius:6px; font-size:1rem; background:var(--panel2); color:var(--text); }
+    select option { background:var(--panel2); color:var(--text); }
+    .btn { padding:.6rem .9rem; border:1px solid var(--border); border-radius:6px; background:var(--panel2); color:var(--accent); cursor:pointer; }
+    .btn:hover { background:var(--panel3); }
+    .btn.disabled { opacity:.55; cursor:not-allowed; }
+    .status { margin-top:.75rem; padding:.6rem .9rem; background:#0a1220; color:var(--accent); border-left:5px solid var(--accent); border-radius:6px; display:none; }
+    .table-wrapper { margin-top:1rem; border:1px solid var(--border); border-radius:8px; overflow:auto; background:var(--panel); }
+    table { width:100%; border-collapse:collapse; font-size:1rem; }
+    thead { background:var(--panel2); color:var(--text); }
+    th, td { padding:.75rem .6rem; border-bottom:1px solid var(--border); text-align:left; color:var(--text); }
+    th { position:relative; user-select:none; cursor:pointer; background:var(--panel2); color:var(--text); }
+    th .sort-ind { position:absolute; right:.6rem; top:50%; transform:translateY(-50%); font-size:.9rem; opacity:.85; }
+    tbody tr:nth-child(odd){ background:var(--panel); }
+    tbody tr:nth-child(even){ background:var(--panel2); }
+    tbody tr:hover { background:var(--panel3); }
+    .hint { color:var(--dim); }
+    .divider { flex: 0 0 1px; align-self: stretch; background:var(--border); margin:0 .25rem; }
+  </style>
+</head>
+<body>
+<nav style="position:sticky;top:0;z-index:500;height:46px;background:rgba(4,6,12,.97);
+     border-bottom:1px solid #1e2640;backdrop-filter:blur(14px);
+     display:flex;align-items:center;padding:0 24px;gap:8px;overflow-x:auto">
+  <a href="index.html" style="font-family:Georgia,serif;font-size:13px;font-style:italic;
+     color:#c8a84b;font-weight:700;text-decoration:none;flex-shrink:0;margin-right:8px">Soil Intelligence</a>
+  <a href="index.html" style="font-size:11px;color:#5a6490;text-decoration:none;padding:0 8px;white-space:nowrap">Home</a>
+  <a href="soil-atlas.html" style="font-size:11px;color:#22c55e;font-weight:700;text-decoration:none;padding:0 8px;white-space:nowrap">Soil Atlas</a>
+  <a href="sql-explorer.html" style="font-size:11px;color:#5a6490;text-decoration:none;padding:0 8px;white-space:nowrap">SQL Explorer</a>
+  <a href="data-models.html" style="font-size:11px;color:#5a6490;text-decoration:none;padding:0 8px;white-space:nowrap">Data Models</a>
+  <a href="soil-data-stories.html" style="font-size:11px;color:#38bdf8;font-weight:700;text-decoration:none;padding:0 8px;white-space:nowrap">Data Stories</a>
+</nav>
+  <div class="header">
+    <div class="container">
+      <h1>Wisconsin Forage Suitability Group Guide</h1>
+      <p>Pasture and Hayland Soil Interpretations</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="section">
+      <div class="control-group">
+        <label for="selectId1">Select a Soil Survey Area:</label>
+        <select id="selectId1">
+          <option value="" hidden>(select a Soil Survey Area)</option>
+        </select>
+
+        <span class="divider"></span>
+
+        <!-- Major Component filter -->
+        <label for="majFilter">Major Component:</label>
+        <select id="majFilter" disabled>
+          <option value="ALL">All</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+
+        <span class="divider"></span>
+
+        <button id="exportExcelBtn" class="btn disabled" disabled>Export to Excel (XLS)</button>
+        <button id="exportCsvBtn"  class="btn disabled" disabled>Export CSV</button>
+      </div>
+
+      <div id="selectedStateId" class="status"><span id="stateText"></span></div>
+      <div id="id1" class="table-wrapper"></div>
+      <div id="emptyMsg" class="hint" style="display:none; padding:.75rem 0;">No data available for this survey area.</div>
+    </div>
+  </div>
+
+  <script>
+    const SDA_URL = "https://sdmdataaccess.sc.egov.usda.gov/tabular/post.rest";
+    let headers = [], fullRows = [], rows = [], sortState = {}, majIdx = -1;
+    let currentAreaName = '', currentAreaSymbol = '';
+
+    const qs = (sel, root=document) => root.querySelector(sel);
+    const safeFilePart = s => String(s || '').replace(/[\\/:*?"<>|]/g, '_');
+    const isNumeric = v => v !== null && v !== undefined && /^-?\d+(\.\d+)?$/.test(String(v).trim());
+    const normFlag = v => {
+      const s = String(v ?? '').trim().toLowerCase();
+      if (['y','yes','true','1','t'].includes(s)) return 'Yes';
+      if (['n','no','false','0','f'].includes(s)) return 'No';
+      return '';
+    };
+    const compareVals = (a,b,asc=true) => {
+      let cmp;
+      if (isNumeric(a)&&isNumeric(b)) cmp=parseFloat(a)-parseFloat(b);
+      else cmp=String(a??'').localeCompare(String(b??''),undefined,{numeric:true,sensitivity:'base'});
+      return asc?cmp:-cmp;
+    };
+
+    function enableExports(){qs('#exportExcelBtn').disabled=false;qs('#exportCsvBtn').disabled=false;qs('#exportExcelBtn').classList.remove('disabled');qs('#exportCsvBtn').classList.remove('disabled');}
+    function disableExports(){qs('#exportExcelBtn').disabled=true;qs('#exportCsvBtn').disabled=true;qs('#exportExcelBtn').classList.add('disabled');qs('#exportCsvBtn').classList.add('disabled');}
+
+    async function sdaPost(sql,format="json"){const body=new URLSearchParams({query:sql,format});const res=await fetch(SDA_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});if(!res.ok)throw new Error(`SDA HTTP ${res.status}`);return res.json();}
+
+    function applyFilterAndSort(){
+      const filterVal=qs('#majFilter').value;
+      let base=fullRows.slice();
+      if(majIdx>=0){
+        if(filterVal==='Yes'||filterVal==='No'){base=base.filter(r=>normFlag(r[majIdx])===filterVal);}
+        else if(filterVal==='YN'){base=base.filter(r=>['Yes','No'].includes(normFlag(r[majIdx])));}
+      }
+      const col=Object.keys(sortState)[0];
+      if(col!==undefined){const cIdx=parseInt(col,10);const dir=sortState[cIdx]==='asc';base.sort((r1,r2)=>compareVals(r1[cIdx],r2[cIdx],dir));}
+      rows=base;
+    }
+
+    function buildTable(container){
+      container.innerHTML='';
+      const tbl=document.createElement('table');tbl.id='dataTable';
+      const thead=document.createElement('thead');const thr=document.createElement('tr');
+      headers.forEach((h,idx)=>{
+        const th=document.createElement('th');th.textContent=h;
+        const ind=document.createElement('span');ind.className='sort-ind';ind.textContent=sortState[idx]==='asc'?'▲':(sortState[idx]==='desc'?'▼':'');
+        th.appendChild(ind);
+        th.addEventListener('click',()=>{const next=sortState[idx]==='asc'?'desc':'asc';sortState={};sortState[idx]=next;applyFilterAndSort();buildTable(container);});
+        thr.appendChild(th);
+      });
+      thead.appendChild(thr);tbl.appendChild(thead);
+      const tbody=document.createElement('tbody');
+      for(const r of rows){const tr=document.createElement('tr');for(const cell of r){const td=document.createElement('td');td.textContent=cell??'';tr.appendChild(td);}tbody.appendChild(tr);}
+      tbl.appendChild(tbody);container.appendChild(tbl);
+    }
+
+    function exportXLS(){
+      if(!rows.length)return;
+      const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      let xml='<?xml version="1.0"?>\n<?mso-application progid="Excel.Sheet"?>\n<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="FSG"><Table>';
+      xml+='<Row>'+headers.map(h=>`<Cell><Data ss:Type="String">${esc(h)}</Data></Cell>`).join('')+'</Row>';
+      for(const r of rows){xml+='<Row>'+r.map(v=>`<Cell><Data ss:Type="${isNumeric(v)?'Number':'String'}">${esc(v)}</Data></Cell>`).join('')+'</Row>';}
+      xml+='</Table></Worksheet></Workbook>';
+      const filename=`FSG_${safeFilePart(currentAreaName||currentAreaSymbol||'WI')}_${new Date().toISOString().slice(0,10)}.xls`;
+      const blob=new Blob([xml],{type:'application/vnd.ms-excel'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(a.href),0);
+    }
+
+    function exportCSV(){
+      if(!rows.length)return;
+      const escCSV=s=>{if(s==null)return'';s=String(s);return /[",\r\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;};
+      const lines=[];lines.push(headers.map(escCSV).join(','));for(const r of rows)lines.push(r.map(escCSV).join(','));
+      const csv=lines.join('\r\n');const filename=`FSG_${safeFilePart(currentAreaName||currentAreaSymbol||'WI')}_${new Date().toISOString().slice(0,10)}.csv`;
+      const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(a.href),0);
+    }
+
+    document.addEventListener('DOMContentLoaded',async()=>{
+      try{
+        const sqlSSA="SELECT distinct c.areaname, c.areasymbol FROM [dbo].[sastatusmap] c, [dbo].[saspatialver] s WHERE s.areasymbol=c.areasymbol AND c.areasymbol IN (SELECT DISTINCT l.areasymbol FROM [dbo].[legend] l,[dbo].[laoverlap] o WHERE o.lkey=l.lkey AND o.areatypename='State or Territory' AND o.areasymbol='WI') order by c.areaname,c.areasymbol;";
+        const result=await sdaPost(sqlSSA,"json");const table=result.Table||[];const sel=qs('#selectId1');sel.innerHTML='<option value="" hidden>(select a Soil Survey Area)</option>';
+        for(const row of table){const opt=document.createElement('option');opt.value=row[1];opt.textContent=row[0];sel.appendChild(opt);}
+        sel.addEventListener('change',async e=>{
+          const stateId=e.target.value;currentAreaName=e.target.options[e.target.selectedIndex]?.text||'';currentAreaSymbol=stateId||'';
+          const status=qs('#selectedStateId');const statusText=qs('#stateText');const tableWrap=qs('#id1');const emptyMsg=qs('#emptyMsg');const majFilter=qs('#majFilter');
+          if(!stateId){status.style.display='none';tableWrap.innerHTML='';emptyMsg.style.display='none';majFilter.disabled=true;majFilter.value='ALL';rows=[];fullRows=[];headers=[];majIdx=-1;sortState={};disableExports();return;}
+          statusText.textContent=`Selected: ${currentAreaName}`;status.style.display='block';
+          const sqlData="SELECT mapunit.muname AS [Mapunit Name], mapunit.musym, compname AS [Component Name], comppct_r, c.majcompflag, ecoclassid, ecoclassname, mapunit.mukey FROM legend INNER JOIN mapunit ON legend.lkey=mapunit.lkey AND legend.areasymbol='"+stateId+"' INNER JOIN component AS c ON c.mukey=mapunit.mukey LEFT OUTER JOIN (SELECT coecoclass.cokey, coecoclass.ecoclassid, ecoclassname, ROW_NUMBER() OVER (PARTITION BY coecoclass.cokey ORDER BY CASE WHEN ecoclassid LIKE '%WI%' THEN 1 ELSE 2 END, coecoclass.cokey) AS rn FROM component INNER JOIN coecoclass ON coecoclass.cokey=component.cokey AND CASE WHEN ecoclassid LIKE '%WI%' THEN 1 ELSE 2 END=1 AND ecoclasstypename='Forage Suitability Groups') AS f ON f.cokey=c.cokey AND f.rn=1 ORDER BY mapunit.muname ASC,mapunit.mukey,comppct_r DESC,compname,c.cokey";
+          try{
+            const result2=await sdaPost(sqlData,"json+columnname");const tbl=result2.Table||[];
+            if(!tbl.length){tableWrap.innerHTML='';emptyMsg.style.display='block';majFilter.disabled=true;majFilter.value='ALL';rows=[];fullRows=[];headers=[];majIdx=-1;sortState={};disableExports();return;}
+            headers=tbl[0];fullRows=tbl.slice(1).map(r=>r.map(v=>v===null?'':v));rows=fullRows.slice();sortState={};
+            majIdx=headers.findIndex(h=>String(h).toLowerCase().includes('majcompflag'));majFilter.disabled=majIdx>=0?false:true;majFilter.value='ALL';
+            applyFilterAndSort();buildTable(tableWrap);emptyMsg.style.display='none';enableExports();
+          }catch(err){console.error(err);tableWrap.innerHTML='';emptyMsg.style.display='block';majFilter.disabled=true;majFilter.value='ALL';rows=[];fullRows=[];headers=[];majIdx=-1;sortState={};disableExports();}
+        });
+        qs('#majFilter').addEventListener('change',()=>{applyFilterAndSort();buildTable(qs('#id1'));});
+        qs('#exportExcelBtn').addEventListener('click',exportXLS);
+        qs('#exportCsvBtn').addEventListener('click',exportCSV);
+      }catch(err){console.error(err);disableExports();}
+    });
+  </script>
+</body>
+</html>

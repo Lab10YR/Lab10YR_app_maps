@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="canonical" href="https://lab10yr.com/county-risk-leaderboard">
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="Lab10YR">
+<meta property="og:title"       content="America's 100 Most At-Risk Counties — Soil Intelligence">
+<meta property="og:description" content="The counties with the highest combined Fragile Soil Index and Organic Matter Depletion risk, ranked from 4,089 US soil survey areas.">
+<meta property="og:url"         content="https://lab10yr.com/county-risk-leaderboard.html">
+<meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="America's 100 Most At-Risk Counties — Soil Intelligence">
+<meta name="twitter:description" content="The counties with the highest combined Fragile Soil Index and Organic Matter Depletion risk, ranked from 4,089 US soil survey areas.">
+<title>America's 100 Most At-Risk Counties · Soil Intelligence</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#0d1220;--border:#1e2640;
+  --text:#d4daf0;--dim:#8892b0;--dimmer:#4a5270;
+  --accent:#38bdf8;--accent2:#7c3aed;--green:#22c55e;--red:#ef4444;
+  --soil:#c8a84b;--font:'Inter',system-ui,sans-serif;
+  --shadow:0 8px 24px rgba(0,0,0,.6)
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* NAV */
+nav{background:rgba(4,6,12,.97);border-bottom:1px solid var(--border);
+    padding:0 20px;height:48px;display:flex;align-items:center;gap:16px;
+    position:sticky;top:0;z-index:100}
+.nav-logo{font-weight:800;font-size:14px;color:#fff;white-space:nowrap}
+.nav-logo em{color:var(--soil);font-style:normal}
+.nav-links{display:flex;gap:12px;margin-left:auto}
+.nav-links a{font-size:11px;font-weight:600;color:var(--dim);transition:color .15s}
+.nav-links a:hover{color:var(--text);text-decoration:none}
+
+/* HERO */
+.hero{padding:48px 24px 36px;max-width:960px;margin:0 auto}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+         color:var(--soil);margin-bottom:10px}
+h1{font-size:clamp(22px,4vw,36px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px}
+h1 em{color:var(--red);font-style:normal}
+.lead{font-size:14px;color:var(--dim);max-width:640px;line-height:1.7;margin-bottom:20px}
+.hero-stats{display:flex;gap:24px;flex-wrap:wrap}
+.hstat{background:var(--panel);border:1px solid var(--border);border-radius:8px;
+       padding:12px 18px;min-width:120px}
+.hstat-n{font-size:22px;font-weight:800;color:var(--accent)}
+.hstat-l{font-size:10px;color:var(--dim);margin-top:2px}
+
+/* CONTROLS */
+.controls{max-width:960px;margin:0 auto;padding:0 24px 16px;
+          display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.filter-input{background:var(--panel2);border:1px solid var(--border);color:var(--text);
+              border-radius:6px;padding:7px 12px;font-size:12px;width:220px;
+              font-family:var(--font);outline:none}
+.filter-input:focus{border-color:var(--accent)}
+.filter-input::placeholder{color:var(--dimmer)}
+.state-sel{background:var(--panel2);border:1px solid var(--border);color:var(--text);
+           border-radius:6px;padding:7px 10px;font-size:12px;font-family:var(--font);
+           cursor:pointer;outline:none}
+.state-sel:focus{border-color:var(--accent)}
+.ctl-label{font-size:11px;color:var(--dim)}
+#row-count-label{font-size:11px;color:var(--dimmer);margin-left:auto}
+
+/* TABLE */
+.tbl-wrap{max-width:960px;margin:0 auto 40px;padding:0 24px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{
+  background:var(--panel);border-bottom:2px solid var(--border);
+  padding:9px 10px;text-align:left;font-size:10px;font-weight:800;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--dim);
+  cursor:pointer;user-select:none;white-space:nowrap;position:sticky;top:48px
+}
+thead th:hover{color:var(--text)}
+thead th.sort-asc::after{content:' ▲';color:var(--accent)}
+thead th.sort-desc::after{content:' ▼';color:var(--accent)}
+tbody tr{border-bottom:1px solid rgba(30,38,64,.6);transition:background .1s}
+tbody tr:hover{background:rgba(56,189,248,.04)}
+td{padding:8px 10px;vertical-align:middle}
+.rank{color:var(--dimmer);font-weight:700;font-size:11px;min-width:28px}
+.top10 .rank{color:var(--red);font-weight:900}
+.county-name{color:var(--text);font-weight:600;max-width:240px;white-space:nowrap;
+             overflow:hidden;text-overflow:ellipsis}
+.state-badge{display:inline-block;background:var(--panel2);border:1px solid var(--border);
+             border-radius:3px;padding:1px 6px;font-size:10px;font-weight:700;
+             color:var(--dim);margin-left:6px}
+.chip{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700}
+.score-cell{min-width:130px}
+.score-val{font-weight:700;color:var(--text);font-size:12px;margin-bottom:3px}
+.score-bar-bg{background:var(--panel2);border-radius:2px;height:4px;overflow:hidden}
+.score-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--red))}
+.fsi-val{color:var(--dim);font-size:11px}
+.om-val{color:var(--dim);font-size:11px}
+
+/* MAP LINK */
+.map-link{font-size:10px;color:var(--accent);display:inline-block;margin-top:2px;opacity:.7}
+.map-link:hover{opacity:1;text-decoration:none}
+
+/* FOOTER */
+footer{text-align:center;padding:24px;color:var(--dimmer);font-size:11px;
+       border-top:1px solid var(--border);margin-top:20px}
+
+/* FSI color map */
+.c-nf{color:#1b7837}.c-sf{color:#78c679}.c-mf{color:#fecc5c}
+.c-f{color:#fd8d3c}.c-hf{color:#f03b20}.c-ef{color:#bd0026}.c-vhf{color:#7b0000}
+.c-ol{color:#22c55e}.c-oml{color:#78c679}.c-om{color:#fecc5c}
+.c-omh{color:#f03b20}.c-oh{color:#7b0007}.c-nd{color:#555566}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><em>Soil</em> Intelligence</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="Regenerative-Agriculture-Risk-Map.html">Risk Map</a>
+    <a href="soil-data-stories.html">Data Stories</a>
+    <a href="https://lab10yr.com/articles/" target="_blank" rel="noopener noreferrer">Articles</a>
+    <a href="sql-explorer.html">SQL Explorer</a>
+    <a href="data-models.html">Data Models</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">SSURGO National Analysis · 4,089 Survey Areas</div>
+  <h1>America's <em>100 Most At-Risk</em> Counties</h1>
+  <p class="lead">Ranked by combined Fragile Soil Index and Organic Matter Depletion risk score from 967,000+ SSURGO map unit interpretations. Updated weekly from the USDA Soil Data Access API.</p>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-n" id="hs-counties">—</div><div class="hstat-l">Counties ranked</div></div>
+    <div class="hstat"><div class="hstat-n" id="hs-top-state">—</div><div class="hstat-l">Most at-risk state</div></div>
+    <div class="hstat"><div class="hstat-n" id="hs-avg-fsi">—</div><div class="hstat-l">Avg FSI (top 100)</div></div>
+    <div class="hstat"><div class="hstat-n" id="hs-avg-om">—</div><div class="hstat-l">Avg OM depletion</div></div>
+  </div>
+</div>
+
+<div class="controls">
+  <input class="filter-input" id="filter-input" placeholder="Filter by county name…" oninput="applyFilters()">
+  <select class="state-sel" id="state-sel" onchange="applyFilters()">
+    <option value="">All states</option>
+  </select>
+  <span class="ctl-label">Show top</span>
+  <select class="state-sel" id="n-sel" onchange="applyFilters()">
+    <option value="100" selected>100</option>
+    <option value="250">250</option>
+    <option value="500">500</option>
+    <option value="all">All</option>
+  </select>
+  <span id="row-count-label"></span>
+</div>
+
+<div class="tbl-wrap">
+  <table id="risk-table">
+    <thead>
+      <tr>
+        <th onclick="sortBy('rank')"    data-col="rank">Rank</th>
+        <th onclick="sortBy('name')"    data-col="name">County / Survey Area</th>
+        <th onclick="sortBy('state')"   data-col="state">State</th>
+        <th onclick="sortBy('fsi')"     data-col="fsi">FSI Class</th>
+        <th onclick="sortBy('fsi_val')" data-col="fsi_val">FSI Score</th>
+        <th onclick="sortBy('om')"      data-col="om">OM Class</th>
+        <th onclick="sortBy('om_val')"  data-col="om_val">OM Score</th>
+        <th onclick="sortBy('score')"   data-col="score" class="sort-desc">Combined Risk ▼</th>
+      </tr>
+    </thead>
+    <tbody id="risk-tbody"></tbody>
+  </table>
+  <div id="loading-msg" style="text-align:center;padding:40px;color:var(--dim)">Loading soil data…</div>
+</div>
+
+<footer>
+  Data: USDA SSURGO via <a href="https://sdmdataaccess.sc.egov.usda.gov/" target="_blank" rel="noopener noreferrer">Soil Data Access</a> ·
+  Interpretations: Fragile Soil Index &amp; SOH - Organic Matter Depletion ·
+  <a href="Regenerative-Agriculture-Risk-Map.html">View on Map</a>
+</footer>
+
+<script>
+const INTERP_URL = 'data/interp_data.json';
+const FIPS_TO_STATE = {
+  '01':'AL','02':'AK','04':'AZ','05':'AR','06':'CA','08':'CO','09':'CT',
+  '10':'DE','11':'DC','12':'FL','13':'GA','15':'HI','16':'ID','17':'IL',
+  '18':'IN','19':'IA','20':'KS','21':'KY','22':'LA','23':'ME','24':'MD',
+  '25':'MA','26':'MI','27':'MN','28':'MS','29':'MO','30':'MT','31':'NE',
+  '32':'NV','33':'NH','34':'NJ','35':'NM','36':'NY','37':'NC','38':'ND',
+  '39':'OH','40':'OK','41':'OR','42':'PA','44':'RI','45':'SC','46':'SD',
+  '47':'TN','48':'TX','49':'UT','50':'VT','51':'VA','53':'WA','54':'WV',
+  '55':'WI','56':'WY','60':'AS','66':'GU','72':'PR','78':'VI'
+};
+const FSI_CLS_ORDER = ['Not fragile','Slightly fragile','Moderately fragile','Fragile','Highly fragile','Extremely fragile','Very highly fragile'];
+const OM_CLS_ORDER  = ['OM depletion low','OM depletion moderately low','OM depletion moderate','OM depletion moderately high','OM depletion high'];
+const FSI_COLOR = {
+  'Not fragile':'#1b7837','Slightly fragile':'#78c679','Moderately fragile':'#fecc5c',
+  'Fragile':'#fd8d3c','Highly fragile':'#f03b20','Extremely fragile':'#bd0026',
+  'Very highly fragile':'#7b0000'
+};
+const OM_COLOR = {
+  'OM depletion low':'#22c55e','OM depletion moderately low':'#78c679',
+  'OM depletion moderate':'#fecc5c','OM depletion moderately high':'#f03b20',
+  'OM depletion high':'#7b0007','Not rated':'#555566'
+};
+
+let allCounties = [];
+let sortCol = 'score', sortDir = -1;
+
+function chip(label, colorMap) {
+  const col = colorMap[label] || '#555566';
+  return `<span class="chip" style="background:${col}22;color:${col};border:1px solid ${col}44">${label||'No data'}</span>`;
+}
+
+function renderTable(rows) {
+  const max = rows.reduce((m,r)=>Math.max(m,r.score),0);
+  const tbody = document.getElementById('risk-tbody');
+  tbody.innerHTML = rows.map((r,i)=>`
+    <tr class="${i<10?'top10':''}">
+      <td><span class="rank">${r.origRank}</span></td>
+      <td>
+        <div class="county-name" title="${r.name}">${r.name}</div>
+        <a class="map-link" href="Regenerative-Agriculture-Risk-Map.html#z=9&lat=${r.lat||38}&lng=${r.lng||-96}" target="_blank" rel="noopener noreferrer">↗ View on map</a>
+      </td>
+      <td><span class="state-badge">${r.state}</span></td>
+      <td>${chip(r.fc,FSI_COLOR)}</td>
+      <td class="fsi-val">${r.fsi.toFixed(3)}</td>
+      <td>${chip(r.oc,OM_COLOR)}</td>
+      <td class="om-val">${r.om.toFixed(3)}</td>
+      <td class="score-cell">
+        <div class="score-val">${r.score.toFixed(3)}</div>
+        <div class="score-bar-bg"><div class="score-bar" style="width:${(r.score/max*100).toFixed(1)}%"></div></div>
+      </td>
+    </tr>`).join('');
+  document.getElementById('row-count-label').textContent = `${rows.length.toLocaleString()} counties shown`;
+}
+
+function applyFilters() {
+  const txt = document.getElementById('filter-input').value.toLowerCase();
+  const st  = document.getElementById('state-sel').value;
+  const nRaw = document.getElementById('n-sel').value;
+  const n   = nRaw === 'all' ? Infinity : +nRaw;
+
+  let rows = [...allCounties];
+  if (txt) rows = rows.filter(r => r.name.toLowerCase().includes(txt) || r.fips.includes(txt));
+  if (st)  rows = rows.filter(r => r.state === st);
+  rows = sortRows(rows).slice(0, n);
+  renderTable(rows);
+}
+
+function sortRows(rows) {
+  return [...rows].sort((a,b) => {
+    let av = a[sortCol] ?? '', bv = b[sortCol] ?? '';
+    if (typeof av === 'string') return sortDir * av.localeCompare(bv);
+    return sortDir * (av - bv);
+  });
+}
+
+function sortBy(col) {
+  if (sortCol === col) sortDir *= -1;
+  else { sortCol = col; sortDir = -1; }
+  document.querySelectorAll('thead th').forEach(th => {
+    th.classList.remove('sort-asc','sort-desc');
+    if (th.dataset.col === col) th.classList.add(sortDir === -1 ? 'sort-desc' : 'sort-asc');
+  });
+  applyFilters();
+}
+
+async function init() {
+  try {
+    const resp = await fetch(INTERP_URL);
+    const data = await resp.json();
+    const counties = [];
+    for (const [fips, v] of Object.entries(data)) {
+      if (!(fips.match(/^\d{5}$/))) continue;
+      if (!(v.fv && v.ov)) continue;
+      const state = FIPS_TO_STATE[fips.slice(0,2)] || '??';
+      counties.push({
+        fips, state,
+        name:  v.name || fips,
+        fc:    v.fc || '',
+        fsi:   +v.fv,
+        oc:    v.oc || '',
+        om:    +v.ov,
+        score: (+v.fv * 0.5 + +v.ov * 0.5),
+      });
+    }
+    counties.sort((a,b) => b.score - a.score);
+    counties.forEach((c,i) => { c.origRank = i+1; c.rank = i+1; c.fsi_val = c.fsi; c.om_val = c.om; });
+    allCounties = counties;
+
+    document.getElementById('loading-msg').style.display = 'none';
+
+    // Hero stats
+    document.getElementById('hs-counties').textContent = counties.length.toLocaleString();
+    const top100 = counties.slice(0,100);
+    const stateCounts = {};
+    top100.forEach(c => stateCounts[c.state] = (stateCounts[c.state]||0)+1);
+    const topState = Object.entries(stateCounts).sort((a,b)=>b[1]-a[1])[0];
+    document.getElementById('hs-top-state').textContent = topState ? `${topState[0]} (${topState[1]})` : '—';
+    document.getElementById('hs-avg-fsi').textContent = (top100.reduce((s,c)=>s+c.fsi,0)/top100.length).toFixed(3);
+    document.getElementById('hs-avg-om').textContent  = (top100.reduce((s,c)=>s+c.om,0)/top100.length).toFixed(3);
+
+    // Populate state filter
+    const states = [...new Set(counties.map(c=>c.state))].sort();
+    const sel = document.getElementById('state-sel');
+    states.forEach(st => { const o=document.createElement('option'); o.value=st; o.textContent=st; sel.appendChild(o); });
+
+    // Preselect state from ?state= URL param (linked from cartogram)
+    const urlState = new URLSearchParams(location.search).get('state');
+    if (urlState && states.includes(urlState)) sel.value = urlState;
+
+    applyFilters();
+  } catch(e) {
+    document.getElementById('loading-msg').textContent = `Error loading data: ${e.message}`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>

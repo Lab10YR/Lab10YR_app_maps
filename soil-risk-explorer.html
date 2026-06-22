@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="canonical" href="https://lab10yr.com/soil-risk-explorer">
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="Lab10YR">
+<meta property="og:title"       content="Soil Risk Explorer — Linked Scatter & Map">
+<meta property="og:description" content="Brush the FSI × OM scatter plot to highlight matching counties on the national map. Find the crisis zone where fragile soils and organic matter loss collide.">
+<meta property="og:url"         content="https://lab10yr.com/soil-risk-explorer.html">
+<meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
+<title>Soil Risk Explorer · Soil Intelligence</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#0d1220;--border:#1e2640;
+  --text:#d4daf0;--dim:#8892b0;--dimmer:#4a5270;
+  --accent:#38bdf8;--green:#22c55e;--red:#ef4444;--soil:#c8a84b;
+  --font:'Inter',system-ui,sans-serif;--hdr:48px
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow:hidden}
+
+/* NAV */
+#hdr{
+  height:var(--hdr);background:rgba(4,6,12,.97);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 14px;gap:10px;flex-shrink:0;z-index:200;
+  position:relative
+}
+.nav-logo{font-weight:800;font-size:13px;color:#fff}
+.nav-logo em{color:var(--soil);font-style:normal}
+.nav-sep{width:1px;height:22px;background:var(--border);flex-shrink:0}
+.hdr-title{font-size:12px;font-weight:700;color:var(--text)}
+.hdr-sub{font-size:10px;color:var(--dim);margin-left:4px}
+.hdr-pill{
+  padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;
+  border:1px solid var(--border);color:var(--dim);cursor:pointer;transition:all .15s;
+  white-space:nowrap
+}
+.hdr-pill:hover{border-color:var(--accent);color:var(--accent)}
+.hdr-pill.active{background:var(--accent);color:#000;border-color:var(--accent)}
+#sel-count{font-size:11px;color:var(--accent);min-width:120px}
+#clear-btn{
+  padding:4px 12px;font-size:11px;font-weight:700;background:rgba(239,68,68,.15);
+  border:1px solid rgba(239,68,68,.4);color:var(--red);border-radius:6px;
+  cursor:pointer;transition:all .15s;display:none
+}
+#clear-btn:hover{background:rgba(239,68,68,.3)}
+.nav-links{margin-left:auto;display:flex;gap:10px}
+.nav-links a{font-size:11px;color:var(--dim);text-decoration:none;font-weight:600}
+.nav-links a:hover{color:var(--text)}
+
+/* BODY SPLIT */
+#body{display:flex;height:calc(100vh - var(--hdr));overflow:hidden}
+
+/* MAP PANE */
+#map-pane{flex:1;position:relative;min-width:0}
+#map{width:100%;height:100%}
+
+/* DIVIDER */
+#divider{
+  width:5px;background:var(--border);cursor:col-resize;flex-shrink:0;
+  transition:background .15s
+}
+#divider:hover,#divider.dragging{background:var(--accent)}
+
+/* SCATTER PANE */
+#scatter-pane{
+  width:380px;flex-shrink:0;background:var(--panel);
+  border-left:1px solid var(--border);display:flex;flex-direction:column;
+  overflow:hidden
+}
+#scatter-header{
+  padding:14px 16px 8px;border-bottom:1px solid var(--border);flex-shrink:0
+}
+.sc-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px}
+.sc-sub{font-size:10px;color:var(--dim);line-height:1.5}
+#scatter-wrap{flex:1;position:relative;overflow:hidden}
+#scatter-svg{width:100%;height:100%}
+
+/* Scatter styles */
+.dot{cursor:pointer;transition:r .1s}
+.dot.dimmed{opacity:.12}
+.dot.highlighted{stroke:#fff;stroke-width:1.5px}
+.brush-rect .selection{
+  fill:rgba(56,189,248,.12);stroke:var(--accent);stroke-width:1.5px;
+  stroke-dasharray:4,2
+}
+.brush-rect .handle{fill:none}
+.x-axis text,.y-axis text{fill:var(--dim);font-size:10px;font-family:var(--font)}
+.x-axis path,.x-axis line,.y-axis path,.y-axis line{stroke:var(--border)}
+.axis-label{fill:var(--dim);font-size:11px;font-family:var(--font)}
+.quadrant-line{stroke:var(--border);stroke-dasharray:4,3;stroke-width:1}
+.quad-label{fill:var(--dimmer);font-size:9px;font-family:var(--font);font-weight:700;
+            letter-spacing:.06em;text-transform:uppercase}
+
+/* Scatter legend — lives in header, never overlaps chart */
+#scatter-legend{
+  margin-top:7px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center
+}
+.leg-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:3px;flex-shrink:0}
+.leg-item{display:flex;align-items:center;font-size:9px;color:var(--dim)}
+
+/* Tooltip */
+#tip{
+  position:fixed;z-index:900;pointer-events:none;display:none;
+  background:rgba(8,8,16,.97);border:1px solid var(--border);
+  border-radius:8px;padding:9px 13px;font-size:11px;max-width:220px;
+  box-shadow:0 8px 24px rgba(0,0,0,.6)
+}
+.tip-name{font-weight:700;font-size:12px;color:#fff;margin-bottom:4px}
+.tip-row{display:flex;justify-content:space-between;gap:12px;padding:2px 0;color:var(--dim)}
+.tip-val{font-weight:600;color:var(--text)}
+
+/* County info panel on map */
+#county-info{
+  position:absolute;bottom:20px;left:16px;z-index:100;
+  background:rgba(10,14,26,.95);border:1px solid var(--border);
+  border-radius:8px;padding:12px 14px;font-size:11px;min-width:180px;
+  display:none;max-width:240px
+}
+.ci-name{font-weight:700;font-size:12px;color:#fff;margin-bottom:6px}
+.ci-row{display:flex;justify-content:space-between;gap:10px;padding:2px 0;color:var(--dim)}
+.ci-val{font-weight:600;color:var(--text)}
+.chip{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700}
+
+/* Loading */
+#loading{
+  position:absolute;inset:0;z-index:500;background:rgba(4,6,12,.9);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px
+}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);
+         border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading p{color:var(--dim);font-size:12px}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <a class="nav-logo" href="index.html"><em>Soil</em> Intelligence</a>
+  <div class="nav-sep"></div>
+  <span class="hdr-title">Soil Risk Explorer</span>
+  <span class="hdr-sub">Brush the scatter to select counties · Click a county to highlight its dot</span>
+  <div class="nav-sep"></div>
+  <button class="hdr-pill active" id="pill-fsi" onclick="setColorMode('fsi')">Color: FSI</button>
+  <button class="hdr-pill"        id="pill-om"  onclick="setColorMode('om')">Color: OM</button>
+  <button class="hdr-pill"        id="pill-zone" onclick="setColorMode('zone')">Color: Zone</button>
+  <div class="nav-sep"></div>
+  <span id="sel-count">4,089 counties shown</span>
+  <button id="clear-btn" onclick="clearSelection()">✕ Clear selection</button>
+  <div class="nav-links">
+    <a href="Regenerative-Agriculture-Risk-Map.html">Risk Map</a>
+    <a href="county-risk-leaderboard.html">Leaderboard</a>
+    <a href="soil-data-stories.html">Data Stories</a>
+    <a href="https://lab10yr.com/articles/" target="_blank" rel="noopener noreferrer">Articles</a>
+    <a href="index.html">Home</a>
+  </div>
+</div>
+
+<div id="body">
+  <div id="map-pane">
+    <div id="map"></div>
+    <div id="county-info"></div>
+    <div id="loading"><div class="spinner"></div><p>Loading soil data…</p></div>
+  </div>
+  <div id="divider"></div>
+  <div id="scatter-pane">
+    <div id="scatter-header">
+      <div class="sc-title">FSI × Organic Matter Depletion</div>
+      <div class="sc-sub">Each dot = one county survey area · Drag to select · Click to inspect</div>
+      <div id="scatter-legend"></div>
+    </div>
+    <div id="scatter-wrap">
+      <svg id="scatter-svg"></svg>
+    </div>
+  </div>
+</div>
+
+<div id="tip"></div>
+
+<script>
+// ── CONSTANTS ──────────────────────────────────────────────────────────────
+const INTERP_URL   = 'data/interp_data.json';
+const COUNTIES_CDN = 'https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json';
+const BASESTYLE    = 'https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json';
+
+const FIPS_TO_STATE = {
+  '01':'AL','02':'AK','04':'AZ','05':'AR','06':'CA','08':'CO','09':'CT',
+  '10':'DE','11':'DC','12':'FL','13':'GA','15':'HI','16':'ID','17':'IL',
+  '18':'IN','19':'IA','20':'KS','21':'KY','22':'LA','23':'ME','24':'MD',
+  '25':'MA','26':'MI','27':'MN','28':'MS','29':'MO','30':'MT','31':'NE',
+  '32':'NV','33':'NH','34':'NJ','35':'NM','36':'NY','37':'NC','38':'ND',
+  '39':'OH','40':'OK','41':'OR','42':'PA','44':'RI','45':'SC','46':'SD',
+  '47':'TN','48':'TX','49':'UT','50':'VT','51':'VA','53':'WA','54':'WV',
+  '55':'WI','56':'WY','72':'PR','78':'VI'
+};
+const FSI_MAP = {
+  'Not fragile':'#1b7837','Slightly fragile':'#78c679','Moderately fragile':'#fecc5c',
+  'Fragile':'#fd8d3c','Highly fragile':'#f03b20','Extremely fragile':'#bd0026',
+  'Very highly fragile':'#7b0000'
+};
+const OM_MAP = {
+  'OM depletion low':'#22c55e','OM depletion moderately low':'#78c679',
+  'OM depletion moderate':'#fecc5c','OM depletion moderately high':'#f03b20',
+  'OM depletion high':'#7b0007','Not rated':'#555566'
+};
+// Zone color: quadrant-based (x=fsi, y=om, threshold 0.35 / 0.65)
+function zoneColor(fsi, om) {
+  const hf = fsi >= 0.35, hom = om >= 0.65;
+  if (hf && hom)  return '#ef4444'; // crisis
+  if (hf && !hom) return '#f97316'; // fragile, OM ok
+  if (!hf && hom) return '#a78bfa'; // stable soil, OM loss
+  return '#22c55e';                 // resilient
+}
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let counties   = [];    // [{fips, state, name, fsi, om, fc, oc}]
+let geoData    = null;  // GeoJSON FeatureCollection
+let selectedFips = new Set();
+let colorMode  = 'fsi';
+let mapReady   = false;
+let map;
+
+// ── MAP INIT ───────────────────────────────────────────────────────────────
+function initMap() {
+  map = new maplibregl.Map({
+    container: 'map',
+    style: BASESTYLE,
+    center: [-96, 38],
+    zoom: 3.3,
+    minZoom: 2,
+    maxZoom: 14,
+    attributionControl: false
+  });
+  map.addControl(new maplibregl.NavigationControl({showCompass:false}), 'top-right');
+  map.addControl(new maplibregl.ScaleControl({maxWidth:70,unit:'imperial'}), 'bottom-right');
+
+  map.on('load', () => {
+    mapReady = true;
+    if (geoData) addMapLayers();
+  });
+}
+
+function addMapLayers() {
+  try {
+  map.addSource('counties', { type: 'geojson', data: geoData, generateId: true });
+
+  const colorExpr = buildColorExpr();
+  map.addLayer({
+    id: 'county-fill', type: 'fill', source: 'counties',
+    paint: {
+      'fill-color': colorExpr,
+      'fill-opacity': ['case',
+        ['boolean', ['feature-state', 'selected'], false], 1.0,
+        ['boolean', ['feature-state', 'dimmed'],   false], 0.12,
+        0.75
+      ]
+    }
+  });
+  map.addLayer({
+    id: 'county-outline', type: 'line', source: 'counties',
+    paint: {
+      'line-color': '#222',
+      'line-opacity': ['case',
+        ['boolean', ['feature-state', 'dimmed'], false], 0.3, 0.5
+      ],
+      'line-width': ['interpolate', ['linear'], ['zoom'], 3, 0.3, 7, 0.8]
+    }
+  });
+  map.addLayer({
+    id: 'county-selected-outline', type: 'line', source: 'counties',
+    paint: {
+      'line-color': '#fff',
+      'line-opacity': ['case', ['boolean',['feature-state','selected'],false], 0.9, 0],
+      'line-width': 2
+    }
+  });
+
+  // Hover tooltip
+  const tip = document.getElementById('tip');
+  let hovId = null;
+  map.on('mousemove', 'county-fill', e => {
+    map.getCanvas().style.cursor = 'pointer';
+    const f = e.features[0];
+    if (hovId !== null) map.setFeatureState({source:'counties',id:hovId},{hover:false});
+    hovId = f.id;
+    const p = f.properties;
+    const fc = p.fsi_dominant || '—', oc = p.om_dominant || '—';
+    tip.innerHTML = `
+      <div class="tip-name">${p.areaname||p.areasymbol}</div>
+      <div class="tip-row"><span>State</span><span class="tip-val">${p.state}</span></div>
+      <div class="tip-row"><span>FSI class</span><span class="tip-val" style="color:${FSI_MAP[fc]||'#888'}">${fc}</span></div>
+      <div class="tip-row"><span>FSI avg</span><span class="tip-val">${p.fsi_avg!=null?(+p.fsi_avg).toFixed(3):'—'}</span></div>
+      <div class="tip-row"><span>OM class</span><span class="tip-val" style="color:${OM_MAP[oc]||'#888'}">${oc}</span></div>
+      <div class="tip-row"><span>OM avg</span><span class="tip-val">${p.om_avg!=null?(+p.om_avg).toFixed(3):'—'}</span></div>`;
+    tip.style.display = 'block';
+    tip.style.left = (e.originalEvent.clientX + 14) + 'px';
+    tip.style.top  = (e.originalEvent.clientY - 10) + 'px';
+  });
+  map.on('mouseleave', 'county-fill', () => {
+    map.getCanvas().style.cursor = '';
+    tip.style.display = 'none';
+    if (hovId !== null) { map.setFeatureState({source:'counties',id:hovId},{hover:false}); hovId=null; }
+  });
+
+  // Click → select single county, highlight scatter dot
+  map.on('click', 'county-fill', e => {
+    const p = e.features[0].properties;
+    if (!p.fips) return;
+    selectFromMap(p.fips, p);
+  });
+
+  document.getElementById('loading').style.display = 'none';
+  } catch(err) {
+    console.error('[explorer] addMapLayers failed:', err);
+    document.getElementById('loading').innerHTML =
+      `<div style="color:#ef4444;font-size:12px;text-align:center;padding:20px">Map layer error: ${err.message}</div>`;
+  }
+}
+
+function buildColorExpr() {
+  if (colorMode === 'fsi') {
+    const expr = ['match', ['get', 'fsi_dominant']];
+    Object.entries(FSI_MAP).forEach(([k,v]) => expr.push(k,v));
+    expr.push('#555566');
+    return expr;
+  }
+  if (colorMode === 'om') {
+    const expr = ['match', ['get', 'om_dominant']];
+    Object.entries(OM_MAP).forEach(([k,v]) => expr.push(k,v));
+    expr.push('#555566');
+    return expr;
+  }
+  // zone mode: computed in data
+  const expr = ['match', ['get', 'zone']];
+  expr.push('crisis','#ef4444','fragile','#f97316','om-loss','#a78bfa','resilient','#22c55e','#555566');
+  return expr;
+}
+
+function updateMapColors() {
+  if (!map || !map.getLayer('county-fill')) return;
+  map.setPaintProperty('county-fill', 'fill-color', buildColorExpr());
+}
+
+function setColorMode(mode) {
+  colorMode = mode;
+  document.querySelectorAll('.hdr-pill').forEach(p => p.classList.remove('active'));
+  document.getElementById('pill-'+mode).classList.add('active');
+  updateMapColors();
+  updateScatterColors();
+  buildLegend();
+}
+
+// ── DATA LOAD ──────────────────────────────────────────────────────────────
+async function loadData() {
+  const [interpResp, topoResp] = await Promise.all([
+    fetch(INTERP_URL),
+    fetch(COUNTIES_CDN)
+  ]);
+  const interp = await interpResp.json();
+  const topo   = await topoResp.json();
+
+  // Build county list
+  for (const [fips, v] of Object.entries(interp)) {
+    if (!fips.match(/^\d{5}$/)) continue;
+    if (!v.fv && !v.ov) continue;
+    const fsi = v.fv ? +v.fv : null;
+    const om  = v.ov ? +v.ov : null;
+    counties.push({
+      fips,
+      state: FIPS_TO_STATE[fips.slice(0,2)] || '??',
+      name:  v.name || fips,
+      fc:    v.fc || '',
+      fsi,
+      oc:    v.oc || '',
+      om,
+      zone:  fsi!=null && om!=null ? (
+        fsi>=0.35 && om>=0.65 ? 'crisis' :
+        fsi>=0.35             ? 'fragile' :
+        om>=0.65              ? 'om-loss' : 'resilient'
+      ) : 'unknown'
+    });
+  }
+
+  // Build GeoJSON from TopoJSON
+  geoData = topoToGeoJSON(topo, interp);
+  if (mapReady) addMapLayers();
+
+  buildLegend();
+  buildScatter();
+  updateSelCount();
+}
+
+// Use topojson-client library (same approach as soil-atlas.html — known working)
+function topoToGeoJSON(topo, interp) {
+  const TERRITORY_FALLBACK = new Set(['AK','HI','PR','VI','GU','AS','MP','PW','MH','FM']);
+  // topojson.feature() produces valid GeoJSON — no custom decoder needed
+  const base = topojson.feature(topo, topo.objects.counties);
+  base.features.forEach(f => {
+    const fips = String(f.id).padStart(5,'0');
+    const st   = FIPS_TO_STATE[fips.slice(0,2)] || fips.slice(0,2);
+    const asy  = st + fips.slice(2);
+    const d    = interp[fips] || interp[asy] || (TERRITORY_FALLBACK.has(st) ? interp[st+'_state'] : null) || {};
+    const fsi  = d.fv ? +d.fv : null;
+    const om   = d.ov ? +d.ov : null;
+    f.properties = {
+      fips, state: st, areasymbol: asy, areaname: d.name||'',
+      fsi_dominant: d.fc||null, fsi_avg: fsi,
+      om_dominant:  d.oc||null, om_avg:  om,
+      zone: fsi!=null && om!=null ? (
+        fsi>=0.35 && om>=0.65 ? 'crisis' :
+        fsi>=0.35             ? 'fragile' :
+        om>=0.65              ? 'om-loss' : 'resilient'
+      ) : 'unknown'
+    };
+  });
+  return base;
+}
+
+// ── SCATTER PLOT ───────────────────────────────────────────────────────────
+let xScale, yScale, svgSel, dots;
+
+function buildScatter() {
+  const wrap = document.getElementById('scatter-wrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  const margin = { top: 24, right: 16, bottom: 50, left: 48 };
+  const w = W - margin.left - margin.right;
+  const h = H - margin.top - margin.bottom;
+
+  xScale = d3.scaleLinear().domain([0, 0.85]).range([0, w]);
+  yScale = d3.scaleLinear().domain([0.15, 1.02]).range([h, 0]);
+
+  const svg = d3.select('#scatter-svg')
+    .attr('width', W).attr('height', H);
+  svg.selectAll('*').remove();
+  svgSel = svg;
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  // Quadrant lines
+  const qx = xScale(0.35), qy = yScale(0.65);
+  g.append('line').attr('class','quadrant-line').attr('x1',qx).attr('x2',qx).attr('y1',0).attr('y2',h);
+  g.append('line').attr('class','quadrant-line').attr('x1',0).attr('x2',w).attr('y1',qy).attr('y2',qy);
+
+  // Quadrant labels — top pair uses 'hanging', bottom pair uses explicit baseline
+  const ql = [
+    [qx+6, 8,     'CRISIS ZONE', 'hanging'],
+    [4,    8,     'OM LOSS',     'hanging'],
+    [qx+6, h-14,  'HIGH FRAGILITY', 'auto'],
+    [4,    h-14,  'RESILIENT',      'auto']
+  ];
+  ql.forEach(([x,y,label,baseline]) => g.append('text').attr('class','quad-label')
+    .attr('x',x).attr('y',y).attr('dominant-baseline',baseline).text(label));
+
+  // Axes
+  g.append('g').attr('class','x-axis').attr('transform',`translate(0,${h})`)
+    .call(d3.axisBottom(xScale).ticks(6).tickFormat(d3.format('.2f')));
+  g.append('g').attr('class','y-axis')
+    .call(d3.axisLeft(yScale).ticks(6).tickFormat(d3.format('.2f')));
+
+  // Axis labels
+  g.append('text').attr('class','axis-label').attr('text-anchor','middle')
+    .attr('x', w/2).attr('y', h+38).text('Fragile Soil Index (FSI avg)');
+  g.append('text').attr('class','axis-label').attr('text-anchor','middle')
+    .attr('transform',`rotate(-90)`).attr('x',-h/2).attr('y',-36)
+    .text('OM Depletion (avg)');
+
+  // Dots
+  const validCounties = counties.filter(c => c.fsi != null && c.om != null);
+  dots = g.append('g').attr('class','dots-layer')
+    .selectAll('circle')
+    .data(validCounties, d => d.fips)
+    .join('circle')
+    .attr('class', 'dot')
+    .attr('r', 3.5)
+    .attr('cx', d => xScale(d.fsi))
+    .attr('cy', d => yScale(d.om))
+    .attr('fill', d => dotColor(d))
+    .attr('fill-opacity', 0.8)
+    .on('mouseenter', (event, d) => showDotTip(event, d))
+    .on('mousemove',  (event) => moveTip(event))
+    .on('mouseleave', hideTip)
+    .on('click', (event, d) => selectFromScatter(d.fips));
+
+  // Brush (drawn on top of dots)
+  const brush = d3.brush()
+    .extent([[0,0],[w,h]])
+    .on('start brush', onBrush)
+    .on('end', onBrushEnd);
+
+  g.append('g').attr('class','brush-rect').call(brush);
+
+  // Preselect the crisis zone on load
+  const cx0 = xScale(0.35), cy0 = yScale(1.0), cx1 = xScale(0.85), cy1 = yScale(0.65);
+  g.select('.brush-rect').call(brush.move, [[cx0,cy0],[cx1,cy1]]);
+}
+
+function dotColor(d) {
+  if (colorMode === 'fsi')  return FSI_MAP[d.fc] || '#555566';
+  if (colorMode === 'om')   return OM_MAP[d.oc]  || '#555566';
+  return zoneColor(d.fsi, d.om);
+}
+
+function updateScatterColors() {
+  if (!dots) return;
+  dots.attr('fill', d => dotColor(d));
+}
+
+function onBrush(event) {
+  const sel = event.selection;
+  if (!sel) return;
+  const [[x0,y0],[x1,y1]] = sel;
+  const fsiMin = xScale.invert(x0), fsiMax = xScale.invert(x1);
+  const omMin  = yScale.invert(y1), omMax  = yScale.invert(y0);
+
+  selectedFips = new Set(
+    counties.filter(c =>
+      c.fsi != null && c.om != null &&
+      c.fsi >= fsiMin && c.fsi <= fsiMax &&
+      c.om  >= omMin  && c.om  <= omMax
+    ).map(c => c.fips)
+  );
+  applySelection();
+}
+
+function onBrushEnd(event) {
+  if (!event.selection) {
+    clearSelection();
+  }
+}
+
+// ── SELECTION LOGIC ────────────────────────────────────────────────────────
+function applySelection() {
+  const hasSelection = selectedFips.size > 0;
+
+  // Update scatter dots
+  if (dots) {
+    dots
+      .classed('highlighted', d => selectedFips.has(d.fips))
+      .classed('dimmed', d => hasSelection && !selectedFips.has(d.fips));
+  }
+
+  // Update map feature states
+  if (map && map.getSource('counties')) {
+    geoData.features.forEach(f => {
+      const fips = f.properties.fips;
+      const sel  = selectedFips.has(fips);
+      map.setFeatureState({source:'counties',id:f.id},{
+        selected: sel,
+        dimmed: hasSelection && !sel
+      });
+    });
+  }
+
+  updateSelCount();
+  document.getElementById('clear-btn').style.display = hasSelection ? 'block' : 'none';
+}
+
+function clearSelection() {
+  selectedFips.clear();
+  applySelection();
+  // Clear brush
+  if (svgSel) svgSel.select('.brush-rect').call(
+    d3.brush().extent([[0,0],[1,1]]).on('start brush end', ()=>{})
+  );
+}
+
+function selectFromMap(fips, props) {
+  // Single county selection from map click — highlight its dot
+  if (selectedFips.size === 1 && selectedFips.has(fips)) {
+    clearSelection();
+    document.getElementById('county-info').style.display = 'none';
+    return;
+  }
+  selectedFips = new Set([fips]);
+  applySelection();
+  showCountyInfo(props);
+
+  // Center scatter view on selected dot
+  if (dots) {
+    const county = counties.find(c => c.fips === fips);
+    if (county && county.fsi != null && county.om != null) {
+      dots.filter(d => d.fips === fips).raise();
+    }
+  }
+}
+
+function selectFromScatter(fips) {
+  selectedFips = new Set([fips]);
+  applySelection();
+
+  // Fly map to county
+  const feat = geoData?.features.find(f => f.properties.fips === fips);
+  if (feat) {
+    const bbox = getBBox(feat.geometry);
+    if (bbox) {
+      map.fitBounds(bbox, {padding:60,maxZoom:10,duration:800});
+    }
+    showCountyInfo(feat.properties);
+  }
+}
+
+function showCountyInfo(p) {
+  const fc = p.fsi_dominant||'—', oc = p.om_dominant||'—';
+  const fcCol = FSI_MAP[fc]||'#555566', ocCol = OM_MAP[oc]||'#555566';
+  const panel = document.getElementById('county-info');
+  panel.innerHTML = `
+    <div class="ci-name">${p.areaname||p.areasymbol||p.fips}</div>
+    <div class="ci-row"><span>State</span><span class="ci-val">${p.state}</span></div>
+    <div class="ci-row"><span>FSI</span>
+      <span class="ci-val"><span class="chip" style="background:${fcCol}22;color:${fcCol};border:1px solid ${fcCol}44">${fc}</span></span></div>
+    ${p.fsi_avg!=null?`<div class="ci-row"><span>FSI avg</span><span class="ci-val">${(+p.fsi_avg).toFixed(3)}</span></div>`:''}
+    <div class="ci-row"><span>OM</span>
+      <span class="ci-val"><span class="chip" style="background:${ocCol}22;color:${ocCol};border:1px solid ${ocCol}44">${oc}</span></span></div>
+    ${p.om_avg!=null?`<div class="ci-row"><span>OM avg</span><span class="ci-val">${(+p.om_avg).toFixed(3)}</span></div>`:''}
+  `;
+  panel.style.display = 'block';
+}
+
+function updateSelCount() {
+  const n = selectedFips.size;
+  const total = counties.filter(c=>c.fsi!=null&&c.om!=null).length;
+  document.getElementById('sel-count').textContent =
+    n > 0 ? `${n.toLocaleString()} selected of ${total.toLocaleString()}` : `${total.toLocaleString()} counties`;
+}
+
+// ── LEGEND ─────────────────────────────────────────────────────────────────
+function buildLegend() {
+  const el = document.getElementById('scatter-legend');
+  el.innerHTML = '';
+  let entries = [];
+  if (colorMode === 'fsi') {
+    entries = Object.entries(FSI_MAP).slice(0,6);
+  } else if (colorMode === 'om') {
+    entries = Object.entries(OM_MAP).slice(0,5);
+  } else {
+    entries = [['Crisis (high FSI + high OM)','#ef4444'],['High fragility','#f97316'],['High OM loss','#a78bfa'],['Resilient','#22c55e']];
+  }
+  entries.forEach(([label, color]) => {
+    const item = document.createElement('div');
+    item.className = 'leg-item';
+    item.innerHTML = `<span class="leg-dot" style="background:${color}"></span>${label}`;
+    el.appendChild(item);
+  });
+}
+
+// ── TOOLTIP ────────────────────────────────────────────────────────────────
+const tip = document.getElementById('tip');
+function showDotTip(event, d) {
+  tip.innerHTML = `
+    <div class="tip-name">${d.name}</div>
+    <div class="tip-row"><span>State</span><span class="tip-val">${d.state}</span></div>
+    <div class="tip-row"><span>FSI</span><span class="tip-val" style="color:${FSI_MAP[d.fc]||'#888'}">${d.fc||'—'}</span></div>
+    <div class="tip-row"><span>FSI avg</span><span class="tip-val">${d.fsi!=null?d.fsi.toFixed(3):'—'}</span></div>
+    <div class="tip-row"><span>OM</span><span class="tip-val" style="color:${OM_MAP[d.oc]||'#888'}">${d.oc||'—'}</span></div>
+    <div class="tip-row"><span>OM avg</span><span class="tip-val">${d.om!=null?d.om.toFixed(3):'—'}</span></div>`;
+  tip.style.display = 'block';
+  moveTip(event);
+}
+function moveTip(event) {
+  const vw=window.innerWidth,vh=window.innerHeight,w=tip.offsetWidth||200,h=tip.offsetHeight||100;
+  tip.style.left=(event.clientX+14+w>vw?event.clientX-w-8:event.clientX+14)+'px';
+  tip.style.top=(event.clientY+14+h>vh?event.clientY-h-8:event.clientY+14)+'px';
+}
+function hideTip() { tip.style.display='none'; }
+
+// ── UTILITIES ──────────────────────────────────────────────────────────────
+function getBBox(geom) {
+  const coords = [];
+  function collect(c) {
+    if (typeof c[0] === 'number') coords.push(c);
+    else c.forEach(collect);
+  }
+  if (geom.coordinates) collect(geom.coordinates);
+  if (!coords.length) return null;
+  const lngs = coords.map(c=>c[0]), lats = coords.map(c=>c[1]);
+  return [[Math.min(...lngs),Math.min(...lats)],[Math.max(...lngs),Math.max(...lats)]];
+}
+
+// Resize scatter on window resize
+window.addEventListener('resize', () => {
+  if (counties.length) buildScatter();
+});
+
+// Divider drag
+(function(){
+  const div=document.getElementById('divider');
+  const body=document.getElementById('body');
+  const sp=document.getElementById('scatter-pane');
+  let drag=false,sx,sw;
+  div.addEventListener('mousedown',e=>{drag=true;div.classList.add('dragging');sx=e.clientX;sw=sp.offsetWidth;e.preventDefault();});
+  document.addEventListener('mousemove',e=>{
+    if(!drag)return;
+    const tot=body.offsetWidth-div.offsetWidth;
+    const nw=Math.max(280,Math.min(tot-200,sw-(e.clientX-sx)));
+    sp.style.width=nw+'px';sp.style.flex='none';
+  });
+  document.addEventListener('mouseup',()=>{if(drag){drag=false;div.classList.remove('dragging');if(counties.length)buildScatter();}});
+})();
+
+// ── MAIN ───────────────────────────────────────────────────────────────────
+initMap();
+loadData().catch(e => {
+  document.getElementById('loading').innerHTML =
+    `<p style="color:var(--red)">Error loading data: ${e.message}</p>`;
+});
+</script>
+</body>
+</html>

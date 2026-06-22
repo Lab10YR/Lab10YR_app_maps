@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://lab10yr.com/soil-data-visual-lab">
+  <title>Soil Data Visual Lab | Soil Data Access</title>
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <style>
+    :root {
+      --bg: #04060c;
+      --panel: #0a0e1a;
+      --panel2: #111625;
+      --panel3: #181e30;
+      --border: #1e2640;
+      --text: #d4daf0;
+      --dim: #5a6490;
+      --accent: #38bdf8;
+      --green: #22c55e;
+      --soil: #c8a84b;
+      --red: #ef4444;
+      --font: 'Inter', system-ui, sans-serif;
+      --serif: Georgia, serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+    }
+
+    .lab-wrap {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 1.1rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 0.7rem;
+    }
+
+    .kpi {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 0.75rem;
+    }
+
+    .kpi b {
+      display: block;
+      font-size: 1.65rem;
+      line-height: 1.1;
+      color: var(--text);
+    }
+
+    .kpi span {
+      color: var(--dim);
+      font-size: 0.85rem;
+    }
+
+    .viz-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 0.9rem;
+    }
+
+    .viz-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--panel);
+      padding: 0.7rem;
+    }
+
+    .viz-card h2 {
+      margin: 0 0 0.22rem;
+      font-size: 1.28rem;
+      color: var(--text);
+    }
+
+    .viz-sub {
+      margin: 0 0 0.5rem;
+      color: var(--dim);
+      font-size: 0.88rem;
+    }
+
+    .plot {
+      width: 100%;
+      min-height: 380px;
+    }
+
+    .plot.tall {
+      min-height: 470px;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 1080px) {
+      .viz-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .kpi-grid {
+        grid-template-columns: repeat(2, minmax(160px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header" id="top">
+    <p class="eyebrow">Soils Intelligence • Visual Lab</p>
+    <h1>Topography Of Soil Risk Signals</h1>
+    <p>Live charts and maps generated from repository datasets: county-level interpretation values, class labels, and SQL corpus metadata.</p>
+    <nav class="navbar" aria-label="Main navigation">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="soil-atlas.html" style="font-weight:700;color:#22c55e">Soil Atlas</a>
+      <a class="nav-link" href="soil-data-stories.html" style="font-weight:700;color:#4e9fff">Data Stories</a>
+      <a class="nav-link" href="https://lab10yr.com/articles/" target="_blank" rel="noopener noreferrer">Articles</a>
+      <a class="nav-link" href="sql-explorer.html">SQL Explorer</a>
+      <a class="nav-link" href="examples.html">Examples</a>
+      <a class="nav-link" href="wisconsin-forage-suitability-report.html">Wisconsin Forage Report</a>
+      <a class="nav-link" href="soil-data-visual-lab.html">Visual Lab</a>
+      <a class="nav-link" href="https://github.com/jneme910/Soil-Data-Access-Training-Resources">SDA API Help</a>
+      <a class="nav-link" href="data-models.html">Data Models</a>
+    </nav>
+    <div class="floating-nav">
+      <button class="btn" id="themeToggleBtn" type="button">Theme: Dark</button>
+      <button class="btn" id="densityToggleBtn" type="button">Density: Comfortable</button>
+      <button class="btn" id="backToTopFab" title="Back to top" style="display:inline-block;">↑</button>
+    </div>
+    <div class="badge-bar" id="badgeBar"></div>
+  </header>
+
+  <main class="lab-wrap">
+    <section class="kpi-grid" id="kpiGrid"></section>
+
+    <section class="panel">
+      <h2>Featured Live Report</h2>
+      <p class="viz-sub">Open your Wisconsin forage suitability report directly from the published docs surface.</p>
+      <p><a href="wisconsin-forage-suitability-report.html">Open Wisconsin Forage Suitability Report</a></p>
+    </section>
+
+    <section class="viz-grid">
+      <article class="viz-card">
+        <h2>FSI vs OM Depletion Relationship</h2>
+        <p class="viz-sub">County-level scatter from interp_data.json. Each point is a county or county-equivalent interpretation record.</p>
+        <div class="plot" id="riskScatter"></div>
+      </article>
+
+      <article class="viz-card">
+        <h2>Interpretation Class Distribution</h2>
+        <p class="viz-sub">Fragile Soil Index and Organic Matter classes, ranked by prevalence.</p>
+        <div class="plot" id="classBars"></div>
+      </article>
+
+      <article class="viz-card full-width">
+        <h2>State-Level OM Depletion Choropleth</h2>
+        <p class="viz-sub">Average county OM depletion values by state, computed directly from county records in interp_data.json.</p>
+        <div class="plot tall" id="stateMap"></div>
+      </article>
+
+      <article class="viz-card">
+        <h2>Territories And Outlying Areas</h2>
+        <p class="viz-sub">Average OM depletion for non-state geographies represented in repository data.</p>
+        <div class="plot" id="territoryBars"></div>
+      </article>
+
+      <article class="viz-card">
+        <h2>SQL Purpose Portfolio</h2>
+        <p class="viz-sub">Category composition from docs/data/sql-index.json.</p>
+        <div class="plot" id="sqlTreemap"></div>
+      </article>
+    </section>
+  </main>
+
+  <script type="module">
+    const FIPS_TO_STATE = {
+      "01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC","12":"FL","13":"GA","15":"HI","16":"ID","17":"IL",
+      "18":"IN","19":"IA","20":"KS","21":"KY","22":"LA","23":"ME","24":"MD","25":"MA","26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE",
+      "32":"NV","33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH","40":"OK","41":"OR","42":"PA","44":"RI","45":"SC","46":"SD",
+      "47":"TN","48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV","55":"WI","56":"WY"
+    };
+
+    const TERRITORY_LABELS = {
+      "60":"American Samoa",
+      "66":"Guam",
+      "69":"Northern Mariana Islands",
+      "72":"Puerto Rico",
+      "78":"U.S. Virgin Islands",
+      "64":"Federated States of Micronesia",
+      "68":"Marshall Islands",
+      "70":"Palau"
+    };
+
+    const layoutTheme = {
+      paper_bgcolor: "rgba(0,0,0,0)",
+      plot_bgcolor: "rgba(0,0,0,0)",
+      font: { color: "#dce8f6", family: "Libre Franklin, Segoe UI, sans-serif" },
+      margin: { t: 18, r: 12, b: 46, l: 54 }
+    };
+
+    function normalizeCountyFips(raw) {
+      const digits = String(raw || "").replace(/\D/g, "");
+      if (digits.length >= 5) return digits.slice(0, 5);
+      return null;
+    }
+
+    function safeNum(v) {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function makeKpiCard(value, label) {
+      return `<article class="kpi"><b>${value}</b><span>${label}</span></article>`;
+    }
+
+    function incrementCount(map, key) {
+      if (!key || key === "Unknown") return;
+      map.set(key, (map.get(key) || 0) + 1);
+    }
+
+    function appendAggregate(map, key, value) {
+      if (!key || value == null) return;
+      const next = map.get(key) || { sum: 0, count: 0 };
+      next.sum += value;
+      next.count += 1;
+      map.set(key, next);
+    }
+
+    async function loadData() {
+      const [interpRes, sqlRes] = await Promise.all([
+        fetch("data/interp_data.json", { cache: "no-store" }),
+        fetch("data/sql-index.json", { cache: "no-store" })
+      ]);
+      if (!interpRes.ok || !sqlRes.ok) {
+        throw new Error("Could not load required repository datasets.");
+      }
+      return {
+        interp: await interpRes.json(),
+        sqlIndex: await sqlRes.json()
+      };
+    }
+
+    function summarizeInterp(interpObj) {
+      const entries = Object.entries(interpObj || {});
+      const points = [];
+      const fsiClassCounts = new Map();
+      const omClassCounts = new Map();
+      const stateStats = new Map();
+      const territoryStats = new Map();
+
+      for (const [key, row] of entries) {
+        if (!row || typeof row !== "object") continue;
+
+        const fv = safeNum(row.fv);
+        const ov = safeNum(row.ov);
+        const fc = row.fc || "Unknown";
+        const oc = row.oc || "Unknown";
+
+        incrementCount(fsiClassCounts, fc);
+        incrementCount(omClassCounts, oc);
+
+        const countyFips = normalizeCountyFips(key);
+        if (!countyFips || fv == null || ov == null) continue;
+
+        points.push({ countyFips, fv, ov, fc, oc, name: row.name || countyFips });
+
+        const stateFips = countyFips.slice(0, 2);
+        if (FIPS_TO_STATE[stateFips]) {
+          appendAggregate(stateStats, stateFips, ov);
+        }
+        if (TERRITORY_LABELS[stateFips]) {
+          appendAggregate(territoryStats, stateFips, ov);
+        }
+      }
+
+      return { points, fsiClassCounts, omClassCounts, stateStats, territoryStats };
+    }
+
+    function renderKpis(points, sqlScripts, territoryStats) {
+      const avgFsi = points.reduce((a, p) => a + p.fv, 0) / Math.max(points.length, 1);
+      const avgOm = points.reduce((a, p) => a + p.ov, 0) / Math.max(points.length, 1);
+      const territoryCount = territoryStats.size;
+      const kpiGrid = document.getElementById("kpiGrid");
+      kpiGrid.innerHTML = [
+        makeKpiCard(points.length.toLocaleString(), "County-level interpretation points"),
+        makeKpiCard(avgFsi.toFixed(3), "Mean fragile soil index"),
+        makeKpiCard(avgOm.toFixed(3), "Mean OM depletion score"),
+        makeKpiCard((sqlScripts || []).length.toLocaleString(), "Indexed SQL scripts backing workflows")
+      ].join("");
+
+      if (territoryCount > 0) {
+        kpiGrid.innerHTML += makeKpiCard(String(territoryCount), "Territories/outlying areas represented");
+      }
+    }
+
+    function renderScatter(points) {
+      Plotly.newPlot("riskScatter", [{
+        type: "scattergl",
+        mode: "markers",
+        x: points.map(p => p.fv),
+        y: points.map(p => p.ov),
+        text: points.map(p => `${p.name}<br>FSI ${p.fv.toFixed(3)}<br>OM ${p.ov.toFixed(3)}`),
+        hovertemplate: "%{text}<extra></extra>",
+        marker: {
+          size: 5,
+          color: points.map(p => p.ov),
+          colorscale: "Turbo",
+          opacity: 0.7,
+          line: { width: 0 }
+        }
+      }], {
+        ...layoutTheme,
+        xaxis: { title: "Fragile Soil Index (fv)", gridcolor: "rgba(146,168,190,0.18)", zeroline: false },
+        yaxis: { title: "OM Depletion (ov)", gridcolor: "rgba(146,168,190,0.18)", zeroline: false }
+      }, { responsive: true, displayModeBar: false });
+    }
+
+    function renderClassBars(fsiClassCounts, omClassCounts) {
+      const fsiPairs = [...fsiClassCounts.entries()].sort((a,b) => b[1]-a[1]);
+      const omPairs = [...omClassCounts.entries()].sort((a,b) => b[1]-a[1]);
+
+      Plotly.newPlot("classBars", [
+        {
+          type: "bar",
+          orientation: "h",
+          y: fsiPairs.map(x => x[0]),
+          x: fsiPairs.map(x => x[1]),
+          name: "FSI Class",
+          marker: { color: "#61d39b" }
+        },
+        {
+          type: "bar",
+          orientation: "h",
+          y: omPairs.map(x => x[0]),
+          x: omPairs.map(x => x[1]),
+          name: "OM Class",
+          marker: { color: "#f2a86d" }
+        }
+      ], {
+        ...layoutTheme,
+        barmode: "group",
+        xaxis: { title: "Count", gridcolor: "rgba(146,168,190,0.18)" },
+        yaxis: { automargin: true }
+      }, { responsive: true, displayModeBar: false });
+    }
+
+    function renderStateMap(stateStats) {
+      const states = [...stateStats.entries()]
+        .map(([fips, s]) => ({ state: FIPS_TO_STATE[fips], value: s.sum / Math.max(s.count, 1) }))
+        .filter(x => Boolean(x.state));
+
+      Plotly.newPlot("stateMap", [{
+        type: "choropleth",
+        locationmode: "USA-states",
+        locations: states.map(s => s.state),
+        z: states.map(s => s.value),
+        colorscale: [
+          [0, "#2b8cbe"],
+          [0.35, "#7fcdbb"],
+          [0.6, "#fddf8b"],
+          [0.8, "#f58b5f"],
+          [1, "#d83b4e"]
+        ],
+        marker: { line: { color: "#11243a", width: 0.8 } },
+        colorbar: { title: "Avg OM" },
+        hovertemplate: "%{location}: %{z:.3f}<extra></extra>"
+      }], {
+        ...layoutTheme,
+        geo: {
+          scope: "usa",
+          projection: { type: "albers usa" },
+          bgcolor: "rgba(0,0,0,0)",
+          showlakes: false,
+          showland: true,
+          landcolor: "rgba(16,30,46,0.6)"
+        },
+        margin: { t: 6, r: 12, b: 0, l: 12 }
+      }, { responsive: true, displayModeBar: false });
+    }
+
+    function renderTerritories(territoryStats) {
+      const items = [...territoryStats.entries()]
+        .map(([fips, s]) => ({ name: TERRITORY_LABELS[fips] || fips, value: s.sum / Math.max(s.count, 1), count: s.count }))
+        .sort((a, b) => b.value - a.value);
+
+      Plotly.newPlot("territoryBars", [{
+        type: "bar",
+        x: items.map(i => i.value),
+        y: items.map(i => i.name),
+        orientation: "h",
+        marker: { color: items.map(i => i.value), colorscale: "Portland" },
+        text: items.map(i => `${i.count} records`),
+        hovertemplate: "%{y}<br>Avg OM %{x:.3f}<br>%{text}<extra></extra>"
+      }], {
+        ...layoutTheme,
+        xaxis: { title: "Average OM depletion", gridcolor: "rgba(146,168,190,0.18)" },
+        yaxis: { automargin: true }
+      }, { responsive: true, displayModeBar: false });
+    }
+
+    function renderSqlTreemap(scripts) {
+      const categoryCounts = scripts.reduce((acc, script) => {
+        const category = script.category || "General Soil Data";
+        acc.set(category, (acc.get(category) || 0) + 1);
+        return acc;
+      }, new Map());
+
+      const tags = scripts.flatMap(s => Array.isArray(s.tags) ? s.tags : []);
+      const topTagCounts = tags.reduce((acc, tag) => {
+        acc.set(tag, (acc.get(tag) || 0) + 1);
+        return acc;
+      }, new Map());
+
+      const labels = ["SQL Corpus"];
+      const parents = [""];
+      const values = [scripts.length];
+
+      [...categoryCounts.entries()].sort((a,b) => b[1]-a[1]).forEach(([category, count]) => {
+        labels.push(category);
+        parents.push("SQL Corpus");
+        values.push(count);
+      });
+
+      Plotly.newPlot("sqlTreemap", [{
+        type: "treemap",
+        labels,
+        parents,
+        values,
+        branchvalues: "total",
+        textinfo: "label+value",
+        marker: {
+          colors: values,
+          colorscale: "Tealgrn",
+          line: { width: 1, color: "#0e2238" }
+        },
+        hovertemplate: "%{label}<br>%{value} scripts<extra></extra>"
+      }], {
+        ...layoutTheme,
+        margin: { t: 8, r: 8, b: 8, l: 8 },
+        annotations: [
+          {
+            x: 0,
+            y: -0.12,
+            xref: "paper",
+            yref: "paper",
+            text: `Top tags: ${[...topTagCounts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,6).map(t=>t[0]).join(", ")}`,
+            showarrow: false,
+            font: { size: 12, color: "#9cb4cc" },
+            xanchor: "left"
+          }
+        ]
+      }, { responsive: true, displayModeBar: false });
+    }
+
+    try {
+      const { interp, sqlIndex } = await loadData();
+      const { points, fsiClassCounts, omClassCounts, stateStats, territoryStats } = summarizeInterp(interp);
+      const scripts = Array.isArray(sqlIndex.scripts) ? sqlIndex.scripts : [];
+
+      renderKpis(points, scripts, territoryStats);
+      renderScatter(points);
+      renderClassBars(fsiClassCounts, omClassCounts);
+      renderStateMap(stateStats);
+      renderTerritories(territoryStats);
+      renderSqlTreemap(scripts);
+    } catch (err) {
+      document.querySelector(".lab-wrap").innerHTML = `<section class="panel"><h2>Visualization Error</h2><p>${String(err.message || err)}</p></section>`;
+    }
+  </script>
+  <script src="assets/theme-advanced.js" defer></script>
+</body>
+</html>

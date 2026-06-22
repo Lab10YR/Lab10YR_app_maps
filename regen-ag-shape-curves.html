@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://lab10yr.com/regen-ag-shape-curves">
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="Lab10YR">
+<meta property="og:title"       content="Regenerative Ag SHAPE Curves — SDA & WSS Metrics">
+<meta property="og:description" content="SHAPE scoring curves for regenerative agriculture. SDA API usage, Web Soil Survey metrics, and KSSL lab data — the platform behind America's regenerative agriculture story.">
+<meta property="og:url"         content="https://lab10yr.com/regen-ag-shape-curves.html">
+<meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="Regenerative Ag SHAPE Curves">
+<meta name="twitter:description" content="SHAPE scoring curves for regenerative agriculture, SDA API usage, and WSS metrics.">
+<meta name="twitter:image"       content="https://lab10yr.com/assets/og-preview.png">
+<title>Regenerative Ag SHAPE Curves — SDA & WSS Metrics</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.3.3/echarts.min.js"></script>
+<script src="js/shared.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--panel3:#181e30;
+  --border:#1e2640;--text:#d4daf0;--dim:#5a6490;--dimmer:#2e3560;
+  --accent:#38bdf8;--accent2:#a78bfa;--green:#22c55e;--gold:#f59e0b;
+  --red:#ef4444;--orange:#f97316;
+  --soil:#c8a84b;--soil2:#8b5e2a;
+  --sage:#7aaf6e;--sage2:#5a9460;--earth:#9a7040;--teal:#5a9aa5;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --serif:Georgia,'Times New Roman',serif;
+}
+html,body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden;line-height:1.6}
+
+/* ── NAV ─────────────────────────────────────────────── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;height:46px;
+  display:flex;align-items:center;padding:0 20px;gap:4px;
+  background:rgba(4,6,12,.97);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(12px);overflow-x:auto;
+}
+#nav::-webkit-scrollbar{display:none}
+.nav-logo{
+  font-family:var(--serif);font-size:14px;font-style:italic;
+  color:var(--soil);text-decoration:none;font-weight:700;
+  flex-shrink:0;margin-right:8px;white-space:nowrap;
+}
+.nav-link{
+  font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--dim);text-decoration:none;padding:0 9px;height:46px;
+  display:flex;align-items:center;transition:color .15s;
+  white-space:nowrap;flex-shrink:0;border-bottom:2px solid transparent;
+}
+.nav-link:hover{color:var(--text)}
+.nav-link.active{color:var(--green);border-bottom-color:var(--green)}
+.nav-link.hot{color:var(--accent)}
+.nav-link.hot2{color:var(--accent2)}
+.nav-spacer{flex:1}
+
+/* ── HERO ────────────────────────────────────────────── */
+#hero{
+  min-height:100vh;padding:120px min(8vw,100px) 80px;
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 65% 25%, rgba(200,168,75,.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 70% at 15% 75%, rgba(154,112,64,.10) 0%, transparent 55%),
+    linear-gradient(180deg,#04060c 0%,#080705 35%,#0a0905 55%,#04060c 100%);
+}
+.hero-grid{
+  position:absolute;inset:0;z-index:1;
+  background-image:
+    linear-gradient(rgba(200,168,75,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(200,168,75,.03) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+.hero-content{position:relative;z-index:2;max-width:860px}
+.hero-eyebrow{
+  font-size:10px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--soil);margin-bottom:20px;display:flex;align-items:center;gap:12px;
+}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--soil)}
+.hero-h1{
+  font-family:var(--serif);font-size:clamp(2.8rem,5.5vw,5rem);
+  line-height:1.05;font-weight:400;color:#fff;letter-spacing:-.02em;margin-bottom:20px;
+}
+.hero-h1 strong{color:var(--soil);font-weight:400}
+.hero-sub{
+  font-size:clamp(1rem,1.5vw,1.18rem);color:rgba(212,218,240,.68);
+  max-width:58ch;line-height:1.78;margin-bottom:36px;
+}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:56px}
+.btn-green{
+  display:inline-flex;align-items:center;gap:8px;padding:11px 22px;
+  border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;
+  letter-spacing:.05em;border:1px solid var(--soil);
+  background:rgba(200,168,75,.12);color:var(--soil);transition:all .18s;
+}
+.btn-green:hover{background:rgba(200,168,75,.22);box-shadow:0 0 24px rgba(200,168,75,.2)}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;padding:11px 22px;
+  border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;
+  letter-spacing:.05em;border:1px solid var(--border);color:var(--dim);transition:all .18s;
+}
+.btn-ghost:hover{background:var(--panel2);border-color:var(--dimmer);color:var(--text)}
+
+/* ── HERO STAT GRID ──────────────────────────────────── */
+.hero-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;
+}
+@media(max-width:700px){.hero-stats{grid-template-columns:1fr 1fr}}
+@media(max-width:380px){.hero-stats{grid-template-columns:1fr}}
+.hs-box{background:rgba(10,14,26,.94);padding:22px 18px;display:flex;flex-direction:column;gap:5px}
+.hs-val{font-family:var(--serif);font-size:2.1rem;color:#fff;line-height:1;font-weight:400}
+.hs-val.green{color:var(--green)}
+.hs-val.gold{color:var(--gold)}
+.hs-val.blue{color:var(--accent)}
+.hs-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--dim)}
+.hs-sub{font-size:10.5px;color:var(--dimmer)}
+
+/* ── SECTIONS ────────────────────────────────────────── */
+.section{padding:80px min(6vw,80px);max-width:1280px;margin:0 auto}
+.section.dark-band{
+  background:rgba(8,12,22,.7);border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);max-width:none;
+  padding:80px min(6vw,80px);
+}
+.section.dark-band .section-inner{max-width:1280px;margin:0 auto}
+.section-eyebrow{
+  font-size:10px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--soil);margin-bottom:14px;display:flex;align-items:center;gap:12px;
+}
+.section-eyebrow::before{content:'';width:24px;height:1px;background:var(--soil)}
+.section-h2{
+  font-family:var(--serif);font-size:clamp(1.9rem,3.8vw,3rem);
+  line-height:1.12;font-weight:400;color:#fff;letter-spacing:-.02em;margin-bottom:18px;
+}
+.section-h2 em{font-style:italic;color:var(--soil)}
+.section-lead{
+  font-size:1.02rem;color:rgba(212,218,240,.62);
+  max-width:64ch;line-height:1.78;margin-bottom:44px;
+}
+
+/* ── CHAPTER MARKERS ─────────────────────────────────── */
+.chapter-mark{display:flex;align-items:center;gap:16px;margin-bottom:28px}
+.ch-num{
+  font-family:var(--serif);font-size:4.5rem;font-weight:400;
+  color:rgba(200,168,75,.12);line-height:1;user-select:none;
+}
+.ch-label{font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.ch-hed{font-family:var(--serif);font-size:1.5rem;font-weight:400;color:rgba(212,218,240,.7);line-height:1.2}
+
+/* ── SHAPE CARDS ─────────────────────────────────────── */
+.shape-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:44px}
+@media(max-width:900px){.shape-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.shape-grid{grid-template-columns:1fr}}
+.shape-card{
+  background:var(--panel2);border:1px solid var(--border);border-radius:8px;
+  padding:24px;position:relative;overflow:hidden;transition:all .2s;cursor:default;
+}
+.shape-card:hover{border-color:var(--soil);transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.35)}
+.shape-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0}
+.shape-card.c1::before{background:var(--sage)}
+.shape-card.c2::before{background:var(--soil)}
+.shape-card.c3::before{background:var(--sage2)}
+.shape-card.c4::before{background:var(--earth)}
+.shape-card.c5::before{background:var(--teal)}
+.shape-card.c6::before{background:var(--gold)}
+.shape-icon{font-size:1.8rem;margin-bottom:12px;display:block}
+.shape-name{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:7px;letter-spacing:.01em}
+.shape-desc{font-size:.78rem;color:var(--dim);line-height:1.65;margin-bottom:14px}
+.shape-tag{
+  font-family:monospace;font-size:.7rem;color:var(--soil);
+  background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.22);
+  padding:3px 8px;border-radius:3px;display:inline-block;
+}
+.shape-tag a{color:inherit;text-decoration:none}
+.shape-tag a:hover{text-decoration:underline}
+
+/* ── BENCHMARK BARS ──────────────────────────────────── */
+.bench-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bench-lbl{width:130px;font-size:10.5px;color:var(--dim);flex-shrink:0;line-height:1.3}
+.bench-track{flex:1;height:9px;background:var(--panel3);border-radius:4px;overflow:hidden}
+.bench-fill{height:100%;border-radius:4px;transition:width 1.8s cubic-bezier(.4,0,.2,1);width:0}
+.bench-val{width:44px;font-size:10px;font-family:monospace;color:var(--green);text-align:right;flex-shrink:0}
+
+/* ── PULLQUOTE ────────────────────────────────────────── */
+.pullquote{
+  font-family:var(--serif);font-size:clamp(1.35rem,2.4vw,1.9rem);
+  font-style:italic;color:var(--soil);line-height:1.45;
+  border-left:3px solid var(--soil);padding:14px 0 14px 24px;
+  margin:40px 0;max-width:620px;
+}
+.pullquote cite{display:block;font-size:.8rem;font-style:normal;color:var(--dimmer);margin-top:10px;letter-spacing:.04em}
+
+/* ── TWO COL ─────────────────────────────────────────── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+@media(max-width:800px){.two-col{grid-template-columns:1fr}}
+
+/* ── CHARTS ──────────────────────────────────────────── */
+.chart-wrap{
+  background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:24px;
+}
+.chart-title{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:3px}
+.chart-sub{font-size:.72rem;color:var(--dimmer);margin-bottom:18px}
+.chart-spinner{
+  display:flex;align-items:center;justify-content:center;
+  height:280px;color:var(--dimmer);font-size:.82rem;gap:10px;
+}
+.chart-spinner::after{
+  content:'';width:18px;height:18px;border:2px solid var(--border);
+  border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── LIVE BADGE ──────────────────────────────────────── */
+.live-badge{
+  display:inline-flex;align-items:center;gap:5px;font-size:9px;
+  font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--green);background:rgba(34,197,94,.08);
+  border:1px solid rgba(34,197,94,.22);padding:3px 9px;border-radius:20px;
+}
+.live-badge::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--green);flex-shrink:0;animation:pulse 1.6s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ── INTERACTIVE CONTROLS ────────────────────────────── */
+.ctrl-row{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.ctrl-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+select{
+  background:var(--panel3);border:1px solid var(--border);color:var(--text);
+  padding:8px 14px;border-radius:6px;font-size:13px;cursor:pointer;
+  outline:none;transition:border-color .15s;min-width:180px;
+  -webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a6490'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;
+}
+select:hover,select:focus{border-color:var(--soil)}
+.spin-label{font-size:11px;color:var(--green);display:none}
+
+/* ── DATA TABLE ──────────────────────────────────────── */
+.tbl-wrap{
+  overflow-x:auto;border-radius:6px;border:1px solid var(--border);
+  max-height:460px;overflow-y:auto;
+}
+.tbl-wrap::-webkit-scrollbar{width:6px;height:6px}
+.tbl-wrap::-webkit-scrollbar-track{background:var(--panel3)}
+.tbl-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.dtbl{width:100%;border-collapse:collapse;font-size:.76rem}
+.dtbl th{
+  background:var(--panel3);color:var(--dim);padding:9px 11px;
+  text-align:left;font-weight:600;letter-spacing:.06em;font-size:.69rem;
+  text-transform:uppercase;white-space:nowrap;
+  position:sticky;top:0;border-bottom:1px solid var(--border);z-index:1;
+}
+.dtbl td{
+  padding:8px 11px;border-bottom:1px solid rgba(30,38,64,.4);
+  color:var(--text);white-space:nowrap;
+}
+.dtbl tr:hover td{background:rgba(255,255,255,.015)}
+.dtbl a{color:var(--accent);text-decoration:none;font-size:.72rem}
+.dtbl a:hover{text-decoration:underline}
+.dtbl .num{text-align:right;font-family:monospace;color:var(--green);font-size:.75rem}
+
+/* ── FOOTER ──────────────────────────────────────────── */
+footer{
+  background:#020408;border-top:1px solid var(--border);
+  padding:48px min(6vw,80px) 32px;color:var(--dim);font-size:.82rem;
+}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:36px}
+@media(max-width:680px){.footer-grid{grid-template-columns:1fr}}
+.footer-brand{font-family:var(--serif);font-size:1.1rem;font-style:italic;color:var(--soil);margin-bottom:8px}
+.footer-desc{font-size:.78rem;line-height:1.65;color:var(--dimmer);max-width:38ch}
+.footer-col h4{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--dimmer);margin-bottom:12px}
+.footer-col a{display:block;color:var(--dim);text-decoration:none;font-size:.8rem;margin-bottom:6px;transition:color .15s}
+.footer-col a:hover{color:var(--soil)}
+.footer-rule{border:none;border-top:1px solid var(--border);margin-bottom:18px}
+.footer-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.73rem;color:var(--dimmer)}
+
+/* ── REVEAL ──────────────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+.reveal.on{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="index.html">Soil Intelligence</a>
+  <a class="nav-link hot"    href="soil-atlas.html">Soil Atlas</a>
+  <a class="nav-link hot2"   href="soil-data-stories.html">Data Stories</a>
+  <a class="nav-link" href="https://lab10yr.com/articles/" target="_blank" rel="noopener noreferrer">Articles</a>
+  <a class="nav-link"        href="data-models.html">Data Models</a>
+  <a class="nav-link"        href="Regenerative-Agriculture-Risk-Map.html">Regen Ag Map</a>
+  <a class="nav-link"        href="carbon-risk-map.html">Carbon Risk</a>
+  <a class="nav-link"        href="county-risk-leaderboard.html">Risk Leaderboard</a>
+  <a class="nav-link"        href="soil-risk-explorer.html">Risk Explorer</a>
+  <a class="nav-link"        href="soil-data-visual-lab.html">Visual Lab</a>
+  <a class="nav-link"        href="sql-explorer.html">SQL Explorer</a>
+  <a class="nav-link active" href="regen-ag-shape-curves.html">Regenerative Ag</a>
+  <a class="nav-link"        href="examples.html">Examples</a>
+  <a class="nav-link"        href="governance-status.html">Governance</a>
+  <div class="nav-spacer"></div>
+  <a class="nav-link" href="https://sdmdataaccess.nrcs.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer" style="color:var(--soil)">Run SDA Query</a>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">SHAPE · Regenerative Agriculture · Soil Data Access · KSSL</div>
+    <h1 class="hero-h1">Regenerative Ag<br><strong>SHAPE Curves</strong></h1>
+    <p class="hero-sub">SHAPE turns lab measurements into regenerative ag scores that track your soil's progress. Soil Data Access puts the nation's soil database into every query. Web Soil Survey brings it to every farm. Together they form the most comprehensive soil data platform in the world — built on open data.</p>
+    <div class="hero-cta">
+      <a class="btn-green" href="#shape-calc">Calculate My SHAPE Score ↓</a>
+      <a class="btn-ghost" href="soil-data-stories.html">Data Stories</a>
+      <a class="btn-ghost" href="https://sdmdataaccess.nrcs.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer">Run SDA Query</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hs-box">
+        <div class="hs-val green" id="hSDA">—</div>
+        <div class="hs-lbl">SDA API Calls</div>
+        <div class="hs-sub" id="hSDAyear">All-time total</div>
+      </div>
+      <div class="hs-box">
+        <div class="hs-val gold" id="hSessions">—</div>
+        <div class="hs-lbl">WSS Session Starts</div>
+        <div class="hs-sub" id="hSessionsYear">All-time total</div>
+      </div>
+      <div class="hs-box">
+        <div class="hs-val blue" id="hAOI">—</div>
+        <div class="hs-lbl">WSS Areas of Interest</div>
+        <div class="hs-sub" id="hAOIYear">All-time total</div>
+      </div>
+      <div class="hs-box">
+        <div class="hs-val" id="hPedons">—</div>
+        <div class="hs-lbl">KSSL Lab Pedons</div>
+        <div class="hs-sub">NCSS characterization DB</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CHAPTER 1: SHAPE ═══════════════ -->
+<section class="section">
+  <div class="chapter-mark reveal">
+    <div class="ch-num">1</div>
+    <div>
+      <div class="ch-label">Chapter One</div>
+      <div class="ch-hed">The SHAPE Framework</div>
+    </div>
+  </div>
+
+  <div class="section-eyebrow">Regenerative Ag · SHAPE Scoring Framework</div>
+  <h2 class="section-h2">Six indicators.<br><em>One score for your soil.</em></h2>
+  <p class="section-lead">SHAPE is a standardized framework for measuring, scoring, and tracking regenerative agriculture's impact on your land. It translates Kellogg Soil Survey Laboratory analyses and field measurements into straightforward 1–10 scores — comparable across fields, states, and management practices.</p>
+
+  <div class="shape-grid">
+    <div class="shape-card c1 reveal">
+      <span class="shape-icon"></span>
+      <div class="shape-name">Soil Organic Matter</div>
+      <div class="shape-desc">The foundation of every regenerative ag assessment. Organic matter drives nutrient cycling, water-holding capacity, and biological activity. KSSL measures total organic carbon (TOC) and loss-on-ignition (LOI) at every horizon.</div>
+      <span class="shape-tag">KSSL: org_c · loi</span>
+    </div>
+    <div class="shape-card c2 reveal">
+      <span class="shape-icon"></span>
+      <div class="shape-name">Active Carbon (POXC)</div>
+      <div class="shape-desc">Permanganate oxidizable carbon is the labile organic matter fraction that feeds soil microbes today. High POXC means an actively cycling ecosystem — the first to respond (positively and negatively) to management changes.</div>
+      <span class="shape-tag">KSSL: c_tot · moist_1500</span>
+    </div>
+    <div class="shape-card c3 reveal">
+      <span class="shape-icon"></span>
+      <div class="shape-name">Biological Activity</div>
+      <div class="shape-desc">CO₂ burst respiration — carbon dioxide released by soil microbes after rewetting dry soil. Healthy soils exhale more because they support larger, more diverse microbial populations. Measured as CO₂-C in the KSSL soil measurement protocol.</div>
+      <span class="shape-tag">KSSL: CO₂-C lbs/acre/day</span>
+    </div>
+    <div class="shape-card c4 reveal">
+      <span class="shape-icon"></span>
+      <div class="shape-name">Aggregate Stability</div>
+      <div class="shape-desc">Soil structure that resists erosion and compaction. Wet aggregate stability (WAS) measures the percentage of aggregates that remain intact after simulated rainfall. Directly queryable through KSSL's lab_agg_stab table in SDA.</div>
+      <span class="shape-tag">SDA: lab_agg_stab table</span>
+    </div>
+    <div class="shape-card c5 reveal">
+      <span class="shape-icon"></span>
+      <div class="shape-name">Available Water Capacity</div>
+      <div class="shape-desc">Volume of water held between field capacity (−33 kPa) and wilting point (−1500 kPa). Critical for drought resilience and irrigation scheduling. KSSL measures water retention curves for every characterized pedon.</div>
+      <span class="shape-tag">KSSL: moist_33 · moist_1500</span>
+    </div>
+    <div class="shape-card c6 reveal">
+      <span class="shape-icon"></span>
+      <div class="shape-name">Regenerative Ag Composite Score</div>
+      <div class="shape-desc">A weighted composite 1–10 score combining all indicators against regional benchmarks. Compare across fields, management practices, and years to track your soil quality trajectory over time.</div>
+      <span class="shape-tag"><a href="#shape-calc">Score My Soil ↓</a></span>
+    </div>
+  </div>
+
+  <div class="two-col reveal">
+    <div>
+      <div style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">How SHAPE Uses KSSL + SDA</div>
+      <p style="font-size:.9rem;color:var(--dim);line-height:1.78;margin-bottom:14px">The Kellogg Soil Survey Laboratory (KSSL) at the National Soil Survey Center in Lincoln, Nebraska has analyzed soil samples from tens of thousands of pedons across all 50 states since the 1950s. These characterization data — organic carbon, water retention, aggregate stability, and more — flow directly into Soil Data Access and underpin both SSURGO and SHAPE.</p>
+      <p style="font-size:.9rem;color:var(--dim);line-height:1.78;margin-bottom:20px">Every SHAPE assessment compares field measurements against regional benchmarks derived from these KSSL analyses. The same data that powers the national soil survey also powers the regenerative ag score on your operation.</p>
+      <a class="btn-green" href="#shape-calc">Score My Soil Now ↓</a>
+    </div>
+    <div>
+      <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:18px">Healthy Soil Benchmarks</div>
+      <div class="bench-row">
+        <span class="bench-lbl">Organic Matter</span>
+        <div class="bench-track"><div class="bench-fill" style="background:var(--green)" data-w="85"></div></div>
+        <span class="bench-val" style="color:var(--green)">3%+</span>
+      </div>
+      <div class="bench-row">
+        <span class="bench-lbl">Active Carbon</span>
+        <div class="bench-track"><div class="bench-fill" style="background:var(--gold)" data-w="72"></div></div>
+        <span class="bench-val" style="color:var(--gold)">450+</span>
+      </div>
+      <div class="bench-row">
+        <span class="bench-lbl">CO₂ Respiration</span>
+        <div class="bench-track"><div class="bench-fill" style="background:var(--accent)" data-w="65"></div></div>
+        <span class="bench-val" style="color:var(--accent)">25 lb</span>
+      </div>
+      <div class="bench-row">
+        <span class="bench-lbl">Agg. Stability</span>
+        <div class="bench-track"><div class="bench-fill" style="background:var(--accent2)" data-w="80"></div></div>
+        <span class="bench-val" style="color:var(--accent2)">80%+</span>
+      </div>
+      <div class="bench-row">
+        <span class="bench-lbl">Avail. Water</span>
+        <div class="bench-track"><div class="bench-fill" style="background:var(--orange)" data-w="62"></div></div>
+        <span class="bench-val" style="color:var(--orange)">0.18"</span>
+      </div>
+      <div class="bench-row">
+        <span class="bench-lbl">SHAPE Score</span>
+        <div class="bench-track"><div class="bench-fill" style="background:var(--red)" data-w="75"></div></div>
+        <span class="bench-val" style="color:var(--red)">7+ / 10</span>
+      </div>
+      <p style="font-size:.72rem;color:var(--dimmer);margin-top:14px">Benchmarks are generalized national targets. SHAPE uses regionally calibrated values. Score in the SHAPE App for location-specific results.</p>
+    </div>
+  </div>
+
+  <div class="pullquote reveal">
+    "Healthy soil is not a destination — it is a trajectory. SHAPE gives every producer a compass, powered by the same national data platform that maps every soil type in America."
+  </div>
+</section>
+
+<!-- ═══════════════ LIVE SHAPE SCORE CALCULATOR ═══════════════ -->
+<section class="section dark-band" id="shape-calc">
+  <div class="section-inner">
+    <div class="chapter-mark reveal">
+      <div class="ch-num"></div>
+      <div>
+        <div class="ch-label">Live Calculator · KSSL Data</div>
+        <div class="ch-hed">Score Your Soil Against Real Lab Data</div>
+      </div>
+    </div>
+
+    <div class="section-eyebrow">Live KSSL · Better Than Shiny</div>
+    <h2 class="section-h2">Where does your soil<br><em>rank?</em></h2>
+    <p class="section-lead">Enter your soil's organic carbon %, select its texture group, and this calculator queries actual KSSL lab-measured SOC values from the Soil Data Access database to show exactly where your soil falls in the real distribution — not a static model, but live national data.</p>
+
+    <div style="display:grid;grid-template-columns:320px 1fr;gap:28px;align-items:start" class="reveal" id="calcGrid">
+
+      <!-- INPUTS -->
+      <div style="background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:24px;display:flex;flex-direction:column;gap:18px">
+
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)">Texture Group</label>
+          <select id="calcTexture" style="min-width:unset" onchange="runSHAPECalc()">
+            <option value="T1">Sandy Soil — light, drains fast (sand, loamy sand)</option>
+            <option value="T2" selected>Sandy Loam — moderate drainage, most common cropland</option>
+            <option value="T3">Silty Soil — smooth texture, holds water well</option>
+            <option value="T4">Clay Loam — rich in clay, holds nutrients</option>
+            <option value="T5">Heavy Clay — sticky when wet, 60%+ clay</option>
+          </select>
+          <span style="font-size:.68rem;color:var(--dimmer);line-height:1.5">Not sure? See the texture guide in "How Scores Work" below, or check <a href="https://websoilsurvey.sc.egov.usda.gov/App/HomePage.htm" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Web Soil Survey</a> for your field</span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)">Your Soil Organic Carbon (%)</label>
+          <input id="calcSOC" type="number" min="0.01" max="20" step="0.1" value="2.5"
+            style="background:var(--panel3);border:1px solid var(--border);color:var(--text);
+                   padding:9px 12px;border-radius:6px;font-size:15px;font-family:monospace;
+                   outline:none;width:100%;transition:border-color .15s"
+            onfocus="this.style.borderColor='var(--soil)'" onblur="this.style.borderColor='var(--border)'"
+            onkeydown="if(event.key==='Enter')runSHAPECalc()">
+          <span style="font-size:.68rem;color:var(--dimmer)">Enter the lab-measured SOC % for your surface horizon</span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)">Reference Dataset</label>
+          <select id="calcScope" style="min-width:unset">
+            <option value="national">National KSSL (all states)</option>
+          </select>
+          <span style="font-size:.68rem;color:var(--dimmer)">Percentile calculated against KSSL lab-measured values</span>
+        </div>
+
+        <button id="calcBtn" onclick="runSHAPECalc()"
+          style="background:rgba(200,168,75,.15);border:1px solid var(--soil);color:var(--soil);
+                 padding:11px 20px;border-radius:6px;font-size:12px;font-weight:700;
+                 letter-spacing:.06em;cursor:pointer;transition:all .18s;text-transform:uppercase">
+          Calculate My SHAPE Score →
+        </button>
+
+        <div id="calcScore" style="display:none;background:var(--panel3);border:1px solid var(--border);border-radius:6px;padding:16px;text-align:center">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);margin-bottom:6px">SHAPE Score</div>
+          <div id="calcScoreNum" style="font-family:var(--serif);font-size:3.2rem;color:var(--soil);line-height:1;font-weight:400"></div>
+          <div id="calcScoreLbl" style="font-size:.72rem;color:var(--dimmer);margin-top:4px"></div>
+          <div id="calcScoreN" style="font-size:.68rem;color:var(--dimmer);margin-top:8px"></div>
+        </div>
+      </div>
+
+      <!-- CHART -->
+      <div style="background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:24px">
+        <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:3px">SOC Distribution — KSSL Surface Horizons</div>
+        <div id="calcChartSub" style="font-size:.7rem;color:var(--dimmer);margin-bottom:14px">Select a texture group to auto-score — or enter your SOC % and press Enter</div>
+        <div id="calcSpinner" style="display:none;text-align:center;padding:40px;font-size:.82rem;color:var(--dimmer)">
+          <div style="display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--soil);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:8px"></div><br>Querying KSSL lab data…
+        </div>
+        <div style="position:relative;height:320px;display:none" id="calcBox">
+          <canvas id="calcChart"></canvas>
+        </div>
+        <div id="calcNoData" style="display:none;font-size:.82rem;color:var(--dimmer);padding:24px 0">No KSSL data found for this selection. Try a different texture group.</div>
+        <p style="font-size:.68rem;color:var(--dimmer);margin-top:12px;line-height:1.6">
+          Data: <code style="color:var(--soil)">lab_layer</code> + <code style="color:var(--soil)">lab_chemical_properties</code> + <code style="color:var(--soil)">lab_physical_properties</code> via SDA · Surface mineral horizon only (no-duff) · SOC via 4-method cascade · <span id="calcSampleNote"></span>
+        </p>
+      </div>
+    </div>
+
+    <style>
+    @media(max-width:860px){#calcGrid{grid-template-columns:1fr !important}}
+    </style>
+  </div>
+</section>
+
+<!-- ═══════════════ METRICS REDIRECT ═══════════════ -->
+<section class="section dark-band">
+  <div class="section-inner">
+    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:8px 0 24px">
+      <div style="flex:1;min-width:260px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--green);margin-bottom:10px">Platform Usage Metrics</div>
+        <h2 style="font-family:var(--serif);font-size:clamp(1.5rem,2.8vw,2.2rem);color:#fff;font-weight:400;line-height:1.15;margin-bottom:10px">Soil Data Access &amp; Web Soil Survey usage metrics have moved to their own page.</h2>
+        <p style="font-size:.85rem;color:var(--dim);line-height:1.7;max-width:54ch">Annual trends, state-by-state breakdowns, seasonal patterns, and interactive metric explorer — all live data from the Soil Data Access API.</p>
+      </div>
+      <a href="soil-application-metrics.html" style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.35);border-radius:8px;text-decoration:none;transition:all .18s;flex-shrink:0" onmouseover="this.style.background='rgba(34,197,94,.2)'" onmouseout="this.style.background='rgba(34,197,94,.1)'">
+        <span style="font-size:1.4rem"></span>
+        <span>
+          <div style="font-size:.8rem;font-weight:700;color:#22c55e;letter-spacing:.05em">View Soil Data Metrics →</div>
+          <div style="font-size:.7rem;color:var(--dimmer);margin-top:2px">soil-application-metrics.html</div>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CHAPTER 2: KSSL LAB DATA ═══════════════ -->
+<section class="section dark-band">
+  <div class="section-inner">
+    <div class="chapter-mark reveal">
+      <div class="ch-num">2</div>
+      <div>
+        <div class="ch-label">Chapter Two</div>
+        <div class="ch-hed">KSSL Lab Data</div>
+      </div>
+    </div>
+
+    <div class="section-eyebrow">Kellogg Soil Survey Laboratory · NCSS Characterization Database · All States &amp; Territories</div>
+    <h2 class="section-h2">Lab reports at your<br><em>fingertips.</em></h2>
+    <p class="section-lead">The National Cooperative Soil Survey (NCSS) characterization database contains lab analyses from the Kellogg Soil Survey Laboratory in Lincoln, Nebraska and cooperating state universities. Each pedon includes links to primary lab reports, taxonomy, water retention, and soil profile descriptions — all queryable live via Soil Data Access.</p>
+
+    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:8px 0 24px" class="reveal">
+      <div style="flex:1;min-width:260px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--sage);margin-bottom:10px">Full Pedon Explorer</div>
+        <h3 style="font-family:var(--serif);font-size:1.4rem;color:#fff;font-weight:400;line-height:1.3;margin-bottom:10px">All 50 states, territories, and protectorates — with map.</h3>
+        <p style="font-size:.82rem;color:var(--dim);line-height:1.7;max-width:52ch">Filter by series name, see pedon locations on a live map, and access lab reports, taxonomy, water retention curves, and soil profiles. Up to 500 pedons per state.</p>
+      </div>
+      <a href="kssl-lab-data.html" style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:rgba(122,175,110,.1);border:1px solid rgba(122,175,110,.35);border-radius:8px;text-decoration:none;transition:all .18s;flex-shrink:0" onmouseover="this.style.background='rgba(122,175,110,.2)'" onmouseout="this.style.background='rgba(122,175,110,.1)'">
+        <span style="font-size:1.4rem"></span>
+        <span>
+          <div style="font-size:.8rem;font-weight:700;color:#7aaf6e;letter-spacing:.05em">Open KSSL Lab Data →</div>
+          <div style="font-size:.7rem;color:var(--dimmer);margin-top:2px">kssl-lab-data.html — map + table + filter</div>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CHAPTER 3: SHAPE SCORING INFRASTRUCTURE ═══════════════ -->
+<section class="section">
+  <div class="chapter-mark reveal">
+    <div class="ch-num">3</div>
+    <div>
+      <div class="ch-label">Chapter Three</div>
+      <div class="ch-hed">SHAPE Scoring Infrastructure</div>
+    </div>
+  </div>
+
+  <div class="section-eyebrow">Soil Texture Groups · Soil Type Groups · SOC Estimation</div>
+  <h2 class="section-h2">How your soil score<br><em>gets calculated.</em></h2>
+  <p class="section-lead">Not all soils are created equal — and SHAPE doesn't score them equally. A sandy soil and a clay-rich soil have different natural limits for organic matter. SHAPE compares your soil against others with the same texture and the same natural soil type for a fair, meaningful score. Two simple questions determine which benchmark applies: What does your soil feel like? And what kind of soil is it naturally?</p>
+
+  <!-- T1-T5 TEXTURE GROUPS -->
+  <div style="margin-bottom:40px">
+    <div style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:10px"><span style="display:block;width:22px;height:1px;background:var(--gold)"></span>Your Soil's Texture — Choose the Best Match</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px" class="reveal">
+      <div style="background:var(--panel2);border:1px solid var(--border);border-top:3px solid #7aaf6e;border-radius:6px;padding:16px 12px">
+        <div style="font-size:.72rem;font-weight:700;color:#7aaf6e;margin-bottom:6px">Sandy Soil</div>
+        <div style="font-size:.68rem;color:var(--dim);line-height:1.6">Light and gritty. Drains fast, warms up early. Lower organic matter targets — soil can't hold as much.</div>
+      </div>
+      <div style="background:var(--panel2);border:1px solid var(--border);border-top:3px solid #f59e0b;border-radius:6px;padding:16px 12px">
+        <div style="font-size:.72rem;font-weight:700;color:#f59e0b;margin-bottom:6px">Sandy Loam</div>
+        <div style="font-size:.68rem;color:var(--dim);line-height:1.6">Mix of sand and finer particles. Good structure and moderate drainage — the most common US cropland soil.</div>
+      </div>
+      <div style="background:var(--panel2);border:1px solid var(--border);border-top:3px solid #38bdf8;border-radius:6px;padding:16px 12px">
+        <div style="font-size:.72rem;font-weight:700;color:#38bdf8;margin-bottom:6px">Silty Soil</div>
+        <div style="font-size:.68rem;color:var(--dim);line-height:1.6">Smooth and floury texture. Holds water well but can crust over when dry. High erosion risk when bare.</div>
+      </div>
+      <div style="background:var(--panel2);border:1px solid var(--border);border-top:3px solid #a78bfa;border-radius:6px;padding:16px 12px">
+        <div style="font-size:.72rem;font-weight:700;color:#a78bfa;margin-bottom:6px">Clay Loam</div>
+        <div style="font-size:.68rem;color:var(--dim);line-height:1.6">Rich in clay. Excellent at holding nutrients and water — the highest organic matter potential of any texture.</div>
+      </div>
+      <div style="background:var(--panel2);border:1px solid var(--border);border-top:3px solid #ef4444;border-radius:6px;padding:16px 12px">
+        <div style="font-size:.72rem;font-weight:700;color:#ef4444;margin-bottom:6px">Heavy Clay</div>
+        <div style="font-size:.68rem;color:var(--dim);line-height:1.6">Sticky when wet, cracks when dry. 60%+ clay — strong nutrient holding but slow drainage and compaction risk.</div>
+      </div>
+    </div>
+    <p style="font-size:.72rem;color:var(--dimmer);margin-top:10px">Not sure of your soil texture? Check your field on <a href="https://websoilsurvey.sc.egov.usda.gov/App/HomePage.htm" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Web Soil Survey ↗</a></p>
+  </div>
+
+  <!-- S1-S5 SUBORDER GROUPS -->
+  <div style="margin-bottom:48px">
+    <div style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:10px"><span style="display:block;width:22px;height:1px;background:var(--accent)"></span>Your Soil's Natural Type — Sets the Comparison Group</div>
+    <p style="font-size:.82rem;color:var(--dim);line-height:1.75;margin-bottom:16px">Different soils form under different climates and vegetation over thousands of years — a prairie soil naturally holds more organic matter than a desert soil. SHAPE compares your soil only against others of the same natural type, so your score is always fair.</p>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px" class="reveal">
+      <div style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:14px 12px">
+        <div style="font-size:.7rem;font-weight:700;color:var(--accent);margin-bottom:6px">Peat &amp; Wetland</div>
+        <div style="font-size:.65rem;color:var(--dim);line-height:1.55">Organic soils, bogs, and marshes. Naturally very high organic matter — these soils are always wet or saturated.</div>
+      </div>
+      <div style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:14px 12px">
+        <div style="font-size:.7rem;font-weight:700;color:var(--accent);margin-bottom:6px">Wet or Volcanic</div>
+        <div style="font-size:.65rem;color:var(--dim);line-height:1.55">Poorly-drained or volcanic soils. Formed under unique flooded or ash-rich conditions — Pacific Northwest and Alaska.</div>
+      </div>
+      <div style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:14px 12px">
+        <div style="font-size:.7rem;font-weight:700;color:var(--accent);margin-bottom:6px">Prairie &amp; Forest</div>
+        <div style="font-size:.65rem;color:var(--dim);line-height:1.55">Rich Corn Belt prairie soils and acidic forest soils. Naturally high organic matter — most productive soils in the US.</div>
+      </div>
+      <div style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:14px 12px">
+        <div style="font-size:.7rem;font-weight:700;color:var(--accent);margin-bottom:6px">Temperate Farmland</div>
+        <div style="font-size:.65rem;color:var(--dim);line-height:1.55">Forest-derived and shrink-swell farmland soils. Moderate to good productivity — covers much of the eastern US.</div>
+      </div>
+      <div style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:14px 12px">
+        <div style="font-size:.7rem;font-weight:700;color:var(--accent);margin-bottom:6px">Dry or Thin Soils</div>
+        <div style="font-size:.65rem;color:var(--dim);line-height:1.55">Desert, eroded, or shallow soils. Low organic matter is expected — these soils are fragile by nature.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOC ESTIMATION HIERARCHY -->
+  <div class="two-col reveal">
+    <div>
+      <div style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--green);margin-bottom:16px;display:flex;align-items:center;gap:10px"><span style="display:block;width:22px;height:1px;background:var(--green)"></span>SOC Estimation — 4-Method Cascade</div>
+      <p style="font-size:.87rem;color:var(--dim);line-height:1.75;margin-bottom:16px">Not every KSSL pedon has all measurements. SHAPE uses a waterfall of SOC estimation methods, falling through to the next when the preferred method is unavailable:</p>
+      <div style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:20px;font-family:monospace;font-size:.72rem;line-height:2">
+        <div style="color:#a78bfa">① <span style="color:var(--green)">estimated_organic_carbon</span> <span style="color:var(--dimmer)">-- KSSL direct</span></div>
+        <div style="color:#a78bfa;margin-left:16px;border-left:2px solid var(--border);padding-left:12px;margin-top:2px">② <span style="color:var(--gold)">total_carbon_ncs − (caco3_lt_2_mm × 0.12)</span> <span style="color:var(--dimmer)">-- subtract CaCO3</span></div>
+        <div style="color:#a78bfa;margin-left:32px;border-left:2px solid var(--border);padding-left:12px;margin-top:2px">③ <span style="color:var(--orange)">total_carbon_ncs</span> <span style="color:var(--dimmer)">-- total C, no CaCO3 data</span></div>
+        <div style="color:#a78bfa;margin-left:48px;border-left:2px solid var(--border);padding-left:12px;margin-top:2px">④ <span style="color:var(--accent)">0.25 + walkley_black × 0.86</span> <span style="color:var(--dimmer)">-- WB correction</span></div>
+      </div>
+      <p style="font-size:.7rem;color:var(--dimmer);margin-top:10px">SQL source: <a href="https://github.com/jneme910/NRCS-Soil-Data-Access/blob/master/sandbox/Top_Combined_Estimated_Organic_Carbon.sql" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Top_Combined_Estimated_Organic_Carbon.sql ↗</a></p>
+    </div>
+    <div>
+      <div style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:10px"><span style="display:block;width:22px;height:1px;background:var(--gold)"></span>SQL Reference Scripts</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="https://github.com/jneme910/NRCS-Soil-Data-Access/blob/master/sandbox/DSP_KSSL_SOC.sql" target="_blank" rel="noopener noreferrer" style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:14px 16px;text-decoration:none;display:block;transition:border-color .15s" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:.75rem;font-weight:700;color:#fff;margin-bottom:3px">KSSL_SOC_Characterization.sql</div>
+          <div style="font-size:.68rem;color:var(--dim);line-height:1.5">Full KSSL SOC characterization query — joins lab tables and returns all SOC estimation fields for SHAPE scoring.</div>
+          <div style="font-size:.65rem;color:var(--green);margin-top:6px">View in repo ↗</div>
+        </a>
+        <a href="https://github.com/jneme910/NRCS-Soil-Data-Access/blob/master/sandbox/DSP_Point_SDA_intersect.sql" target="_blank" rel="noopener noreferrer" style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:14px 16px;text-decoration:none;display:block;transition:border-color .15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:.75rem;font-weight:700;color:#fff;margin-bottom:3px">Point_SDA_Intersect.sql</div>
+          <div style="font-size:.68rem;color:var(--dim);line-height:1.5">Given a lat/long point, intersects SSURGO polygons and returns SHAPE texture groups, suborder groups, surface texture, and dominant soil suborder.</div>
+          <div style="font-size:.65rem;color:var(--accent);margin-top:6px">View in repo ↗</div>
+        </a>
+        <a href="https://github.com/jneme910/NRCS-Soil-Data-Access/tree/master/sandbox" target="_blank" rel="noopener noreferrer" style="background:var(--panel3);border:1px solid var(--border);border-radius:6px;padding:12px 16px;text-decoration:none;display:block;text-align:center">
+          <div style="font-size:.72rem;font-weight:700;color:var(--soil)">All SQL Scripts →</div>
+          <div style="font-size:.65rem;color:var(--dimmer);margin-top:3px">SHAPE scoring, KSSL SOC, SDA intersects</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Soil Intelligence</div>
+      <div class="footer-desc">Interactive maps, 254 production SQL scripts, and data journalism for SSURGO national soil data — built on Soil Data Access.</div>
+    </div>
+    <div class="footer-col">
+      <h4>Applications</h4>
+      <a href="soil-atlas.html">Soil Atlas</a>
+      <a href="soil-data-stories.html">Data Stories</a>
+      <a href="Regenerative-Agriculture-Risk-Map.html">Regen Ag Map</a>
+      <a href="soil-risk-explorer.html">Risk Explorer</a>
+      <a href="regen-ag-shape-curves.html">Regen Ag SHAPE Curves</a>
+      <a href="soil-data-visual-lab.html">Soil Data Visual Lab</a>
+    </div>
+    <div class="footer-col">
+      <h4>Data &amp; Tools</h4>
+      <a href="sql-explorer.html">SQL Explorer</a>
+      <a href="data-models.html">Data Models</a>
+      <a href="governance-status.html">Governance</a>
+      <a href="https://sdmdataaccess.nrcs.usda.gov/" target="_blank" rel="noopener noreferrer">Soil Data Access</a>
+      <a href="#shape-calc">Live SHAPE Calculator</a>
+    </div>
+  </div>
+  <hr class="footer-rule">
+  <div class="footer-bottom">
+    <span>USDA Soil Data Access · Public domain data</span>
+    <span>jneme910 · GitHub Pages</span>
+  </div>
+</footer>
+
+<script>
+/* ── GLOBALS ──────────────────────────────────────────── */
+const SDA = 'https://sdmdataaccess.sc.egov.usda.gov/tabular/post.rest';
+
+function post(q, fmt, tag) {
+  var t = tag || 'SDA';
+  var t0 = performance.now();
+  SoilLog.debug(t, q.slice(0,100));
+  var def = $.ajax({ type:'POST', url:SDA, data:{ query:q, format:fmt||'json+columnname' }, dataType:'json', timeout:30000 });
+  def.done(function(d){
+    var ms = Math.round(performance.now()-t0);
+    SoilLog.info(t, 'OK '+ms+'ms · '+((d&&d.Table)?d.Table.length-1:0)+' row(s)');
+  });
+  def.fail(function(xhr,status){
+    SoilLog.error(t, 'Failed ('+status+') after '+Math.round(performance.now()-t0)+'ms');
+  });
+  return def;
+}
+
+function fmtNum(n) {
+  if (!n || isNaN(n)) return '—';
+  n = +n;
+  if (n >= 1e9) return (n/1e9).toFixed(1) + 'B';
+  if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return Math.round(n/1e3) + 'K';
+  return n.toLocaleString();
+}
+
+function countUp(el, target) {
+  var dur = 1800, step = 16, steps = dur/step, inc = target/steps, cur = 0;
+  var t = setInterval(function(){
+    cur += inc;
+    if (cur >= target) { cur = target; clearInterval(t); }
+    el.textContent = fmtNum(Math.round(cur));
+  }, step);
+}
+
+/* ── HERO STATS ───────────────────────────────────────── */
+post(
+  "SELECT " +
+  " SUM(CASE WHEN query_name='SDA_Usage' THEN [count] ELSE 0 END) AS sda_total," +
+  " SUM(CASE WHEN query_name='wss_ActivityCounts' AND query_header='SESSION_START' THEN [count] ELSE 0 END) AS wss_sessions," +
+  " SUM(CASE WHEN query_name='wss_ActivityCounts' AND query_header='AOI' THEN [count] ELSE 0 END) AS wss_aoi," +
+  " MAX(query_year) AS latest_year" +
+  " FROM wss_metric_query_results" +
+  " WHERE query_frequency='M' AND state LIKE '%NAT%'"
+).done(function(d){
+  if (!d.Table || d.Table.length < 2) return;
+  var cols = d.Table[0], row = d.Table[1], obj = {};
+  cols.forEach(function(c,i){ obj[c]=row[i]; });
+  countUp(document.getElementById('hSDA'), +obj.sda_total);
+  countUp(document.getElementById('hSessions'), +obj.wss_sessions);
+  countUp(document.getElementById('hAOI'), +obj.wss_aoi);
+  if (obj.latest_year) {
+    var yr = 'Through ' + obj.latest_year;
+    ['hSDAyear','hSessionsYear','hAOIYear'].forEach(function(id){ document.getElementById(id).textContent = yr; });
+  }
+});
+
+post(
+  "SELECT COUNT(DISTINCT pedon_key) AS total FROM lab_combine_nasis_ncss",
+  'json+columnname'
+).done(function(d){
+  if (!d.Table || d.Table.length < 2) return;
+  countUp(document.getElementById('hPedons'), +d.Table[1][0]);
+});
+
+/* ── CHART DEFAULTS (used by SHAPE calculator chart) ──── */
+Chart.defaults.color = '#5a6490';
+Chart.defaults.borderColor = '#1e2640';
+
+/* ── KSSL STATE SELECTOR — populate calcScope dropdown ── */
+post(
+  "WITH cte(area_name,area_code) AS (" +
+  " SELECT area_name,area_code FROM lab_webmap" +
+  " INNER JOIN lab_combine_nasis_ncss ON lab_combine_nasis_ncss.pedon_key=lab_webmap.pedon_Key" +
+  " INNER JOIN lab_area ON lab_area.area_key=lab_combine_nasis_ncss.state_key" +
+  " AND area_type='state_admin_div' AND area_sub_type='state' AND parent_area_key=244)" +
+  " SELECT DISTINCT area_name,area_code FROM cte ORDER BY area_name",
+  'json'
+).done(function(d){
+  if (!d.Table) return;
+  var scopeSel = document.getElementById('calcScope');
+  d.Table.forEach(function(r){
+    var o=document.createElement('option'); o.value=r[1]; o.textContent=r[0]+' (state)'; scopeSel.appendChild(o);
+  });
+});
+
+/* ── SCROLL REVEAL ────────────────────────────────────── */
+var obs = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); obs.unobserve(e.target); }});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+
+/* ── ANIMATE BENCHMARK BARS ON SCROLL ────────────────── */
+var benchObs = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.bench-fill').forEach(function(bar){
+        bar.style.width = bar.dataset.w + '%';
+      });
+      benchObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.3});
+document.querySelectorAll('.two-col').forEach(function(el){ benchObs.observe(el); });
+
+/* ── LIVE SHAPE SCORE CALCULATOR ──────────────────────── */
+var calcChart = null;
+
+// Texture group → lab_physical_properties texture_lab codes
+var textureCodes = {
+  T1: ["'S'","'LS'","'SL'"],          // sandy (approximate, includes some T2 SL)
+  T2: ["'SCL'","'L'","'SL'"],         // sandy loam / loam
+  T3: ["'SIL'","'SI'"],               // silty
+  T4: ["'SC'","'CL'","'SICL'","'SIC'"], // clay loam family
+  T5: ["'C'"]                         // heavy clay
+};
+
+var textureLabels = {
+  T1:'Sandy Soil',
+  T2:'Sandy Loam',
+  T3:'Silty Soil',
+  T4:'Clay Loam',
+  T5:'Heavy Clay'
+};
+
+function runSHAPECalc() {
+  var tgrp  = document.getElementById('calcTexture').value;
+  var soc   = parseFloat(document.getElementById('calcSOC').value);
+  var scope = document.getElementById('calcScope').value;
+  if (isNaN(soc) || soc <= 0) { alert('Please enter a valid SOC value (e.g. 2.5)'); return; }
+
+  document.getElementById('calcBtn').disabled = true;
+  document.getElementById('calcBtn').textContent = 'Loading…';
+  document.getElementById('calcSpinner').style.display = 'block';
+  document.getElementById('calcBox').style.display = 'none';
+  document.getElementById('calcScore').style.display = 'none';
+  document.getElementById('calcNoData').style.display = 'none';
+
+  var codes = textureCodes[tgrp];
+  var texIn = codes.join(',');
+
+  // Query KSSL surface-horizon SOC for this texture group via 4-method cascade
+  var q =
+    "SELECT TOP 1000" +
+    " CASE" +
+    "   WHEN lcp.estimated_organic_carbon IS NOT NULL THEN lcp.estimated_organic_carbon" +
+    "   WHEN lcp.estimated_organic_carbon IS NULL AND lcp.caco3_lt_2_mm IS NOT NULL" +
+    "     THEN lcp.total_carbon_ncs - (lcp.caco3_lt_2_mm * 0.12)" +
+    "   WHEN lcp.total_carbon_ncs IS NOT NULL THEN lcp.total_carbon_ncs" +
+    "   WHEN lcp.organic_carbon_walkley_black IS NOT NULL" +
+    "     THEN 0.25 + lcp.organic_carbon_walkley_black * 0.86" +
+    " END AS calc_soc" +
+    " FROM lab_layer ll" +
+    " INNER JOIN lab_chemical_properties lcp ON lcp.labsampnum = ll.labsampnum" +
+    " INNER JOIN lab_physical_properties lpp ON lpp.labsampnum = ll.labsampnum" +
+    (scope && scope!=='national' ?
+      " INNER JOIN lab_combine_nasis_ncss lcn ON lcn.pedon_key=ll.pedon_key" +
+      " INNER JOIN lab_area la ON la.area_key=lcn.state_key AND la.area_code='" + scope.replace(/['";<>]/g,'') + "'" : "") +
+    " WHERE lpp.texture_lab IN (" + texIn + ")" +
+    " AND ll.hzn_top = (" +
+    "   SELECT MIN(ll2.hzn_top) FROM lab_layer ll2" +
+    "   WHERE ll2.pedon_key = ll.pedon_key" +
+    "     AND (ll2.hzn_desgn IS NULL OR ll2.hzn_desgn NOT LIKE 'O%')" +
+    " )" +
+    " AND (" +
+    "   lcp.estimated_organic_carbon IS NOT NULL OR" +
+    "   lcp.total_carbon_ncs IS NOT NULL OR" +
+    "   lcp.organic_carbon_walkley_black IS NOT NULL" +
+    " )" +
+    " AND CASE" +
+    "   WHEN lcp.estimated_organic_carbon IS NOT NULL THEN lcp.estimated_organic_carbon" +
+    "   WHEN lcp.total_carbon_ncs IS NOT NULL THEN lcp.total_carbon_ncs" +
+    "   ELSE 0.5 END BETWEEN 0.01 AND 20";
+
+  post(q).done(function(d){
+    document.getElementById('calcBtn').disabled = false;
+    document.getElementById('calcBtn').textContent = 'Calculate My SHAPE Score →';
+    document.getElementById('calcSpinner').style.display = 'none';
+
+    if (!d.Table || d.Table.length < 5) {
+      document.getElementById('calcNoData').style.display = 'block'; return;
+    }
+
+    // Extract valid SOC values
+    var vals = [];
+    for (var i = 1; i < d.Table.length; i++) {
+      var v = parseFloat(d.Table[i][0]);
+      if (!isNaN(v) && v > 0 && v <= 20) vals.push(v);
+    }
+    if (vals.length < 5) { document.getElementById('calcNoData').style.display='block'; return; }
+
+    vals.sort(function(a,b){return a-b;});
+    var n = vals.length;
+
+    // Compute percentile of user's SOC
+    var below = vals.filter(function(v){return v <= soc;}).length;
+    var pct = Math.round(below / n * 100);
+
+    // KDE — Silverman bandwidth
+    var mean = vals.reduce(function(s,v){return s+v;},0)/n;
+    var sd = Math.sqrt(vals.reduce(function(s,v){return s+(v-mean)*(v-mean);},0)/(n-1));
+    var bw = 1.06 * sd * Math.pow(n, -0.2);
+
+    var xMin = Math.max(0, vals[0] - bw*2);
+    var xMax = Math.min(20, vals[n-1] + bw*2);
+    var steps = 120;
+    var xs = [], kdeY = [], fillY_below = [], fillY_above = [];
+
+    for (var s = 0; s <= steps; s++) {
+      var x = xMin + (xMax - xMin) * s / steps;
+      var y = 0;
+      vals.forEach(function(v){ y += Math.exp(-0.5*((x-v)/bw)*((x-v)/bw))/(bw*Math.sqrt(2*Math.PI)); });
+      y /= n;
+      xs.push(Math.round(x*100)/100);
+      kdeY.push(Math.round(y*10000)/10000);
+      fillY_below.push(x <= soc ? y : null);
+      fillY_above.push(x >= soc ? y : null);
+    }
+
+    // Render chart
+    document.getElementById('calcBox').style.display = 'block';
+    var scopeLabel = (scope && scope!=='national') ? scope : 'National';
+    document.getElementById('calcChartSub').textContent =
+      textureLabels[tgrp] + ' · ' + scopeLabel + ' · n=' + n + ' KSSL pedons · Your SOC: ' + soc + '% → ' + pct + 'th percentile';
+    document.getElementById('calcSampleNote').textContent = n + ' KSSL pedons used';
+
+    if (calcChart) calcChart.destroy();
+    var ctx = document.getElementById('calcChart').getContext('2d');
+    calcChart = new Chart(ctx, {
+      type:'line',
+      data:{
+        labels: xs,
+        datasets:[
+          { label:'Distribution', data:kdeY,
+            borderColor:'rgba(200,168,75,.6)', backgroundColor:'rgba(200,168,75,.08)',
+            borderWidth:2, fill:true, pointRadius:0, tension:0.4 },
+          { label:'Below your value', data:fillY_below,
+            borderColor:'rgba(122,175,110,.0)', backgroundColor:'rgba(122,175,110,.3)',
+            borderWidth:0, fill:true, pointRadius:0, tension:0.4 },
+          { label:'Your value', data:xs.map(function(x){return Math.abs(x-soc)<(xMax-xMin)/steps*1.5?Math.max.apply(null,kdeY)*1.05:null;}),
+            borderColor:'rgba(200,168,75,1)', backgroundColor:'rgba(200,168,75,1)',
+            borderWidth:2, fill:false, pointRadius:0, tension:0, borderDash:[4,3] }
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            callbacks:{
+              title:function(c){return 'SOC: '+c[0].label+'%'},
+              label:function(c){return c.datasetIndex===0 ? 'Density: '+c.raw : '';}
+            }
+          },
+          annotation:{} // placeholder — no annotation plugin needed
+        },
+        scales:{
+          x:{ title:{display:true,text:'Soil Organic Carbon (%)',color:'#5a6490',font:{size:11}},
+              grid:{color:'rgba(30,38,64,.5)'}, ticks:{color:'#5a6490',maxTicksLimit:10,
+                callback:function(v,i){return xs[i]!==undefined?xs[i]:v;}} },
+          y:{ title:{display:true,text:'Probability Density',color:'#5a6490',font:{size:11}},
+              grid:{color:'rgba(30,38,64,.5)'}, ticks:{color:'#5a6490',
+                callback:function(v){return v.toFixed(3);}} }
+        }
+      }
+    });
+
+    // Score display
+    var scoreColor = pct >= 75 ? 'var(--sage)' : pct >= 50 ? 'var(--soil)' : pct >= 25 ? 'var(--gold)' : 'var(--earth)';
+    var scoreLbl = pct >= 75 ? 'Above average — healthy soil organic matter' :
+                   pct >= 50 ? 'Average — room for improvement' :
+                   pct >= 25 ? 'Below average — consider OM-building practices' :
+                                'Low — significant regenerative agriculture opportunity';
+    document.getElementById('calcScoreNum').textContent = pct + 'th';
+    document.getElementById('calcScoreNum').style.color = scoreColor;
+    document.getElementById('calcScoreLbl').textContent = scoreLbl;
+    document.getElementById('calcScoreN').textContent = 'Compared against ' + n + ' KSSL lab-measured pedons · ' + textureLabels[tgrp];
+    document.getElementById('calcScore').style.display = 'block';
+
+  }).fail(function(){
+    document.getElementById('calcBtn').disabled = false;
+    document.getElementById('calcBtn').textContent = 'Calculate My SHAPE Score →';
+    document.getElementById('calcSpinner').style.display = 'none';
+    document.getElementById('calcNoData').style.display = 'block';
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="canonical" href="https://lab10yr.com/analyze">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lab10YR">
+<meta property="og:title" content="AOI Soil Analyzer · Soil Intelligence">
+<meta property="og:description" content="Pick an area on the map and get a plain-language map unit agronomic assessment: the soils, agricultural suitability, drainage, limitations, and management notes, plus ask questions about the area.">
+<meta property="og:url" content="https://lab10yr.com/analyze.html">
+<meta property="og:image" content="https://lab10yr.com/assets/og-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AOI Soil Analyzer · Soil Intelligence">
+<meta name="twitter:description" content="A plain-language agronomic assessment of any area you draw, from the national soil survey.">
+<title>AOI Soil Analyzer · Soil Intelligence</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#0d1220;--border:#1e2640;
+  --text:#d4daf0;--dim:#8892b0;--dimmer:#4a5270;
+  --accent:#38bdf8;--soil:#c8a84b;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;
+  --font:'Inter',system-ui,sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;min-height:100vh}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+nav{background:rgba(4,6,12,.97);border-bottom:1px solid var(--border);padding:0 20px;height:48px;
+    display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nav-logo{font-weight:800;font-size:14px;color:#fff;white-space:nowrap;flex-shrink:0}
+.nav-logo em{color:var(--soil);font-style:normal}
+.nav-links{display:flex;gap:12px;margin-left:auto}
+.nav-links a{font-size:11px;font-weight:600;color:var(--dim);white-space:nowrap;flex-shrink:0}
+.nav-links a:hover{color:var(--text);text-decoration:none}
+.hero{padding:40px 24px 14px;max-width:1080px;margin:0 auto}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--soil);margin-bottom:10px}
+h1{font-size:clamp(20px,3.5vw,32px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:8px}
+h1 em{color:var(--soil);font-style:normal}
+.lead{font-size:13.5px;color:var(--dim);max-width:680px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:8px 24px 60px}
+.controls{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
+.ctl{display:flex;flex-direction:column;gap:5px}
+.ctl label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+select,input{background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:6px;
+  padding:9px 11px;font-size:13px;font-family:var(--font);outline:none}
+input{width:120px}select:focus,input:focus{border-color:var(--accent)}
+.btn{background:var(--accent);color:#04060c;border:none;border-radius:6px;padding:9px 16px;font-size:13px;
+  font-weight:700;cursor:pointer;font-family:var(--font)}
+.btn:hover{filter:brightness(1.08)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+#map{height:380px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.maphint{font-size:11px;color:var(--dim);margin:8px 0 0}
+.report{margin-top:22px}
+.status{color:var(--dim);text-align:center;padding:26px 0}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);
+  border-radius:50%;animation:s .8s linear infinite;vertical-align:-3px;margin-right:8px}
+@keyframes s{to{transform:rotate(360deg)}}
+.rpt-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.rpt-title{font-size:18px;font-weight:800;color:#fff}
+.rpt-sym{font-size:12px;color:var(--dimmer);font-weight:600}
+.assessment{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:20px 22px;line-height:1.65;font-size:13.5px}
+.assessment h4{font-size:13px;color:var(--soil);font-weight:800;margin:14px 0 4px;letter-spacing:.02em}
+.assessment h4:first-child{margin-top:0}
+.assessment p{margin:0 0 8px;color:#cdd5ee}
+.disclaimer{font-size:11px;color:var(--dimmer);margin-top:10px}
+h3{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:22px 0 10px}
+table{width:100%;border-collapse:collapse;font-size:12px;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+th{text-align:left;color:var(--dim);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--border);font-size:10px;text-transform:uppercase}
+td{padding:8px 10px;border-bottom:1px solid var(--border)}tr:last-child td{border-bottom:none}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.ask{display:flex;gap:8px;margin-top:22px;flex-wrap:wrap}
+.ask input{flex:1;min-width:240px;width:auto}
+.qa{background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--soil);border-radius:8px;
+  padding:14px 16px;margin-top:12px;line-height:1.6}
+.qa .q{font-weight:700;color:#fff;margin-bottom:6px}
+.upgrade{background:linear-gradient(180deg,#13233a,#0a1424);border:1px solid var(--accent);border-radius:12px;padding:26px;text-align:center;max-width:520px;margin:18px auto}
+.up-eyebrow{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.up-title{font-size:19px;font-weight:800;color:#fff;margin-bottom:8px}
+.upgrade p{color:var(--dim);font-size:13.5px;line-height:1.6;margin-bottom:16px}
+.up-btn{display:inline-block;text-decoration:none;background:var(--accent);color:#04060c;padding:11px 22px;border-radius:7px;font-weight:700}
+.up-note{font-size:11px;color:var(--dimmer);margin-top:12px}
+.pdf-btn{margin-left:auto;background:var(--accent);color:#04060c;border:none;border-radius:6px;padding:7px 14px;
+  font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font)}
+.print-only-head{display:none}
+footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:var(--dimmer);font-size:11px;margin-top:30px}
+@media print{
+  nav,.controls,#map,.maphint,.ask,.hero .lead,.hero .eyebrow,.hero h1,.pdf-btn{display:none!important}
+  body{background:#fff;color:#111;font-size:12px}.wrap,.hero{padding:0;max-width:none}
+  .print-only-head{display:block;border-bottom:2px solid #c8a84b;padding-bottom:8px;margin-bottom:14px;font-weight:800;font-size:13px;color:#111}
+  .print-only-head span{font-weight:500;color:#666}
+  .assessment,table,.qa{background:#fff;border-color:#bbb}
+  .assessment h4{color:#8a6d1f}.assessment p{color:#222}.rpt-title{color:#111}.rpt-sym{color:#555}
+  th{color:#555;border-color:#ccc}td{border-color:#eee}h3{color:#444}
+  a{color:#111;text-decoration:none}@page{margin:1.4cm}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo"><em>Soil</em> Intelligence</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="county-report.html">County Report</a>
+    <a href="soil-lookup.html">Site Lookup</a>
+    <a href="interpretations.html">Interpretations</a>
+    <a href="sql-explorer.html">SQL Explorer</a>
+  </div>
+</nav>
+<div class="hero">
+  <div class="eyebrow">AOI Soil Analyzer</div>
+  <h1>Pick an area. Get a <em>map unit agronomic assessment</em>.</h1>
+  <p class="lead">Click the map to choose a spot and an area size. The analyzer reads every soil map unit in
+  that area from the national soil survey and writes a plain-language assessment: the soils, agricultural
+  suitability, water and drainage, limitations, and management notes. Then ask it questions about the area.</p>
+</div>
+<div class="wrap">
+  <div class="controls">
+    <div class="ctl"><label>Area size</label>
+      <select id="size">
+        <option value="0">Point</option>
+        <option value="0.5">Small (~0.5 km)</option>
+        <option value="1" selected>Medium (~1 km)</option>
+        <option value="2">Large (~2 km)</option>
+      </select>
+    </div>
+    <div class="ctl"><label>Latitude</label><input id="lat" inputmode="decimal" placeholder="click map"></div>
+    <div class="ctl"><label>Longitude</label><input id="lng" inputmode="decimal" placeholder="click map"></div>
+    <button class="btn ghost" id="geo">Use my location</button>
+    <button class="btn" id="go" disabled>Analyze area</button>
+  </div>
+  <div id="map"></div>
+  <div class="maphint">Click anywhere on the map to set the area. Cropland and survey-mapped land works best; open water returns no soils.</div>
+  <div class="report" id="report"></div>
+</div>
+<footer>
+  Desktop interpretation of generalized map unit data from the National Cooperative Soil Survey (SSURGO) via
+  Soil Data Access. Ground truthing is needed for parcel-level or regulatory decisions. &middot; <a href="index.html">Soil Intelligence</a>
+</footer>
+<script>
+const $=s=>document.querySelector(s);
+const latI=$("#lat"),lngI=$("#lng"),sizeS=$("#size"),report=$("#report"),goBtn=$("#go");
+let center=null, marker=null;
+
+// ── Pro key: captured from the Stripe success_url (/analyze?key=...), stored locally,
+// sent on every API call so paid users bypass the free cap and run Soil Geospatial Intelligence.
+function proKey(){ try{ return localStorage.getItem("lab10yr_key")||""; }catch(e){ return ""; } }
+(function captureKey(){
+  const u=new URL(location.href), k=u.searchParams.get("key");
+  if(k){ try{ localStorage.setItem("lab10yr_key",k.trim()); }catch(e){}
+    u.searchParams.delete("key"); u.searchParams.delete("pro");
+    history.replaceState(null,"",u.pathname+(u.search||"")); }
+})();
+function apiHeaders(extra){ const h=Object.assign({},extra||{}); const k=proKey(); if(k) h["X-Lab10YR-Key"]=k; return h; }
+async function manageSub(){
+  const k=proKey(); if(!k){ location.href="/analyze"; return; }
+  try{ const r=await fetch("/api/portal",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:k})}).then(r=>r.json());
+    if(r&&r.url){ location.href=r.url; return; } if(r&&r.error){ alert(r.error); return; } }catch(e){}
+  location.href="mailto:info@lab10yr.com?subject=Lab10YR%20Pro%20subscription";
+}
+function renderProPill(){
+  if(!proKey()) return;
+  const links=document.querySelector(".nav-links"); if(!links||document.getElementById("proPill")) return;
+  const a=document.createElement("a"); a.id="proPill"; a.href="javascript:void(0)"; a.onclick=manageSub;
+  a.textContent="Pro · Manage"; a.style.cssText="color:var(--accent);font-weight:600";
+  links.appendChild(a);
+}
+renderProPill();
+
+const map=new maplibregl.Map({
+  container:"map",
+  style:{version:8,sources:{c:{type:"raster",tiles:["https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png","https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png"],tileSize:256,attribution:"&copy; OpenStreetMap &copy; CARTO"}},layers:[{id:"c",type:"raster",source:"c"}]},
+  center:[-93.62,42.03],zoom:10
+});
+map.addControl(new maplibregl.NavigationControl({showCompass:false}),"top-right");
+map.on("load",()=>{
+  map.addSource("aoi",{type:"geojson",data:{type:"FeatureCollection",features:[]}});
+  map.addLayer({id:"aoi-fill",type:"fill",source:"aoi",paint:{"fill-color":"#38bdf8","fill-opacity":0.18}});
+  map.addLayer({id:"aoi-line",type:"line",source:"aoi",paint:{"line-color":"#38bdf8","line-width":2}});
+});
+map.on("click",e=>{ setCenter(e.lngLat.lng,e.lngLat.lat); });
+
+function setCenter(lng,lat){
+  center=[lng,lat];
+  latI.value=lat.toFixed(4); lngI.value=lng.toFixed(4);
+  if(marker)marker.setLngLat([lng,lat]); else marker=new maplibregl.Marker({color:"#c8a84b"}).setLngLat([lng,lat]).addTo(map);
+  drawAOI(); goBtn.disabled=false;
+}
+function boxCoords(){
+  const [lng,lat]=center, km=parseFloat(sizeS.value);
+  if(km===0) return null;
+  const dLat=km/111, dLng=km/(111*Math.cos(lat*Math.PI/180));
+  return [[lng-dLng,lat-dLat],[lng+dLng,lat-dLat],[lng+dLng,lat+dLat],[lng-dLng,lat+dLat],[lng-dLng,lat-dLat]];
+}
+function drawAOI(){
+  if(!map.getSource("aoi")||!center)return;
+  const box=boxCoords();
+  const data= box ? {type:"Feature",geometry:{type:"Polygon",coordinates:[box]}} : {type:"FeatureCollection",features:[]};
+  map.getSource("aoi").setData(data);
+}
+function wkt(){
+  const [lng,lat]=center, box=boxCoords();
+  if(!box) return "point("+lng+" "+lat+")";
+  return "polygon(("+box.map(c=>c[0]+" "+c[1]).join(", ")+"))";
+}
+sizeS.onchange=drawAOI;
+[latI,lngI].forEach(inp=>inp.onchange=()=>{const la=parseFloat(latI.value),ln=parseFloat(lngI.value);if(isFinite(la)&&isFinite(ln)){setCenter(ln,la);map.flyTo({center:[ln,la],zoom:11});}});
+$("#geo").onclick=()=>{
+  if(!navigator.geolocation)return;
+  navigator.geolocation.getCurrentPosition(p=>{setCenter(p.coords.longitude,p.coords.latitude);map.flyTo({center:[p.coords.longitude,p.coords.latitude],zoom:12});});
+};
+
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function fmtAnalysis(text){
+  const lines=String(text).split(/\n+/).map(l=>l.trim()).filter(Boolean);
+  return lines.map(l=>{
+    const m=l.match(/^(\d+\.\s*)([A-Z][^.]{2,46}\.)\s*(.*)$/);
+    if(m) return "<h4>"+esc(m[2].replace(/\.$/,""))+"</h4>"+(m[3]?"<p>"+esc(m[3])+"</p>":"");
+    if(/^[A-Z][A-Za-z &/]{2,40}$/.test(l)&&l.length<42) return "<h4>"+esc(l)+"</h4>";
+    return "<p>"+esc(l)+"</p>";
+  }).join("");
+}
+function dataTable(rows){
+  if(!rows||!rows.length)return"";
+  const r=rows.map(x=>'<tr><td>'+esc(x.muname||"")+'</td><td>'+esc(x.compname||"")+'</td><td class=num>'+(x.comppct_r||0)+'%</td><td>'+esc(x.drainagecl||"")+'</td><td class=num>'+(x.nirrcapcl||"")+'</td><td>'+esc(x.hydgrp||"")+'</td><td>'+esc(x.hydricrating||"")+'</td><td class=num>'+(x.om!=null?x.om:"")+'</td></tr>').join("");
+  return '<h3>Map units in this area</h3><table><thead><tr><th>Map unit</th><th>Dominant soil</th><th class=num>Pct</th><th>Drainage</th><th class=num>Cap</th><th>HSG</th><th>Hydric</th><th class=num>OM%</th></tr></thead><tbody>'+r+'</tbody></table>';
+}
+
+let lastData=null;
+function upgradeCard(cap){
+  return '<div class="upgrade"><div class="up-eyebrow">Free limit reached</div>'+
+    '<div class="up-title">You have used your '+cap+' free analyses today</div>'+
+    '<p>Lab10YR <b>Pro</b> gives unlimited soil assessments with deeper, more precise <b>Soil Geospatial Intelligence</b>, PDF export of every report, and saved areas.</p>'+
+    '<button class="btn up-btn" onclick="goPro()">Get Pro access</button>'+
+    '<div class="up-note">Your free analyses reset tomorrow.</div></div>';
+}
+async function goPro(){
+  try{ const r=await fetch("/api/checkout",{method:"POST"}).then(r=>r.json()); if(r&&r.url){location.href=r.url;return;} }catch(e){}
+  location.href="mailto:info@lab10yr.com?subject=Lab10YR%20Pro%20access&body=I%20would%20like%20Pro%20access%20to%20the%20Lab10YR%20soil%20analyzer.";
+}
+async function analyze(){
+  if(!center){report.innerHTML='<div class="status">Click the map to choose an area first.</div>';return;}
+  const w=wkt();
+  report.innerHTML='<div class="status"><span class="spin"></span>Reading the soil survey and writing the assessment. This can take a few seconds.</div>';
+  let j;
+  try{ j=await fetch("/api/soil-analyze",{method:"POST",headers:apiHeaders({"Content-Type":"application/json"}),body:JSON.stringify({wkt:w,mode:"analyze"})}).then(r=>r.json()); }
+  catch(e){ report.innerHTML='<div class="status">Network error. Try again.</div>';return; }
+  if(!j||!j.ok){
+    if(j&&j.upgrade){ report.innerHTML=upgradeCard(j.cap||3); return; }
+    report.innerHTML='<div class="status">'+esc((j&&j.error)||"Could not analyze that area.")+'</div>';return;
+  }
+  lastData=j;
+  const here=center[1].toFixed(4)+", "+center[0].toFixed(4);
+  report.innerHTML=
+    '<div class="print-only-head">LAB10YR &nbsp;&middot;&nbsp; AOI SOIL ASSESSMENT <span>&nbsp;&middot;&nbsp; '+new Date().toLocaleDateString()+'</span></div>'+
+    '<div class="rpt-head"><div class="rpt-title">Area Assessment</div><div class="rpt-sym">'+here+' &middot; '+(j.units||0)+' map units</div><button class="pdf-btn" onclick="window.print()">Save PDF</button></div>'+
+    '<div class="assessment">'+fmtAnalysis(j.analysis||"")+'<div class="disclaimer">Desktop interpretation of generalized SSURGO map units. Verify on the ground for parcel-level or regulatory decisions.</div></div>'+
+    dataTable(j.data)+
+    '<h3>Ask about this area</h3><div class="ask"><input id="q" placeholder="e.g. Is this good for row crops? What limits building here?"><button class="btn" id="askBtn">Ask</button></div><div id="qaOut"></div>';
+  $("#askBtn").onclick=ask; $("#q").addEventListener("keydown",e=>{if(e.key==="Enter")ask();});
+}
+async function ask(){
+  const qi=$("#q"),out=$("#qaOut"),q=qi.value.trim();
+  if(!q||!center)return;
+  out.insertAdjacentHTML("beforeend",'<div class="qa"><div class="q">'+esc(q)+'</div><div class="status" style="text-align:left;padding:6px 0"><span class="spin"></span>Thinking...</div></div>');
+  const node=out.lastElementChild; qi.value="";
+  let j;
+  try{ j=await fetch("/api/soil-analyze",{method:"POST",headers:apiHeaders({"Content-Type":"application/json"}),body:JSON.stringify({wkt:wkt(),mode:"qa",question:q})}).then(r=>r.json()); }
+  catch(e){ node.querySelector(".status").textContent="Network error.";return; }
+  node.querySelector(".status").outerHTML = (j&&j.ok) ? fmtAnalysis(j.analysis||"")
+    : (j&&j.upgrade ? '<p class="muted">You have hit today\'s free limit. <a href="mailto:info@lab10yr.com?subject=Lab10YR%20Pro">Upgrade to Pro</a> for unlimited questions with Soil Geospatial Intelligence.</p>'
+    : '<p>'+esc((j&&j.error)||"Could not answer.")+'</p>');
+}
+goBtn.onclick=analyze;
+</script>
+</body>
+</html>

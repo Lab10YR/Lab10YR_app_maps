@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Lab10YR — Soil Geospatial Intelligence</title>
+    <link>https://lab10yr.com</link>
+    <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 12 Jun 2026 16:16:24 GMT</lastBuildDate>
+    <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <image>
+      <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
+      <title>Lab10YR — Soil Geospatial Intelligence</title>
+      <link>https://lab10yr.com</link>
+    </image>
+  <item>
+    <title>The Ground Beneath the Cloud</title>
+    <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
+    <pubDate>Fri, 12 Jun 2026 16:16:24 GMT</pubDate>
+    <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>Computer Vision Is Now Classifying Soil Texture From Field Photos</title>
+    <link>https://lab10yr.com/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1781280981640</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1781280981640</guid>
+    <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
+    <description>Deep learning now reads soil texture from smartphone photos at 78 percent accuracy, but the 60,000 laboratory-verified pedons in KSSL and free SSURGO polygons remain the ground truth that makes those predictions defensible.</description>
+  </item>
+  <item>
+    <title>Soil Depth Prediction From LiDAR: What the Terrain Tells You Before You Dig</title>
+    <link>https://lab10yr.com/articles/soil-depth-prediction-from-lidar-what-the-terrain-tells-you--1781196707799</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/soil-depth-prediction-from-lidar-what-the-terrain-tells-you--1781196707799</guid>
+    <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
+    <description>Terrain curvature from LiDAR predicts depth to bedrock within 30 cm at 70 percent of tested Appalachian and Rocky Mountain sites, screening soil depth before a costly Phase I geotechnical study.</description>
+  </item>
+  <item>
+    <title>The Ground Under Data Center Alley Was Never Meant to Hold It</title>
+    <link>https://lab10yr.com/articles/the-ground-under-data-center-alley-was-never-meant-to-hold-i-1781050588274</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-under-data-center-alley-was-never-meant-to-hold-i-1781050588274</guid>
+    <pubDate>Wed, 10 Jun 2026 00:00:00 GMT</pubDate>
+    <description>A fuzzy-logic soil-suitability model run against the national soil survey finds that Data Center Alley in Loudoun County, Virginia is only 39 percent buildable, with its largest share of ground rated marginal. The dirt under hyperscale is a construction-budget line item the industry rarely names.</description>
+  </item>
+  <item>
+    <title>Topographic Wetness Index: The Terrain Derivative That Predicts Soil Drainage</title>
+    <link>https://lab10yr.com/articles/topographic-wetness-index-the-terrain-derivative-that-predic-1781109253100</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/topographic-wetness-index-the-terrain-derivative-that-predic-1781109253100</guid>
+    <pubDate>Wed, 10 Jun 2026 00:00:00 GMT</pubDate>
+    <description>The Topographic Wetness Index, derived from a 1-meter LiDAR elevation model, predicts SSURGO drainage class with roughly 80 percent accuracy and flags probable hydric soils before any field delineation dollar is spent.</description>
+  </item>
+  <item>
+    <title>Multispectral Drones Are Measuring What Soil Labs Miss</title>
+    <link>https://lab10yr.com/articles/multispectral-drones-are-measuring-what-soil-labs-miss-1780964296753</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/multispectral-drones-are-measuring-what-soil-labs-miss-1780964296753</guid>
+    <pubDate>Tue, 09 Jun 2026 00:00:00 GMT</pubDate>
+    <description>Multispectral drones map soil organic matter at 5-centimeter resolution for a fraction of the cost of lab sampling, but the reflectance only becomes a defensible carbon number when calibrated against KSSL chemistry and corrected for soil moisture. Here is the science of bare soil reflectance and the workflow that makes it pay.</description>
+  </item>
+  <item>
+    <title>The Ground Under Data Center Alley Was Never Meant to Hold It</title>
+    <link>https://lab10yr.com/articles/the-ground-under-data-center-alley-was-never-meant-to-hold-i-1781048561067</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-under-data-center-alley-was-never-meant-to-hold-i-1781048561067</guid>
+    <pubDate>Tue, 09 Jun 2026 00:00:00 GMT</pubDate>
+    <description>A fuzzy-logic soil-suitability model run against the national soil survey finds that Data Center Alley in Loudoun County, Virginia is only 39 percent buildable, with its largest share of ground rated marginal. The dirt under hyperscale is a construction-budget line item the industry rarely names.</description>
+  </item>
+  <item>
+    <title>What InSAR Sees That SSURGO Already Predicted</title>
+    <link>https://lab10yr.com/articles/what-insar-sees-that-ssurgo-already-predicted-1780933662864</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/what-insar-sees-that-ssurgo-already-predicted-1780933662864</guid>
+    <pubDate>Mon, 08 Jun 2026 00:00:00 GMT</pubDate>
+    <description>Sentinel-1 InSAR now measures millimeter-scale subsidence across American cities, but in most documented cases the soil beneath was already rated settlement-prone in SSURGO. The satellite confirms a forecast the free soil survey delivered decades earlier.</description>
+  </item>
+  <item>
+    <title>Forest Soil Compaction Is an Invisible Tax on Timber Productivity</title>
+    <link>https://lab10yr.com/articles/forest-soil-compaction-is-an-invisible-tax-on-timber-product-1780835300006</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/forest-soil-compaction-is-an-invisible-tax-on-timber-product-1780835300006</guid>
+    <pubDate>Sun, 07 Jun 2026 00:00:00 GMT</pubDate>
+    <description>Thirty-one percent of all mapped SSURGO soil components are classified as hydric. Nearly one-third of the country</description>
+  </item>
+  <item>
+    <title>Hydric Soils and Wetland Regulation: The Map That Determines Your Permit</title>
+    <link>https://lab10yr.com/articles/hydric-soils-and-wetland-regulation-the-map-that-determines--1780833613256</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/hydric-soils-and-wetland-regulation-the-map-that-determines--1780833613256</guid>
+    <pubDate>Sun, 07 Jun 2026 00:00:00 GMT</pubDate>
+    <description>The cost of obtaining a Section 404 wetland permit averages $2.2 million and takes 18 months. High cost. This number represents the cost of regulatory compliance for land development projects that impact jurisdictional wetlands. In these ca</description>
+  </item>
+  <item>
+    <title>LiDAR Terrain Derivatives Are the Best Soil Survey Tool Nobody Uses</title>
+    <link>https://lab10yr.com/articles/lidar-terrain-derivatives-are-the-best-soil-survey-tool-nobo-1780837098173</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/lidar-terrain-derivatives-are-the-best-soil-survey-tool-nobo-1780837098173</guid>
+    <pubDate>Sun, 07 Jun 2026 00:00:00 GMT</pubDate>
+    <description>109 million acres of hydric soils are mapped in the contiguous U.S. Water tables are high. This number represents a significant portion of the country</description>
+  </item>
+  <item>
+    <title>Precision Agriculture Without Soil Data Is Just Precision Guessing</title>
+    <link>https://lab10yr.com/articles/precision-agriculture-without-soil-data-is-just-precision-gu-1780834508696</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/precision-agriculture-without-soil-data-is-just-precision-gu-1780834508696</guid>
+    <pubDate>Sun, 07 Jun 2026 00:00:00 GMT</pubDate>
+    <description>109 million acres of hydric soils are mapped in the contiguous U.S. That</description>
+  </item>
+  <item>
+    <title>Road Salts Are Destroying Urban Soils and Nobody Is Measuring It</title>
+    <link>https://lab10yr.com/articles/road-salts-are-destroying-urban-soils-and-nobody-is-measurin-1780836141404</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/road-salts-are-destroying-urban-soils-and-nobody-is-measurin-1780836141404</guid>
+    <pubDate>Sun, 07 Jun 2026 00:00:00 GMT</pubDate>
+    <description>The contiguous U.S. has approximately 109 million acres of hydric soils. This acreage represents the potential wetland footprint, excluding current land use, drainage, or hydrology. Road salt can cause lasting damage to soil structure due t</description>
+  </item>
+  <item>
+    <title>The Carbon Beneath America</title>
+    <link>https://lab10yr.com/articles/the-carbon-beneath-america-s-peatlands-is-not-accounted-for--1780836473740</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/the-carbon-beneath-america-s-peatlands-is-not-accounted-for--1780836473740</guid>
+    <pubDate>Sun, 07 Jun 2026 00:00:00 GMT</pubDate>
+    <description>109 million acres of hydric soils cover the contiguous U.S. This is a lot of land. Water tables are high in these areas, and organic matter accumulates, creating conditions that support unique ecosystems. Drained peatlands release carbon at</description>
+  </item>
+  <item>
+    <title>The Septic System Failure Map Nobody Publishes</title>
+    <link>https://lab10yr.com/articles/the-septic-system-failure-map-nobody-publishes-1780835827784</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/the-septic-system-failure-map-nobody-publishes-1780835827784</guid>
+    <pubDate>Sun, 07 Jun 2026 00:00:00 GMT</pubDate>
+    <description>109 million acres of hydric soils are mapped in the contiguous U.S. Waterlogged soil presents challenges for septic systems. This number represents areas where the soil is saturated with water. The presence of hydric soils can lead to signi</description>
+  </item>
+  <item>
+    <title>How to Query 967,000 Soil Records in 30 Seconds</title>
+    <link>https://lab10yr.com/articles/how-to-query-967-000-soil-records-in-30-seconds-1780771898117</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/how-to-query-967-000-soil-records-in-30-seconds-1780771898117</guid>
+    <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+    <description>Soil is fragile. The national average Fragile Soil Index value is 0.272 on a 0-to-1 scale, indicating a level of soil fragility that can have significant consequences. This number represents a measure of how easily soil can be damaged by hu</description>
+  </item>
+  <item>
+    <title>Nevada and Arizona Are Running Out of Stable Ground</title>
+    <link>https://lab10yr.com/articles/nevada-and-arizona-are-running-out-of-stable-ground-1780775741405</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/nevada-and-arizona-are-running-out-of-stable-ground-1780775741405</guid>
+    <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+    <description>Nevada</description>
+  </item>
+  <item>
+    <title>What Pipeline Operators Don</title>
+    <link>https://lab10yr.com/articles/what-pipeline-operators-don-t-know-about-soil-corrosivity-1780766412454</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/what-pipeline-operators-don-t-know-about-soil-corrosivity-1780766412454</guid>
+    <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+    <description>13.3% of rated SSURGO map units carry a Fragile or higher FSI rating. This translates to 28,122 map units across the United States. The number is striking. It indicates a significant portion of the country</description>
+  </item>
+  <item>
+    <title>Why Wind Farm Micrositing Needs Soil Science</title>
+    <link>https://lab10yr.com/articles/why-wind-farm-micrositing-needs-soil-science-1780708494506</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/why-wind-farm-micrositing-needs-soil-science-1780708494506</guid>
+    <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+    <description>Wind turbine foundations fail when soils heave or settle, yet most projects skip the public soil data that would predict it. SSURGO drainage class, linear extensibility, and settlement ratings can tell a developer which turbine positions need a million-dollar pile foundation and which need a standard mat, before any borings are drilled.</description>
+  </item>
+  <item>
+    <title>How Organic Matter Loss Is Priced Into Farmland Without Anyone Knowing</title>
+    <link>https://lab10yr.com/articles/how-organic-matter-loss-is-priced-into-farmland-without-anyo-1780621832620</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/how-organic-matter-loss-is-priced-into-farmland-without-anyo-1780621832620</guid>
+    <pubDate>Fri, 05 Jun 2026 00:00:00 GMT</pubDate>
+    <description>Soil organic matter predicts long-term farm productivity. It</description>
+  </item>
+  <item>
+    <title>The Data Behind Shrink-Swell Soils and Foundation Failure</title>
+    <link>https://lab10yr.com/articles/the-data-behind-shrink-swell-soils-and-foundation-failure-1780675011234</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/the-data-behind-shrink-swell-soils-and-foundation-failure-1780675011234</guid>
+    <pubDate>Fri, 05 Jun 2026 00:00:00 GMT</pubDate>
+    <description>Expansive soils cost U.S. homeowners over 15 billion dollars per year. Foundation damage is the culprit. This damage, caused by shrink-swell soils, is well understood by soil scientists. The risk is already mapped in the SSURGO dataset for </description>
+  </item>
+  <item>
+    <title>Fragile Soils and the Infrastructure Debt Nobody Is Counting</title>
+    <link>https://lab10yr.com/articles/fragile-soils-and-the-infrastructure-debt-nobody-is-counting-1780607868672</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/fragile-soils-and-the-infrastructure-debt-nobody-is-counting-1780607868672</guid>
+    <pubDate>Thu, 04 Jun 2026 00:00:00 GMT</pubDate>
+    <description>Fragile soil is a problem. The national soil survey, compiled by the USDA, reveals a complex landscape of soil conditions across 2.3 million map units. Most road budgets fail to account for the impact of fragile soils on infrastructure</description>
+  </item>
+  <item>
+    <title>Karst Country: Mapping Sinkhole Risk Before You Build</title>
+    <link>https://lab10yr.com/articles/karst-country-mapping-sinkhole-risk-before-you-build-1780604636008</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/karst-country-mapping-sinkhole-risk-before-you-build-1780604636008</guid>
+    <pubDate>Thu, 04 Jun 2026 00:00:00 GMT</pubDate>
+    <description>Karst geology underlies 20 percent of the United States. Every square kilometer is marked in your soil survey data. Sinkholes can appear suddenly. They swallow buildings, a major concern for infrastructure projects. </description>
+  </item>
+  <item>
+    <title>Soil Data Is the Cheapest Form of Geotechnical Intelligence</title>
+    <link>https://lab10yr.com/articles/soil-data-is-the-cheapest-form-of-geotechnical-intelligence-1780595467955</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/soil-data-is-the-cheapest-form-of-geotechnical-intelligence-1780595467955</guid>
+    <pubDate>Thu, 04 Jun 2026 00:00:00 GMT</pubDate>
+    <description>A Phase I environmental site assessment costs thousands of dollars.  Nothing, in contrast, is the cost of a SSURGO query, which runs in seconds. </description>
+  </item>
+  </channel>
+</rss>

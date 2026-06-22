@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Ground Beneath the Cloud — GroundScore · Lab10YR</title>
+<meta name="description" content="The AI build-out is racing for power and water. The thing that actually has to hold a hyperscale campus, the soil, has been mapped for decades, and it says the industry is building on some of the country's worst ground. A GroundScore investigation.">
+<link rel="canonical" href="https://lab10yr.com/articles/the-ground-beneath-the-cloud">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Lab10YR">
+<meta property="og:title" content="The Ground Beneath the Cloud">
+<meta property="og:description" content="A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.">
+<meta property="og:url" content="https://lab10yr.com/articles/the-ground-beneath-the-cloud">
+<meta property="og:image" content="https://lab10yr.com/assets/og-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Ground Beneath the Cloud">
+<meta name="twitter:description" content="The soil under Data Center Alley, scored. Where the AI build-out can actually go.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/h3-js@4.1.0/dist/h3-js.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--border:#1e2640;
+  --text:#d4daf0;--dim:#5a6490;--dimmer:#2e3560;
+  --accent:#38bdf8;--green:#22c55e;--soil:#c8a84b;--red:#ef4444;--amber:#f59e0b;
+  --font:'Inter',system-ui,-apple-system,sans-serif;--serif:'Newsreader',Georgia,serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+#nav{position:fixed;top:0;left:0;right:0;z-index:600;height:46px;display:flex;align-items:center;
+  padding:0 22px;gap:14px;background:rgba(4,6,12,.9);border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
+.nav-logo{font-family:var(--serif);font-size:14px;font-style:italic;color:var(--soil);font-weight:700}
+.nav-links{display:flex;gap:14px;margin-left:auto}
+.nav-links a{font-size:11px;font-weight:600;color:var(--dim);white-space:nowrap}
+.nav-links a:hover{color:var(--text)}
+/* progress bar */
+#prog{position:fixed;top:46px;left:0;height:2px;background:linear-gradient(90deg,var(--soil),var(--green));width:0;z-index:600}
+/* hero */
+.hero{position:relative;height:100vh;min-height:660px;overflow:hidden;background:radial-gradient(150% 130% at 70% 6%,#0e1a36 0%,#06090f 56%,#04060c 100%)}
+#heromap{position:absolute;inset:0}
+.hero-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(0deg,rgba(4,6,12,.96) 4%,rgba(4,6,12,.2) 34%,rgba(4,6,12,.5) 100%)}
+.hero-inner{position:absolute;z-index:3;left:0;bottom:0;width:100%;padding:0 min(8vw,110px) 7vh;max-width:1100px}
+.kicker{font-size:11px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--soil);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.kicker::before{content:'';width:30px;height:1px;background:var(--soil)}
+.hero h1{font-family:var(--serif);font-size:clamp(2.6rem,6vw,5.2rem);font-weight:500;color:#fff;letter-spacing:-.022em;line-height:1.02;margin-bottom:20px}
+.hero .standfirst{font-family:var(--serif);font-size:clamp(1.05rem,1.7vw,1.4rem);color:rgba(212,218,240,.82);max-width:60ch;line-height:1.5}
+.byline{margin-top:22px;font-size:12px;color:var(--dim);letter-spacing:.03em}
+.byline b{color:var(--soil);font-weight:700}
+.scroll-cue{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:3;color:var(--dim);font-size:13px;animation:bob 1.9s ease-in-out infinite;pointer-events:none}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+/* article body */
+article{max-width:720px;margin:0 auto;padding:72px 24px 40px}
+article .lede::first-letter{font-family:var(--serif);float:left;font-size:4.4rem;line-height:.74;padding:6px 10px 0 0;color:var(--soil)}
+article p{font-family:var(--serif);font-size:1.235rem;line-height:1.74;color:#c4ccea;margin-bottom:26px}
+article p b{color:#fff;font-weight:600}
+h2.sec{font-family:var(--font);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--soil);
+  margin:18px 0 22px;padding-top:30px;border-top:1px solid var(--border)}
+.pull{font-family:var(--serif);font-size:clamp(1.5rem,2.8vw,2.1rem);line-height:1.32;color:#fff;font-weight:500;
+  margin:14px 0 30px;padding-left:22px;border-left:3px solid var(--soil)}
+/* full-bleed figure */
+.figure{margin:42px calc(50% - 50vw);width:100vw;max-width:100vw;padding:34px max(24px,calc(50vw - 560px));
+  background:linear-gradient(180deg,#070b14,#04060c);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.figure .fcap{font-family:var(--font);font-size:11px;color:var(--dim);letter-spacing:.03em;margin-top:12px;text-align:center}
+.fhead{font-family:var(--font);font-size:13px;font-weight:700;color:#d4daf0;text-align:center;margin-bottom:4px}
+.fsub{font-family:var(--font);font-size:11px;color:var(--dim);text-align:center;margin-bottom:16px}
+.chart{width:100%}
+/* stat band */
+.statband{margin:40px calc(50% - 50vw);width:100vw;padding:46px max(24px,calc(50vw - 540px));
+  background:radial-gradient(120% 160% at 50% 0%,#13203a 0%,#05080f 70%);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+@media(max-width:720px){.statband{grid-template-columns:1fr 1fr;gap:30px 18px}}
+.statband .n{font-family:var(--serif);font-size:clamp(2rem,4vw,3.1rem);color:var(--soil);line-height:1}
+.statband .l{font-size:11px;color:var(--dim);margin-top:8px;line-height:1.45;letter-spacing:.02em}
+/* site cards */
+.sites{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:8px 0 12px}
+@media(max-width:640px){.sites{grid-template-columns:1fr}}
+.site{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:22px;position:relative;overflow:hidden}
+.site::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%}
+.site.good::before{background:var(--green)}.site.bad::before{background:var(--red)}
+.site .gs{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.site .loc{font-size:11px;color:var(--dim);margin-top:8px}.site .nm{font-family:var(--serif);font-size:1.3rem;color:#fff;margin:2px 0 12px}
+.site .score{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+.site .score b{font-family:var(--serif);font-size:2.7rem;line-height:1}
+.site.good .score b{color:var(--green)}.site.bad .score b{color:var(--red)}
+.site .cls{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:20px}
+.site.good .cls{background:rgba(34,197,94,.14);color:var(--green)}.site.bad .cls{background:rgba(239,68,68,.14);color:var(--red)}
+.site .rows{display:grid;grid-template-columns:1fr auto;gap:5px 14px;font-size:12.5px}
+.site .rows .k{color:var(--dim)}.site .rows .v{color:var(--text);text-align:right;font-weight:600}
+.site .fl{margin-top:11px;font-size:11.5px;color:var(--amber)}
+/* method chips */
+.factors{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 26px}
+.factors span{font-size:11.5px;font-weight:600;color:var(--text);background:var(--panel2);border:1px solid var(--border);border-radius:20px;padding:6px 12px}
+.factors span i{color:var(--soil);font-style:normal}
+/* cta */
+.cta{margin:48px auto 0;max-width:720px;padding:30px;border:1px solid var(--soil);border-radius:14px;
+  background:linear-gradient(180deg,#13203a,#0a1322);text-align:center}
+.cta h3{font-family:var(--serif);font-size:1.5rem;color:#fff;margin-bottom:8px}
+.cta p{font-family:var(--font);font-size:.92rem;color:rgba(212,218,240,.7);margin-bottom:16px}
+.btn{display:inline-flex;gap:8px;padding:13px 26px;border-radius:7px;font-size:13px;font-weight:700;background:var(--soil);color:#1a1206}
+footer{border-top:1px solid var(--border);padding:30px 24px;text-align:center;color:var(--dimmer);font-size:11px;margin-top:50px}
+footer a{color:var(--dim)}
+.disc{max-width:720px;margin:30px auto 0;font-size:12px;color:var(--dim);line-height:1.6;font-style:italic}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<nav id="nav">
+  <a href="https://lab10yr.com" class="nav-logo">Lab10YR</a>
+  <div class="nav-links">
+    <a href="https://lab10yr.com/data-center-suitability">GroundScore</a>
+    <a href="https://lab10yr.com/articles/">Articles</a>
+    <a href="https://lab10yr.com/services">Services</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div id="heromap"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-inner">
+    <div class="kicker">GroundScore Investigation &middot; Lab10YR</div>
+    <h1>The Ground<br>Beneath the Cloud</h1>
+    <p class="standfirst">The AI build-out is racing for power and water. The thing that actually has to
+    hold a hyperscale campus, the soil, has been mapped for decades. Read it, and the industry is building
+    on some of the country's worst ground.</p>
+    <div class="byline">By <b>Lab10YR</b> &middot; soil intelligence from the national survey</div>
+  </div>
+  <div class="scroll-cue">&#9660;</div>
+</section>
+
+<article>
+  <p class="lede">In Loudoun County, Virginia, the densest concentration of data centers on Earth sits on
+  ground the national soil survey rates, politely, as a problem. Score every mapped soil unit in the county
+  for what it takes to build a campus, and only <b>39 percent</b> comes back as buildable. The largest single
+  category is not good and not bad. It is marginal: <b>3,125 of the county's 8,024 soil map units</b>, more
+  than a third of the ground, sit in the middle band where a campus is possible but never cheap.</p>
+
+  <p>This is the part of the data-center boom that never makes the site-selection deck. Power gets a column.
+  Water gets a column. Fiber, latency, and tax abatement get columns. The dirt, the thing that has to carry a
+  quarter-million-square-foot slab and a yard full of buried copper, gets a geotechnical boring after the option
+  is already signed. It does not have to work that way. The information has been public, and free, the whole time.</p>
+
+  <div class="pull">A site that pencils on power and water can still lose six months and eight figures to
+  ground that has to be dug out, replaced, dewatered, and protected.</div>
+
+  <h2 class="sec">A national asset almost nobody reads</h2>
+  <p>The national soil survey records, for nearly every acre in the country, the properties that decide whether
+  ground is cheap or expensive to build on: how far down the seasonal water table sits, how much the clay swells
+  and shrinks with the seasons, how fast buried steel and concrete corrode, how deep you can dig before rock,
+  and whether the soil floods, ponds, or counts as a regulated wetland. Each is a line item on a construction
+  budget. Together they tell you, before a single boring, whether a parcel will fight you.</p>
+
+  <p>The catch is that all of this lives behind a query language and a century of terms of art. So we built one
+  score on top of it, the way the survey builds its own engineering interpretations, with <b>fuzzy logic</b>:
+  every property is run through a membership curve that turns a raw number into a limitation between zero and one,
+  the engineering ratings for buildings, roads, and excavations fold in, and the whole thing resolves to a single
+  comprehensive index from 0 to 100. We call it <b>GroundScore</b>. For a data center it is the soil core of the
+  <b>GroundScore DCI</b>, the Data Center Index that fuses it with grid, water, fiber, and land.</p>
+
+  <div class="factors">
+    <span><i>Foundations</i> &middot; large commercial buildings</span>
+    <span><i>Excavation</i> &middot; shallow trenching</span>
+    <span><i>Corrosion</i> &middot; buried steel &amp; concrete</span>
+    <span><i>Shrink-swell</i> &middot; clay movement</span>
+    <span><i>Water table</i> &middot; seasonal high</span>
+    <span><i>Flooding &amp; ponding</i></span>
+    <span><i>Hydric</i> &middot; wetland permitting</span>
+    <span><i>Slope &amp; drainage</i></span>
+  </div>
+
+  <h2 class="sec">Where the buildable ground actually is</h2>
+  <p>Run GroundScore across whole states and the ranking does not follow the headlines. The most forgiving
+  ground sits in the Plains and the Southeast; the hardest sits in the wet, clay-rich glacial soils of the
+  industrial Midwest and the valley floors of the Northwest. The map of where data centers actually clustered
+  and the map of where the ground is easy are not the same map. They were drawn by power, fiber, and politics,
+  and the soil was left for the contractors to sort out later.</p>
+
+  <div class="figure">
+    <div class="fhead">GroundScore across the country</div>
+    <div class="fsub">Color = soil buildability sampled nationwide; spikes mark the data-center markets</div>
+    <div id="map3d" class="chart" style="height:min(70vh,560px)"></div>
+    <div class="fcap">Drag to orbit &middot; scroll to zoom &middot; National Cooperative Soil Survey (SSURGO) via Soil Data Access</div>
+  </div>
+
+  <p>Read the ranked list and the spread is stark. Toward the top, well over half the ground is ready to build.
+  Toward the bottom, less than a third is, and the rest carries a wetness, shrink-swell, or flooding penalty that
+  turns into mass grading, engineered fill, and dewatering before the first slab is poured.</p>
+
+  <div class="figure">
+    <div class="fhead">States, ranked</div>
+    <div class="fsub">Percent of soil rated buildable for a campus footprint</div>
+    <div id="bars" class="chart" style="height:520px"></div>
+    <div class="fcap">Map-unit weighted. More states fill in as the national run completes.</div>
+  </div>
+
+  <h2 class="sec">The corrosion nobody budgets for</h2>
+  <p>A hyperscale campus is, electrically, a city. It runs miles of buried conduit, a grounding grid of bare
+  copper and steel, and concrete ductbanks carrying the feeders that keep the halls alive. Soil decides how fast
+  all of that corrodes. The survey rates corrosion of steel and concrete on every component in the country, and
+  the numbers are not comforting: a large share of U.S. ground is moderately to highly corrosive to steel, which
+  is exactly the material doing the quiet, load-bearing, safety-critical work underground. On a high-corrosion
+  site you pay for it twice, once in cathodic protection and coatings up front, and again in the shortened life
+  of everything you buried.</p>
+
+  <div class="statband">
+    <div><div class="n" id="s1">39%</div><div class="l">of Data Center Alley (Loudoun, VA) is buildable ground</div></div>
+    <div><div class="n">22</div><div class="l">GroundScore of Dulles silt loam, a signature Alley soil (Poor)</div></div>
+    <div><div class="n">88</div><div class="l">GroundScore of Cipriano loam in the Buckeye, AZ corridor (Prime)</div></div>
+    <div><div class="n">0&ndash;100</div><div class="l">one fuzzy-logic score, every U.S. map unit</div></div>
+  </div>
+
+  <h2 class="sec">Two sites, two verdicts</h2>
+  <p>The model is at its most useful when it disagrees with the brochure. Here are two real soils, scored the
+  same way, that tell opposite stories about the same building.</p>
+
+  <div class="sites" id="sites"></div>
+
+  <p>Dulles is not unusable. It is expensive. A 22 means a wet, shrink-swell clay with a shallow water table and
+  a wetland signature, the kind of ground that demands mass grading, engineered fill, under-slab drainage, and a
+  permitting conversation before anything moves. The Alley has been quietly paying that bill for fifteen years.
+  It simply never named it. Cipriano, in the Arizona desert, is the opposite: deep, well drained, low shrink-swell,
+  no water table to fight. Same building, a fraction of the ground risk.</p>
+
+  <h2 class="sec">Why AI makes the dirt matter more</h2>
+  <p>The bigger and denser the campus, the more the ground costs. AI training halls are heavier, run hotter, and
+  are more schedule-sensitive than the cloud build-outs that came before, and as the first-choice grids fill up
+  they are landing in second- and third-choice geographies, exactly the places where soil risk is least understood
+  and most likely to surprise a pro forma. The deals are getting larger and the margins for a ground surprise are
+  getting thinner at the same time.</p>
+
+  <p>That is the case for reading the soil before the option closes instead of after the foundation cracks.
+  GroundScore is the ground pillar; the <b>GroundScore DCI</b> sets it next to the grid, the water, the fiber, and
+  the land, so a site that wins on power is not quietly losing on the one variable that cannot be value-engineered
+  away: the earth it stands on.</p>
+
+  <div class="cta">
+    <h3>Score the ground under a site</h3>
+    <p>Explore GroundScore by state, see the worked examples, and get the per-parcel read for a candidate campus.</p>
+    <a class="btn" href="https://lab10yr.com/data-center-suitability">Open GroundScore &rarr;</a>
+  </div>
+
+  <p class="disc">GroundScore is computed from generalized soil survey map units (SSURGO) via Soil Data Access,
+  attributed to the National Cooperative Soil Survey. Map unit boundaries are generalized; a site-specific
+  geotechnical investigation is required before any commitment. State coverage expands as the national run completes.</p>
+</article>
+
+<footer>
+  &copy; 2026 Lab10YR &middot; <a href="https://lab10yr.com/data-center-suitability">GroundScore</a> &middot;
+  Data: National Cooperative Soil Survey (SSURGO) via Soil Data Access
+</footer>
+
+<script>
+const STATE_NAME={AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DC:'District of Columbia',DE:'Delaware',FL:'Florida',GA:'Georgia',HI:'Hawaii',IA:'Iowa',ID:'Idaho',IL:'Illinois',IN:'Indiana',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',MA:'Massachusetts',MD:'Maryland',ME:'Maine',MI:'Michigan',MN:'Minnesota',MO:'Missouri',MS:'Mississippi',MT:'Montana',NC:'North Carolina',ND:'North Dakota',NE:'Nebraska',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NV:'Nevada',NY:'New York',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VA:'Virginia',VT:'Vermont',WA:'Washington',WI:'Wisconsin',WV:'West Virginia',WY:'Wyoming'};
+function bcolor(v){return v>=70?'#22c55e':v>=55?'#84cc16':v>=40?'#eab308':v>=25?'#f59e0b':'#ef4444';}
+const SITES=[
+ {cls:'good',loc:'Aguila-Carefree Area, AZ (33.55, -112.64)',nm:'Cipriano very gravelly loam',score:88.4,label:'Prime',
+  rows:[['Commercial buildings','Not limited'],['Corrosion of steel','Moderate'],['Shrink-swell (LEP)','1.5 - low'],['Water table','None'],['Drainage','Well drained']],fl:null},
+ {cls:'bad',loc:'Loudoun County, VA - Data Center Alley',nm:'Dulles silt loam',score:21.9,label:'Poor',
+  rows:[['Commercial buildings','Very limited'],['Corrosion of steel','High'],['Shrink-swell (LEP)','6 - high'],['Water table','38 cm'],['Drainage','Somewhat poorly']],
+  fl:'Flags: hydric / wetland &middot; high water table &middot; high shrink-swell &middot; corrosive to steel'}
+];
+document.getElementById('sites').innerHTML=SITES.map(s=>`<div class="site ${s.cls}"><div class="gs">GroundScore</div>
+ <div class="loc">${s.loc}</div><div class="nm">${s.nm}</div>
+ <div class="score"><b>${s.score}</b><span class="cls">${s.label}</span></div>
+ <div class="rows">${s.rows.map(r=>`<div class="k">${r[0]}</div><div class="v">${r[1]}</div>`).join('')}</div>
+ ${s.fl?`<div class="fl">${s.fl}</div>`:''}</div>`).join('');
+
+// reading-progress bar
+addEventListener('scroll',()=>{const h=document.documentElement;const p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;document.getElementById('prog').style.width=p+'%';},{passive:true});
+
+const NAME2AB=Object.fromEntries(Object.entries(STATE_NAME).map(([ab,nm])=>[nm,ab]));
+const GS_RAMP=['interpolate',['linear'],['get','gs'],20,'#7f1d1d',32,'#ef4444',42,'#f59e0b',52,'#eab308',62,'#84cc16',75,'#22c55e',88,'#16a34a'];
+function hexBin(grid,res){
+  if(!window.h3) return {type:'FeatureCollection',features:[]};
+  const acc={};
+  (grid||[]).forEach(p=>{const c=h3.latLngToCell(p[1],p[0],res);(acc[c]=acc[c]||[]).push(p[2]);});
+  const feats=Object.keys(acc).map(c=>{
+    const v=acc[c], m=v.reduce((a,b)=>a+b,0)/v.length;
+    const b=h3.cellToBoundary(c,true); b.push(b[0]);
+    return {type:'Feature',properties:{gs:Math.round(m*10)/10,n:v.length},geometry:{type:'Polygon',coordinates:[b]}};
+  });
+  return {type:'FeatureCollection',features:feats};
+}
+
+// premium MapLibre map: CARTO dark basemap + GroundScore hexbin
+function buildArticleMap(el,agg,geo,mk,grid){
+  if(!el||!window.maplibregl) return;
+  const hexfc=hexBin(grid,3);
+  let g={features:[]}; if(!hexfc.features.length && geo.features){ g=JSON.parse(JSON.stringify(geo)); g.features.forEach(f=>{const a=agg[NAME2AB[f.properties.name]];f.properties.gs=a?a.buildable_pct:null;}); }
+  const map=new maplibregl.Map({container:el,attributionControl:false,antialias:true,
+    style:'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    center:[-95,38.6],zoom:3.6,pitch:48,bearing:-10,maxPitch:80});
+  map.on('load',()=>{
+    const sym=(map.getStyle().layers||[]).find(l=>l.type==='symbol'); const before=sym&&sym.id;
+    if(hexfc.features.length){
+      map.addSource('hex',{type:'geojson',data:hexfc});
+      map.addLayer({id:'gs-hex',type:'fill-extrusion',source:'hex',paint:{'fill-extrusion-color':GS_RAMP,'fill-extrusion-height':['*',['get','gs'],3600],'fill-extrusion-base':0,'fill-extrusion-opacity':0.82}},before);
+    } else if(g.features.length){
+      map.addSource('st',{type:'geojson',data:g});
+      map.addLayer({id:'gs-fill',type:'fill',source:'st',paint:{'fill-color':['case',['==',['get','gs'],null],'#1a1f2e',GS_RAMP],'fill-opacity':0.28}},before);
+    }
+  });
+  return map;
+}
+
+// D3 force-directed beeswarm distribution
+function buildSwarm(host,agg){
+  if(!host||!window.d3) return;
+  const data=Object.entries(agg).map(([ab,a])=>({ab,name:STATE_NAME[ab]||ab,v:+a.buildable_pct,total:a.total}));
+  if(!data.length) return; host.innerHTML='';
+  const W=Math.max(host.clientWidth||900,360),H=470,M={t:30,r:24,b:48,l:24},iw=W-M.l-M.r,ih=H-M.t-M.b;
+  const x=d3.scaleLinear().domain([0,100]).range([0,iw]);
+  const r=d3.scaleSqrt().domain([0,d3.max(data,d=>d.total)||1]).range([4,16]);
+  const svg=d3.select(host).append('svg').attr('viewBox',`0 0 ${W} ${H}`).attr('width','100%').style('overflow','visible');
+  const g=svg.append('g').attr('transform',`translate(${M.l},${M.t})`);
+  const bands=[['EXCLUDED',0,20,'#ef4444'],['POOR',20,40,'#f59e0b'],['MARGINAL',40,60,'#eab308'],['SUITABLE',60,80,'#84cc16'],['PRIME',80,100,'#22c55e']];
+  g.selectAll('rect').data(bands).join('rect').attr('x',d=>x(d[1])).attr('width',d=>x(d[2])-x(d[1])).attr('y',0).attr('height',ih).attr('fill',d=>d[3]).attr('opacity',0.06);
+  g.selectAll('text.bl').data(bands).join('text').attr('x',d=>x((d[1]+d[2])/2)).attr('y',ih+20).attr('text-anchor','middle').attr('fill','#4a5270').attr('font-size',9).attr('font-weight',800).attr('letter-spacing','.12em').text(d=>d[0]);
+  g.selectAll('text.t').data([0,20,40,60,80,100]).join('text').attr('x',d=>x(d)).attr('y',ih+38).attr('text-anchor','middle').attr('fill','#5a6490').attr('font-size',10).text(d=>d+'%');
+  const avg=d3.mean(data,d=>d.v);
+  g.append('line').attr('x1',x(avg)).attr('x2',x(avg)).attr('y1',-6).attr('y2',ih).attr('stroke','#c8a84b').attr('stroke-width',1.2).attr('stroke-dasharray','5 4');
+  g.append('text').attr('x',x(avg)).attr('y',-12).attr('text-anchor','middle').attr('fill','#c8a84b').attr('font-size',11).attr('font-weight',700).text(`U.S. avg ${avg.toFixed(0)}%`);
+  data.forEach(d=>{d.x=x(d.v);d.y=ih*0.55;});
+  const sim=d3.forceSimulation(data).force('x',d3.forceX(d=>x(d.v)).strength(1)).force('y',d3.forceY(ih*0.55).strength(0.045)).force('collide',d3.forceCollide(d=>r(d.total)+1.6).iterations(3)).stop();
+  for(let i=0;i<260;i++) sim.tick();
+  data.forEach(d=>{d.y=Math.max(r(d.total),Math.min(ih-r(d.total),d.y));});
+  const node=g.selectAll('g.n').data(data).join('g').attr('transform',d=>`translate(${d.x},${d.y})`);
+  node.append('circle').attr('r',0).attr('fill',d=>bcolor(d.v)).attr('fill-opacity',0.9).attr('stroke','#04060c').attr('stroke-width',1.1).transition().delay((d,i)=>i*12).duration(550).attr('r',d=>r(d.total));
+  node.filter(d=>r(d.total)>=8).append('text').attr('text-anchor','middle').attr('dy','0.32em').attr('fill','#0a0e16').attr('font-size',9).attr('font-weight',800).attr('opacity',0).text(d=>d.ab).transition().delay(700).attr('opacity',0.9);
+}
+
+(async function(){
+  let agg={},geo={features:[]},mk=[];
+  try{ agg=await fetch('../data/dcsi_state_agg.json?v=2',{cache:'no-store'}).then(r=>r.ok?r.json():{}); }catch(e){}
+  try{ geo=await fetch('../data/us-states.geojson').then(r=>r.json()); }catch(e){}
+  try{ mk=await fetch('../data/dc_markets.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():[]); }catch(e){}
+  // Same surface as the overview page: combined-DCI grid first, soil grid as fallback — one model everywhere.
+  let grid=[]; try{ grid=await fetch('../data/groundscore_grid_dci.json?v=2',{cache:'no-store'}).then(r=>r.ok?r.json():[]); }catch(e){}
+  if(!grid.length){ try{ grid=await fetch('../data/groundscore_grid.json?v=2',{cache:'no-store'}).then(r=>r.ok?r.json():[]); }catch(e){} }
+  buildArticleMap(document.getElementById('heromap'),agg,geo,mk,grid);
+  buildArticleMap(document.getElementById('map3d'),agg,geo,mk,grid);
+  buildSwarm(document.getElementById('bars'),agg);
+  if(agg['VA']) document.getElementById('s1').textContent=agg['VA'].buildable_pct+'%';
+})();
+</script>
+</body>
+</html>

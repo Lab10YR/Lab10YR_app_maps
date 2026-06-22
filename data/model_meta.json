@@ -1,0 +1,31 @@
+{
+ "model_version": "3.0",
+ "built_at": "2026-06-13T01:41:19.990Z",
+ "notes": "THE ONE MODEL: every criterion a fuzzy limitation in ONE aggregation — soils raw inputs (SQL proportions) + LiDAR slope (soils curve) + power incl. interconnection-queue wait + water incl. regional stress + fiber (long-haul hub distance) + land cost + hazard (seismic/tornado-hail/wildfire/karst) + climate; soils blockers + catastrophic site blockers, de-bimodal soft-max blend. Seismic prices, never kills (calibration-caught). Calibrated best-of-ring against 88 operating hyperscale campuses.",
+ "artifacts": {
+  "dcsi_state_agg.json": {
+   "bytes": 6212,
+   "mtime": "2026-06-12T04:09:11.867Z"
+  },
+  "state_dci.json": {
+   "bytes": 1922,
+   "mtime": "2026-06-13T01:41:19.931Z"
+  },
+  "dc_markets.json": {
+   "bytes": 7625,
+   "mtime": "2026-06-12T19:08:33.116Z"
+  },
+  "groundscore_grid.json": {
+   "bytes": 11940,
+   "mtime": "2026-06-13T01:09:25.982Z"
+  },
+  "groundscore_grid_dci.json": {
+   "bytes": 12541,
+   "mtime": "2026-06-13T01:33:31.347Z"
+  },
+  "calibration.json": {
+   "bytes": 9946,
+   "mtime": "2026-06-12T21:59:19.895Z"
+  }
+ }
+}

@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://lab10yr.com/sql-explorer">
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="Lab10YR">
+  <meta property="og:title"       content="SQL Explorer — SSURGO Script Library">
+  <meta property="og:description" content="Browse and search 258 production SQL scripts for SSURGO and Soil Data Access, organized by category: carbon, hydrology, interpretations, spatial, and more.">
+  <meta property="og:url"         content="https://lab10yr.com/sql-explorer.html">
+  <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="SQL Explorer — SSURGO Script Library">
+  <meta name="twitter:description" content="Browse and search 258 production SQL scripts for SSURGO and Soil Data Access, organized by category: carbon, hydrology, interpretations, spatial, and more.">
+  <meta name="twitter:image"       content="https://lab10yr.com/assets/og-preview.png">
+<title>SQL Explorer — Soil Intelligence</title>
+<style>
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--panel3:#181e30;
+  --border:#1e2640;--border2:#2a3558;--text:#d4daf0;--dim:#5a6490;--dimmer:#2e3560;
+  --accent:#38bdf8;--green:#22c55e;--soil:#c8a84b;--red:#ef4444;
+  --font:'Inter',system-ui,sans-serif;--serif:Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow:hidden}
+#shell{display:flex;flex-direction:column;height:100vh}
+
+/* TOPBAR */
+#topbar{flex-shrink:0;height:48px;background:rgba(4,6,12,.97);border-bottom:1px solid var(--border);
+        backdrop-filter:blur(14px);display:flex;align-items:center;padding:0 14px;gap:8px;z-index:200;overflow-x:auto}
+.tb-logo{font-family:var(--serif);font-size:13px;font-style:italic;color:var(--soil);font-weight:700;
+         white-space:nowrap;text-decoration:none;flex-shrink:0}
+.tb-sep{width:1px;height:24px;background:var(--border);flex-shrink:0}
+#search{flex:1;max-width:400px;padding:6px 12px 6px 30px;background:var(--panel2);
+        border:1px solid var(--border);color:var(--text);border-radius:6px;
+        font-size:12px;outline:none;transition:border-color .18s;font-family:var(--font)}
+#search:focus{border-color:var(--accent)}
+.search-wrap{position:relative;flex:1;max-width:400px}
+.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);
+             color:var(--dim);font-size:11px;pointer-events:none}
+#count-badge{font-size:11px;color:var(--dim);white-space:nowrap;flex-shrink:0}
+.tb-space{flex:1}
+.tb-link{font-size:11px;color:var(--dim);text-decoration:none;padding:0 8px;height:48px;
+         display:flex;align-items:center;white-space:nowrap;border-bottom:2px solid transparent;
+         transition:color .15s;flex-shrink:0}
+.tb-link:hover{color:var(--text)}
+.tb-link.hot{color:var(--green);font-weight:700}
+#type-btns{display:flex;gap:3px;flex-shrink:0}
+.type-btn{padding:4px 9px;border:1px solid var(--border);border-radius:10px;
+          background:var(--panel2);color:var(--dim);font-size:10px;font-weight:700;
+          cursor:pointer;transition:all .15s;white-space:nowrap}
+.type-btn.active{border-color:var(--accent);background:rgba(56,189,248,.12);color:var(--accent)}
+#view-btns{display:flex;gap:3px;flex-shrink:0}
+.view-btn{width:26px;height:26px;border:1px solid var(--border);border-radius:4px;
+          background:var(--panel2);color:var(--dim);cursor:pointer;font-size:11px;
+          display:flex;align-items:center;justify-content:center;transition:all .15s}
+.view-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
+
+/* MAIN */
+#main{flex:1;display:flex;overflow:hidden}
+
+/* SIDEBAR */
+#sidebar{width:210px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border);
+         overflow-y:auto;display:flex;flex-direction:column}
+.sb-hdr{padding:10px 12px;border-bottom:1px solid var(--border);
+        font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--dimmer)}
+.cat-item{display:flex;align-items:center;gap:7px;padding:7px 12px;cursor:pointer;
+          transition:background .15s;border-left:3px solid transparent;font-size:11px;color:var(--dim)}
+.cat-item:hover{background:var(--panel2);color:var(--text)}
+.cat-item.active{background:var(--panel2);color:var(--text);border-left-color:var(--accent)}
+.ci-icon{font-size:13px;flex-shrink:0;width:18px;text-align:center}
+.ci-label{flex:1;font-weight:600}
+.ci-count{font-size:9px;background:var(--panel3);padding:1px 5px;border-radius:6px;color:var(--dim)}
+.sb-divider{border:none;border-top:1px solid var(--border);margin:4px 0}
+
+/* GRID */
+#grid-wrap{flex:1;overflow-y:auto;padding:14px}
+#script-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+#script-grid.list-view{grid-template-columns:1fr}
+
+.sc{background:var(--panel);border:1px solid var(--border);border-radius:8px;
+    padding:14px 16px;cursor:pointer;transition:all .18s;
+    display:flex;flex-direction:column;gap:7px;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cat-color,#5a6490)}
+.sc:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.sc.sel{border-color:var(--accent);background:rgba(56,189,248,.05)}
+.sc-top{display:flex;align-items:flex-start;gap:8px}
+.sc-icon{font-size:17px;flex-shrink:0;margin-top:1px}
+.sc-body{flex:1;min-width:0}
+.sc-name{font-size:12px;font-weight:700;color:#fff;line-height:1.3;
+         white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-desc{font-size:11px;color:var(--dim);line-height:1.45;margin-top:2px;
+         display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sc-foot{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.dt-badge{font-size:9px;font-weight:800;padding:2px 6px;border-radius:8px;
+          border:1px solid;flex-shrink:0;letter-spacing:.04em}
+.dt-t{color:#38bdf8;border-color:rgba(56,189,248,.3)}
+.dt-s{color:#22c55e;border-color:rgba(34,197,94,.3)}
+.dt-b{color:#a78bfa;border-color:rgba(167,139,250,.3)}
+.tag{font-size:9px;padding:2px 6px;border-radius:6px;background:var(--panel3);
+     color:var(--dim);border:1px solid var(--border)}
+
+/* DETAIL PANE */
+#detail{width:460px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--border);
+        overflow-y:auto;display:flex;flex-direction:column;
+        transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+#detail.open{transform:none}
+#d-close{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--dim);
+         font-size:15px;cursor:pointer;z-index:2;width:26px;height:26px;border-radius:4px;
+         display:flex;align-items:center;justify-content:center;transition:color .15s}
+#d-close:hover{color:var(--text);background:var(--panel2)}
+#d-body{padding:14px;flex:1;overflow-y:auto;position:relative}
+.d-eye{font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+       margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.d-title{font-family:var(--serif);font-size:1.3rem;color:#fff;line-height:1.2;
+         margin-bottom:8px;font-weight:400}
+.d-q{font-size:.88rem;color:var(--dim);line-height:1.65;padding:10px 12px;
+     background:var(--panel2);border-radius:5px;border-left:3px solid var(--soil);margin-bottom:14px}
+.d-sec{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+       color:var(--dimmer);margin:14px 0 7px;padding-top:10px;border-top:1px solid var(--border);
+       display:flex;align-items:center;gap:6px}
+.d-sec::after{content:'';flex:1;height:1px;background:var(--border)}
+.d-tags{display:flex;flex-wrap:wrap;gap:4px}
+.d-tag{font-size:10px;padding:3px 9px;border-radius:8px;background:var(--panel2);
+       border:1px solid var(--border2);color:var(--dim);font-weight:600}
+
+/* Param rows */
+.p-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.p-lbl{width:110px;font-size:10px;color:var(--dim);flex-shrink:0;font-weight:600}
+.p-inp{flex:1;background:var(--panel2);border:1px solid var(--border);color:var(--text);
+       border-radius:4px;padding:5px 8px;font-size:11px;font-family:var(--font);
+       outline:none;transition:border-color .18s}
+.p-inp:focus{border-color:var(--accent)}
+
+/* SQL block */
+.sql-pre{background:#020408;border:1px solid var(--border);border-radius:5px;
+         padding:10px 12px;font-family:'Courier New',monospace;font-size:10.5px;
+         color:#7dd3fc;line-height:1.7;overflow-x:auto;white-space:pre;
+         max-height:240px;overflow-y:auto}
+.kw{color:#c084fc}.fn{color:#86efac}.co{color:#475569}.st{color:#fbbf24}.nu{color:#f97316}
+
+/* Actions */
+.d-actions{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.btn-run{padding:7px 16px;background:var(--accent);color:#000;border:none;border-radius:5px;
+         font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;
+         gap:5px;transition:all .15s;font-family:var(--font)}
+.btn-run:hover{background:#7dd3fc}.btn-run:disabled{opacity:.5;cursor:not-allowed}
+.btn-dl{padding:7px 12px;background:var(--panel2);border:1px solid var(--border2);
+        color:var(--text);border-radius:5px;font-size:11px;font-weight:600;
+        cursor:pointer;transition:all .15s;font-family:var(--font)}
+.btn-dl:hover{border-color:var(--soil);color:var(--soil);background:var(--panel3)}
+.btn-sda{padding:7px 12px;background:transparent;border:1px solid var(--border);
+         color:var(--dim);border-radius:5px;font-size:11px;font-weight:600;
+         cursor:pointer;text-decoration:none;display:flex;align-items:center;
+         transition:all .15s}
+.btn-sda:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Results */
+#r-area{margin-top:10px}
+.r-ok{padding:7px 10px;border-radius:5px;font-size:11px;font-weight:600;
+      background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:var(--green);
+      display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.r-err{padding:7px 10px;border-radius:5px;font-size:11px;background:rgba(239,68,68,.08);
+       border:1px solid rgba(239,68,68,.3);color:var(--red);line-height:1.6}
+.r-info{padding:7px 10px;border-radius:5px;font-size:11px;
+        background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.3);color:var(--accent);
+        display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.rtw{overflow-x:auto;max-height:280px;overflow-y:auto;border-radius:5px;border:1px solid var(--border)}
+#rt{width:100%;border-collapse:collapse;font-size:10px}
+#rt th{background:var(--panel3);color:var(--dim);padding:5px 9px;text-align:left;
+       font-weight:700;font-size:9px;text-transform:uppercase;letter-spacing:.08em;
+       position:sticky;top:0;border-bottom:1px solid var(--border)}
+#rt td{padding:4px 9px;border-bottom:1px solid var(--border);color:var(--text)}
+#rt tr:hover td{background:var(--panel2)}
+.rc{font-size:10px;color:var(--dim);margin-top:5px;text-align:right}
+.spin{animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* empty */
+#empty{text-align:center;padding:60px 20px;color:var(--dim);display:none}
+.em-i{font-size:2rem;margin-bottom:10px}
+
+/* AI PANEL */
+#ai-panel{flex-shrink:0;background:linear-gradient(135deg,#080d1a 0%,#0a1020 100%);
+  border-bottom:1px solid var(--border);overflow:hidden;transition:max-height .3s ease}
+#ai-panel.collapsed{max-height:40px}
+#ai-panel.expanded{max-height:260px}
+#ai-toggle{display:flex;align-items:center;gap:8px;padding:0 14px;height:40px;
+  cursor:pointer;user-select:none;border:none;background:none;width:100%;color:var(--text);
+  font-family:var(--font);font-size:12px}
+#ai-toggle:hover{background:rgba(56,189,248,.05)}
+.ai-spark{font-size:14px}
+.ai-label{font-weight:600;letter-spacing:.5px;color:var(--accent)}
+.ai-sub{color:var(--dim);font-size:11px;margin-left:4px}
+.ai-arrow{margin-left:auto;color:var(--dim);font-size:10px;transition:transform .25s}
+#ai-panel.expanded .ai-arrow{transform:rotate(180deg)}
+#ai-body{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px}
+#ai-row{display:flex;gap:8px;align-items:flex-start}
+#ai-input{flex:1;background:var(--panel2);border:1px solid var(--border2);color:var(--text);
+  border-radius:6px;padding:8px 12px;font-family:var(--font);font-size:13px;
+  resize:none;height:52px;outline:none;line-height:1.4;transition:border-color .18s}
+#ai-input:focus{border-color:var(--accent)}
+#ai-input::placeholder{color:var(--dimmer)}
+#ai-gen-btn{background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;border:none;
+  border-radius:6px;padding:8px 18px;font-size:12px;font-weight:600;cursor:pointer;
+  white-space:nowrap;height:52px;display:flex;align-items:center;gap:6px;
+  transition:opacity .15s;font-family:var(--font);letter-spacing:.3px}
+#ai-gen-btn:disabled{opacity:.5;cursor:not-allowed}
+#ai-examples{display:flex;gap:6px;flex-wrap:wrap}
+.ai-ex{background:var(--panel3);border:1px solid var(--border);color:var(--dim);
+  font-size:10px;padding:3px 9px;border-radius:10px;cursor:pointer;
+  transition:border-color .15s,color .15s;font-family:var(--font)}
+.ai-ex:hover{border-color:var(--accent);color:var(--text)}
+#ai-result{display:none;background:var(--panel);border:1px solid var(--border);
+  border-radius:6px;padding:10px 12px}
+#ai-sql-out{font-family:'Fira Code','Cascadia Code',monospace;font-size:11.5px;
+  color:#a5d6a7;white-space:pre-wrap;word-break:break-word;line-height:1.55;
+  max-height:90px;overflow-y:auto}
+#ai-result-btns{display:flex;gap:8px;margin-top:8px}
+.ai-run-btn{background:var(--green);color:#000;border:none;border-radius:5px;
+  padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font)}
+.ai-run-btn:hover{opacity:.85}
+.ai-copy-btn{background:var(--panel2);border:1px solid var(--border2);color:var(--dim);
+  border-radius:5px;padding:5px 14px;font-size:11px;cursor:pointer;font-family:var(--font)}
+.ai-copy-btn:hover{color:var(--text);border-color:var(--accent)}
+#ai-status{font-size:11px;color:var(--dim);margin-top:2px;min-height:14px}
+</style>
+</head>
+<body>
+<div id="shell">
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <a class="tb-logo" href="index.html">Soil Intelligence</a>
+  <div class="tb-sep"></div>
+  <div class="search-wrap">
+    <span class="search-icon"></span>
+    <input id="search" type="text" placeholder="Search by question, property, keyword…" autocomplete="off">
+  </div>
+  <div id="type-btns">
+    <button class="type-btn active" data-type="all">All</button>
+    <button class="type-btn" data-type="tabular">Tabular</button>
+    <button class="type-btn" data-type="spatial">Spatial</button>
+    <button class="type-btn" data-type="both">Both</button>
+  </div>
+  <span id="count-badge">—</span>
+  <div class="tb-space"></div>
+  <div id="view-btns">
+    <button class="view-btn active" data-view="grid" title="Grid">⊞</button>
+    <button class="view-btn" data-view="list" title="List"></button>
+  </div>
+  <a class="tb-link hot" href="soil-atlas.html">Atlas</a>
+  <a class="tb-link" href="soil-data-stories.html">Stories</a>
+  <a class="tb-link" href="https://lab10yr.com/articles/" target="_blank" rel="noopener noreferrer">Articles</a>
+  <a class="tb-link" href="data-models.html">Data Models</a>
+  <a class="tb-link" href="index.html">Home</a>
+</div>
+
+<!-- AI PANEL -->
+<div id="ai-panel" class="collapsed">
+  <button id="ai-toggle" onclick="toggleAi()" aria-expanded="false">
+    <span class="ai-spark"></span>
+    <span class="ai-label">AI Query Generator</span>
+    <span class="ai-sub">— describe what you want, get SSURGO SQL</span>
+    <span class="ai-arrow">▼</span>
+  </button>
+  <div id="ai-body">
+    <div id="ai-row">
+      <textarea id="ai-input" placeholder="e.g. Find soils with high organic matter good for corn in Iowa…" rows="2"></textarea>
+      <button id="ai-gen-btn" onclick="generateAiSql()">Generate</button>
+    </div>
+    <div id="ai-examples">
+      <span class="ai-ex" onclick="useExample(this)">Soils good for corn in Iowa</span>
+      <span class="ai-ex" onclick="useExample(this)">Karst sinkhole risk from limestone parent material</span>
+      <span class="ai-ex" onclick="useExample(this)">Hydric soils by county in Wisconsin</span>
+      <span class="ai-ex" onclick="useExample(this)">Pipeline corrosion risk — high clay, low pH</span>
+      <span class="ai-ex" onclick="useExample(this)">Soils with slope over 15% in Colorado</span>
+      <span class="ai-ex" onclick="useExample(this)">Top organic matter soils nationally</span>
+    </div>
+    <div id="ai-status"></div>
+    <div id="ai-result">
+      <pre id="ai-sql-out"></pre>
+      <div id="ai-result-btns">
+        <button class="ai-run-btn" onclick="runAiSql()">Run on SDA</button>
+        <button class="ai-copy-btn" onclick="copyAiSql()">Copy SQL</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sb-hdr">Filter by Category</div>
+    <div style="padding:8px 12px;font-size:9px;color:var(--dimmer);line-height:1.6;border-bottom:1px solid var(--border)">
+      Catalog auto-rebuilds when .sql files change via CI. Common names derived from SQL content — no people's names.
+    </div>
+    <div class="cat-item active" data-cat="all" onclick="setCat(this,'all')">
+      <span class="ci-icon"></span>
+      <span class="ci-label">All Scripts</span>
+      <span class="ci-count" id="cnt-all">—</span>
+    </div>
+    <hr class="sb-divider">
+    <div id="cat-list"></div>
+  </div>
+
+  <!-- GRID -->
+  <div id="grid-wrap">
+    <div id="script-grid"></div>
+    <div id="empty"><div class="em-i"></div><b style="color:var(--text)">No scripts found</b><p>Try different keywords or clear filters</p></div>
+  </div>
+
+  <!-- DETAIL PANE -->
+  <div id="detail">
+    <button id="d-close" onclick="closeDetail()">✕</button>
+    <div id="d-body"></div>
+  </div>
+</div>
+</div>
+
+<script>
+const SDA='https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest';
+let cat=null,activeId=null,activeCat='all',activeType='all',q='',view='grid';
+
+async function boot(){
+  const r=await fetch('data/sql-catalog.json');
+  cat=await r.json();
+  cat.scripts=cat.scripts.filter(s=>!s.hidden);
+  buildNav();render();
+  // Deep link (?script=<repo path>) — used by examples.html "run" links and the
+  // retired sql-runner.html redirect stub.
+  const want=new URLSearchParams(location.search).get('script');
+  if(want){
+    const hit=cat.scripts.find(s=>(s.filePath||'')===want||(s.filePath||'').endsWith('/'+want));
+    if(hit)openDetail(hit.id);
+  }
+}
+
+function buildNav(){
+  const counts={};
+  cat.scripts.forEach(s=>counts[s.category]=(counts[s.category]||0)+1);
+  document.getElementById('cnt-all').textContent=cat.scripts.length;
+  document.getElementById('cat-list').innerHTML=
+    Object.entries(cat.categories)
+      .sort((a,b)=>(counts[b[0]]||0)-(counts[a[0]]||0))
+      .map(([k,c])=>`<div class="cat-item" data-cat="${k}" onclick="setCat(this,'${k}')">
+        <span class="ci-icon">${c.icon}</span>
+        <span class="ci-label">${c.label}</span>
+        <span class="ci-count">${counts[k]||0}</span>
+      </div>`).join('');
+}
+
+function setCat(el,c){
+  document.querySelectorAll('.cat-item').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');activeCat=c;render();
+}
+
+function render(){
+  const s=q.toLowerCase();
+  const items=cat.scripts.filter(x=>{
+    if(activeCat!=='all'&&x.category!==activeCat)return false;
+    if(activeType!=='all'&&x.dataType!==activeType)return false;
+    if(s){const h=[x.commonName,x.description,...(x.tags||[])].join(' ').toLowerCase();if(!h.includes(s))return false;}
+    return true;
+  });
+  document.getElementById('count-badge').textContent=items.length+' scripts';
+  const grid=document.getElementById('script-grid');
+  const empty=document.getElementById('empty');
+  if(!items.length){grid.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  grid.className=view==='list'?'list-view':'';
+  grid.innerHTML=items.map(s=>{
+    const c=cat.categories[s.category]||{color:'#5a6490',icon:''};
+    const dt=s.dataType==='both'?'dt-b':s.dataType==='spatial'?'dt-s':'dt-t';
+    const dtl=s.dataType==='both'?'Both':s.dataType==='spatial'?'Spatial':'Tabular';
+    return `<div class="sc${activeId===s.id?' sel':''}" data-id="${s.id}"
+      style="--cat-color:${c.color}" onclick="openDetail('${s.id}')">
+      <div class="sc-top">
+        <span class="sc-icon">${c.icon}</span>
+        <div class="sc-body">
+          <div class="sc-name">${esc(s.commonName)}</div>
+          <div class="sc-desc">${esc(s.description)}</div>
+        </div>
+      </div>
+      <div class="sc-foot">
+        <span class="dt-badge ${dt}">${dtl}</span>
+        ${(s.tags||[]).slice(0,4).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openDetail(id){
+  const s=cat.scripts.find(x=>x.id===id);
+  if(!s)return;
+  activeId=id;
+  document.querySelectorAll('.sc').forEach(c=>c.classList.toggle('sel',c.dataset.id===id));
+  const c=cat.categories[s.category]||{color:'#5a6490',icon:'',label:s.category};
+  const params=extractParams(s.cleanSql||'');
+  const dt=s.dataType==='both'?'dt-b':s.dataType==='spatial'?'dt-s':'dt-t';
+  const dtl=s.dataType==='both'?'Tabular + Spatial':s.dataType==='spatial'?'Spatial':'Tabular';
+
+  document.getElementById('d-body').innerHTML=`
+    <button id="d-close" onclick="closeDetail()">✕</button>
+    <div class="d-eye" style="color:${c.color}">${c.icon} ${esc(c.label)}
+      <span class="dt-badge ${dt}" style="margin-left:4px">${dtl}</span>
+    </div>
+    <div class="d-title">${esc(s.commonName)}</div>
+    <div class="d-q">${esc(s.description)}</div>
+    ${params.length?`<div class="d-sec">Parameters</div>
+    ${params.map(p=>`<div class="p-row">
+      <label class="p-lbl" for="pi_${p.name}">${esc(p.label)}</label>
+      <input class="p-inp" id="pi_${p.name}" value="${esc(p.def)}"
+             placeholder="${esc(p.hint)}" data-param="${p.name}">
+    </div>`).join('')}`:''}
+    <div class="d-sec">SQL</div>
+    <div class="sql-pre">${hlSQL((s.cleanSql||'').slice(0,2200))}</div>
+    <div class="d-actions">
+      <button class="btn-run" onclick="runQuery('${id}')" id="run-btn">Test on SDA</button>
+      <button class="btn-dl" onclick="dlSQL('${id}')">⬇ Download</button>
+      <a class="btn-sda" href="https://sdmdataaccess.nrcs.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer">Open SDA</a>
+    </div>
+    <div id="r-area"></div>
+    <div class="d-sec">Tags</div>
+    <div class="d-tags">${(s.tags||[]).map(t=>`<span class="d-tag">${esc(t)}</span>`).join('')}</div>
+    <div class="d-sec">File Info</div>
+    <div style="font-size:10px;color:var(--dimmer);line-height:1.9">
+      Path: <span style="color:var(--dim)">${esc(s.filePath)}</span><br>
+      Size: ${((s.charCount||0)/1000).toFixed(1)} KB
+    </div>`;
+  document.getElementById('detail').classList.add('open');
+}
+
+function closeDetail(){
+  document.getElementById('detail').classList.remove('open');
+  activeId=null;
+  document.querySelectorAll('.sc').forEach(c=>c.classList.remove('sel'));
+}
+
+function extractParams(sql){
+  const out=[],seen=new Set();
+  const re=/DECLARE\s+@(\w+)\s+\w+/gi;
+  let m;
+  while((m=re.exec(sql))!==null){
+    const n=m[1];if(seen.has(n))continue;seen.add(n);
+    const dm=sql.match(new RegExp(`SELECT\\s+@${n}\\s*=\\s*'([^']*)'`,'i'));
+    out.push({name:n,label:pLabel(n),def:dm?dm[1]:'',hint:pHint(n)});
+  }
+  return out.slice(0,5);
+}
+function pLabel(n){return({'area':'Survey Area / State','domc':'All Components? (0=dom)','major':'Major Only? (0=yes)','state':'State Abbr'})[n.toLowerCase()]||n.replace(/_/g,' ');}
+function pHint(n){return({'area':'e.g. WI025 or WI','domc':'0=dominant 1=all','major':'0=major only','state':'e.g. IA'})[n.toLowerCase()]||'';}
+
+async function runQuery(id){
+  const s=cat.scripts.find(x=>x.id===id);if(!s)return;
+  const btn=document.getElementById('run-btn');
+  const ra=document.getElementById('r-area');
+  btn.disabled=true;btn.innerHTML='<span class="spin">⟳</span> Querying…';
+  ra.innerHTML='<div class="r-info"><span class="spin">⟳</span> Connecting to SDA API…</div>';
+  let sql=s.cleanSql||'';
+  document.querySelectorAll('.p-inp').forEach(inp=>{
+    sql=sql.replace(new RegExp(`(SELECT\\s+@${inp.dataset.param}\\s*=\\s*')[^']*(')`,'gi'),`$1${inp.value}$2`);
+  });
+  const sdaSql=toSDASql(sql);
+  try{
+    const resp=await fetch(SDA,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:`query=${encodeURIComponent(sdaSql)}&format=JSON%2BCOLUMNNAME`});
+    // SDA sometimes returns XML on error — always read as text first, then parse
+    const text=await resp.text();
+    let data;
+    try{ data=JSON.parse(text); }
+    catch(_){
+      btn.disabled=false;btn.innerHTML='Test on SDA';
+      // Extract message from XML if present
+      const xmlMsg=(text.match(/<Message>([\s\S]*?)<\/Message>/i)||[])[1]||
+                   (text.match(/<string[^>]*>([\s\S]*?)<\/string>/i)||[])[1]||
+                   'SDA returned a non-JSON response';
+      ra.innerHTML=`<div class="r-err">✗ ${esc(xmlMsg.trim())}<br><small>Try using the <a href="https://sdmdataaccess.nrcs.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">SDA query interface</a> for complex queries with temp tables.</small></div>`;
+      return;
+    }
+    btn.disabled=false;btn.innerHTML='Test on SDA';
+    if(!data.Table||data.Table.length<2){
+      ra.innerHTML='<div class="r-ok">✓ Query executed — 0 rows returned</div>';return;
+    }
+    const[headers,,...rows]=data.Table;
+    ra.innerHTML=`<div class="r-ok">✓ ${rows.length.toLocaleString()} row${rows.length!==1?'s':''} returned</div>
+      <div class="rtw"><table id="rt">
+        <thead><tr>${headers.map(h=>`<th>${esc(h||'')}</th>`).join('')}</tr></thead>
+        <tbody>${rows.slice(0,200).map(r=>`<tr>${r.map(c=>`<td>${esc(c!=null?String(c):'—')}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table></div>
+      ${rows.length>200?`<div class="rc">Showing 200 of ${rows.length} rows</div>`:''}`;
+  }catch(e){
+    btn.disabled=false;btn.innerHTML='Test on SDA';
+    ra.innerHTML=`<div class="r-err">✗ ${esc(e.message)}<br><small>Queries with temp tables require SSMS or the <a href="https://sdmdataaccess.nrcs.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">SDA query interface</a>.</small></div>`;
+  }
+}
+
+function toSDASql(sql){
+  let s=sql
+    .replace(/DROP\s+TABLE\s+(IF\s+EXISTS\s+)?#\w+[^;\n]*/gi,'')
+    .replace(/CREATE\s+TABLE\s+#\w+[\s\S]*?(?=\n\s*(?:INSERT|SELECT|CREATE|DROP|GO|$))/gi,'')
+    .replace(/INSERT\s+INTO\s+#\w+[\s\S]*?(?=\n\s*(?:SELECT|CREATE|DROP|INSERT|GO|\-\-|$))/gi,'')
+    .replace(/CREATE\s+INDEX[\s\S]*?\n/gi,'')
+    .replace(/^go\s*$/gim,'')
+    .replace(/SET\s+STATISTICS[^\n]*/gi,'')
+    .replace(/USE\s+sdm\w*[^\n]*/gi,'')
+    .replace(/DECLARE\s+@\w+[^\n]*/gi,'');
+  const blocks=[];
+  const re=/\bSELECT\b[\s\S]*?(?=(?:\bSELECT\b|\bINSERT\b|\bCREATE\b|\bDROP\b|$))/gi;
+  let m;
+  while((m=re.exec(s))!==null){
+    const b=m[0].trim();
+    if(!b.match(/INTO\s+#/i)&&b.length>30)blocks.push(b);
+  }
+  const best=blocks[blocks.length-1]||s;
+  return best.trim().slice(0,3500);
+}
+
+async function dlSQL(id){
+  const s=cat.scripts.find(x=>x.id===id);if(!s)return;
+  let text=s.cleanSql||'';
+  try{const r=await fetch(s.filePath);if(r.ok)text=await r.text();}catch(_){}
+  const b=new Blob([text],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(b);
+  a.download=(s.commonName||'query').replace(/\s+/g,'_')+'.sql';
+  a.click();URL.revokeObjectURL(a.href);
+}
+
+function hlSQL(sql){
+  return esc(sql)
+    .replace(/(--.*)$/gm,(_,c)=>`<span class="co">${c}</span>`)
+    .replace(/'([^']*)'/g,(_,g)=>`<span class="st">'${g}'</span>`)
+    .replace(/\b(SELECT|FROM|WHERE|INNER|LEFT|OUTER|JOIN|ON|AND|OR|NOT|IN|IS|NULL|AS|ORDER|BY|GROUP|HAVING|DISTINCT|TOP|CASE|WHEN|THEN|ELSE|END|INTO|WITH|DECLARE|SET|IF|OVER|PARTITION)\b/gi,m=>`<span class="kw">${m}</span>`)
+    .replace(/\b(ROUND|SUM|MAX|MIN|AVG|COUNT|CAST|CONVERT|CONCAT|ISNULL|COALESCE|SUBSTRING|LEN|LEFT|RIGHT|REPLACE|FORMAT)\s*(?=\()/gi,m=>`<span class="fn">${m}</span>`)
+    .replace(/\b(\d+\.?\d*)\b/g,m=>`<span class="nu">${m}</span>`);
+}
+
+function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// Events
+document.getElementById('search').addEventListener('input',e=>{q=e.target.value.trim();render();});
+document.querySelectorAll('.type-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.type-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');activeType=b.dataset.type;render();
+}));
+document.querySelectorAll('.view-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.view-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');view=b.dataset.view;render();
+}));
+
+boot().catch(e=>document.getElementById('script-grid').innerHTML=
+  `<div style="padding:40px;color:var(--red)">Error: ${e.message}</div>`);
+
+/* ── WORKERS AI ── */
+let aiSqlGenerated = '';
+
+function toggleAi() {
+  const panel = document.getElementById('ai-panel');
+  const btn = document.getElementById('ai-toggle');
+  const expanded = panel.classList.toggle('expanded');
+  panel.classList.toggle('collapsed', !expanded);
+  btn.setAttribute('aria-expanded', expanded);
+}
+
+function useExample(el) {
+  document.getElementById('ai-input').value = el.textContent;
+  if (document.getElementById('ai-panel').classList.contains('collapsed')) toggleAi();
+  document.getElementById('ai-input').focus();
+}
+
+async function generateAiSql() {
+  const prompt = document.getElementById('ai-input').value.trim();
+  if (!prompt) return;
+  const btn = document.getElementById('ai-gen-btn');
+  const status = document.getElementById('ai-status');
+  const result = document.getElementById('ai-result');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin">⟳</span> Generating…';
+  status.textContent = 'Sending to Llama 3.1 at Cloudflare edge…';
+  result.style.display = 'none';
+  try {
+    const resp = await fetch('https://lab10yr.com/ai/sql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+    const data = await resp.json();
+    if (!data.ok) throw new Error(data.error || 'AI request failed');
+    aiSqlGenerated = data.sql;
+    document.getElementById('ai-sql-out').textContent = aiSqlGenerated;
+    result.style.display = 'block';
+    status.textContent = 'Generated — review the SQL before running.';
+  } catch (e) {
+    status.textContent = '✗ ' + e.message;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Generate';
+  }
+}
+
+async function runAiSql() {
+  if (!aiSqlGenerated) return;
+  const ra = document.getElementById('r-area');
+  if (!ra) {
+    // open detail pane with a synthetic script entry
+    alert('Select any script first to open the results pane, then use Run on SDA.');
+    return;
+  }
+  const btn = document.querySelector('.ai-run-btn');
+  btn.disabled = true;
+  btn.textContent = '⟳ Running…';
+  ra.innerHTML = '<div class="r-info"><span class="spin">⟳</span> Connecting to SDA API…</div>';
+  const SDA = 'https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest';
+  try {
+    const resp = await fetch(SDA, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `query=${encodeURIComponent(aiSqlGenerated)}&format=JSON%2BCOLUMNNAME`
+    });
+    const text = await resp.text();
+    let data;
+    try { data = JSON.parse(text); } catch (_) {
+      const xmlMsg = (text.match(/<Message>([\s\S]*?)<\/Message>/i)||[])[1] || 'SDA returned a non-JSON response';
+      ra.innerHTML = `<div class="r-err">✗ ${esc(xmlMsg.trim())}</div>`;
+      return;
+    }
+    if (!data.Table || data.Table.length < 2) {
+      ra.innerHTML = '<div class="r-ok">✓ Query executed — 0 rows returned</div>';
+      return;
+    }
+    const [headers,,...rows] = data.Table;
+    ra.innerHTML = `<div class="r-ok">✓ ${rows.length.toLocaleString()} rows — AI-generated query</div>
+      <div class="rtw"><table id="rt">
+        <thead><tr>${headers.map(h=>`<th>${esc(h||'')}</th>`).join('')}</tr></thead>
+        <tbody>${rows.slice(0,200).map(r=>`<tr>${r.map(c=>`<td>${esc(c!=null?String(c):'—')}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table></div>
+      ${rows.length>200?`<div class="rc">Showing 200 of ${rows.length} rows</div>`:''}`;
+    // scroll detail pane into view
+    document.getElementById('detail')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } catch (e) {
+    ra.innerHTML = `<div class="r-err">✗ ${esc(e.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Run on SDA';
+  }
+}
+
+function copyAiSql() {
+  if (!aiSqlGenerated) return;
+  navigator.clipboard.writeText(aiSqlGenerated).then(() => {
+    const btn = document.querySelector('.ai-copy-btn');
+    btn.textContent = '✓ Copied';
+    setTimeout(() => btn.textContent = 'Copy SQL', 1500);
+  });
+}
+</script>
+</body>
+</html>

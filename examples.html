@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://lab10yr.com/examples">
+  <title>SQL Examples and Write-up</title>
+  <link rel="stylesheet" href="assets/theme.css">
+  <style>
+    :root {
+      --bg: #04060c;
+      --panel: #0a0e1a;
+      --panel2: #111625;
+      --panel3: #181e30;
+      --border: #1e2640;
+      --text: #d4daf0;
+      --dim: #5a6490;
+      --accent: #38bdf8;
+      --green: #22c55e;
+      --soil: #c8a84b;
+      --red: #ef4444;
+      --font: 'Inter', system-ui, sans-serif;
+      --serif: Georgia, serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+    }
+
+    .examples-wrap {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 1.2rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr auto;
+      gap: 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 0.8rem;
+    }
+
+    .toolbar label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.28rem;
+      color: var(--dim);
+    }
+
+    .toolbar input,
+    .toolbar select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.6rem;
+      font-size: 0.95rem;
+      background: var(--panel2);
+      color: var(--text);
+    }
+
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .example-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 0.85rem;
+      color: var(--text);
+    }
+
+    .example-card h3 {
+      margin: 0 0 0.4rem;
+      line-height: 1.3;
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    .example-card ul {
+      margin: 0.45rem 0 0;
+      padding-left: 1rem;
+    }
+
+    .example-card li {
+      margin-bottom: 0.38rem;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.45rem;
+    }
+
+    .chip {
+      display: inline-block;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.16rem 0.5rem;
+      background: var(--panel2);
+      color: var(--dim);
+      font-size: 0.77rem;
+      font-weight: 700;
+    }
+
+    .meta {
+      color: var(--dim);
+      font-size: 0.88rem;
+    }
+
+    .status {
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 0.85rem;
+      color: var(--dim);
+      text-align: center;
+      background: var(--panel2);
+    }
+
+    @media (max-width: 920px) {
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header" id="top">
+    <h1>SQL Examples and Write-up</h1>
+    <p>Dynamic, auto-generated examples by SQL purpose. Categories and common names come from the same index used by Explorer and Runner.</p>
+    <nav class="navbar" aria-label="Main navigation">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="soil-atlas.html" style="font-weight:700;color:#22c55e">Soil Atlas</a>
+      <a class="nav-link" href="soil-data-stories.html" style="font-weight:700;color:#4e9fff">Data Stories</a>
+      <a class="nav-link" href="sql-explorer.html">SQL Explorer</a>
+      <a class="nav-link" href="examples.html">Examples</a>
+      <a class="nav-link" href="governance-status.html">Governance</a>
+      <a class="nav-link" href="../README.md">README</a>
+      <a class="nav-link" href="data-models.html">Data Models</a>
+    </nav>
+    <div class="floating-nav">
+      <button class="btn" id="themeToggleBtn" type="button">Theme: Dark</button>
+      <button class="btn" id="densityToggleBtn" type="button">Density: Comfortable</button>
+      <button class="btn" id="backToTopFab" title="Back to top" style="display:inline-block;">↑</button>
+    </div>
+    <div class="badge-bar" id="badgeBar"></div>
+  </header>
+
+  <main class="examples-wrap">
+    <section class="toolbar" aria-label="Filter examples">
+      <div>
+        <label for="q">Keyword</label>
+        <input id="q" type="search" placeholder="Try: carbon, root zone, flooding, geometry">
+      </div>
+      <div>
+        <label for="category">Purpose Category</label>
+        <select id="category"><option value="">All categories</option></select>
+      </div>
+      <div>
+        <label for="tag">Tag</label>
+        <select id="tag"><option value="">All tags</option></select>
+      </div>
+      <div style="align-self:end;">
+        <button class="btn" id="resetBtn" type="button">Reset</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="meta" id="meta">Loading examples...</div>
+    </section>
+
+    <section class="example-grid" id="grid" aria-live="polite"></section>
+
+    <footer class="footer">
+      Soil Data Access SQL Library • Examples are dynamically generated from docs/data/sql-index.json • <span data-year></span>
+    </footer>
+  </main>
+
+  <script type="module">
+    const state = {
+      scripts: [],
+      filtered: [],
+      familyCounts: {}
+    };
+
+    const q = document.getElementById("q");
+    const category = document.getElementById("category");
+    const tag = document.getElementById("tag");
+    const resetBtn = document.getElementById("resetBtn");
+    const grid = document.getElementById("grid");
+    const meta = document.getElementById("meta");
+
+    function normalizeTags(raw) {
+      if (Array.isArray(raw)) return raw;
+      if (typeof raw === "string" && raw.trim()) return [raw.trim()];
+      return [];
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function chooseMode(script) {
+      const tags = new Set(normalizeTags(script.tags).map(t => String(t).toLowerCase()));
+      const c = String(script.category || "").toLowerCase();
+      if (c.includes("spatial") || tags.has("geometry") || tags.has("spatial-overlay") || tags.has("aoi-polygon") || tags.has("point-query")) {
+        return "spatial";
+      }
+      return "tabular";
+    }
+
+    function applyFilters() {
+      const needle = q.value.trim().toLowerCase();
+      const selectedCategory = category.value;
+      const selectedTag = tag.value;
+
+      state.filtered = state.scripts.filter(script => {
+        if (selectedCategory && script.category !== selectedCategory) return false;
+
+        const tags = normalizeTags(script.tags);
+        if (selectedTag && !tags.includes(selectedTag)) return false;
+
+        if (!needle) return true;
+
+        const bag = [
+          script.commonName,
+          script.fileName,
+          script.category,
+          script.description,
+          ...tags
+        ].join(" ").toLowerCase();
+
+        return bag.includes(needle);
+      });
+
+      render();
+    }
+
+    function render() {
+      meta.textContent = `${state.filtered.length} script(s) across ${new Set(state.filtered.map(s => s.category)).size} category(ies).`;
+
+      if (!state.filtered.length) {
+        grid.innerHTML = '<div class="status">No examples matched your filters.</div>';
+        return;
+      }
+
+      const groups = new Map();
+      state.filtered.forEach(script => {
+        const key = script.category || "General Soil Data";
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(script);
+      });
+
+      const sortedGroups = [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+
+      grid.innerHTML = sortedGroups.map(([groupName, scripts]) => {
+        const top = scripts
+          .sort((a, b) => (a.commonName || "").localeCompare(b.commonName || ""))
+          .slice(0, 8);
+
+        const rows = top.map(script => {
+          const familyCount = script.familyKey ? (state.familyCounts[script.familyKey] || 1) : 1;
+          const runnerHref = `sql-explorer.html?script=${encodeURIComponent(script.path || "")}`;
+          return `
+            <li>
+              <a href="../${script.path}" target="_blank" rel="noopener noreferrer">${escapeHtml(script.commonName || script.fileName || script.path)}</a>
+              <span class="meta"> (${escapeHtml(script.fileName || "")})</span>
+              <span class="meta"> • <a href="${runnerHref}">run</a></span>
+              ${familyCount > 1 ? `<span class="chip">${familyCount} related</span>` : ""}
+            </li>
+          `;
+        }).join("");
+
+        return `
+          <article class="example-card reveal">
+            <h3>${escapeHtml(groupName)}</h3>
+            <p class="meta">${scripts.length} script(s) in this purpose category.</p>
+            <ul>${rows}</ul>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function init() {
+      const res = await fetch("data/sql-index.json", { cache: "no-store" });
+      if (!res.ok) {
+        throw new Error(`Could not load SQL index: ${res.status}`);
+      }
+
+      const payload = await res.json();
+      state.scripts = (Array.isArray(payload.scripts) ? payload.scripts : []).filter(s => !s.hidden);
+
+      state.familyCounts = state.scripts.reduce((acc, script) => {
+        const key = (script.familyKey || "").trim();
+        if (key) {
+          acc[key] = (acc[key] || 0) + 1;
+        }
+        return acc;
+      }, {});
+
+      const categories = [...new Set(state.scripts.map(s => s.category).filter(Boolean))].sort();
+      categories.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item;
+        option.textContent = item;
+        category.append(option);
+      });
+
+      const tags = [...new Set(state.scripts.flatMap(s => normalizeTags(s.tags)).filter(Boolean))].sort();
+      tags.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item;
+        option.textContent = item;
+        tag.append(option);
+      });
+
+      applyFilters();
+    }
+
+    q.addEventListener("input", applyFilters);
+    category.addEventListener("change", applyFilters);
+    tag.addEventListener("change", applyFilters);
+    resetBtn.addEventListener("click", () => {
+      q.value = "";
+      category.value = "";
+      tag.value = "";
+      applyFilters();
+    });
+
+    try {
+      await init();
+    } catch (err) {
+      meta.textContent = "Could not load examples index.";
+      grid.innerHTML = `<div class="status">${escapeHtml(err.message)}</div>`;
+    }
+  </script>
+  <script src="assets/theme-advanced.js" defer></script>
+</body>
+</html>

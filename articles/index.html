@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Articles &mdash; Lab10YR Soil Intelligence</title>
+<meta name="description" content="Data-driven analysis of America's soils: fragile soil risk, organic matter depletion, infrastructure vulnerability, and regenerative land management.">
+<link rel="canonical" href="https://lab10yr.com/articles/">
+<link rel="alternate" type="application/rss+xml" title="Lab10YR Articles" href="https://lab10yr.com/feed.xml">
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="Lab10YR">
+<meta property="og:title"       content="Articles &mdash; Lab10YR Soil Intelligence">
+<meta property="og:description" content="Data-driven analysis of America's soils: fragile soil risk, organic matter depletion, infrastructure vulnerability, and regenerative land management.">
+<meta property="og:url"         content="https://lab10yr.com/articles/">
+<meta property="og:image"       content="https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" fetchpriority="high">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#c8973a;--gold2:#e8c46a;--bg:#0e0b08;--bg2:#13100d;--muted:#8a7a6a;
+  --ff-serif:'Playfair Display',Georgia,serif;--ff-mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:#f0ede8;font-family:Georgia,'Times New Roman',serif;line-height:1.7;min-height:100vh}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,11,8,.95);
+    backdrop-filter:blur(10px);border-bottom:1px solid #2a1e0f;
+    display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:56px}
+.nav-brand{font-family:var(--ff-serif);font-size:18px;font-weight:700;color:var(--gold2);text-decoration:none;letter-spacing:-.3px}
+.nav-brand span{color:#f0ede8}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{font-family:var(--ff-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:#f0ede8}
+.nav-cta{background:var(--gold)!important;color:var(--bg)!important;padding:6px 16px!important;border-radius:3px;font-weight:600!important}
+.nav-cta:hover{background:var(--gold2)!important;color:var(--bg)!important}
+
+.page-header{padding:100px 40px 48px;max-width:900px;margin:0 auto}
+.page-kicker{font-family:var(--ff-mono);font-size:10px;font-weight:700;letter-spacing:.15em;
+             text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.page-kicker::before{content:'';width:28px;height:1px;background:var(--gold)}
+.page-title{font-family:var(--ff-serif);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:400;margin-bottom:14px;letter-spacing:-.02em}
+.page-deck{color:#c8beb4;font-size:1.05rem;max-width:560px;line-height:1.6}
+.page-count{font-family:var(--ff-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:24px;padding-top:20px;border-top:1px solid #2a1e0f}
+
+.articles{max-width:900px;margin:0 auto;padding:0 40px 80px;display:grid;gap:2px}
+
+.card{background:var(--bg2);border:1px solid #1e1710;transition:border-color .2s}
+.card:hover{border-color:#3a2e20}
+.card--lead{border-left:3px solid var(--gold)}
+.card-link{display:block;padding:32px;text-decoration:none;color:inherit}
+.card-meta{display:flex;gap:16px;align-items:center;margin-bottom:10px}
+.card-date{font-family:var(--ff-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card-tag{font-family:var(--ff-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border:1px solid #3a2e20;padding:2px 8px;border-radius:2px}
+.card-read{font-family:var(--ff-mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-left:auto}
+.card-title{font-family:var(--ff-serif);font-size:1.55rem;font-weight:400;line-height:1.2;margin-bottom:10px;color:#f0ede8;transition:color .2s}
+.card:hover .card-title{color:var(--gold2)}
+.card--lead .card-title{font-size:clamp(1.6rem,3vw,2.2rem)}
+.card-desc{font-size:.9rem;color:#c8beb4;line-height:1.55;max-width:680px;margin-bottom:14px}
+.card-cta{font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
+
+.empty{padding:80px 40px;max-width:900px;margin:0 auto;color:var(--muted);font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em}
+
+footer{border-top:1px solid #1e1710;padding:28px 40px;max-width:900px;margin:0 auto;
+       display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+footer a{font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+footer a:hover{color:var(--gold)}
+footer span{font-family:var(--ff-mono);font-size:9px;color:#2a1e0f}
+
+@media(max-width:700px){
+  nav{padding:0 16px}
+  .page-header,.articles,footer{padding-left:20px;padding-right:20px}
+  .card-link{padding:24px 20px}
+  .card-title{font-size:1.25rem}
+  .nav-links a:not(.nav-cta){display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://lab10yr.com" class="nav-brand"><span>Lab</span>10<em style="font-style:normal;color:var(--gold2)">YR</em></a>
+  <div class="nav-links">
+    <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map" rel="noopener noreferrer">Risk Map</a>
+    <a href="https://lab10yr.com/soil-data-stories" rel="noopener noreferrer">Data Stories</a>
+    <a href="https://lab10yr.com/articles/" rel="noopener noreferrer" style="color:#f0ede8">Articles</a>
+    <a href="https://lab10yr.com/#contact" class="nav-cta" rel="noopener noreferrer">Get in Touch</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-kicker">Lab10YR &mdash; Research &amp; Analysis</div>
+  <h1 class="page-title">Soil Intelligence Articles</h1>
+  <p class="page-deck">Data-driven analysis of America&rsquo;s soils: fragile soil risk, organic matter depletion, infrastructure vulnerability, and regenerative land management practices.</p>
+  <div class="page-count">24 articles published</div>
+</div>
+
+<main class="articles">
+
+  <article class="card card--lead">
+    <a href="/articles/why-wind-farm-micrositing-needs-soil-science-1780708494506" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 6, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">12 min read</span>
+      </div>
+      <h2 class="card-title">Why Wind Farm Micrositing Needs Soil Science</h2>
+      <p class="card-desc">Wind turbine foundations fail when soils heave or settle, yet most projects skip the public soil data that would predict it. SSURGO drainage class, linear extensibility, and settlement ratings can tell a developer which turbine positions need a million-dollar pile foundation and which need a standard mat, before any borings are drilled.</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/what-pipeline-operators-don-t-know-about-soil-corrosivity-1780766412454" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 6, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">9 min read</span>
+      </div>
+      <h2 class="card-title">What Pipeline Operators Don</h2>
+      <p class="card-desc">13.3% of rated SSURGO map units carry a Fragile or higher FSI rating. This translates to 28,122 map units across the United States. The number is striking. It indicates a significant portion of the country</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/what-insar-sees-that-ssurgo-already-predicted-1780933662864" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 8, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">12 min read</span>
+      </div>
+      <h2 class="card-title">What InSAR Sees That SSURGO Already Predicted</h2>
+      <p class="card-desc">Sentinel-1 InSAR now measures millimeter-scale subsidence across American cities, but in most documented cases the soil beneath was already rated settlement-prone in SSURGO. The satellite confirms a forecast the free soil survey delivered decades earlier.</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/topographic-wetness-index-the-terrain-derivative-that-predic-1781109253100" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 10, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">6 min read</span>
+      </div>
+      <h2 class="card-title">Topographic Wetness Index: The Terrain Derivative That Predicts Soil Drainage</h2>
+      <p class="card-desc">The Topographic Wetness Index, derived from a 1-meter LiDAR elevation model, predicts SSURGO drainage class with roughly 80 percent accuracy and flags probable hydric soils before any field delineation dollar is spent.</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/the-septic-system-failure-map-nobody-publishes-1780835827784" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 7, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">12 min read</span>
+      </div>
+      <h2 class="card-title">The Septic System Failure Map Nobody Publishes</h2>
+      <p class="card-desc">109 million acres of hydric soils are mapped in the contiguous U.S. Waterlogged soil presents challenges for septic systems. This number represents areas where the soil is saturated with water. The presence of hydric soils can lead to signi</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/the-ground-under-data-center-alley-was-never-meant-to-hold-i-1781050588274" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 10, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">8 min read</span>
+      </div>
+      <h2 class="card-title">The Ground Under Data Center Alley Was Never Meant to Hold It</h2>
+      <p class="card-desc">A fuzzy-logic soil-suitability model run against the national soil survey finds that Data Center Alley in Loudoun County, Virginia is only 39 percent buildable, with its largest share of ground rated marginal. The dirt under hyperscale is a construction-budget line item the industry rarely names.</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/the-ground-under-data-center-alley-was-never-meant-to-hold-i-1781048561067" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 9, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">8 min read</span>
+      </div>
+      <h2 class="card-title">The Ground Under Data Center Alley Was Never Meant to Hold It</h2>
+      <p class="card-desc">A fuzzy-logic soil-suitability model run against the national soil survey finds that Data Center Alley in Loudoun County, Virginia is only 39 percent buildable, with its largest share of ground rated marginal. The dirt under hyperscale is a construction-budget line item the industry rarely names.</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/the-ground-beneath-the-cloud" class="card-link">
+      <div class="card-meta">
+        
+        <span class="card-tag">Soil Intelligence</span>
+        <span class="card-read">8 min read</span>
+      </div>
+      <h2 class="card-title">The Ground Beneath the Cloud</h2>
+      <p class="card-desc">A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/the-data-behind-shrink-swell-soils-and-foundation-failure-1780675011234" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 5, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">5 min read</span>
+      </div>
+      <h2 class="card-title">The Data Behind Shrink-Swell Soils and Foundation Failure</h2>
+      <p class="card-desc">Expansive soils cost U.S. homeowners over 15 billion dollars per year. Foundation damage is the culprit. This damage, caused by shrink-swell soils, is well understood by soil scientists. The risk is already mapped in the SSURGO dataset for </p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/the-carbon-beneath-america-s-peatlands-is-not-accounted-for--1780836473740" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 7, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">12 min read</span>
+      </div>
+      <h2 class="card-title">The Carbon Beneath America</h2>
+      <p class="card-desc">109 million acres of hydric soils cover the contiguous U.S. This is a lot of land. Water tables are high in these areas, and organic matter accumulates, creating conditions that support unique ecosystems. Drained peatlands release carbon at</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/soil-depth-prediction-from-lidar-what-the-terrain-tells-you--1781196707799" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 11, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">6 min read</span>
+      </div>
+      <h2 class="card-title">Soil Depth Prediction From LiDAR: What the Terrain Tells You Before You Dig</h2>
+      <p class="card-desc">Terrain curvature from LiDAR predicts depth to bedrock within 30 cm at 70 percent of tested Appalachian and Rocky Mountain sites, screening soil depth before a costly Phase I geotechnical study.</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/soil-data-is-the-cheapest-form-of-geotechnical-intelligence-1780595467955" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 4, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">6 min read</span>
+      </div>
+      <h2 class="card-title">Soil Data Is the Cheapest Form of Geotechnical Intelligence</h2>
+      <p class="card-desc">A Phase I environmental site assessment costs thousands of dollars.  Nothing, in contrast, is the cost of a SSURGO query, which runs in seconds. </p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/road-salts-are-destroying-urban-soils-and-nobody-is-measurin-1780836141404" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 7, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">11 min read</span>
+      </div>
+      <h2 class="card-title">Road Salts Are Destroying Urban Soils and Nobody Is Measuring It</h2>
+      <p class="card-desc">The contiguous U.S. has approximately 109 million acres of hydric soils. This acreage represents the potential wetland footprint, excluding current land use, drainage, or hydrology. Road salt can cause lasting damage to soil structure due t</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/precision-agriculture-without-soil-data-is-just-precision-gu-1780834508696" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 7, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">11 min read</span>
+      </div>
+      <h2 class="card-title">Precision Agriculture Without Soil Data Is Just Precision Guessing</h2>
+      <p class="card-desc">109 million acres of hydric soils are mapped in the contiguous U.S. That</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/nevada-and-arizona-are-running-out-of-stable-ground-1780775741405" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 6, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">10 min read</span>
+      </div>
+      <h2 class="card-title">Nevada and Arizona Are Running Out of Stable Ground</h2>
+      <p class="card-desc">Nevada</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/multispectral-drones-are-measuring-what-soil-labs-miss-1780964296753" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 9, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">12 min read</span>
+      </div>
+      <h2 class="card-title">Multispectral Drones Are Measuring What Soil Labs Miss</h2>
+      <p class="card-desc">Multispectral drones map soil organic matter at 5-centimeter resolution for a fraction of the cost of lab sampling, but the reflectance only becomes a defensible carbon number when calibrated against KSSL chemistry and corrected for soil moisture. Here is the science of bare soil reflectance and the workflow that makes it pay.</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/lidar-terrain-derivatives-are-the-best-soil-survey-tool-nobo-1780837098173" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 7, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">11 min read</span>
+      </div>
+      <h2 class="card-title">LiDAR Terrain Derivatives Are the Best Soil Survey Tool Nobody Uses</h2>
+      <p class="card-desc">109 million acres of hydric soils are mapped in the contiguous U.S. Water tables are high. This number represents a significant portion of the country</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/karst-country-mapping-sinkhole-risk-before-you-build-1780604636008" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 4, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">5 min read</span>
+      </div>
+      <h2 class="card-title">Karst Country: Mapping Sinkhole Risk Before You Build</h2>
+      <p class="card-desc">Karst geology underlies 20 percent of the United States. Every square kilometer is marked in your soil survey data. Sinkholes can appear suddenly. They swallow buildings, a major concern for infrastructure projects. </p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/hydric-soils-and-wetland-regulation-the-map-that-determines--1780833613256" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 7, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">11 min read</span>
+      </div>
+      <h2 class="card-title">Hydric Soils and Wetland Regulation: The Map That Determines Your Permit</h2>
+      <p class="card-desc">The cost of obtaining a Section 404 wetland permit averages $2.2 million and takes 18 months. High cost. This number represents the cost of regulatory compliance for land development projects that impact jurisdictional wetlands. In these ca</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/how-to-query-967-000-soil-records-in-30-seconds-1780771898117" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 6, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">11 min read</span>
+      </div>
+      <h2 class="card-title">How to Query 967,000 Soil Records in 30 Seconds</h2>
+      <p class="card-desc">Soil is fragile. The national average Fragile Soil Index value is 0.272 on a 0-to-1 scale, indicating a level of soil fragility that can have significant consequences. This number represents a measure of how easily soil can be damaged by hu</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/how-organic-matter-loss-is-priced-into-farmland-without-anyo-1780621832620" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 5, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">6 min read</span>
+      </div>
+      <h2 class="card-title">How Organic Matter Loss Is Priced Into Farmland Without Anyone Knowing</h2>
+      <p class="card-desc">Soil organic matter predicts long-term farm productivity. It</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/fragile-soils-and-the-infrastructure-debt-nobody-is-counting-1780607868672" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 4, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">6 min read</span>
+      </div>
+      <h2 class="card-title">Fragile Soils and the Infrastructure Debt Nobody Is Counting</h2>
+      <p class="card-desc">Fragile soil is a problem. The national soil survey, compiled by the USDA, reveals a complex landscape of soil conditions across 2.3 million map units. Most road budgets fail to account for the impact of fragile soils on infrastructure</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/forest-soil-compaction-is-an-invisible-tax-on-timber-product-1780835300006" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 7, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">12 min read</span>
+      </div>
+      <h2 class="card-title">Forest Soil Compaction Is an Invisible Tax on Timber Productivity</h2>
+      <p class="card-desc">Thirty-one percent of all mapped SSURGO soil components are classified as hydric. Nearly one-third of the country</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+
+  <article class="card">
+    <a href="/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1781280981640" class="card-link">
+      <div class="card-meta">
+        <span class="card-date">June 12, 2026</span>
+        <span class="card-tag">Soil</span>
+        <span class="card-read">6 min read</span>
+      </div>
+      <h2 class="card-title">Computer Vision Is Now Classifying Soil Texture From Field Photos</h2>
+      <p class="card-desc">Deep learning now reads soil texture from smartphone photos at 78 percent accuracy, but the 60,000 laboratory-verified pedons in KSSL and free SSURGO polygons remain the ground truth that makes those predictions defensible.</p>
+      <span class="card-cta">Read the analysis &rarr;</span>
+    </a>
+  </article>
+</main>
+
+<footer style="max-width:900px;margin:0 auto">
+  <div>
+    <a href="https://lab10yr.com" rel="noopener noreferrer">&larr; lab10yr.com</a>
+  </div>
+  <div style="display:flex;gap:24px;flex-wrap:wrap">
+    <a href="https://lab10yr.com/soil-data-stories" rel="noopener noreferrer">Data Stories</a>
+    <a href="https://lab10yr.com/soil-atlas" rel="noopener noreferrer">Soil Atlas</a>
+    <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map" rel="noopener noreferrer">Risk Map</a>
+    <a href="https://ko-fi.com/lab10yr" target="_blank" rel="noopener noreferrer">Ko-fi</a>
+  </div>
+</footer>
+
+</body>
+</html>

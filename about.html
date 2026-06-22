@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About — Lab10YR Soil Intelligence</title>
+<meta name="description" content="Lab10YR makes the national soil survey usable: SSURGO and KSSL turned into plain-language risk intelligence for engineers, appraisers, farmers, and developers. Built by Jason Nemecek.">
+<link rel="canonical" href="https://lab10yr.com/about">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lab10YR">
+<meta property="og:title" content="About Lab10YR — the national soil survey, made usable">
+<meta property="og:description" content="SSURGO and KSSL turned into plain-language soil risk intelligence. Built on decades of pedology and soil-database work.">
+<meta property="og:url" content="https://lab10yr.com/about">
+<meta property="og:image" content="https://lab10yr.com/assets/og-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About Lab10YR — the national soil survey, made usable">
+<meta name="twitter:description" content="SSURGO and KSSL turned into plain-language soil risk intelligence.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--panel3:#181e30;
+  --border:#1e2640;--text:#d4daf0;--dim:#5a6490;--dimmer:#2e3560;
+  --accent:#38bdf8;--green:#22c55e;--soil:#c8a84b;--soil2:#8b5e2a;
+  --red:#ef4444;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --serif:Georgia,'Times New Roman',serif;
+}
+html,body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6}
+
+/* ── NAV ── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;height:46px;
+  display:flex;align-items:center;padding:0 24px;gap:6px;
+  background:rgba(4,6,12,.97);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(14px);
+}
+.nav-logo{font-family:var(--serif);font-size:13px;font-style:italic;color:var(--soil);font-weight:700;margin-right:12px;text-decoration:none;flex-shrink:0}
+.nav-link{font-size:11px;font-weight:600;color:var(--dim);text-decoration:none;padding:0 8px;height:46px;display:flex;align-items:center;border-bottom:2px solid transparent;transition:color .15s;white-space:nowrap}
+.nav-link:hover{color:var(--text)}
+.nav-link.active{color:var(--soil);border-bottom-color:var(--soil)}
+.nav-spacer{flex:1}
+.nav-cta{background:var(--soil);color:#000;font-size:11px;font-weight:700;padding:7px 16px;border-radius:5px;text-decoration:none;letter-spacing:.03em;transition:background .15s}
+.nav-cta:hover{background:#d9b85c}
+
+/* ── HERO ── */
+.page-hero{padding:120px min(8vw,100px) 56px;max-width:1100px;margin:0 auto}
+.hero-eyebrow{font-size:10px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--soil);margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--soil)}
+.page-hero h1{font-family:var(--serif);font-size:clamp(2.4rem,4.5vw,4rem);font-weight:400;color:#fff;letter-spacing:-.02em;line-height:1.08;margin-bottom:24px}
+.page-hero h1 em{color:var(--soil);font-style:normal}
+.page-hero .lead{font-size:1.18rem;color:rgba(212,218,240,.72);max-width:60ch;line-height:1.75}
+
+/* ── PROSE SECTIONS ── */
+.section{padding:0 min(8vw,100px);max-width:1100px;margin:0 auto}
+.section-eyebrow{font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--soil);margin:64px 0 14px;display:flex;align-items:center;gap:10px}
+.section-eyebrow::before{content:'';width:20px;height:1px;background:var(--soil)}
+.section-h2{font-family:var(--serif);font-size:clamp(1.7rem,3vw,2.4rem);font-weight:400;letter-spacing:-.02em;color:#fff;margin-bottom:20px;line-height:1.15}
+.section-h2 em{color:var(--soil);font-style:normal}
+.prose p{font-size:1.02rem;color:rgba(212,218,240,.72);line-height:1.85;margin-bottom:20px;max-width:68ch}
+.prose p b{color:#fff;font-weight:700}
+
+/* ── BIO CARD ── */
+.bio{
+  display:grid;grid-template-columns:200px 1fr;gap:40px;align-items:start;
+  background:var(--panel);border:1px solid var(--border);border-radius:8px;
+  padding:44px 40px;margin-top:8px;
+}
+@media(max-width:680px){.bio{grid-template-columns:1fr;gap:24px}}
+.bio-portrait{
+  width:200px;height:200px;border-radius:8px;border:1px solid var(--border);
+  background:linear-gradient(135deg,var(--panel3),#0d1020);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:3.4rem;color:var(--soil2);
+}
+@media(max-width:680px){.bio-portrait{width:120px;height:120px;font-size:2.4rem}}
+.bio-name{font-family:var(--serif);font-size:1.7rem;color:#fff;margin-bottom:4px}
+.bio-role{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soil);margin-bottom:20px}
+.bio-placeholder{
+  border:1px dashed var(--soil2);border-radius:6px;background:rgba(200,168,75,.05);
+  padding:18px 20px;color:rgba(212,218,240,.55);font-size:.92rem;line-height:1.7;
+}
+.bio-placeholder strong{color:var(--soil);font-weight:700;display:block;margin-bottom:6px;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase}
+
+/* ── STAT BAR ── */
+.trust-bar{
+  background:var(--panel);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:40px min(8vw,100px);display:flex;gap:48px;flex-wrap:wrap;align-items:center;
+  margin:72px 0;
+}
+.trust-item{display:flex;flex-direction:column;gap:4px}
+.trust-num{font-family:var(--serif);font-size:2rem;color:var(--soil);line-height:1}
+.trust-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--dim)}
+
+/* ── VALUES GRID ── */
+.values{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:8px}
+@media(max-width:760px){.values{grid-template-columns:1fr}}
+.value{background:var(--panel);border:1px solid var(--border);padding:30px 26px}
+.value h3{font-size:.95rem;font-weight:700;color:#fff;margin-bottom:10px}
+.value p{font-size:.86rem;color:var(--dim);line-height:1.7}
+
+/* ── CTA ── */
+.cta-section{
+  background:linear-gradient(135deg,var(--panel) 0%,#0d1020 100%);
+  border:1px solid var(--border);border-radius:8px;
+  padding:60px min(8vw,80px);margin:80px min(8vw,100px) 96px;max-width:1100px;
+  margin-left:auto;margin-right:auto;
+  display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;
+}
+.cta-text h2{font-family:var(--serif);font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:400;color:#fff;margin-bottom:10px;line-height:1.2}
+.cta-text p{font-size:.95rem;color:rgba(212,218,240,.6);max-width:48ch;line-height:1.7}
+.cta-actions{display:flex;gap:12px;flex-wrap:wrap;flex-shrink:0}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:6px;font-size:13px;font-weight:700;text-decoration:none;letter-spacing:.04em;transition:all .18s;border:1px solid transparent}
+.btn-primary{background:var(--soil);color:#000;border-color:var(--soil)}
+.btn-primary:hover{background:#d9b85c;box-shadow:0 0 24px rgba(200,168,75,.35)}
+.btn-ghost{background:transparent;color:var(--text);border-color:var(--border)}
+.btn-ghost:hover{background:var(--panel2);border-color:var(--dimmer)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:36px min(8vw,100px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo{font-family:var(--serif);font-size:13px;font-style:italic;color:var(--soil);font-weight:700;text-decoration:none}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:11px;color:var(--dim);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:var(--text)}
+.footer-copy{font-size:10px;color:var(--dimmer)}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="https://lab10yr.com" class="nav-logo">Lab10YR</a>
+  <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map" class="nav-link">Risk Map</a>
+  <a href="https://lab10yr.com/county-report" class="nav-link">County Report</a>
+  <a href="https://lab10yr.com/soil-data-stories" class="nav-link">Data Stories</a>
+  <a href="https://lab10yr.com/articles/" class="nav-link">Articles</a>
+  <a href="https://lab10yr.com/services" class="nav-link">Services</a>
+  <a href="https://lab10yr.com/about" class="nav-link active">About</a>
+  <div class="nav-spacer"></div>
+  <a href="mailto:jasonnemecek@yahoo.com?subject=Lab10YR%20Inquiry" class="nav-cta">Get in Touch</a>
+</nav>
+
+<div class="page-hero">
+  <div class="hero-eyebrow">About Lab10YR</div>
+  <h1>The national soil survey,<br><em>made usable</em>.</h1>
+  <p class="lead">The United States has surveyed nearly every acre of its soil. That data is public,
+  authoritative, and almost nobody can use it. Lab10YR exists to close that gap — turning the raw
+  national soil database into plain-language risk intelligence anyone can act on.</p>
+</div>
+
+<div class="section prose">
+  <div class="section-eyebrow">The problem</div>
+  <h2 class="section-h2">A national asset that <em>almost no one can read</em></h2>
+  <p>SSURGO — the national soil survey — holds hundreds of thousands of map units, millions of
+  laboratory horizon measurements, and millions of interpretive ratings. It describes drainage,
+  shrink-swell potential, corrosivity, organic matter, productivity, and dozens of other properties
+  for the ground under every project, farm, and parcel in the country.</p>
+  <p>But it lives behind a SQL API, a tangle of foreign keys, and terminology that takes years to
+  learn. The result: enterprise platforms repackage it and charge <b>$25,000 to $150,000 a year</b>,
+  while the engineer, appraiser, farmer, or developer who actually needs one answer is locked out.</p>
+
+  <div class="section-eyebrow">The work</div>
+  <h2 class="section-h2">From raw survey to a <em>straight answer</em></h2>
+  <p>Lab10YR queries the live Soil Data Access API directly — no middleware, no black box — and
+  translates the result into something a non-specialist can use: a county risk report, a site
+  hazard profile, an area agronomic assessment, an interpretation explained in plain English.
+  Every tool shows the underlying query, so the numbers can be verified independently.</p>
+  <p>The same library of production SQL that powers the public tools is available as consulting:
+  custom queries, site and county reports, and expert interpretation for decisions that turn on
+  what the soil will do over the next ten years.</p>
+</div>
+
+<div class="trust-bar">
+  <div class="trust-item"><div class="trust-num">315K</div><div class="trust-label">SSURGO map units queried</div></div>
+  <div class="trust-item"><div class="trust-num">166</div><div class="trust-label">National interpretations covered</div></div>
+  <div class="trust-item"><div class="trust-num">258+</div><div class="trust-label">Production SQL scripts</div></div>
+  <div class="trust-item"><div class="trust-num">100%</div><div class="trust-label">Sourced from the live national survey</div></div>
+</div>
+
+<div class="section">
+  <div class="section-eyebrow">Who's behind it</div>
+  <h2 class="section-h2">Built by a <em>soil scientist</em>, not a data vendor</h2>
+  <div class="bio">
+    <div class="bio-portrait">JN</div>
+    <div>
+      <div class="bio-name">Jason Nemecek</div>
+      <div class="bio-role">Founder &middot; Soil Scientist</div>
+      <div class="bio-placeholder">
+        <strong>Bio — to be written by Jason</strong>
+        Replace this block with your background: years working with the national soil survey,
+        your pedology / soil-mapping experience, the regions and projects you've worked,
+        relevant credentials, and why you built Lab10YR. Two or three short paragraphs.
+        Keep attribution to the <em>National Cooperative Soil Survey</em> (not agency names),
+        per the site's word rules.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-eyebrow">What guides the work</div>
+  <h2 class="section-h2">Principles</h2>
+  <div class="values">
+    <div class="value">
+      <h3>Show the query</h3>
+      <p>Every number traces back to a query against the live national survey. No estimates, no
+      interpolation from satellite imagery, nothing you can't reproduce yourself.</p>
+    </div>
+    <div class="value">
+      <h3>Plain language</h3>
+      <p>The value isn't the data — it's the answer. Reports say what the soil means for the
+      decision in front of you, not just what the ratings are.</p>
+    </div>
+    <div class="value">
+      <h3>Accessible by default</h3>
+      <p>The core tools are free and public. The deeper analysis is priced for an individual
+      practitioner, not an enterprise procurement department.</p>
+    </div>
+  </div>
+</div>
+
+<div class="cta-section">
+  <div class="cta-text">
+    <h2>Have a soil question that needs a real answer?</h2>
+    <p>Try the free tools, or send a 2-sentence description of your project for a fixed-price assessment.</p>
+  </div>
+  <div class="cta-actions">
+    <a href="https://lab10yr.com/services" class="btn btn-primary">See Consulting Services</a>
+    <a href="https://lab10yr.com/county-report" class="btn btn-ghost">Try the Free County Tool</a>
+  </div>
+</div>
+
+<footer>
+  <a href="https://lab10yr.com" class="footer-logo">Lab10YR</a>
+  <div class="footer-links">
+    <a href="https://lab10yr.com/county-report">County Report</a>
+    <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map">Risk Map</a>
+    <a href="https://lab10yr.com/articles/">Articles</a>
+    <a href="https://lab10yr.com/services">Services</a>
+    <a href="https://ko-fi.com/lab10yr" target="_blank" rel="noopener noreferrer">Ko-fi</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 Lab10YR &middot; Jason Nemecek &middot; Data: National Cooperative Soil Survey</div>
+</footer>
+
+</body>
+</html>

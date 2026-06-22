@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://lab10yr.com/data-models">
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="Lab10YR">
+  <meta property="og:title"       content="SSURGO Data Model — Interactive ER Diagram & Schema Browser">
+  <meta property="og:description" content="Interactive D3 entity-relationship diagram for 134 SSURGO tables. Search columns live, explore relationships, and understand the full soil survey schema.">
+  <meta property="og:url"         content="https://lab10yr.com/data-models.html">
+  <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="SSURGO Data Model — Interactive ER Diagram & Schema Browser">
+  <meta name="twitter:description" content="Interactive D3 entity-relationship diagram for 134 SSURGO tables. Search columns live, explore relationships, and understand the full soil survey schema.">
+  <meta name="twitter:image"       content="https://lab10yr.com/assets/og-preview.png">
+<title>SSURGO Data Model — Soil Intelligence</title>
+<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js"></script>
+<style>
+:root{
+  --bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--panel3:#181e30;
+  --border:#1e2640;--border2:#2a3558;--text:#d4daf0;--dim:#5a6490;--dimmer:#2e3560;
+  --accent:#38bdf8;--accent2:#a78bfa;--green:#22c55e;--soil:#c8a84b;
+  --red:#ef4444;--orange:#f97316;--gold:#f59e0b;
+  --c-survey:#38bdf8;--c-mapunit:#22c55e;--c-component:#c8a84b;
+  --c-horizon:#f97316;--c-spatial:#a78bfa;--c-meta:#94a3b8;--c-other:#5a6490;
+  --font:'Inter',system-ui,sans-serif;--serif:Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden}
+
+/* ── NAV ──────────────────────────────────────── */
+#nav{
+  position:sticky;top:0;z-index:500;height:46px;
+  background:rgba(4,6,12,.97);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(14px);display:flex;align-items:center;
+  padding:0 24px;gap:8px;
+}
+.nav-logo{font-family:var(--serif);font-size:13px;font-style:italic;
+          color:var(--soil);font-weight:700;text-decoration:none;flex-shrink:0}
+.nav-sep{width:1px;height:24px;background:var(--border)}
+.nav-link{font-size:11px;color:var(--dim);text-decoration:none;
+          padding:0 8px;height:46px;display:flex;align-items:center;
+          border-bottom:2px solid transparent;transition:color .15s;white-space:nowrap}
+.nav-link:hover{color:var(--text)}
+.nav-link.hot{color:var(--green);font-weight:700}
+.nav-space{flex:1}
+
+/* ── HERO ─────────────────────────────────────── */
+#hero{
+  padding:80px 60px 60px;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#04060c 0%,#060a14 60%,#04060c 100%);
+}
+.hero-grid-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(56,189,248,.03) 0 1px,transparent 1px 60px),
+             repeating-linear-gradient(90deg,rgba(56,189,248,.03) 0 1px,transparent 1px 60px);
+}
+.hero-inner{max-width:1200px;margin:0 auto;position:relative}
+.hero-eyebrow{font-size:10px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+              color:var(--soil);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';width:24px;height:1px;background:var(--soil)}
+.hero-h1{font-family:var(--serif);font-size:clamp(2.4rem,5vw,4.5rem);
+         font-weight:400;letter-spacing:-.02em;color:#fff;line-height:1.08;margin-bottom:20px}
+.hero-h1 em{color:var(--soil);font-style:normal}
+.hero-sub{font-size:1.1rem;color:var(--dim);max-width:58ch;line-height:1.75;margin-bottom:40px}
+.hero-stats{display:flex;gap:0;border:1px solid var(--border);border-radius:8px;
+            overflow:hidden;width:fit-content;max-width:100%}
+.hs{padding:20px 28px;border-right:1px solid var(--border)}
+.hs:last-child{border-right:none}
+.hs-val{font-family:var(--serif);font-size:2.2rem;color:#fff;line-height:1}
+.hs-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);margin-top:4px}
+@media(max-width:700px){.hero-stats{flex-wrap:wrap}.hs{border-right:none;border-bottom:1px solid var(--border)}}
+
+/* ── SECTION SCAFFOLD ─────────────────────────── */
+.section{max-width:1400px;margin:0 auto;padding:60px 40px}
+.section-label{font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+               color:var(--soil);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.section-label::before{content:'';width:18px;height:1px;background:var(--soil)}
+.section-h2{font-family:var(--serif);font-size:clamp(1.8rem,3vw,2.6rem);
+            font-weight:400;color:#fff;letter-spacing:-.02em;margin-bottom:12px;line-height:1.1}
+.section-h2 em{color:var(--soil);font-style:normal}
+.section-lead{font-size:1.1rem;color:var(--dim);max-width:64ch;line-height:1.8;margin-bottom:40px}
+.nc-tables{margin-top:12px;font-size:13px;font-family:'Courier New',monospace;
+           color:var(--dim);line-height:2.2;background:var(--panel3);
+           padding:14px 16px;border-radius:6px;border:1px solid var(--border)}
+
+/* ── ER DIAGRAM ───────────────────────────────── */
+#er-section{background:var(--panel);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+#er-outer{position:relative}
+#er-canvas{width:100%;height:680px;cursor:grab;display:block;background:transparent}
+#er-canvas:active{cursor:grabbing}
+#er-controls{position:absolute;top:16px;right:16px;display:flex;flex-direction:column;gap:6px}
+.er-btn{width:32px;height:32px;background:rgba(4,6,12,.85);border:1px solid var(--border);
+        border-radius:6px;color:var(--accent);font-size:14px;cursor:pointer;
+        display:flex;align-items:center;justify-content:center;transition:all .15s}
+.er-btn:hover{background:var(--panel2);border-color:var(--accent)}
+#er-legend{position:absolute;bottom:16px;left:16px;background:rgba(4,6,12,.88);
+           border:1px solid var(--border);border-radius:8px;padding:12px 16px;
+           backdrop-filter:blur(8px)}
+.erl-item{display:flex;align-items:center;gap:7px;font-size:10px;color:var(--dim);margin-bottom:5px}
+.erl-item:last-child{margin-bottom:0}
+.erl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+#er-tooltip{position:fixed;pointer-events:none;background:rgba(4,6,12,.95);
+            border:1px solid var(--border2);border-radius:8px;padding:10px 14px;
+            font-size:11px;opacity:0;transition:opacity .18s;z-index:800;
+            max-width:280px;backdrop-filter:blur(12px)}
+#er-tooltip .tt-name{font-weight:700;color:#fff;margin-bottom:4px;font-size:12px}
+#er-tooltip .tt-group{font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+#er-tooltip .tt-desc{color:var(--dim);line-height:1.5}
+#er-tooltip .tt-cols{color:var(--dimmer);font-size:10px;margin-top:4px}
+
+/* ── CUSTOM SCROLLBAR ─────────────────────────── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--dim)}
+*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+
+/* ── SEARCH + TABLE BROWSER ───────────────────── */
+#browser-section{border-top:1px solid var(--border)}
+#browser-inner{max-width:1600px;margin:0 auto;padding:64px 48px}
+.search-bar{display:flex;gap:10px;margin-bottom:32px;max-width:820px}
+#col-search{flex:1;padding:13px 16px 13px 42px;background:var(--panel2);
+            border:1px solid var(--border);color:var(--text);border-radius:8px;
+            font-size:15px;outline:none;transition:border-color .18s;font-family:var(--font)}
+#col-search:focus{border-color:var(--accent)}
+#col-search::placeholder{color:var(--dimmer)}
+.sb-icon-wrap{position:relative;flex:1}
+.sb-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);
+         color:var(--dim);font-size:15px;pointer-events:none}
+#search-scope{padding:13px 16px;background:var(--panel2);border:1px solid var(--border);
+              color:var(--text);border-radius:8px;font-size:13px;font-family:var(--font);
+              outline:none;cursor:pointer;flex-shrink:0}
+#search-scope:focus{border-color:var(--accent)}
+#search-scope option{background:var(--panel2)}
+
+/* Group filter pills */
+.group-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.grp-pill{padding:7px 16px;border:1px solid var(--border);border-radius:999px;
+          background:var(--panel2);font-size:12px;font-weight:600;cursor:pointer;
+          transition:all .15s;display:flex;align-items:center;gap:6px}
+.grp-pill:hover{border-color:var(--border2);color:var(--text)}
+.grp-pill.active{border-color:currentColor}
+.grp-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+
+/* Table sort bar */
+.tbl-sort-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.tbl-sort-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+                color:var(--dimmer)}
+.ts-btn{padding:5px 13px;border:1px solid var(--border);border-radius:999px;background:var(--panel2);
+        font-size:11px;color:var(--dim);cursor:pointer;transition:all .15s;font-family:var(--font);
+        white-space:nowrap}
+.ts-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(56,189,248,.09)}
+.ts-btn:hover:not(.active){border-color:var(--border2);color:var(--text)}
+
+/* Results layout — no fixed height, expands naturally */
+#results-layout{display:grid;grid-template-columns:260px 1fr;gap:16px}
+@media(max-width:900px){#results-layout{grid-template-columns:1fr}}
+
+/* Table list — sticky within its scroll container */
+#table-list{background:var(--panel);border:1px solid var(--border);border-radius:8px;
+            overflow-y:auto;height:calc(100vh - 280px);min-height:500px;position:sticky;top:62px}
+#table-list-count{padding:11px 16px;border-bottom:1px solid var(--border);
+                  font-size:11px;color:var(--dim);font-weight:700;
+                  text-transform:uppercase;letter-spacing:.1em;position:sticky;top:0;
+                  background:var(--panel);z-index:1}
+.tbl-item{padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--border);
+          transition:background .15s;border-left:3px solid transparent}
+.tbl-item:hover{background:var(--panel2)}
+.tbl-item.active{background:var(--panel2);border-left-color:var(--accent)}
+.tbl-item:last-child{border-bottom:none}
+.ti-name{font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;gap:7px}
+.ti-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ti-label{font-size:12px;color:var(--dim);margin-top:3px;
+          white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ti-count{font-size:11px;color:var(--dimmer);margin-top:2px}
+
+/* Table detail — no height cap, scrolls page */
+#table-detail{background:var(--panel);border:1px solid var(--border);border-radius:8px;min-height:500px}
+#td-header{padding:24px 28px;border-bottom:1px solid var(--border);position:sticky;top:46px;
+           background:var(--panel);z-index:2;backdrop-filter:blur(8px)}
+.td-eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+            color:var(--soil);margin-bottom:8px}
+.td-name{font-family:var(--serif);font-size:2.2rem;color:#fff;margin-bottom:8px;line-height:1.1}
+.td-desc{font-size:1rem;color:var(--dim);line-height:1.75;max-width:80ch}
+.td-meta{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap}
+.td-meta-item{font-size:12px;color:var(--dimmer);display:flex;align-items:center;gap:6px}
+.td-meta-item strong{color:var(--dim);font-size:13px}
+
+#td-body{padding:0;overflow-x:auto}
+#cols-table{width:100%;border-collapse:collapse;font-size:13px}
+#cols-table th{
+  background:var(--panel3);color:var(--dim);padding:10px 14px;
+  text-align:left;font-weight:700;font-size:11px;
+  text-transform:uppercase;letter-spacing:.08em;
+  position:sticky;top:0;border-bottom:1px solid var(--border);
+  cursor:pointer;user-select:none;white-space:nowrap;
+}
+#cols-table th:hover{color:var(--text);background:var(--panel2)}
+#cols-table th .sort-arrow{margin-left:5px;opacity:.4;font-size:10px}
+#cols-table th.sort-asc .sort-arrow::after{content:'↑';opacity:1;color:var(--accent)}
+#cols-table th.sort-desc .sort-arrow::after{content:'↓';opacity:1;color:var(--accent)}
+#cols-table th.sort-asc,#cols-table th.sort-desc{color:var(--accent)}
+#cols-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+#cols-table tr:hover td{background:var(--panel2)}
+.col-ord{color:var(--dimmer);font-size:11px;font-family:'Courier New',monospace;text-align:right}
+.col-name{font-weight:700;color:var(--accent);font-family:'Courier New',monospace;font-size:13px}
+.col-name.is-pk{color:var(--gold)}
+.pk-badge{font-size:9px;font-weight:800;letter-spacing:.08em;padding:2px 6px;
+          border-radius:4px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);
+          color:var(--gold);margin-left:5px}
+.col-type-log{color:var(--accent2);font-size:12px;font-family:'Courier New',monospace}
+.col-type-phys{color:var(--orange);font-size:11px;font-family:'Courier New',monospace;margin-top:2px}
+.col-label{color:var(--text);font-size:13px;font-weight:600}
+.col-desc{color:var(--dim);font-size:12px;line-height:1.6;margin-top:4px;max-width:52ch}
+.col-size{color:var(--dim);font-size:12px;font-family:'Courier New',monospace}
+.col-nn{font-size:12px;font-weight:700;padding:3px 8px;border-radius:4px;
+        background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green)}
+.col-null{font-size:12px;color:var(--dimmer);padding:3px 8px;border-radius:4px;
+          background:var(--panel3);border:1px solid var(--border)}
+.col-domain{color:var(--accent2);font-size:12px;font-family:'Courier New',monospace;
+            cursor:pointer;text-decoration:underline;text-decoration-color:rgba(167,139,250,.4)}
+.col-units{color:var(--dim);font-size:12px;font-style:italic}
+.col-prec{color:var(--dim);font-size:12px;font-family:'Courier New',monospace}
+
+/* ── SEARCH RESULTS ───────────────────────────── */
+#search-results-panel{background:var(--panel);border:1px solid var(--border);
+                       border-radius:8px;grid-column:1/-1}
+.sr-row{padding:14px 18px;border-bottom:1px solid var(--border);cursor:pointer;
+        display:grid;grid-template-columns:240px 200px 1fr;gap:14px;align-items:start;
+        transition:background .15s}
+.sr-row:hover{background:var(--panel2)}
+.sr-tbl{font-size:13px;font-weight:700;color:var(--accent);font-family:'Courier New',monospace}
+.sr-col{font-size:13px;font-weight:700;color:var(--soil);font-family:'Courier New',monospace}
+.sr-desc{font-size:12px;color:var(--dim);line-height:1.6}
+.sr-type{font-size:11px;color:var(--orange);font-family:'Courier New',monospace;margin-top:3px}
+.sr-match{background:rgba(200,168,75,.2);color:var(--soil);padding:0 2px;border-radius:2px}
+
+/* ── NCSS LAB SECTION ────────────────────────── */
+#ncss-section{background:var(--panel);border-top:1px solid var(--border)}
+.ncss-inner{max-width:1400px;margin:0 auto;padding:60px 40px}
+.ncss-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:800px){.ncss-grid{grid-template-columns:1fr}}
+.ncss-card{background:var(--panel2);border:1px solid var(--border);border-radius:8px;
+           padding:24px 28px;transition:border-color .18s}
+.ncss-card:hover{border-color:var(--border2)}
+.nc-eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--soil);margin-bottom:10px}
+.nc-title{font-family:var(--serif);font-size:1.35rem;color:#fff;margin-bottom:10px;font-weight:400}
+.nc-desc{font-size:.95rem;color:var(--dim);line-height:1.75;margin-bottom:16px}
+.nc-links{display:flex;flex-wrap:wrap;gap:8px}
+.nc-link{padding:8px 16px;border:1px solid var(--border2);border-radius:6px;
+         font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;
+         transition:all .15s}
+.nc-link:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+/* nc-tables defined above with correct font-size:13px */
+
+/* ── EMPTY STATE ──────────────────────────────── */
+.empty{text-align:center;padding:48px 20px;color:var(--dim)}
+.empty-icon{font-size:2rem;margin-bottom:10px}
+
+/* ── FOOTER ───────────────────────────────────── */
+footer{background:#020408;border-top:1px solid var(--border);
+       padding:32px 40px;text-align:center;font-size:.8rem;color:var(--dimmer)}
+footer a{color:var(--dim);text-decoration:none}
+footer a:hover{color:var(--soil)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="index.html">Soil Intelligence</a>
+  <div class="nav-sep"></div>
+  <a class="nav-link" href="index.html">Home</a>
+  <a class="nav-link hot" href="soil-atlas.html">Atlas</a>
+  <a class="nav-link" href="sql-explorer.html">SQL Explorer</a>
+  <a class="nav-link" href="soil-data-stories.html">Data Stories</a>
+  <a class="nav-link" href="https://lab10yr.com/articles/" target="_blank" rel="noopener noreferrer">Articles</a>
+  <div class="nav-space"></div>
+  <a class="nav-link" href="https://sdmdataaccess.nrcs.usda.gov/QueryHelp.aspx" target="_blank" rel="noopener noreferrer" style="color:var(--soil)">QueryHelp</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">SSURGO · SDA · KSSL · Data Model Reference</div>
+    <h1 class="hero-h1">The Architecture of<br><em>American Soil Data</em></h1>
+    <p class="hero-sub">134 tables. 78 foreign-key relationships. One database encoding the physical, chemical, and biological properties of every acre of mapped soil in the United States. This is how it connects.</p>
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-val" id="hs-tables">—</div><div class="hs-lbl">Tables</div></div>
+      <div class="hs"><div class="hs-val" id="hs-rels">—</div><div class="hs-lbl">Relationships</div></div>
+      <div class="hs"><div class="hs-val" id="hs-cols">—</div><div class="hs-lbl">Columns</div></div>
+      <div class="hs"><div class="hs-val">88</div><div class="hs-lbl">SDA Live Tables</div></div>
+      <div class="hs"><div class="hs-val" id="hs-groups">—</div><div class="hs-lbl">Table Groups</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ER DIAGRAM -->
+<section id="er-section">
+  <div class="section" style="padding-bottom:0">
+    <div class="section-label">Interactive Schema Diagram</div>
+    <h2 class="section-h2">The Entity Relationship<br><em>Architecture</em></h2>
+    <p class="section-lead">Force-directed layout of the SSURGO data model. Click any table to explore its columns. Drag to rearrange. Scroll to zoom.</p>
+  </div>
+  <div id="er-outer">
+    <svg id="er-canvas"></svg>
+    <div id="er-controls">
+      <button class="er-btn" id="btn-fit" title="Fit to screen">⤢</button>
+      <button class="er-btn" id="btn-zoom-in" title="Zoom in">+</button>
+      <button class="er-btn" id="btn-zoom-out" title="Zoom out">−</button>
+      <button class="er-btn" id="btn-reset" title="Reset layout">↺</button>
+      <button class="er-btn" id="btn-all-tables" title="Toggle all 134 tables" style="font-size:10px;width:auto;padding:0 8px">All</button>
+    </div>
+    <div id="er-legend">
+      <div id="er-legend-items"></div>
+    </div>
+  </div>
+  <div id="er-tooltip">
+    <div class="tt-name"></div>
+    <div class="tt-group"></div>
+    <div class="tt-desc"></div>
+    <div class="tt-cols"></div>
+  </div>
+</section>
+
+<!-- TABLE / COLUMN BROWSER -->
+<section id="browser-section">
+  <div id="browser-inner">
+    <div class="section-label">Schema Explorer</div>
+    <h2 class="section-h2" style="font-size:clamp(2.2rem,4vw,3.4rem)">Find Any Field<br><em>in 2 Keystrokes</em></h2>
+    <p class="section-lead">Search across all 134 tables and their columns. Click any row to see full field documentation including data type, size, and description from the SSURGO metadata.</p>
+
+    <div class="search-bar">
+      <div class="sb-icon-wrap">
+        <span class="sb-icon"></span>
+        <input id="col-search" type="text" placeholder="Search table names, column names, descriptions…" autocomplete="off">
+      </div>
+      <select id="search-scope">
+        <option value="all">All fields</option>
+        <option value="table">Table names only</option>
+        <option value="column">Column names only</option>
+      </select>
+    </div>
+
+    <div class="group-pills" id="group-pills"></div>
+
+    <div class="tbl-sort-bar">
+      <span class="tbl-sort-label">Sort tables:</span>
+      <button class="ts-btn active" id="ts-name-az" data-sort="name" data-dir="1">Name A→Z</button>
+      <button class="ts-btn" id="ts-name-za" data-sort="name" data-dir="-1">Name Z→A</button>
+      <button class="ts-btn" id="ts-cols-desc" data-sort="colCount" data-dir="-1">Most Columns</button>
+      <button class="ts-btn" id="ts-cols-asc" data-sort="colCount" data-dir="1">Fewest Columns</button>
+    </div>
+
+    <div id="results-layout">
+      <div id="table-list">
+        <div id="table-list-count">Loading…</div>
+      </div>
+      <div id="table-detail">
+        <div class="empty"><div class="empty-icon">←</div><p>Select a table to view its columns</p></div>
+      </div>
+    </div>
+
+    <div id="search-results-panel" style="display:none"></div>
+  </div>
+</section>
+
+<!-- DOMAIN VALUE LOOKUP -->
+<section style="border-top:1px solid var(--border);background:var(--panel)">
+  <div style="max-width:1400px;margin:0 auto;padding:60px 40px">
+    <div class="section-label">Live Domain Decoder</div>
+    <h2 class="section-h2">Decode Any<br><em>Coded Field Value</em></h2>
+    <p class="section-lead">SSURGO uses coded fields for many categorical values — drainage class, flooding frequency, HSG, soil moisture class. Enter any column name to see all valid domain values and their labels from the live SDA API.</p>
+    <div style="display:grid;grid-template-columns:320px 1fr;gap:16px;max-width:1000px">
+      <div>
+        <div style="font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer);margin-bottom:8px">Column or Domain Name</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <input id="domain-input" type="text" placeholder="e.g. drainagecl, flodfreqcl, hydgrp…"
+            style="flex:1;padding:8px 12px;background:var(--panel2);border:1px solid var(--border);
+                   color:var(--text);border-radius:6px;font-size:12px;outline:none;font-family:var(--font)"
+            onkeydown="if(event.key==='Enter')lookupDomain()">
+          <button onclick="lookupDomain()"
+            style="padding:8px 16px;background:var(--accent);color:#000;border:none;border-radius:6px;
+                   font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap">
+            Look Up
+          </button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px" id="domain-examples">
+          <span style="font-size:9px;color:var(--dimmer);width:100%;margin-bottom:3px">Common domains:</span>
+        </div>
+      </div>
+      <div id="domain-result" style="background:var(--panel2);border:1px solid var(--border);border-radius:8px;
+           padding:16px;min-height:120px;font-size:11px;color:var(--dim)">
+        <div style="text-align:center;padding:20px 0">Enter a column name and click Look Up</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NCSS LAB / REFERENCES -->
+<section id="ncss-section">
+  <div class="ncss-inner">
+    <div class="section-label">Related Databases</div>
+    <h2 class="section-h2 section-h2" style="font-family:var(--serif);font-size:clamp(1.8rem,3vw,2.6rem);color:#fff;margin-bottom:12px">Beyond SSURGO:<br><em>Lab Data &amp; References</em></h2>
+    <p class="section-lead">SSURGO encodes field-observed soil properties. The NCSS Kellogg Soil Survey Laboratory stores 800,000+ measured samples. Together they form a complete picture of US soil properties.</p>
+    <div class="ncss-grid">
+      <div class="ncss-card">
+        <div class="nc-eyebrow">KSSL · Kellogg Soil Survey Lab</div>
+        <div class="nc-title">NCSS Lab Data Mart</div>
+        <div class="nc-desc">800,000+ measured soil samples with lab-analyzed pH, CEC, particle size distribution, organic carbon, bulk density, and mineralogy. Includes X-ray diffraction, micromorphology, and water retention data.</div>
+        <div class="nc-links">
+          <a class="nc-link" href="https://ncsslabdatamart.sc.egov.usda.gov/database_download.aspx" target="_blank" rel="noopener noreferrer">Download Lab Data</a>
+          <a class="nc-link" href="https://ncsslabdatamart.sc.egov.usda.gov" target="_blank" rel="noopener noreferrer">Lab Data Mart</a>
+        </div>
+        <div class="nc-tables">Key tables: site · pedon · phorizon · phanalyte<br>phsample · petaxhistmoistcl · psctotest<br>pereference · pdinterp · siteobs</div>
+      </div>
+      <div class="ncss-card">
+        <div class="nc-eyebrow">SDA · Soil Data Access</div>
+        <div class="nc-title">Live Query Interface</div>
+        <div class="nc-desc">SDA exposes 88 SSURGO tables via a REST API and interactive query interface. POST SQL to receive JSON or tabular results. The same API powering the Soil Atlas, Regen Ag Map, and SQL Explorer.</div>
+        <div class="nc-links">
+          <a class="nc-link" href="https://sdmdataaccess.nrcs.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer">Run Queries</a>
+          <a class="nc-link" href="https://sdmdataaccess.nrcs.usda.gov/QueryHelp.aspx" target="_blank" rel="noopener noreferrer">Query Help</a>
+          <a class="nc-link" href="sql-explorer.html">SQL Explorer</a>
+        </div>
+        <div class="nc-tables">Endpoint: sdmdataaccess.sc.egov.usda.gov<br>POST /Tabular/post.rest<br>Format: JSON+COLUMNNAME · XML · CSV</div>
+      </div>
+      <div class="ncss-card">
+        <div class="nc-eyebrow">Schema Documents</div>
+        <div class="nc-title">Reference Materials</div>
+        <div class="nc-desc">The complete SSURGO schema is documented across multiple official PDFs including table/column descriptions, domain values, relationship diagrams, and aggregation engine specs.</div>
+        <div class="nc-links">
+          <a class="nc-link" href="https://sdmdataaccess.nrcs.usda.gov/documents/TablesAndColumnsReport.pdf" rel="noopener noreferrer" target="_blank" rel="noopener noreferrer">Table &amp; Column Descriptions</a>
+          <a class="nc-link" href="https://sdmdataaccess.nrcs.usda.gov/documents/TableRelationshipsReport.pdf" rel="noopener noreferrer" target="_blank" rel="noopener noreferrer">Relationships Diagram</a>
+          <a class="nc-link" href="https://sdmdataaccess.nrcs.usda.gov/documents/SoilDataAccessQueryGuide.pdf" rel="noopener noreferrer" target="_blank" rel="noopener noreferrer">SDA Query Guide</a>
+        </div>
+        <div class="nc-tables">docs/ SDMOnlineSChema.xlsx · SDMOnlineSChema.pdf<br>SSURGO_Metadata_-_Domains.pdf<br>TableColumnDescriptionsReport.pdf</div>
+      </div>
+      <div class="ncss-card">
+        <div class="nc-eyebrow">SSURGO Schema · Key Chains</div>
+        <div class="nc-title" style="font-family:Georgia,serif;font-size:1.5rem;font-weight:400">The Core Join Path</div>
+        <div class="nc-desc">Every SSURGO query follows the same backbone relationship chain from survey area down to horizon-level properties. Understanding this path unlocks the entire database.</div>
+        <div class="nc-links">
+          <a class="nc-link" href="sql-explorer.html?cat=all">Browse SQL Patterns</a>
+        </div>
+        <div class="nc-tables">legend <span style="color:var(--soil)">→ lkey</span><br>
+          &nbsp;&nbsp;mapunit <span style="color:var(--soil)">→ mukey</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;component <span style="color:var(--soil)">→ cokey</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chorizon <span style="color:var(--soil)">→ chkey</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chtexturegrp · chfrags · chcolor…</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  SSURGO schema extracted from SDMOnlineSChema.xlsx · Table descriptions from SDA MetadataTable API ·
+  <a href="https://sdmdataaccess.nrcs.usda.gov/QueryHelp.aspx" target="_blank" rel="noopener noreferrer">SDA QueryHelp</a> ·
+  <a href="https://ncsslabdatamart.sc.egov.usda.gov" target="_blank" rel="noopener noreferrer">NCSS Lab Data Mart</a> ·
+  <a href="index.html">Soil Intelligence Home</a> ·
+  <a href="https://jneme910.github.io/Soil-Data-Access-Training-Resources/soil-model.html" target="_blank" rel="noopener noreferrer">SDA SQL Training ↗</a>
+</footer>
+
+<script>
+const SDA = 'https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest';
+let schema = null;
+let activeGroup = 'all';
+let activeTable = null;
+let searchMode = false;
+let _tblSortKey = 'name', _tblSortDir = 1;
+let _currentTableList = [];
+
+// ── LOAD SCHEMA ──────────────────────────────────────────────────────────────
+async function boot() {
+  const r = await fetch('data/ssurgo-schema.json');
+  schema = await r.json();
+  initStats();
+  buildERDiagramMode(false);
+  buildGroupPills();
+  buildTableList(schema.tables);
+  wireTblSortBar();
+}
+
+function wireTblSortBar() {
+  document.querySelectorAll('.ts-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      _tblSortKey = btn.dataset.sort;
+      _tblSortDir = parseInt(btn.dataset.dir);
+      document.querySelectorAll('.ts-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterTables();
+    });
+  });
+}
+
+function initStats() {
+  document.getElementById('hs-tables').textContent = schema.tableCount;
+  document.getElementById('hs-rels').textContent = schema.relationships.length;
+  document.getElementById('hs-cols').textContent = schema.tables.reduce((a,t)=>a+t.colCount,0).toLocaleString();
+  document.getElementById('hs-groups').textContent = Object.keys(schema.groups).length;
+}
+
+// ── ER DIAGRAM ───────────────────────────────────────────────────────────────
+function buildERDiagramMode(showAll) {
+  const svg = d3.select('#er-canvas');
+  const W = document.getElementById('er-canvas').clientWidth;
+  const H = 680;
+  svg.attr('viewBox', `0 0 ${W} ${H}`);
+
+  // Filter to core tables only for readability
+  const coreGroups = new Set(['survey-area','map-unit','component','horizon','spatial']);
+  const nodes = (showAll ? schema.tables : schema.tables.filter(t => coreGroups.has(t.group)))
+    .map(t => ({...t, id: t.name}));
+  const nodeIds = new Set(nodes.map(n=>n.id));
+  const links = schema.relationships
+    .filter(r => nodeIds.has(r.from) && nodeIds.has(r.to))
+    .map(r => ({source:r.from, target:r.to, fromKey:r.fromKey, toKey:r.toKey}));
+
+  const gMap = schema.groups;
+
+  // Defs: arrow markers
+  const defs = svg.append('defs');
+  Object.entries(gMap).forEach(([k,g]) => {
+    defs.append('marker').attr('id',`arrow-${k}`)
+      .attr('viewBox','0 -4 8 8').attr('refX',18).attr('refY',0)
+      .attr('markerWidth',6).attr('markerHeight',6)
+      .attr('orient','auto')
+      .append('path').attr('d','M0,-4L8,0L0,4').attr('fill',g.color).attr('opacity',.6);
+  });
+
+  const container = svg.append('g').attr('class','er-container');
+
+  // Force simulation
+  const sim = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d=>d.id).distance(120).strength(0.6))
+    .force('charge', d3.forceManyBody().strength(-320))
+    .force('center', d3.forceCenter(W/2, H/2))
+    .force('collision', d3.forceCollide(54))
+    .force('x', d3.forceX(W/2).strength(0.04))
+    .force('y', d3.forceY(H/2).strength(0.04));
+
+  // Links
+  const linkSel = container.append('g').selectAll('line')
+    .data(links).join('line')
+    .attr('stroke', d => {
+      const src = nodes.find(n=>n.id===(d.source.id||d.source));
+      return src ? (gMap[src.group]?.color||'#2a3558') : '#2a3558';
+    })
+    .attr('stroke-opacity', 0.45)
+    .attr('stroke-width', 1.5)
+    .attr('marker-end', d => {
+      const src = nodes.find(n=>n.id===(d.source.id||d.source));
+      return src ? `url(#arrow-${src.group})` : '';
+    });
+
+  // Link labels (key names)
+  const linkLabelSel = container.append('g').selectAll('text')
+    .data(links).join('text')
+    .attr('font-size', 8).attr('fill','rgba(90,100,144,.7)')
+    .attr('text-anchor','middle').attr('dy','-3');
+
+  // Nodes
+  const nodeSel = container.append('g').selectAll('g.node')
+    .data(nodes).join('g').attr('class','node')
+    .style('cursor','pointer')
+    .call(d3.drag()
+      .on('start', (event,d) => { if(!event.active) sim.alphaTarget(.3).restart(); d.fx=d.x;d.fy=d.y; })
+      .on('drag',  (event,d) => { d.fx=event.x;d.fy=event.y; })
+      .on('end',   (event,d) => { if(!event.active) sim.alphaTarget(0); d.fx=null;d.fy=null; })
+    )
+    .on('mouseenter', (event,d) => showTooltip(event,d))
+    .on('mouseleave', hideTooltip)
+    .on('click', (_,d) => { selectTableFromER(d.name); });
+
+  const color = d => gMap[d.group]?.color || '#5a6490';
+
+  // Outer glow circle
+  nodeSel.append('circle').attr('r', 32)
+    .attr('fill', d => color(d)).attr('opacity', .07);
+
+  // Main circle
+  nodeSel.append('circle').attr('r', 22)
+    .attr('fill', d => `${color(d)}22`)
+    .attr('stroke', d => color(d))
+    .attr('stroke-width', 1.5);
+
+  // Table name
+  nodeSel.append('text')
+    .attr('text-anchor','middle').attr('dy','4px')
+    .attr('font-size', 9).attr('font-weight', 700)
+    .attr('fill', d => color(d))
+    .attr('font-family', 'Courier New, monospace')
+    .text(d => d.name.length > 12 ? d.name.slice(0,11)+'…' : d.name);
+
+  // Column count badge
+  nodeSel.append('text')
+    .attr('text-anchor','middle').attr('dy','18px')
+    .attr('font-size', 8).attr('fill','rgba(90,100,144,.7)')
+    .text(d => `${d.colCount}c`);
+
+  // Tick
+  sim.on('tick', () => {
+    linkSel
+      .attr('x1', d=>d.source.x).attr('y1', d=>d.source.y)
+      .attr('x2', d=>d.target.x).attr('y2', d=>d.target.y);
+    linkLabelSel
+      .attr('x', d => (d.source.x+d.target.x)/2)
+      .attr('y', d => (d.source.y+d.target.y)/2)
+      .text(d => d.fromKey);
+    nodeSel.attr('transform', d => `translate(${d.x},${d.y})`);
+  });
+
+  // Zoom
+  const zoom = d3.zoom().scaleExtent([.2,4])
+    .on('zoom', e => container.attr('transform', e.transform));
+  svg.call(zoom);
+  document.getElementById('btn-fit').onclick = () => svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity);
+  document.getElementById('btn-zoom-in').onclick = () => svg.transition().duration(300).call(zoom.scaleBy, 1.4);
+  document.getElementById('btn-zoom-out').onclick = () => svg.transition().duration(300).call(zoom.scaleBy, 0.7);
+  document.getElementById('btn-reset').onclick = () => { sim.alpha(1).restart(); svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity); };
+
+  // Legend
+  const legEl = document.getElementById('er-legend-items');
+  legEl.innerHTML = Object.entries(gMap)
+    .filter(([k]) => showAll || coreGroups.has(k))
+    .map(([k,g]) => `<div class="erl-item"><span class="erl-dot" style="background:${g.color}"></span>${g.label}</div>`)
+    .join('');
+}
+
+// All-tables toggle
+let showAllTables = false;
+document.getElementById('btn-all-tables').addEventListener('click', function() {
+  showAllTables = !showAllTables;
+  this.classList.toggle('active', showAllTables);
+  this.title = showAllTables ? 'Show core tables only' : 'Show all 134 tables';
+  // Rebuild diagram
+  const container = document.querySelector('.er-container');
+  if (container) container.remove();
+  buildERDiagramMode(showAllTables);
+});
+
+// Tooltip
+const tt = document.getElementById('er-tooltip');
+function showTooltip(event, d) {
+  const g = schema.groups[d.group] || {};
+  tt.querySelector('.tt-name').textContent = d.name;
+  tt.querySelector('.tt-group').textContent = g.label || d.group;
+  tt.querySelector('.tt-group').style.color = g.color || '#5a6490';
+  tt.querySelector('.tt-desc').textContent = (d.desc || 'No description available.').slice(0,180);
+  tt.querySelector('.tt-cols').textContent = `${d.colCount} columns`;
+  tt.style.opacity = 1;
+  moveTooltip(event);
+}
+function hideTooltip() { tt.style.opacity = 0; }
+document.addEventListener('mousemove', e => { if(tt.style.opacity==='1') moveTooltip(e); });
+function moveTooltip(e) {
+  const x = e.clientX + 14, y = e.clientY + 14;
+  tt.style.left = Math.min(x, window.innerWidth-300) + 'px';
+  tt.style.top  = Math.min(y, window.innerHeight-180) + 'px';
+}
+
+function selectTableFromER(name) {
+  const t = schema.tables.find(x => x.name === name);
+  if (t) { activeTable = name; showTableDetail(t); scrollToBrowser(); }
+}
+function scrollToBrowser() {
+  document.getElementById('browser-section').scrollIntoView({behavior:'smooth'});
+}
+
+// ── GROUP PILLS ──────────────────────────────────────────────────────────────
+function buildGroupPills() {
+  const container = document.getElementById('group-pills');
+  const allCounts = {};
+  schema.tables.forEach(t => allCounts[t.group] = (allCounts[t.group]||0)+1);
+
+  let html = `<button class="grp-pill active" data-grp="all" style="color:var(--text)">
+    <span class="grp-dot" style="background:var(--text)"></span>All (${schema.tables.length})</button>`;
+  Object.entries(schema.groups).forEach(([k,g]) => {
+    if (!allCounts[k]) return;
+    html += `<button class="grp-pill" data-grp="${k}" style="color:${g.color}">
+      <span class="grp-dot" style="background:${g.color}"></span>${g.label} (${allCounts[k]})</button>`;
+  });
+  container.innerHTML = html;
+  container.querySelectorAll('.grp-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      container.querySelectorAll('.grp-pill').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      activeGroup = btn.dataset.grp;
+      filterTables();
+    });
+  });
+}
+
+function filterTables() {
+  if (document.getElementById('col-search').value.trim()) return; // search mode handles filtering
+  const filtered = activeGroup === 'all' ? schema.tables : schema.tables.filter(t=>t.group===activeGroup);
+  buildTableList(filtered);
+}
+
+// ── TABLE LIST ───────────────────────────────────────────────────────────────
+function buildTableList(tables) {
+  _currentTableList = tables;
+  const sorted = [...tables].sort((a, b) => {
+    const av = a[_tblSortKey] ?? '', bv = b[_tblSortKey] ?? '';
+    if (typeof av === 'number' || typeof bv === 'number') return (+av - +bv) * _tblSortDir;
+    return String(av).toLowerCase() < String(bv).toLowerCase() ? -_tblSortDir
+         : String(av).toLowerCase() > String(bv).toLowerCase() ? _tblSortDir : 0;
+  });
+
+  const list = document.getElementById('table-list');
+  list.innerHTML = `<div id="table-list-count">${tables.length} table${tables.length!==1?'s':''}</div>`;
+
+  sorted.forEach(t => {
+    const g = schema.groups[t.group] || {color:'#5a6490'};
+    const div = document.createElement('div');
+    div.className = 'tbl-item' + (t.name===activeTable?' active':'');
+    div.dataset.name = t.name;
+    div.innerHTML = `<div class="ti-name"><span class="ti-dot" style="background:${g.color}"></span>${esc(t.name)}</div>
+      <div class="ti-label">${esc(t.label||'')}</div>
+      <div class="ti-count">${t.colCount} columns</div>`;
+    div.addEventListener('click', () => { activeTable=t.name; showTableDetail(t); });
+    list.appendChild(div);
+  });
+}
+
+// ── TABLE DETAIL (full SDA column metadata) ──────────────────────────────────
+let _lastCols = [], _sortColIdx = 0, _sortDir = 1;
+
+async function showTableDetail(t) {
+  document.querySelectorAll('.tbl-item').forEach(el =>
+    el.classList.toggle('active', el.dataset.name === t.name));
+  document.getElementById('search-results-panel').style.display = 'none';
+  document.getElementById('results-layout').style.display = 'grid';
+
+  const g = schema.groups[t.group] || {color:'#5a6490',label:t.group};
+  const det = document.getElementById('table-detail');
+  _sortColIdx = 0; _sortDir = 1;
+
+  det.innerHTML = `
+  <div id="td-header">
+    <div class="td-eyebrow" style="color:${g.color}">${g.label} · ${esc(t.name)}</div>
+    <div class="td-name">${esc(t.label||t.name)}</div>
+    <div class="td-desc">${esc(t.desc||'No description available.')}</div>
+    <div class="td-meta">
+      <span class="td-meta-item"><strong>${t.colCount}</strong> columns</span>
+      <span class="td-meta-item">Group: <strong style="color:${g.color}">${g.label}</strong></span>
+      <span class="td-meta-item">Physical name: <strong style="font-family:'Courier New',monospace">${esc(t.name)}</strong></span>
+    </div>
+  </div>
+  <div id="td-body">
+    <div style="padding:20px;color:var(--dim);font-size:13px;display:flex;align-items:center;gap:8px">
+      <span style="animation:spin .7s linear infinite;display:inline-block;font-size:16px">⟳</span>
+      Loading column definitions from SDA MetadataColumn…
+    </div>
+  </div>`;
+
+  // Full SDA MetadataColumn query — all available fields
+  try {
+    const sql = `SELECT ColumnOrdinalPosition, ColumnPhysicalName, ColumnLabel,
+      ColumnLogicalDataType, ColumnPhysicalDataType, ColumnSize, PrecisionComponent,
+      NotNullFlag, PrimaryKeyFlag, ColumnUnitsOfMeasure, DomainName, ColumnDescription
+      FROM MetadataColumn WHERE TablePhysicalName='${t.name}' ORDER BY ColumnOrdinalPosition`;
+    const body = new URLSearchParams({query:sql,'format':'JSON+COLUMNNAME'});
+    const resp = await fetch(SDA, {method:'POST', body});
+    const text = await resp.text();
+    let data; try{ data=JSON.parse(text); }catch(_){ data={}; }
+    if (data.Table && data.Table.length >= 3) {
+      const [,,...rows] = data.Table;
+      _lastCols = rows.map(r=>({
+        ord:r[0], name:r[1], label:r[2], logType:r[3], physType:r[4],
+        size:r[5], prec:r[6], notNull:r[7], pk:r[8],
+        units:r[9], domain:r[10], desc:r[11]
+      }));
+      renderColumns(_lastCols);
+      return;
+    }
+  } catch(_) {}
+
+  // Fallback to xlsx columns (fewer fields)
+  _lastCols = t.columns.map((c,i)=>({
+    ord:i+1, name:c.name, label:c.label||c.name,
+    logType:c.type||'', physType:'', size:c.size||'', prec:'',
+    notNull:'', pk:c.pk?'Yes':'', units:'', domain:'', desc:c.desc||''
+  }));
+  renderColumns(_lastCols);
+}
+
+function renderColumns(cols) {
+  const body = document.getElementById('td-body');
+  if (!cols.length) {
+    body.innerHTML = '<div class="empty"><div class="empty-icon"></div><p>No columns found</p></div>';
+    return;
+  }
+
+  // Column definitions for the header
+  const HEADERS = [
+    {key:'ord',    label:'#',             title:'Column order'},
+    {key:'name',   label:'Physical Name', title:'Physical column name in database'},
+    {key:'label',  label:'Label',         title:'Human-readable column label'},
+    {key:'logType',label:'Logical Type',  title:'Logical data type (String, Integer, Float…)'},
+    {key:'physType',label:'Physical Type',title:'Physical SQL data type (varchar, int, real…)'},
+    {key:'size',   label:'Size',          title:'Maximum length or precision'},
+    {key:'prec',   label:'Precision',     title:'Decimal precision'},
+    {key:'notNull',label:'Not Null?',     title:'Whether NULL values are allowed'},
+    {key:'pk',     label:'PK',            title:'Primary key column'},
+    {key:'units',  label:'Units',         title:'Units of measure'},
+    {key:'domain', label:'Domain',        title:'Coded-value domain name — click to look up values'},
+    {key:'desc',   label:'Description',   title:'Full column description from SSURGO metadata'},
+  ];
+
+  const sortedCols = [...cols].sort((a,b) => {
+    const va = a[HEADERS[_sortColIdx].key] ?? '';
+    const vb = b[HEADERS[_sortColIdx].key] ?? '';
+    const na = isNaN(va) ? String(va).toLowerCase() : Number(va);
+    const nb = isNaN(vb) ? String(vb).toLowerCase() : Number(vb);
+    return na < nb ? -_sortDir : na > nb ? _sortDir : 0;
+  });
+
+  const thHtml = HEADERS.map((h,i) => `
+    <th title="${esc(h.title)}" onclick="colSort(${i})"
+        class="${_sortColIdx===i?(_sortDir===1?'sort-asc':'sort-desc'):''}">
+      ${esc(h.label)}<span class="sort-arrow"></span>
+    </th>`).join('');
+
+  const rowHtml = sortedCols.map(c => `
+    <tr>
+      <td class="col-ord">${esc(String(c.ord??''))}</td>
+      <td style="white-space:nowrap">
+        <span class="col-name${c.pk==='Yes'?' is-pk':''}">${esc(c.name||'')}</span>
+        ${c.pk==='Yes'?'<span class="pk-badge">PK</span>':''}
+      </td>
+      <td><div class="col-label">${esc(c.label||'')}</div></td>
+      <td><span class="col-type-log">${esc(c.logType||'—')}</span></td>
+      <td><span class="col-type-phys">${esc(c.physType||'—')}</span></td>
+      <td class="col-size">${c.size?esc(String(c.size)):'—'}</td>
+      <td class="col-prec">${c.prec?esc(String(c.prec)):'—'}</td>
+      <td>${c.notNull==='Yes'?'<span class="col-nn">NOT NULL</span>':'<span class="col-null">null ok</span>'}</td>
+      <td>${c.pk==='Yes'?'<span class="pk-badge">PK</span>':'<span style="color:var(--dimmer);font-size:11px">—</span>'}</td>
+      <td class="col-units">${c.units?esc(c.units):'—'}</td>
+      <td>${c.domain?`<span class="col-domain" onclick="event.stopPropagation();lookupDomainInline('${esc(c.domain)}')" title="Click to decode domain values">${esc(c.domain)}</span>`:'<span style="color:var(--dimmer);font-size:11px">—</span>'}</td>
+      <td><div class="col-desc">${esc((c.desc||'').slice(0,400))}</div></td>
+    </tr>`).join('');
+
+  body.innerHTML = `<div style="overflow-x:auto">
+    <table id="cols-table">
+      <thead><tr>${thHtml}</tr></thead>
+      <tbody>${rowHtml}</tbody>
+    </table>
+    <div style="padding:10px 16px;font-size:11px;color:var(--dimmer);border-top:1px solid var(--border)">
+      ${cols.length} columns · Click any header to sort · Click domain name to decode values
+    </div>
+  </div>`;
+}
+
+function colSort(idx) {
+  if (_sortColIdx === idx) _sortDir = -_sortDir;
+  else { _sortColIdx = idx; _sortDir = 1; }
+  renderColumns(_lastCols);
+}
+
+function lookupDomainInline(domainName) {
+  document.getElementById('domain-input').value = domainName;
+  lookupDomain();
+  document.getElementById('domain-input').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+// ── SEARCH ────────────────────────────────────────────────────────────────────
+const searchInput = document.getElementById('col-search');
+const scopeSelect = document.getElementById('search-scope');
+let searchTimer;
+
+searchInput.addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(doSearch, 250);
+});
+scopeSelect.addEventListener('change', doSearch);
+
+function doSearch() {
+  const q = searchInput.value.trim().toLowerCase();
+  const scope = scopeSelect.value;
+
+  if (!q) {
+    searchMode = false;
+    document.getElementById('search-results-panel').style.display = 'none';
+    document.getElementById('results-layout').style.display = 'grid';
+    filterTables();
+    return;
+  }
+  searchMode = true;
+
+  // Search tables + columns
+  const hits = [];
+  schema.tables.forEach(t => {
+    const inTable = t.name.toLowerCase().includes(q) || (t.label||'').toLowerCase().includes(q) || (t.desc||'').toLowerCase().includes(q);
+    if (scope !== 'column' && inTable) {
+      hits.push({table:t.name, col:null, type:'table', label:t.label, desc:t.desc, colType:''});
+    }
+    if (scope !== 'table') {
+      t.columns.forEach(c => {
+        if ((c.name||'').toLowerCase().includes(q) || (c.label||'').toLowerCase().includes(q) || (c.desc||'').toLowerCase().includes(q)) {
+          hits.push({table:t.name, col:c.name, type:'column', label:c.label||'', desc:c.desc||'', colType:c.type||''});
+        }
+      });
+    }
+  });
+
+  document.getElementById('results-layout').style.display = 'none';
+  const panel = document.getElementById('search-results-panel');
+  panel.style.display = 'block';
+
+  if (!hits.length) {
+    panel.innerHTML = '<div class="empty"><div class="empty-icon"></div><p>No results for "'+esc(q)+'"</p></div>';
+    return;
+  }
+
+  function hl(s) {
+    if (!s) return '';
+    const re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')', 'gi');
+    return esc(s).replace(re, '<span class="sr-match">$1</span>');
+  }
+
+  panel.innerHTML = `<div style="padding:12px 18px;border-bottom:1px solid var(--border);
+    font-size:12px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+    position:sticky;top:0;background:var(--panel);z-index:1">
+    ${hits.length} result${hits.length!==1?'s':''} for "${esc(q)}"</div>
+    ${hits.slice(0,200).map(h=>`
+      <div class="sr-row" onclick="openSearchResult('${h.table}')">
+        <div><div class="sr-tbl">${hl(h.table)}</div>
+             ${schema.tables.find(t=>t.name===h.table)?.label ? `<div style="font-size:11px;color:var(--dimmer);margin-top:3px">${esc(schema.tables.find(t=>t.name===h.table).label)}</div>` : ''}
+        </div>
+        <div>${h.col ? `<div class="sr-col">${hl(h.col)}</div><div class="sr-type">${esc(h.colType)}</div>` : '<div style="font-size:11px;color:var(--dimmer)">— table match —</div>'}</div>
+        <div><div class="sr-desc">${hl((h.desc||h.label||'').slice(0,180))}</div></div>
+      </div>`).join('')}
+    ${hits.length>200?`<div style="padding:12px 18px;font-size:12px;color:var(--dim)">Showing 200 of ${hits.length} results</div>`:''}`;
+}
+
+function openSearchResult(tableName) {
+  const t = schema.tables.find(x=>x.name===tableName);
+  if (!t) return;
+  activeTable = tableName;
+  document.getElementById('search-results-panel').style.display = 'none';
+  document.getElementById('results-layout').style.display = 'grid';
+  filterTables();
+  showTableDetail(t);
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function esc(s) { return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── BOOT ─────────────────────────────────────────────────────────────────────
+boot().catch(e => {
+  document.getElementById('er-canvas').innerHTML = `<text x="40" y="60" fill="red">Error: ${e.message}</text>`;
+  console.error(e);
+});
+
+// ── DOMAIN LOOKUP ─────────────────────────────────────────────────────────────
+const COMMON_DOMAINS = [
+  'drainagecl','flodfreqcl','floddurcl','pondfreqcl','ponddurcl',
+  'hydgrp','taxorder','taxsubgrp','farmlndcl','nirrcapcl','compkind','majcompflag'
+];
+
+// Populate example chips after page loads
+document.addEventListener('DOMContentLoaded', () => {
+  const ex = document.getElementById('domain-examples');
+  if (ex) {
+    COMMON_DOMAINS.forEach(d => {
+      const chip = document.createElement('span');
+      chip.textContent = d;
+      chip.style.cssText = 'font-size:9px;padding:2px 8px;border-radius:8px;background:var(--panel3);border:1px solid var(--border);color:var(--dim);cursor:pointer;font-family:Courier New,monospace';
+      chip.addEventListener('mouseenter', () => chip.style.borderColor = 'var(--accent)');
+      chip.addEventListener('mouseleave', () => chip.style.borderColor = 'var(--border)');
+      chip.addEventListener('click', () => { document.getElementById('domain-input').value = d; lookupDomain(); });
+      ex.appendChild(chip);
+    });
+  }
+});
+
+async function lookupDomain() {
+  const col = (document.getElementById('domain-input').value || '').trim();
+  const res = document.getElementById('domain-result');
+  if (!col) { res.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--dim)">Enter a column name first</div>'; return; }
+  res.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--accent)"><span style="animation:spin .7s linear infinite;display:inline-block">⟳</span> Querying SDA domain metadata…</div>';
+
+  // Try two approaches: MetadataDomainDetail and also direct domain from column
+  const sql = `SELECT dm.DomainName, dd.ChoiceLabel, dd.ChoiceName, dd.ChoiceSequence
+    FROM MetadataDomainMaster dm
+    INNER JOIN MetadataDomainDetail dd ON dm.DomainID = dd.DomainID
+    WHERE dm.DomainName = '${col}' OR dm.DomainName LIKE '%${col}%'
+    ORDER BY dm.DomainName, dd.ChoiceSequence`;
+  try {
+    const body = new URLSearchParams({query: sql, format: 'JSON+COLUMNNAME'});
+    const r = await fetch(SDA, {method: 'POST', body});
+    const txt = await r.text();
+    let d; try{ d=JSON.parse(txt); }catch(_){ d={}; }
+    if (!d.Table || d.Table.length < 3) {
+      res.innerHTML = `<div style="color:var(--dim);padding:8px">No domain found for "<span style="color:var(--soil)">${esc(col)}</span>". Try a different column name or check <a href="https://sdmdataaccess.nrcs.usda.gov/QueryHelp.aspx" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">SDA QueryHelp</a>.</div>`;
+      return;
+    }
+    const [headers,,,...rows] = d.Table;
+    // Group by domain name
+    const groups = {};
+    rows.forEach(r => {
+      const g = r[0] || col;
+      if (!groups[g]) groups[g] = [];
+      groups[g].push({label: r[1], name: r[2], seq: r[3]});
+    });
+    let html = '';
+    Object.entries(groups).forEach(([gname, vals]) => {
+      html += `<div style="margin-bottom:12px">
+        <div style="font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+                    color:var(--soil);margin-bottom:6px">${esc(gname)}</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <tr><th style="text-align:left;padding:6px 10px;background:var(--panel3);color:var(--dim);border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;letter-spacing:.08em">Code / Label</th>
+              <th style="text-align:left;padding:6px 10px;background:var(--panel3);color:var(--dim);border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;letter-spacing:.08em">Display Name</th></tr>
+          ${vals.map(v => `<tr>
+            <td style="padding:4px 8px;border-bottom:1px solid var(--border);color:var(--accent);font-family:Courier New,monospace">${esc(v.label||'')}</td>
+            <td style="padding:4px 8px;border-bottom:1px solid var(--border);color:var(--text)">${esc(v.name||'')}</td>
+          </tr>`).join('')}
+        </table>
+      </div>`;
+    });
+    res.innerHTML = `<div style="font-size:10px;color:var(--green);margin-bottom:10px">✓ ${rows.length} domain values for "${esc(col)}"</div>${html}`;
+  } catch(e) {
+    res.innerHTML = `<div style="color:var(--red);font-size:11px">Error: ${esc(e.message)}</div>`;
+  }
+}
+</script>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+</body>
+</html>
