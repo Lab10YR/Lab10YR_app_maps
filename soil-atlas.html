@@ -21,12 +21,13 @@
 <script src="https://unpkg.com/wellknown@0.5.0/wellknown.js"></script>
 <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
 <script src="js/shared.js"></script>
+<link rel="stylesheet" href="assets/lab10yr-theme.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#060810;--panel:#0f1121;--panel2:#161828;--panel3:#1e2038;
   --border:#252540;--text:#d8ddf0;--dim:#6870a0;--dimmer:#3a3d5a;
-  --accent:#38bdf8;--accent2:#a78bfa;--green:#22c55e;--gold:#f59e0b;
+  --accent:#f59e0b;--accent2:#fcd34d;--green:#22c55e;--gold:#f59e0b;
   --red:#ef4444;--orange:#f97316;
   --c-vlow:#1b7837;--c-low:#4dac26;--c-mod:#b8e186;
   --c-high:#f1b6da;--c-vhigh:#d01c8b;--c-extreme:#8e0152;
@@ -342,7 +343,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
   transition:transform .12s,box-shadow .12s;
 }
 #exag-slider::-webkit-slider-thumb:hover{
-  transform:scale(1.2);box-shadow:0 2px 8px rgba(56,189,248,.4);
+  transform:scale(1.2);box-shadow:0 2px 8px rgba(245, 158, 11,.4);
 }
 #exag-slider::-moz-range-thumb{
   width:18px;height:18px;border-radius:50%;border:2px solid var(--accent);
@@ -379,7 +380,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
       <span>Fragile Soils</span>
     </div>
     <div class="stab" data-story="carbon" onclick="setStory(this,'carbon')">
-      <span class="dot" style="background:#a78bfa;box-shadow:0 0 6px #a78bfa"></span>
+      <span class="dot" style="background:#fcd34d;box-shadow:0 0 6px #fcd34d"></span>
       <span>Carbon Risk</span>
     </div>
     <div class="stab" data-story="compound" onclick="setStory(this,'compound')">
@@ -391,7 +392,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
       <span>Resilience</span>
     </div>
     <div class="stab" data-story="opportunity" onclick="setStory(this,'opportunity')">
-      <span class="dot" style="background:#38bdf8;box-shadow:0 0 6px #38bdf8"></span>
+      <span class="dot" style="background:#f59e0b;box-shadow:0 0 6px #f59e0b"></span>
       <span>Opportunity</span>
     </div>
     <div class="stab" data-story="productivity" onclick="setStory(this,'productivity')">
@@ -770,7 +771,7 @@ const STORIES = {
       const om=f.properties.om_avg||(()=>{const st=FIPS_TO_STATE[(f.properties.fips||'').slice(0,2)];return(STATE_AGG[st]||{}).om||0.65;})();
       const eco=Math.max(0,(1-om)*0.6+(1-fsi)*0.4);
       if(eco>0.42)return'#7c3aed';
-      if(eco>0.36)return'#a78bfa';
+      if(eco>0.36)return'#fcd34d';
       if(eco>0.30)return'#c4b5fd';
       if(eco>0.24)return'#ddd6fe';
       if(eco>0.18)return'#ede9fe';
@@ -778,7 +779,7 @@ const STORIES = {
     },
     legend:[
       {color:'#7c3aed',label:'Highest ecological interest',sub:'Maine, NH, AK — forest & wetland soils'},
-      {color:'#a78bfa',label:'High — hydric & forest'},
+      {color:'#fcd34d',label:'High — hydric & forest'},
       {color:'#c4b5fd',label:'Moderate-high'},
       {color:'#ddd6fe',label:'Moderate'},
       {color:'#ede9fe',label:'Lower ecological diversity'},
@@ -964,7 +965,7 @@ function buildMap(){
     'line-width':['interpolate',['linear'],['zoom'],3,0.15,8,0.5,12,1],
   }});
   map.addLayer({id:'hover-line',type:'line',source:'counties',paint:{
-    'line-color':['case',['boolean',['feature-state','hover'],false],'#38bdf8','transparent'],
+    'line-color':['case',['boolean',['feature-state','hover'],false],'#f59e0b','transparent'],
     'line-width':2,'line-opacity':0.9,
   }});
 
@@ -1385,10 +1386,10 @@ function renderRecs(props){
   else if(fsi.includes('Moderately')||fsi.includes('Fragile'))
     recs.push({text:'Reduced tillage',color:'#f97316'});
   if(om.includes('high')||om.includes('moderately high'))
-    recs.push({text:'Cover crops (Prac. 340)',color:'#a78bfa'});
+    recs.push({text:'Cover crops (Prac. 340)',color:'#fcd34d'});
   if(om.includes('high'))
-    recs.push({text:'Soil carbon amendment',color:'#a78bfa'});
-  recs.push({text:'Nutrient mgmt (590)',color:'#38bdf8'});
+    recs.push({text:'Soil carbon amendment',color:'#fcd34d'});
+  recs.push({text:'Nutrient mgmt (590)',color:'#f59e0b'});
   if(!fsi.includes('Not'))recs.push({text:'Residue mgmt (329)',color:'#22c55e'});
   return`<div class="rec-chips">${recs.map(r=>
     `<span class="rec-chip" style="color:${r.color};border-color:${r.color}44">${r.text}</span>`
@@ -1477,20 +1478,20 @@ function drawTexTri(sand,silt,clay){
 
   // Glow
   ctx.beginPath();ctx.arc(px,py,10,0,Math.PI*2);
-  ctx.fillStyle='rgba(56,189,248,0.2)';ctx.fill();
+  ctx.fillStyle='rgba(245, 158, 11,0.2)';ctx.fill();
   ctx.beginPath();ctx.arc(px,py,6,0,Math.PI*2);
-  ctx.fillStyle='rgba(56,189,248,0.4)';ctx.fill();
+  ctx.fillStyle='rgba(245, 158, 11,0.4)';ctx.fill();
   ctx.beginPath();ctx.arc(px,py,3,0,Math.PI*2);
-  ctx.fillStyle='#38bdf8';ctx.fill();
+  ctx.fillStyle='#f59e0b';ctx.fill();
 
   // Crosshairs
-  ctx.strokeStyle='rgba(56,189,248,0.6)';ctx.lineWidth=0.8;
+  ctx.strokeStyle='rgba(245, 158, 11,0.6)';ctx.lineWidth=0.8;
   ctx.beginPath();ctx.moveTo(px,py-14);ctx.lineTo(px,py+14);
   ctx.moveTo(px-14,py);ctx.lineTo(px+14,py);ctx.stroke();
 
   // Label
   const texClass=getTexClass(sand,silt,clay);
-  ctx.fillStyle='#38bdf8';ctx.font='bold 10px Inter,sans-serif';ctx.textAlign='center';
+  ctx.fillStyle='#f59e0b';ctx.font='bold 10px Inter,sans-serif';ctx.textAlign='center';
   ctx.fillText(texClass,W/2,H-2);
   document.getElementById('tri-text').textContent=
     `Sand ${sand.toFixed(0)}% · Silt ${silt.toFixed(0)}% · Clay ${clay.toFixed(0)}%`;
@@ -1787,5 +1788,6 @@ function geolocate(){
   });
 }
 </script>
+<script src="js/lab10yr-nav.js" defer></script>
 </body>
 </html>

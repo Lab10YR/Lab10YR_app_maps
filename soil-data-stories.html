@@ -16,11 +16,12 @@
   <meta name="twitter:image"       content="https://lab10yr.com/assets/og-preview.png">
 <title>The World Beneath: What Soil Data Tells Us — Soil Data Access</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="assets/lab10yr-theme.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --ink:#18120a;--paper:#faf8f5;--muted:#6b5e52;--line:#e0d9d0;
-  --soil:#5c3a1e;--gold:#c8a84b;--green:#2e7d32;--red:#b71c1c;
+  --soil:#5c3a1e;--gold:#f59e0b;--green:#2e7d32;--red:#b71c1c;
   --blue:#1565c0;--amber:#e65100;
   --ff-serif:Georgia,'Times New Roman',serif;
   --ff-sans:system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -1013,5 +1014,6 @@ const healthObs = new IntersectionObserver(entries => {
 const healthWrap = document.getElementById('healthScoreWrap');
 if (healthWrap) healthObs.observe(healthWrap);
 </script>
+<script src="js/lab10yr-nav.js" defer></script>
 </body>
 </html>

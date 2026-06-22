@@ -14,12 +14,13 @@
 <meta name="twitter:title"       content="County Soil Report — Soil Intelligence">
 <meta name="twitter:description" content="Measured soil profile for any US county, live from the national soil survey via Soil Data Access.">
 <title>County Soil Report &middot; Soil Intelligence</title>
+<link rel="stylesheet" href="assets/lab10yr-theme.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#04060c;--panel:#0a0e1a;--panel2:#0d1220;--border:#1e2640;
   --text:#d4daf0;--dim:#8892b0;--dimmer:#4a5270;
-  --accent:#38bdf8;--accent2:#7c3aed;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;
+  --accent:#f59e0b;--accent2:#d97706;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;
   --soil:#c8a84b;--font:'Inter',system-ui,sans-serif;
   --shadow:0 8px 24px rgba(0,0,0,.6)
 }
@@ -234,5 +235,6 @@ function metric(label,value,desc,lvl){
     (lvl?tag(lvl[0],lvl[1]):'')+'</div>';
 }
 </script>
+<script src="js/lab10yr-nav.js" defer></script>
 </body>
 </html>
