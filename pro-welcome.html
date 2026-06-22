@@ -10,7 +10,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--border:#1e2640;--text:#d4daf0;--dim:#5a6490;
-  --accent:#38bdf8;--green:#22c55e;--soil:#c8a84b;--amber:#f59e0b;
+  --accent:#f59e0b;--green:#22c55e;--soil:#c8a84b;--amber:#f59e0b;
   --font:'Inter',system-ui,-apple-system,sans-serif;--serif:Georgia,'Times New Roman',serif}
 html,body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;overflow-x:hidden}
 a{color:var(--accent);text-decoration:none}
@@ -41,6 +41,7 @@ code{font-family:'SF Mono',Menlo,Consolas,monospace;font-size:12px;color:#aeb9e6
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .miss{border:1px solid var(--border);border-radius:12px;background:var(--panel2);padding:24px;text-align:center}
 </style>
+<link rel="stylesheet" href="assets/lab10yr-theme.css">
 </head>
 <body>
 <nav id="nav"><a href="https://lab10yr.com" class="nav-logo">Lab10YR</a></nav>
@@ -103,5 +104,6 @@ async function manageBilling(){
   }catch(e){ alert('Could not open billing portal.'); }
 }
 </script>
+<script src="js/lab10yr-nav.js" defer></script>
 </body>
 </html>

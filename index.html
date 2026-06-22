@@ -24,7 +24,7 @@
 :root{
   --bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--panel3:#181e30;
   --border:#1e2640;--text:#d4daf0;--dim:#5a6490;--dimmer:#2e3560;
-  --accent:#38bdf8;--accent2:#a78bfa;--green:#22c55e;--gold:#f59e0b;
+  --accent:#f59e0b;--accent2:#a78bfa;--green:#22c55e;--gold:#f59e0b;
   --red:#ef4444;--orange:#f97316;
   --soil:#c8a84b;--soil2:#8b5e2a;
   --font:'Inter',system-ui,-apple-system,sans-serif;
@@ -310,6 +310,7 @@ footer{background:#020408;border-top:1px solid var(--border);
 .reveal.on{opacity:1;transform:none}
 .maplibregl-ctrl-bottom-right,.maplibregl-ctrl-bottom-left{display:none}
 </style>
+<link rel="stylesheet" href="assets/lab10yr-theme.css">
 </head>
 <body>
 
@@ -347,7 +348,7 @@ footer{background:#020408;border-top:1px solid var(--border);
   <div id="hero-map"></div>
   <div class="hero-veil"></div>
   <div class="hero-content">
-    <div class="hero-eyebrow">USDA · SSURGO · Soil Data Access</div>
+    <div class="hero-eyebrow">SSURGO · Soil Data Access</div>
     <h1 class="hero-h1">America's Soil,<br><strong>Mapped & Queryable</strong></h1>
     <p class="hero-sub">300,000+ soil components. 3,143 counties. 254 SQL scripts. One open platform connecting the nation's most comprehensive soil database to interactive maps, data journalism, and conservation science.</p>
     <div class="hero-actions">
@@ -633,7 +634,7 @@ footer{background:#020408;border-top:1px solid var(--border);
     <div class="footer-grid">
       <div>
         <div class="footer-brand">Soil Intelligence</div>
-        <p class="footer-desc">A living SQL library and visualization platform built on USDA SSURGO — America's most comprehensive soil database. Open source, open data.</p>
+        <p class="footer-desc">A living SQL library and visualization platform built on SSURGO — America's most comprehensive soil database. Open source, open data.</p>
       </div>
       <div class="footer-col">
         <h4>Applications</h4>
@@ -655,7 +656,7 @@ footer{background:#020408;border-top:1px solid var(--border);
     </div>
     <hr class="footer-rule">
     <div class="footer-bottom">
-      <span>USDA · Soil Data Access · SSURGO · 300,000+ soil components · 56 states &amp; territories</span>
+      <span>Soil Data Access · SSURGO · 300,000+ soil components · 56 states &amp; territories</span>
       <span>© 2026 Jason Nemecek · Soil Data Access Project</span>
     </div>
   </div>
@@ -857,7 +858,7 @@ function drawAtlasPreview(){
     ctx.fillRect(W*0.1,y,W*0.5*(i*0.15+0.4),H/hzColors.length-2);
   });
   // Draw texture triangle hint
-  ctx.strokeStyle='rgba(56,189,248,0.4)';ctx.lineWidth=1;
+  ctx.strokeStyle='rgba(245,158,11,0.4)';ctx.lineWidth=1;
   ctx.globalAlpha=0.5;
   ctx.beginPath();ctx.moveTo(W*.7,H*.1);ctx.lineTo(W*.95,H*.9);ctx.lineTo(W*.45,H*.9);ctx.closePath();ctx.stroke();
   ctx.beginPath();ctx.arc(W*.72,H*.35,4,0,Math.PI*2);
@@ -911,5 +912,6 @@ if('serviceWorker' in navigator){
     .catch(()=>{});
 }
 </script>
+<script src="js/lab10yr-nav.js" defer></script>
 </body>
 </html>

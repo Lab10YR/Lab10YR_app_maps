@@ -10,7 +10,7 @@
   <style>
     :root {
       --bg:#04060c; --panel:#0a0e1a; --panel2:#111625; --panel3:#181e30;
-      --border:#1e2640; --text:#d4daf0; --dim:#5a6490; --accent:#38bdf8;
+      --border:#1e2640; --text:#d4daf0; --dim:#5a6490; --accent:#f59e0b;
       --soil:#c8a84b; --green:#22c55e; --red:#ef4444;
       --font:'Inter',system-ui,sans-serif; --serif:Georgia,serif;
       --blue:#38bdf8; --blue2:#0ea5d6; --gray:#1e2640; --light:#04060c;
@@ -42,6 +42,7 @@
     .hint { color:var(--dim); }
     .divider { flex: 0 0 1px; align-self: stretch; background:var(--border); margin:0 .25rem; }
   </style>
+<link rel="stylesheet" href="assets/lab10yr-theme.css">
 </head>
 <body>
 <nav style="position:sticky;top:0;z-index:500;height:46px;background:rgba(4,6,12,.97);
@@ -191,5 +192,6 @@
       }catch(err){console.error(err);disableExports();}
     });
   </script>
+<script src="js/lab10yr-nav.js" defer></script>
 </body>
 </html>

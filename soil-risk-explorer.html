@@ -20,7 +20,7 @@
 :root{
   --bg:#04060c;--panel:#0a0e1a;--panel2:#0d1220;--border:#1e2640;
   --text:#d4daf0;--dim:#8892b0;--dimmer:#4a5270;
-  --accent:#38bdf8;--green:#22c55e;--red:#ef4444;--soil:#c8a84b;
+  --accent:#f59e0b;--green:#22c55e;--red:#ef4444;--soil:#c8a84b;
   --font:'Inter',system-ui,sans-serif;--hdr:48px
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow:hidden}
@@ -87,7 +87,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .dot.dimmed{opacity:.12}
 .dot.highlighted{stroke:#fff;stroke-width:1.5px}
 .brush-rect .selection{
-  fill:rgba(56,189,248,.12);stroke:var(--accent);stroke-width:1.5px;
+  fill:rgba(245,158,11,.12);stroke:var(--accent);stroke-width:1.5px;
   stroke-dasharray:4,2
 }
 .brush-rect .handle{fill:none}
@@ -138,6 +138,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 @keyframes spin{to{transform:rotate(360deg)}}
 #loading p{color:var(--dim);font-size:12px}
 </style>
+<link rel="stylesheet" href="assets/lab10yr-theme.css">
 </head>
 <body>
 
@@ -710,5 +711,6 @@ loadData().catch(e => {
     `<p style="color:var(--red)">Error loading data: ${e.message}</p>`;
 });
 </script>
+<script src="js/lab10yr-nav.js" defer></script>
 </body>
 </html>

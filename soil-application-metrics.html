@@ -24,7 +24,7 @@
 :root{
   --bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--panel3:#181e30;
   --border:#1e2640;--text:#d4daf0;--dim:#5a6490;--dimmer:#2e3560;
-  --accent:#38bdf8;--accent2:#a78bfa;--green:#22c55e;
+  --accent:#f59e0b;--accent2:#a78bfa;--green:#22c55e;
   --gold:#f59e0b;--red:#ef4444;--orange:#f97316;
   --soil:#c8a84b;--soil2:#8b5e2a;
   --sage:#7aaf6e;--earth:#9a7040;--teal:#5a9aa5;
@@ -363,6 +363,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
 /* ── CHART SOURCE LINE ───────────────────────────────── */
 .chart-source{font-size:.7rem;color:var(--dimmer);margin-top:8px;padding:0 2px}
 </style>
+<link rel="stylesheet" href="assets/lab10yr-theme.css">
 </head>
 <body>
 
@@ -803,7 +804,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
           <div class="nyt-bar-track"><div class="nyt-bar-fill" style="width:50%;background:rgba(167,139,250,.65)"></div></div>
           <div class="nyt-bar-val">~50%</div>
         </div>
-        <p class="chart-source">Source: USDA Soil Data Metrics article · FY2023</p>
+        <p class="chart-source">Source: National soil data metrics · FY2023</p>
       </div>
     </div>
   </div>
@@ -945,7 +946,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
   </div>
   <hr class="footer-rule">
   <div class="footer-bottom">
-    <span>USDA Soil Data Access · Public domain data</span>
+    <span>Soil Data Access · Public domain data</span>
     <span>jneme910 · GitHub Pages</span>
   </div>
 </footer>
@@ -1611,5 +1612,6 @@ var obs=new IntersectionObserver(function(entries){
 },{threshold:0.08});
 document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
 </script>
+<script src="js/lab10yr-nav.js" defer></script>
 </body>
 </html>

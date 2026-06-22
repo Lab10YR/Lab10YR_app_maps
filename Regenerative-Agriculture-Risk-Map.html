@@ -25,7 +25,7 @@
 :root{
   --bg:#080810;--panel:#11111e;--panel2:#191928;--panel3:#21213a;
   --border:#252538;--text:#dde1f0;--dim:#7880a8;--dimmer:#454566;
-  --accent:#4e9fff;--accent2:#a78bfa;--green:#22c55e;
+  --accent:#f59e0b;--accent2:#a78bfa;--green:#22c55e;
   --c0:#1b7837;--c1:#78c679;--c2:#fecc5c;--c3:#f03b20;--c4:#7b0007;--cx:#343450;
   --radius:7px;--shadow:0 6px 28px rgba(0,0,0,0.65);
   --font:'Inter',system-ui,-apple-system,sans-serif;
@@ -152,7 +152,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
   box-shadow:0 1px 5px rgba(0,0,0,.5);transition:transform .12s,box-shadow .12s;
 }
 #exag-slider::-webkit-slider-thumb:hover{
-  transform:scale(1.2);box-shadow:0 2px 8px rgba(56,189,248,.4);
+  transform:scale(1.2);box-shadow:0 2px 8px rgba(245,158,11,.4);
 }
 #exag-slider::-moz-range-thumb{
   width:18px;height:18px;border-radius:50%;border:2px solid var(--accent);
@@ -433,6 +433,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
 #loading p{color:var(--dim);font-size:12px;max-width:300px;text-align:center}
 #loading .load-sub{font-size:10px;color:var(--dimmer)}
 </style>
+<link rel="stylesheet" href="assets/lab10yr-theme.css">
 </head>
 <body>
 
@@ -540,7 +541,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
   <button class="ip-close" onclick="toggleInterpPanel()" title="Close">✕</button>
   <div id="interp-panel-inner">
 
-    <div class="ip-eyebrow">USDA Regenerative Agriculture Risk Map</div>
+    <div class="ip-eyebrow">Regenerative Agriculture Risk Map</div>
     <h1 class="ip-headline">Two Lenses on America's Soil Vulnerability</h1>
     <p class="ip-lead">
       Not all soils respond to disturbance the same way. This map renders two complementary
@@ -681,7 +682,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
     <hr class="ip-divider">
 
     <p class="ip-source">
-      <strong>Data source:</strong> USDA Natural Resources Conservation Service,
+      <strong>Data source:</strong> National Cooperative Soil Survey,
       National Cooperative Soil Survey (NCSS). Interpretations computed via the
       Soil Data Access (SDA) tabular endpoint using dominant condition aggregation
       across all major soil components per map unit. Values reflect the most recent
@@ -793,7 +794,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
           </p>
           <p style="margin-bottom:6px">
             <strong style="color:var(--text)">Data:</strong>
-            USDA SSURGO ·
+            SSURGO ·
             <a href="https://sdmdataaccess.sc.egov.usda.gov" target="_blank" rel="noopener noreferrer"
                style="color:var(--accent)">SDA REST API</a> ·
             auto-refreshed weekly.
@@ -1718,7 +1719,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('#search-wrap'))sr.st
 async function geocode(q){
   try{
     const res=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=5&countrycodes=us`,
-      {headers:{'Accept-Language':'en','User-Agent':'NRCS-SoilHealthRisk/1.0'}});
+      {headers:{'Accept-Language':'en','User-Agent':'Lab10YR-RiskMap/1.0'}});
     const data=await res.json();
     sr.innerHTML='';
     if(!data.length){
@@ -2349,5 +2350,6 @@ if('serviceWorker' in navigator){
     .catch(()=>{});
 }
 </script>
+<script src="js/lab10yr-nav.js" defer></script>
 </body>
 </html>

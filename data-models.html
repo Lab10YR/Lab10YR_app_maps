@@ -20,7 +20,7 @@
 :root{
   --bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--panel3:#181e30;
   --border:#1e2640;--border2:#2a3558;--text:#d4daf0;--dim:#5a6490;--dimmer:#2e3560;
-  --accent:#38bdf8;--accent2:#a78bfa;--green:#22c55e;--soil:#c8a84b;
+  --accent:#f59e0b;--accent2:#a78bfa;--green:#22c55e;--soil:#c8a84b;
   --red:#ef4444;--orange:#f97316;--gold:#f59e0b;
   --c-survey:#38bdf8;--c-mapunit:#22c55e;--c-component:#c8a84b;
   --c-horizon:#f97316;--c-spatial:#a78bfa;--c-meta:#94a3b8;--c-other:#5a6490;
@@ -53,8 +53,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 }
 .hero-grid-bg{
   position:absolute;inset:0;pointer-events:none;
-  background:repeating-linear-gradient(0deg,rgba(56,189,248,.03) 0 1px,transparent 1px 60px),
-             repeating-linear-gradient(90deg,rgba(56,189,248,.03) 0 1px,transparent 1px 60px);
+  background:repeating-linear-gradient(0deg,rgba(245,158,11,.03) 0 1px,transparent 1px 60px),
+             repeating-linear-gradient(90deg,rgba(245,158,11,.03) 0 1px,transparent 1px 60px);
 }
 .hero-inner{max-width:1200px;margin:0 auto;position:relative}
 .hero-eyebrow{font-size:10px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
@@ -151,7 +151,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .ts-btn{padding:5px 13px;border:1px solid var(--border);border-radius:999px;background:var(--panel2);
         font-size:11px;color:var(--dim);cursor:pointer;transition:all .15s;font-family:var(--font);
         white-space:nowrap}
-.ts-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(56,189,248,.09)}
+.ts-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(245,158,11,.09)}
 .ts-btn:hover:not(.active){border-color:var(--border2);color:var(--text)}
 
 /* Results layout — no fixed height, expands naturally */
@@ -266,6 +266,7 @@ footer{background:#020408;border-top:1px solid var(--border);
 footer a{color:var(--dim);text-decoration:none}
 footer a:hover{color:var(--soil)}
 </style>
+<link rel="stylesheet" href="assets/lab10yr-theme.css">
 </head>
 <body>
 
@@ -1030,5 +1031,6 @@ async function lookupDomain() {
 }
 </script>
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<script src="js/lab10yr-nav.js" defer></script>
 </body>
 </html>

@@ -19,7 +19,7 @@
 :root{
   --bg:#04060c;--panel:#0a0e1a;--panel2:#0d1220;--border:#1e2640;
   --text:#d4daf0;--dim:#8892b0;--dimmer:#4a5270;
-  --accent:#38bdf8;--soil:#c8a84b;--font:'Inter',system-ui,sans-serif;
+  --accent:#f59e0b;--soil:#c8a84b;--font:'Inter',system-ui,sans-serif;
 }
 body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;min-height:100vh}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
@@ -62,6 +62,7 @@ main{max-width:1080px;margin:0 auto;padding:8px 24px 60px}
 .empty{color:var(--dim);text-align:center;padding:40px 0}
 footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:var(--dimmer);font-size:11px;margin-top:30px}
 </style>
+<link rel="stylesheet" href="assets/lab10yr-theme.css">
 </head>
 <body>
 <nav>
@@ -982,5 +983,6 @@ q.addEventListener("input",()=>{
   empty.style.display=any?"none":"block";
 });
 </script>
+<script src="js/lab10yr-nav.js" defer></script>
 </body>
 </html>

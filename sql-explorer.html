@@ -19,7 +19,7 @@
 :root{
   --bg:#04060c;--panel:#0a0e1a;--panel2:#111625;--panel3:#181e30;
   --border:#1e2640;--border2:#2a3558;--text:#d4daf0;--dim:#5a6490;--dimmer:#2e3560;
-  --accent:#38bdf8;--green:#22c55e;--soil:#c8a84b;--red:#ef4444;
+  --accent:#f59e0b;--green:#22c55e;--soil:#c8a84b;--red:#ef4444;
   --font:'Inter',system-ui,sans-serif;--serif:Georgia,serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -50,7 +50,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .type-btn{padding:4px 9px;border:1px solid var(--border);border-radius:10px;
           background:var(--panel2);color:var(--dim);font-size:10px;font-weight:700;
           cursor:pointer;transition:all .15s;white-space:nowrap}
-.type-btn.active{border-color:var(--accent);background:rgba(56,189,248,.12);color:var(--accent)}
+.type-btn.active{border-color:var(--accent);background:rgba(245,158,11,.12);color:var(--accent)}
 #view-btns{display:flex;gap:3px;flex-shrink:0}
 .view-btn{width:26px;height:26px;border:1px solid var(--border);border-radius:4px;
           background:var(--panel2);color:var(--dim);cursor:pointer;font-size:11px;
@@ -84,7 +84,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
     display:flex;flex-direction:column;gap:7px;position:relative;overflow:hidden}
 .sc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cat-color,#5a6490)}
 .sc:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.4)}
-.sc.sel{border-color:var(--accent);background:rgba(56,189,248,.05)}
+.sc.sel{border-color:var(--accent);background:rgba(245,158,11,.05)}
 .sc-top{display:flex;align-items:flex-start;gap:8px}
 .sc-icon{font-size:17px;flex-shrink:0;margin-top:1px}
 .sc-body{flex:1;min-width:0}
@@ -95,7 +95,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .sc-foot{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
 .dt-badge{font-size:9px;font-weight:800;padding:2px 6px;border-radius:8px;
           border:1px solid;flex-shrink:0;letter-spacing:.04em}
-.dt-t{color:#38bdf8;border-color:rgba(56,189,248,.3)}
+.dt-t{color:#38bdf8;border-color:rgba(245,158,11,.3)}
 .dt-s{color:#22c55e;border-color:rgba(34,197,94,.3)}
 .dt-b{color:#a78bfa;border-color:rgba(167,139,250,.3)}
 .tag{font-size:9px;padding:2px 6px;border-radius:6px;background:var(--panel3);
@@ -164,7 +164,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .r-err{padding:7px 10px;border-radius:5px;font-size:11px;background:rgba(239,68,68,.08);
        border:1px solid rgba(239,68,68,.3);color:var(--red);line-height:1.6}
 .r-info{padding:7px 10px;border-radius:5px;font-size:11px;
-        background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.3);color:var(--accent);
+        background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);color:var(--accent);
         display:flex;align-items:center;gap:6px;margin-bottom:7px}
 .rtw{overflow-x:auto;max-height:280px;overflow-y:auto;border-radius:5px;border:1px solid var(--border)}
 #rt{width:100%;border-collapse:collapse;font-size:10px}
@@ -189,7 +189,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 #ai-toggle{display:flex;align-items:center;gap:8px;padding:0 14px;height:40px;
   cursor:pointer;user-select:none;border:none;background:none;width:100%;color:var(--text);
   font-family:var(--font);font-size:12px}
-#ai-toggle:hover{background:rgba(56,189,248,.05)}
+#ai-toggle:hover{background:rgba(245,158,11,.05)}
 .ai-spark{font-size:14px}
 .ai-label{font-weight:600;letter-spacing:.5px;color:var(--accent)}
 .ai-sub{color:var(--dim);font-size:11px;margin-left:4px}
@@ -226,6 +226,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .ai-copy-btn:hover{color:var(--text);border-color:var(--accent)}
 #ai-status{font-size:11px;color:var(--dim);margin-top:2px;min-height:14px}
 </style>
+<link rel="stylesheet" href="assets/lab10yr-theme.css">
 </head>
 <body>
 <div id="shell">
@@ -658,5 +659,6 @@ function copyAiSql() {
   });
 }
 </script>
+<script src="js/lab10yr-nav.js" defer></script>
 </body>
 </html>
