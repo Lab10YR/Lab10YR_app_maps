@@ -908,7 +908,7 @@ ticker.innerHTML=items.map(f=>`<div class="tick-item"><span class="ti">${f.i}</s
 </script>
 <script>
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/NRCS-Soil-Data-Access/sw.js',{scope:'/NRCS-Soil-Data-Access/'})
+  navigator.serviceWorker.register('/sw.js',{scope:'/'})
     .catch(()=>{});
 }
 </script>
