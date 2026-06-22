@@ -46,6 +46,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
   background:rgba(6,8,16,.97);border-bottom:1px solid var(--border);
   display:flex;align-items:center;padding:0 12px;gap:8px;
   backdrop-filter:blur(14px);overflow-x:auto;overflow-y:visible;
+  /* leave room at the right so the fixed Lab10YR apps launcher
+     (position:fixed; top:12px; right:12px, ~150px wide) never overlaps
+     header buttons */
+  margin-right:178px;
 }
 .logo{font-size:13px;font-weight:800;color:#fff;white-space:nowrap;
       display:flex;align-items:center;gap:6px;flex-shrink:0}
@@ -415,8 +419,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
   <div class="hdr-sep"></div>
 
   <div class="res-group" title="Soil pattern resolution — 900m/500m/100m shows SSURGO map unit polygons">
-    <button class="res-btn" id="res-county" onclick="setResolution('county')">County</button>
-    <button class="res-btn active" id="res-900" onclick="setResolution('900m')">900m</button>
+    <button class="res-btn active" id="res-county" onclick="setResolution('county')">County</button>
+    <button class="res-btn" id="res-900" onclick="setResolution('900m')">900m</button>
     <button class="res-btn" id="res-500" onclick="setResolution('500m')">500m</button>
     <button class="res-btn" id="res-100" onclick="setResolution('100m')">100m</button>
   </div>
@@ -931,7 +935,10 @@ async function loadData(){
     updateStats();
     buildTicker();
     initRasterLayers(); // check for 900m raster PMTiles (no-op if not built yet)
-    setTimeout(()=>setResolution('900m'),400);
+    // Default to the county choropleth — the only resolution with data shipped.
+    // (900m/500m/100m need PMTiles under data/raster + per-state mapunit tiles,
+    // which aren't built yet; auto-switching there blanked the map.)
+    setTimeout(()=>setResolution('county'),400);
 
   }catch(e){
     SoilLog.error(tag,'loadData failed: '+e.message);
@@ -1594,7 +1601,10 @@ function setResolution(level){
     loadMUTiles();
     // Set immediate opacity for already-loaded layers
     const muOp=Math.max(0,Math.min(0.85,0.85*(targetZ-5)/(7-5)));
-    const countyOp=Math.max(0,Math.min(0.78,0.78*(7-targetZ)/(7-5)));
+    // Only fade out the county choropleth if a higher-res layer is actually
+    // ready to take over. With no raster/mapunit tiles built, keep county
+    // fully visible so sub-county buttons zoom in instead of blanking the map.
+    const countyOp=_rasterReady?Math.max(0,Math.min(0.78,0.78*(7-targetZ)/(7-5))):0.78;
     if(map.getLayer('fill'))map.setPaintProperty('fill','fill-opacity',
       ['case',['boolean',['feature-state','hover'],false],1,countyOp]);
     muLayersAdded.forEach(st=>{
