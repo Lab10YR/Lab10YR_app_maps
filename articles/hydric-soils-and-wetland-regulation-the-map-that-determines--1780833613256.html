@@ -141,18 +141,11 @@ h1{font-family:var(--ff-serif);font-size:clamp(2.2rem,4.2vw,3.8rem);line-height:
 @media(max-width:900px){nav{padding:0 16px}.hero-grid{grid-template-columns:1fr;padding:0 20px;gap:32px}.hero-waffle-wrap{display:none}#article-wrap{grid-template-columns:1fr;padding:48px 20px 0}.sidebar{display:none}.callout-row{grid-template-columns:1fr}#article-footer{padding-left:20px;padding-right:20px}}
 .data-table-wrap{margin:20px 0 4px;overflow-x:auto}.data-table{width:100%;border-collapse:collapse;font-family:var(--ff-mono);font-size:10px}.data-table th{text-align:left;color:var(--gold);font-size:8px;letter-spacing:.12em;text-transform:uppercase;padding:7px 10px;border-bottom:1px solid #3a2e20}.data-table td{padding:6px 10px;border-bottom:1px solid #1e1710;color:var(--soft)}.data-table tr:hover td{background:#13100d}.data-val{color:#f0ede8;font-weight:600;text-align:right}.data-table-source{font-family:var(--ff-mono);font-size:8px;color:#5a4a3a;letter-spacing:.06em;margin-top:5px;text-align:right}
 </style>
+<link rel="stylesheet" href="../assets/lab10yr-theme.css">
 </head>
 <body>
 <div id="progress"></div>
-<nav>
-  <a href="https://lab10yr.com" class="nav-brand"><span>Lab</span>10<em style="font-style:normal;color:var(--gold2)">YR</em></a>
-  <div class="nav-links">
-    <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map" rel="noopener noreferrer">Risk Map</a>
-    <a href="https://lab10yr.com/soil-data-stories" rel="noopener noreferrer">Data Stories</a>
-    <a href="https://lab10yr.com/articles/" rel="noopener noreferrer">Articles</a>
-    <a href="https://lab10yr.com/#contact" class="nav-cta" rel="noopener noreferrer">Get in Touch</a>
-  </div>
-</nav>
+<nav id="nav"><a class="nav-link" href="/articles/" style="display:none">Articles</a></nav>
 
 <section id="hero">
   <div class="hero-grid">
@@ -359,5 +352,6 @@ window.addEventListener('load',function(){
   }
 });
 </script>
+<script src="../js/lab10yr-nav.js" defer></script>
 </body>
 </html>

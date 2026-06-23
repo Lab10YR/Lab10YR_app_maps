@@ -45,7 +45,8 @@
     { group: "Company", items: [
       { h: "services.html",                          t: "Services",           i: "→" },
       { h: "dci-pricing.html",                       t: "Pricing & API",      i: "$" },
-      { h: "about.html",                             t: "About",              i: "ℹ" }
+      { h: "about.html",                             t: "About",              i: "ℹ" },
+      { h: "/admin",                                 t: "Admin",              i: "⚷" }
     ] }
   ];
 
