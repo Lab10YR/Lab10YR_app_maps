@@ -12,7 +12,7 @@
 <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
 <meta name="twitter:card"        content="summary_large_image">
 <meta name="twitter:title"       content="Site Soil Lookup — Soil Intelligence">
-<meta name="twitter:description" content="The soil hazard profile at any coordinate, live from the national soil survey via Soil Data Access.">
+<meta name="twitter:description" content="The soil hazard profile at any coordinate, live from the national soil survey via the National Cooperative Soil Survey (SSURGO).">
 <title>Site Soil Lookup &middot; Soil Intelligence</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -128,7 +128,7 @@ footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:v
   <h1>The soil hazard profile at <em>any point on the map</em></h1>
   <p class="lead">Enter a latitude and longitude, or use your current location. This finds the exact
   map unit at that coordinate in the national soil survey and reports what its soils mean for building,
-  drainage, wetlands, and buried infrastructure. Every value is live from Soil Data Access.</p>
+  drainage, wetlands, and buried infrastructure. Every value is live from the National Cooperative Soil Survey (SSURGO).</p>
 </div>
 
 <div class="controls">
@@ -143,7 +143,7 @@ footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:v
 </div>
 
 <footer>
-  Data: National Cooperative Soil Survey (SSURGO) via Soil Data Access. Profiles reflect the mapped
+  Data: National Cooperative Soil Survey (SSURGO). Profiles reflect the mapped
   components of the map unit at the coordinate; map-unit boundaries are generalized, so verify on the
   ground for site-specific decisions. &middot; <a href="index.html">Soil Intelligence</a>
 </footer>
@@ -155,7 +155,7 @@ const SDA="https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest";
 async function sda(query){
   const body=new URLSearchParams();body.set("query",query);body.set("format","JSON+COLUMNNAME");
   const r=await fetch(SDA,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body});
-  if(!r.ok) throw new Error("Soil Data Access returned "+r.status);
+  if(!r.ok) throw new Error("the National Cooperative Soil Survey (SSURGO) returned "+r.status);
   const j=await r.json();const t=(j&&j.Table)?j.Table:[];
   if(t.length<2) return [];const cols=t[0];
   return t.slice(1).map(row=>{const o={};cols.forEach((c,i)=>o[c]=row[i]);return o;});

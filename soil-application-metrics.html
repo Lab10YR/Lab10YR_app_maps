@@ -394,7 +394,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
   <div class="hero-content">
     <div class="hero-eyebrow">Soil Intelligence · Prove It · Soil Data Metrics</div>
     <h1 class="hero-h1">Proving the Value<br>of <strong>Soil Data</strong></h1>
-    <p class="hero-sub">In 2025, Soil Data Access requests nearly doubled from the year prior. In FY2023, SDA received 121 million requests — 4.6 million from CART alone. Web Soil Survey created 3.4 million Areas of Interest. These aren't just statistics. They're the measured impact of national soil data on every conservation decision in America.</p>
+    <p class="hero-sub">In 2025, the National Cooperative Soil Survey (SSURGO) requests nearly doubled from the year prior. In FY2023, SDA received 121 million requests — 4.6 million from CART alone. Web Soil Survey created 3.4 million Areas of Interest. These aren't just statistics. They're the measured impact of national soil data on every conservation decision in America.</p>
     <div class="hero-cta">
       <a class="btn-soil" href="soil-data-stories.html">Explore Data Stories ↗</a>
       <a class="btn-ghost" href="regen-ag-shape-curves.html">SHAPE Curves</a>
@@ -441,8 +441,8 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
 
   <div class="interp-grid reveal">
     <div class="interp-row">
-      <div class="interp-name">Soil Data Access API Requests</div>
-      <div class="interp-desc">Distinct queries submitted to the Soil Data Access web service. Includes direct queries, application-embedded calls (CART, ArcGIS, web apps), and automated pipelines. One user action in CART may generate multiple SDA queries.</div>
+      <div class="interp-name">National Cooperative Soil Survey (SSURGO) Requests</div>
+      <div class="interp-desc">Distinct queries submitted to the National Cooperative Soil Survey (SSURGO) web service. Includes direct queries, application-embedded calls (CART, ArcGIS, web apps), and automated pipelines. One user action in CART may generate multiple SDA queries.</div>
       <div class="interp-unit">Unit: distinct query submissions · Scale: millions per year</div>
     </div>
     <div class="interp-row">
@@ -536,7 +536,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
     <div style="display:flex;flex-direction:column;gap:4px">
       <span class="ctrl-lbl">Metric Type</span>
       <select id="selQueryName" onchange="runMetricQuery()">
-        <option value="SDA_Usage">Soil Data Access API Requests</option>
+        <option value="SDA_Usage">National Cooperative Soil Survey (SSURGO) Requests</option>
         <option value="wss_ActivityCounts">Web Soil Survey Activity</option>
         <option value="wss_AOIDefinition">AOI Type — How Users Set Areas</option>
         <option value="wss_AOISizeRange">AOI Size Range</option>
@@ -582,7 +582,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
   </div>
 
   <div id="metricChartBox" class="chart-wrap" style="margin-bottom:24px">
-    <div class="chart-title" id="metricChartTitle">Soil Data Access API Requests · 2023 · National · Monthly</div>
+    <div class="chart-title" id="metricChartTitle">National Cooperative Soil Survey (SSURGO) Requests · 2023 · National · Monthly</div>
     <div class="chart-sub" id="metricChartSub">Select parameters above to update</div>
     <div id="metricEchart" style="height:360px"></div>
   </div>
@@ -653,7 +653,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
     <div class="stat-card cs">
       <div class="stat-num">121<span>M</span></div>
       <div class="stat-lbl">Total SDA Requests</div>
-      <div class="stat-desc">FY2023 distinct queries to the Soil Data Access API from all sources — CART, external GIS tools, automated pipelines, and direct queries.</div>
+      <div class="stat-desc">FY2023 distinct queries to the National Cooperative Soil Survey (SSURGO) from all sources — CART, external GIS tools, automated pipelines, and direct queries.</div>
     </div>
     <div class="stat-card cg">
       <div class="stat-num">4.6<span>M</span></div>
@@ -695,11 +695,11 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
   </div>
 
   <div class="pullquote reveal">
-    "The clear and consistent demand for soil data, across a wide variety of geographic settings, demonstrates that Web Soil Survey, Soil Data Access, and SoilWeb play an important role in sustainable land management."
+    "The clear and consistent demand for soil data, across a wide variety of geographic settings, demonstrates that Web Soil Survey, the National Cooperative Soil Survey (SSURGO), and SoilWeb play an important role in sustainable land management."
   </div>
 
   <div class="footnote">
-    <strong>Data note:</strong> SDA metrics are sourced from the <code style="color:var(--soil)">wss_metric_query_results</code> table via the public Soil Data Access API. CART request counts (FY2023 = 4.6M) are derived from the SDA BAFLOG audit log database, which filters on <code style="color:var(--soil)">application="CART"</code> in the SDA audit trail. These internal counts are not directly queryable via the public API but are derived from the SDA BAFLOG audit log database.
+    <strong>Data note:</strong> SDA metrics are sourced from the <code style="color:var(--soil)">wss_metric_query_results</code> table via the public National Cooperative Soil Survey (SSURGO). CART request counts (FY2023 = 4.6M) are derived from the SDA BAFLOG audit log database, which filters on <code style="color:var(--soil)">application="CART"</code> in the SDA audit trail. These internal counts are not directly queryable via the public API but are derived from the SDA BAFLOG audit log database.
   </div>
 </section>
 
@@ -715,7 +715,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
 
   <div class="section-eyebrow">SDA Annual Requests · Every Year on Record · Live Data</div>
   <h2 class="section-h2">From millions to<br><em>hundreds of millions.</em></h2>
-  <p class="section-lead">Soil Data Access has become infrastructure. In FY2023, it fielded 121 million queries. In 2025, requests nearly doubled again. What began as a specialized federal data service now flows into farm management software, conservation planning tools, university research pipelines, and state GIS systems across the country.</p>
+  <p class="section-lead">the National Cooperative Soil Survey (SSURGO) has become infrastructure. In FY2023, it fielded 121 million queries. In 2025, requests nearly doubled again. What began as a specialized federal data service now flows into farm management software, conservation planning tools, university research pipelines, and state GIS systems across the country.</p>
 
   <div style="margin-bottom:28px">
     <div id="growthSpinner" class="chart-spinner">Loading live data</div>
@@ -926,7 +926,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
   <div class="footer-grid">
     <div>
       <div class="footer-brand">Soil Intelligence</div>
-      <div class="footer-desc">Interactive maps, 254 production SQL scripts, and data journalism for SSURGO national soil data — built on Soil Data Access.</div>
+      <div class="footer-desc">Interactive maps, 254 production SQL scripts, and data journalism for SSURGO national soil data — built on the National Cooperative Soil Survey (SSURGO).</div>
     </div>
     <div class="footer-col">
       <h4>Applications</h4>
@@ -941,12 +941,12 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
       <a href="sql-explorer.html">SQL Explorer</a>
       <a href="data-models.html">Data Models</a>
       <a href="soil-data-stories.html">Data Stories</a>
-      <a href="https://sdmdataaccess.nrcs.usda.gov/" target="_blank" rel="noopener noreferrer">Soil Data Access</a>
+      <a href="https://sdmdataaccess.nrcs.usda.gov/" target="_blank" rel="noopener noreferrer">the National Cooperative Soil Survey (SSURGO)</a>
     </div>
   </div>
   <hr class="footer-rule">
   <div class="footer-bottom">
-    <span>Soil Data Access · Public domain data</span>
+    <span>the National Cooperative Soil Survey (SSURGO) · Public domain data</span>
     <span>jneme910 · GitHub Pages</span>
   </div>
 </footer>
@@ -1045,7 +1045,7 @@ post(
 /* ── PARAMETRIC METRIC QUERY ──────────────────────────── */
 var metricEchart = null;
 var QNAME_LABELS = {
-  SDA_Usage:'Soil Data Access API Requests',
+  SDA_Usage:'National Cooperative Soil Survey (SSURGO) Requests',
   wss_ActivityCounts:'Web Soil Survey Activity',
   wss_AOIDefinition:'AOI Type — How Users Set Areas',
   wss_AOISizeRange:'AOI Size Range',

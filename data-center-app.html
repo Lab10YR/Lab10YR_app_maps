@@ -399,7 +399,7 @@ select.inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-ima
   <b>Elevated 35&ndash;50</b> &middot; <b>Severe &lt;35</b>. Draw an area to screen every map unit in it and
   get a buildability distribution plus a written, pedologist-grade assessment. The whole model is
   validated against the siting record of 88 operating hyperscale campuses.</p>
-  <p class="ab-disc">Desktop screening from the National Cooperative Soil Survey (SSURGO via Soil Data Access)
+  <p class="ab-disc">Desktop screening from the National Cooperative Soil Survey (SSURGO)
   fused with public infrastructure data. A screening signal to prioritize sites; it does not replace a
   geotechnical investigation. Ground truthing is required before commitment.</p>
 </template>
@@ -1484,7 +1484,7 @@ function _reportShell(title,inner){
    @media print{body{padding:0}}</style></head><body>
    <div class="rh"><span class="b">Lab10YR &middot; GroundScore DCI</span><span class="d">${new Date().toLocaleDateString()}</span></div>
    ${inner}
-   <div class="disc">Desktop screening from the National Cooperative Soil Survey (SSURGO via Soil Data Access) fused with public infrastructure data (USGS 3DEP and seismic, Open-Meteo, HIFLD transmission). A screening signal to prioritize sites; it does not replace a geotechnical investigation. Ground truthing is required before commitment. &copy; ${new Date().getFullYear()} Lab10YR.</div>
+   <div class="disc">Desktop screening from the National Cooperative Soil Survey (SSURGO) fused with public infrastructure data (USGS 3DEP and seismic, Open-Meteo, HIFLD transmission). A screening signal to prioritize sites; it does not replace a geotechnical investigation. Ground truthing is required before commitment. &copy; ${new Date().getFullYear()} Lab10YR.</div>
 </body></html>`);
   w.document.close(); w.focus(); setTimeout(()=>{ try{ w.print(); }catch(e){} },650);
 }

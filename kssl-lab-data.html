@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="canonical" href="https://lab10yr.com/kssl-lab-data">
 <meta property="og:title"       content="KSSL Lab Data — National Pedon Database">
-<meta property="og:description" content="Explore Kellogg Soil Survey Laboratory pedon data for every state and territory. Live lab reports, taxonomy, water retention, and soil profiles via Soil Data Access.">
+<meta property="og:description" content="Explore Kellogg Soil Survey Laboratory pedon data for every state and territory. Live lab reports, taxonomy, water retention, and soil profiles via the National Cooperative Soil Survey (SSURGO).">
 <meta property="og:url"         content="https://lab10yr.com/kssl-lab-data.html">
 <title>KSSL Lab Data — National Pedon Database</title>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css">
@@ -154,7 +154,7 @@ td.num{font-family:monospace;color:var(--dim);font-size:.68rem}
     <div class="sb-hdr">
       <div class="sb-eyebrow">KSSL · NCSS Characterization Database</div>
       <div class="sb-title">KSSL Lab Data</div>
-      <div class="sb-sub">Kellogg Soil Survey Laboratory pedon reports — all states and territories, live via Soil Data Access.</div>
+      <div class="sb-sub">Kellogg Soil Survey Laboratory pedon reports — all states and territories, live via the National Cooperative Soil Survey (SSURGO).</div>
     </div>
 
     <div id="sb-body">
@@ -362,7 +362,7 @@ function loadState(code) {
     var sel = document.getElementById('selState');
     var stName = sel.options[sel.selectedIndex]?sel.options[sel.selectedIndex].text:'';
     document.getElementById('tbl-sub').textContent =
-      rows.length + ' pedons · ' + stName + ' · Soil Data Access · lab_webmap';
+      rows.length + ' pedons · ' + stName + ' · the National Cooperative Soil Survey (SSURGO) · lab_webmap';
 
     history.replaceState(null,'','?state='+code);
   }).fail(function() {

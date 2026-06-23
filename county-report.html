@@ -12,7 +12,7 @@
 <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
 <meta name="twitter:card"        content="summary_large_image">
 <meta name="twitter:title"       content="County Soil Report — Soil Intelligence">
-<meta name="twitter:description" content="Measured soil profile for any US county, live from the national soil survey via Soil Data Access.">
+<meta name="twitter:description" content="Measured soil profile for any US county, live from the national soil survey via the National Cooperative Soil Survey (SSURGO).">
 <title>County Soil Report &middot; Soil Intelligence</title>
 <link rel="stylesheet" href="assets/lab10yr-theme.css">
 <style>
@@ -119,7 +119,7 @@ footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:v
   <div class="eyebrow">County Soil Report</div>
   <h1>The measured soil profile of <em>any US county</em></h1>
   <p class="lead">Choose a state and county. This pulls the county's soils straight from the national
-  soil survey through the Soil Data Access API and summarizes what the field and lab records say
+  soil survey through the National Cooperative Soil Survey (SSURGO) and summarizes what the field and lab records say
   about its surface organic matter, shrink-swell behavior, wetland extent, corrosion risk, drainage,
   and plant-available water. Every number is live, sourced, and defensible.</p>
 </div>
@@ -140,7 +140,7 @@ footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:v
 </div>
 
 <footer>
-  Data: National Cooperative Soil Survey (SSURGO) via Soil Data Access. Values are area-representative
+  Data: National Cooperative Soil Survey (SSURGO). Values are area-representative
   summaries weighted by component extent; consult the full survey for site-specific decisions.
   &middot; <a href="index.html">Soil Intelligence</a>
 </footer>
@@ -155,7 +155,7 @@ const SDA="https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest";
 async function sda(query){
   const body=new URLSearchParams();body.set("query",query);body.set("format","JSON+COLUMNNAME");
   const r=await fetch(SDA,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body});
-  if(!r.ok) throw new Error("Soil Data Access returned "+r.status);
+  if(!r.ok) throw new Error("the National Cooperative Soil Survey (SSURGO) returned "+r.status);
   const j=await r.json();
   const t=(j&&j.Table)?j.Table:[];
   if(t.length<2) return [];

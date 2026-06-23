@@ -193,7 +193,7 @@ footer{border-top:1px solid var(--border);padding:34px min(7vw,90px);margin-top:
     Click the map above to score any point.</p>
   </div>
   <div class="chartwrap" style="margin-top:14px;padding:6px 4px 2px"><div id="swarm" style="position:relative"></div></div>
-  <p class="note" id="datanote">Loading the national aggregate&hellip; (map-unit weighted, National Cooperative Soil Survey via Soil Data Access)</p>
+  <p class="note" id="datanote">Loading the national aggregate&hellip; (map-unit weighted, National Cooperative Soil Survey via the National Cooperative Soil Survey (SSURGO))</p>
 </div>
 
 <!-- ── PUBLIC: data center markets scorecard ─────────────────────────────── -->
@@ -223,7 +223,7 @@ footer{border-top:1px solid var(--border);padding:34px min(7vw,90px);margin-top:
     soils, steep slope, and shrink-swell clay. Two real sites:</p>
   </div>
   <div class="sites" id="sites"></div>
-  <p class="note">Worked examples computed live from Soil Data Access. The full per-parcel breakdown is a Pro feature.</p>
+  <p class="note">Worked examples computed live from the National Cooperative Soil Survey (SSURGO). The full per-parcel breakdown is a Pro feature.</p>
 </div>
 
 <!-- ── CALIBRATION: validated against where the industry actually built ──── -->
@@ -291,7 +291,7 @@ footer{border-top:1px solid var(--border);padding:34px min(7vw,90px);margin-top:
 
 <footer>
   <a href="https://lab10yr.com" class="footer-logo">Lab10YR</a>
-  <div class="footer-copy">&copy; 2026 Lab10YR &middot; Jason Nemecek &middot; Data: National Cooperative Soil Survey (SSURGO) via Soil Data Access</div>
+  <div class="footer-copy">&copy; 2026 Lab10YR &middot; Jason Nemecek &middot; Data: National Cooperative Soil Survey (SSURGO)</div>
 </footer>
 
 <style>
@@ -342,7 +342,7 @@ footer{border-top:1px solid var(--border);padding:34px min(7vw,90px);margin-top:
 const CLASS_COLOR={Prime:'#16a34a',Suitable:'#22c55e',Marginal:'#eab308',Poor:'#f59e0b',Excluded:'#ef4444'};
 const STATE_NAME={AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DC:'District of Columbia',DE:'Delaware',FL:'Florida',GA:'Georgia',HI:'Hawaii',IA:'Iowa',ID:'Idaho',IL:'Illinois',IN:'Indiana',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',MA:'Massachusetts',MD:'Maryland',ME:'Maine',MI:'Michigan',MN:'Minnesota',MO:'Missouri',MS:'Mississippi',MT:'Montana',NC:'North Carolina',ND:'North Dakota',NE:'Nebraska',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NV:'Nevada',NY:'New York',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VA:'Virginia',VT:'Vermont',WA:'Washington',WI:'Wisconsin',WV:'West Virginia',WY:'Wyoming'};
 
-// Worked examples — real DCSI output validated against Soil Data Access.
+// Worked examples — real DCSI output validated against the National Cooperative Soil Survey (SSURGO).
 const SITES=[
  {cls:'good',loc:'Aguila-Carefree Area, AZ (33.55, -112.64)',name:'Cipriano very gravelly loam',score:88.4,label:'Prime',
   rows:[['Small commercial buildings','Not limited'],['Corrosion of steel','Moderate'],['Shrink-swell (LEP)','1.5 - low'],['Water table','None'],['Drainage','Well drained']],flags:null},
@@ -564,8 +564,8 @@ async function load(){
     const vaDci=(agg['VA']&&agg['VA'].dci!=null)?agg['VA'].dci:(dvals.length?dvals.reduce((a,b)=>a+b,0)/dvals.length:0);
     animateStat(vaDci, agg['VA']&&agg['VA'].dci!=null?'GroundScore DCI · Data Center Alley (VA)':'average GroundScore DCI, U.S.'); }
   const note=document.getElementById('datanote');
-  if(!states.length){ note.textContent='National aggregate is still building — charts populate as states finish. (Map-unit weighted, National Cooperative Soil Survey via Soil Data Access.)'; }
-  else { note.textContent=`GroundScore DCI (soil + power + water + seismic + slope + climate) at each state's primary data-center area, over a ${states.length}-state soil aggregate. National Cooperative Soil Survey (SSURGO) via Soil Data Access.`; }
+  if(!states.length){ note.textContent='National aggregate is still building — charts populate as states finish. (Map-unit weighted, National Cooperative Soil Survey via the National Cooperative Soil Survey (SSURGO).)'; }
+  else { note.textContent=`GroundScore DCI (soil + power + water + seismic + slope + climate) at each state's primary data-center area, over a ${states.length}-state soil aggregate. National Cooperative Soil Survey (SSURGO).`; }
 
   // ── 3D extruded US map (MapLibre) — click anywhere to score ──
   buildMap(agg);
