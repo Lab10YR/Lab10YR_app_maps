@@ -7,7 +7,7 @@
 <meta property="og:type"        content="website">
 <meta property="og:site_name"   content="Lab10YR">
 <meta property="og:title"       content="Soil Data Metrics - Proving the Value of Soil Information">
-<meta property="og:description" content="121 million SDA requests in FY2023. Nearly doubled in 2025. CART, WSS, and SDA usage metrics - the numbers that prove soil data matters.">
+<meta property="og:description" content="121 million SDA requests in FY2023. Nearly doubled in 2025. CART, the viewer, and SDA usage metrics - the numbers that prove soil data matters.">
 <meta property="og:url"         content="https://lab10yr.com/soil-application-metrics.html">
 <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
 <meta name="twitter:card"        content="summary_large_image">
@@ -394,7 +394,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
   <div class="hero-content">
     <div class="hero-eyebrow">Soil Intelligence · Prove It · Soil Data Metrics</div>
     <h1 class="hero-h1">Proving the Value<br>of <strong>Soil Data</strong></h1>
-    <p class="hero-sub">In 2025, the National Cooperative Soil Survey (SSURGO) requests nearly doubled from the year prior. In FY2023, SDA received 121 million requests - 4.6 million from CART alone. Web Soil Survey created 3.4 million Areas of Interest. These aren't just statistics. They're the measured impact of national soil data on every conservation decision in America.</p>
+    <p class="hero-sub">In 2025, the National Cooperative Soil Survey (SSURGO) requests nearly doubled from the year prior. In FY2023, SDA received 121 million requests - 4.6 million from CART alone. the national soil viewer created 3.4 million Areas of Interest. These aren't just statistics. They're the measured impact of national soil data on every conservation decision in America.</p>
     <div class="hero-cta">
       <a class="btn-soil" href="soil-data-stories.html">Explore Data Stories ↗</a>
       <a class="btn-ghost" href="regen-ag-shape-curves.html">SHAPE Curves</a>
@@ -408,7 +408,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
       </div>
       <div class="hs-box">
         <div class="hs-val sage" id="hWSS2023">3.4M</div>
-        <div class="hs-lbl">WSS Areas of Interest</div>
+        <div class="hs-lbl">the viewer Areas of Interest</div>
         <div class="hs-sub">FY2023 · AOIs created</div>
       </div>
       <div class="hs-box">
@@ -437,7 +437,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
 
   <div class="section-eyebrow">Interpretation Guide · Not Straightforward</div>
   <h2 class="section-h2">The numbers tell a story.<br><em>If you know how to read them.</em></h2>
-  <p class="section-lead">Comparing metric counts from year to year requires context. Each metric type measures a different user action, at a different scale. SDA traffic is always higher than WSS because SDA's API is embedded in dozens of external applications and GIS tools - each of those generates many API requests per user action.</p>
+  <p class="section-lead">Comparing metric counts from year to year requires context. Each metric type measures a different user action, at a different scale. SDA traffic is always higher than the viewer because SDA's API is embedded in dozens of external applications and GIS tools - each of those generates many API requests per user action.</p>
 
   <div class="interp-grid reveal">
     <div class="interp-row">
@@ -446,18 +446,18 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
       <div class="interp-unit">Unit: distinct query submissions · Scale: millions per year</div>
     </div>
     <div class="interp-row">
-      <div class="interp-name">Web Soil Survey - Areas of Interest Created</div>
-      <div class="interp-desc">Areas of Interest created in Web Soil Survey - each represents a farm field, parcel, or project area that a user drew or imported. The best proxy for "unique soil questions answered" because it directly counts user intent.</div>
+      <div class="interp-name">National soil viewer - Areas of Interest Created</div>
+      <div class="interp-desc">Areas of Interest created in National soil viewer - each represents a farm field, parcel, or project area that a user drew or imported. The best proxy for "unique soil questions answered" because it directly counts user intent.</div>
       <div class="interp-unit">Unit: AOIs created · Scale: millions per year · Peaks: March & October</div>
     </div>
     <div class="interp-row">
-      <div class="interp-name">Web Soil Survey - Sessions Started</div>
-      <div class="interp-desc">WSS sessions initiated. Higher than AOI counts because users browse WSS without always setting an AOI - reading soil maps, looking at reports, or downloading data directly without drawing a field boundary.</div>
+      <div class="interp-name">National soil viewer - Sessions Started</div>
+      <div class="interp-desc">the viewer sessions initiated. Higher than AOI counts because users browse the viewer without always setting an AOI - reading soil maps, looking at reports, or downloading data directly without drawing a field boundary.</div>
       <div class="interp-unit">Unit: sessions · Always &gt; AOI count · Not directly comparable to SDA</div>
     </div>
     <div class="interp-row">
       <div class="interp-name">Top Soil Reports Generated</div>
-      <div class="interp-desc">The top 100 soil reports generated from Web Soil Survey by survey area and year. Shows which report types matter most to users - Engineering Properties, Physical Properties, Map Unit Description are typically dominant.</div>
+      <div class="interp-desc">The top 100 soil reports generated from the national soil viewer by survey area and year. Shows which report types matter most to users - Engineering Properties, Physical Properties, Map Unit Description are typically dominant.</div>
       <div class="interp-unit">Unit: report generations · Category = report name</div>
     </div>
     <div class="interp-row">
@@ -484,7 +484,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
       <div class="ch-num">2</div>
       <div>
         <div class="ch-label">Chapter Two</div>
-        <div class="ch-hed">Annual Trends - SDA &amp; WSS</div>
+        <div class="ch-hed">Annual Trends - SDA &amp; the viewer</div>
       </div>
     </div>
 
@@ -502,7 +502,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
         </div>
       </div>
       <div class="chart-wrap">
-        <div class="chart-title">WSS Activity - Annual (CY)</div>
+        <div class="chart-title">the viewer Activity - Annual (CY)</div>
         <div class="chart-sub">AOIs created and Session Starts · National</div>
         <div id="annWSSspinner" class="chart-spinner">Loading live data</div>
         <div style="position:relative;height:260px;display:none" id="annWSSbox">
@@ -530,14 +530,14 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
 
   <div class="section-eyebrow">SDA Soil Application Metrics · All Query Types</div>
   <h2 class="section-h2">Select your metric.<br><em>See the data.</em></h2>
-  <p class="section-lead">Query any metric type, any year, any frequency. The <code style="font-size:.9em;color:var(--soil);background:rgba(200,168,75,.08);padding:1px 5px;border-radius:3px">wss_metric_query_results</code> table stores all platform activity - API calls, WSS actions, downloads, AOI definitions, and what soil data users are actually viewing.</p>
+  <p class="section-lead">Query any metric type, any year, any frequency. The <code style="font-size:.9em;color:var(--soil);background:rgba(200,168,75,.08);padding:1px 5px;border-radius:3px">wss_metric_query_results</code> table stores all platform activity - API calls, the viewer actions, downloads, AOI definitions, and what soil data users are actually viewing.</p>
 
   <div class="ctrl-row reveal">
     <div style="display:flex;flex-direction:column;gap:4px">
       <span class="ctrl-lbl">Metric Type</span>
       <select id="selQueryName" onchange="runMetricQuery()">
         <option value="SDA_Usage">National Cooperative Soil Survey (SSURGO) Requests</option>
-        <option value="wss_ActivityCounts">Web Soil Survey Activity</option>
+        <option value="wss_ActivityCounts">National soil viewer activity</option>
         <option value="wss_AOIDefinition">AOI Type - How Users Set Areas</option>
         <option value="wss_AOISizeRange">AOI Size Range</option>
         <option value="wss_ExportCounts">Data Downloads</option>
@@ -607,12 +607,12 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
       </div>
     </div>
 
-    <div class="section-eyebrow">Web Soil Survey - Monthly Area of Interest Patterns · Live Data</div>
+    <div class="section-eyebrow">National soil viewer - Monthly Area of Interest Patterns · Live Data</div>
     <h2 class="section-h2">Spring planting.<br><em>Fall harvest.</em></h2>
-    <p class="section-lead">WSS usage peaks in March and October - driven by planting season soil assessments and fall conservation planning deadlines. The January and June dips reflect winter dormancy and summer field-season gaps. This heatmap shows the monthly pattern year over year.</p>
+    <p class="section-lead">the viewer usage peaks in March and October - driven by planting season soil assessments and fall conservation planning deadlines. The January and June dips reflect winter dormancy and summer field-season gaps. This heatmap shows the monthly pattern year over year.</p>
 
     <div id="seasonalWrap" class="chart-wrap" style="margin-bottom:24px">
-      <div class="chart-title">Web Soil Survey - Areas of Interest Created Monthly by Year</div>
+      <div class="chart-title">National soil viewer - Areas of Interest Created Monthly by Year</div>
       <div class="chart-sub">Relative intensity (darker = more areas) · National · All years on record</div>
       <div id="seasonalSpinner" class="chart-spinner">Loading live data</div>
       <div id="seasonalEchart" style="height:380px;display:none"></div>
@@ -622,7 +622,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
       <div class="ctx-card">
         <span class="ctx-icon"></span>
         <div class="ctx-title">Spring Peak - March</div>
-        <div class="ctx-body">The largest annual spike in WSS usage aligns with spring planting deadlines. Farmers and conservation planners need soil drainage class, flooding frequency, and crop suitability data before field operations begin.</div>
+        <div class="ctx-body">The largest annual spike in the viewer usage aligns with spring planting deadlines. Farmers and conservation planners need soil drainage class, flooding frequency, and crop suitability data before field operations begin.</div>
         <span class="ctx-metric">Top Ratings: Hydrologic Soil Group · Drainage Class</span>
       </div>
       <div class="ctx-card">
@@ -677,13 +677,13 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
     <div class="ctx-card">
       <span class="ctx-icon"></span>
       <div class="ctx-title">Rural demand, not urban</div>
-      <div class="ctx-body">WSS AOI density analysis shows peak usage in areas with population density similar to Nebraska - distinctly rural. Most customers using soil survey data are making land management decisions on working lands, not in cities.</div>
+      <div class="ctx-body">the viewer AOI density analysis shows peak usage in areas with population density similar to Nebraska - distinctly rural. Most customers using soil survey data are making land management decisions on working lands, not in cities.</div>
       <span class="ctx-metric">AOI centroid density peaks at ~Nebraska population density</span>
     </div>
     <div class="ctx-card">
       <span class="ctx-icon"></span>
-      <div class="ctx-title">Why SDA &gt;&gt; WSS Traffic</div>
-      <div class="ctx-body">SDA receives far more requests than WSS because SDA's REST API is embedded in CART, ArcGIS tools, state agency GIS systems, university research pipelines, and commercial applications. Each of those generates multiple API calls per user action.</div>
+      <div class="ctx-title">Why SDA &gt;&gt; the viewer Traffic</div>
+      <div class="ctx-body">SDA receives far more requests than the viewer because SDA's REST API is embedded in CART, ArcGIS tools, state agency GIS systems, university research pipelines, and commercial applications. Each of those generates multiple API calls per user action.</div>
       <span class="ctx-metric">Many-to-one: apps → SDA queries → user decisions</span>
     </div>
     <div class="ctx-card">
@@ -695,7 +695,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
   </div>
 
   <div class="pullquote reveal">
-    "The clear and consistent demand for soil data, across a wide variety of geographic settings, demonstrates that Web Soil Survey, the National Cooperative Soil Survey (SSURGO), and SoilWeb play an important role in sustainable land management."
+    "The clear and consistent demand for soil data, across a wide variety of geographic settings, demonstrates that the national soil viewer, the National Cooperative Soil Survey (SSURGO), and SoilWeb play an important role in sustainable land management."
   </div>
 
   <div class="footnote">
@@ -736,8 +736,8 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
     </div>
     <div class="nyt-milestone">
       <div class="nyt-milestone-num">3.4<span>M</span></div>
-      <div class="nyt-milestone-yr">WSS AOIs · FY2023</div>
-      <div class="nyt-milestone-note">Areas of Interest created in Web Soil Survey - the best proxy for unique soil questions answered by a real user</div>
+      <div class="nyt-milestone-yr">the viewer AOIs · FY2023</div>
+      <div class="nyt-milestone-note">Areas of Interest created in National soil viewer - the best proxy for unique soil questions answered by a real user</div>
     </div>
     <div class="nyt-milestone">
       <div class="nyt-milestone-num">4-5<span>K</span></div>
@@ -820,9 +820,9 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
     </div>
   </div>
 
-  <div class="section-eyebrow">Monthly Demand Pattern · WSS AOI · All Years Averaged · Live SDA Data</div>
+  <div class="section-eyebrow">Monthly Demand Pattern · the viewer AOI · All Years Averaged · Live SDA Data</div>
   <h2 class="section-h2">March. October.<br><em>The farm calendar, written in queries.</em></h2>
-  <p class="section-lead">Every year, without exception, WSS usage spikes in March and again in October. Spring planting drives the first wave. Fall conservation program enrollment deadlines drive the second. The chart below shows average monthly AOI creation across all years on record - the agricultural rhythm encoded in data.</p>
+  <p class="section-lead">Every year, without exception, the viewer usage spikes in March and again in October. Spring planting drives the first wave. Fall conservation program enrollment deadlines drive the second. The chart below shows average monthly AOI creation across all years on record - the agricultural rhythm encoded in data.</p>
 
   <div class="two-col" style="margin-bottom:40px;align-items:start;gap:28px">
     <div>
@@ -858,15 +858,15 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
       </div>
     </div>
 
-    <div class="section-eyebrow">Geographic Demand · Top States · WSS AOI Activity · Live SDA Data</div>
+    <div class="section-eyebrow">Geographic Demand · Top States · the viewer AOI Activity · Live SDA Data</div>
     <h2 class="section-h2">Not the cities.<br><em>Where the soil is.</em></h2>
-    <p class="section-lead">AOI centroid analysis shows peak WSS usage in areas with the population density of rural Nebraska - not metropolitan centers. The users asking soil questions are making real land management decisions on working lands. The chart below ranks states by total cumulative WSS AOI activity across all years on record.</p>
+    <p class="section-lead">AOI centroid analysis shows peak the viewer usage in areas with the population density of rural Nebraska - not metropolitan centers. The users asking soil questions are making real land management decisions on working lands. The chart below ranks states by total cumulative the viewer AOI activity across all years on record.</p>
 
     <div class="nyt-geo-grid reveal">
       <div class="nyt-geo-stat">
         <div class="nyt-geo-num">~Nebraska</div>
         <div class="nyt-geo-lbl">Peak AOI density profile</div>
-        <div class="nyt-geo-note">WSS AOI centroids cluster in rural agricultural counties - the same population density as rural Nebraska, not suburban or urban zones</div>
+        <div class="nyt-geo-note">the viewer AOI centroids cluster in rural agricultural counties - the same population density as rural Nebraska, not suburban or urban zones</div>
       </div>
       <div class="nyt-geo-stat">
         <div class="nyt-geo-num">50%</div>
@@ -881,7 +881,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
     </div>
 
     <div class="chart-wrap">
-      <div class="chart-title">Top 20 States - Cumulative WSS AOI Activity</div>
+      <div class="chart-title">Top 20 States - Cumulative the viewer AOI Activity</div>
       <div class="chart-sub">Total AOIs by state · All years on record · wss_ActivityCounts AOI · M frequency · Live SDA data</div>
       <div id="stateSpinner" class="chart-spinner">Loading live data</div>
       <div id="stateEchart" style="height:440px;display:none"></div>
@@ -901,10 +901,10 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
 
   <div class="section-eyebrow">Geographic Demand · All States · Live SDA Data</div>
   <h2 class="section-h2">Every county.<br><em>Every decision.</em></h2>
-  <p class="section-lead">Soil data requests don't cluster in cities - they trace working lands. The map below shows cumulative Web Soil Survey and SDA usage by state across all years on record. Select a metric to see where the demand is strongest.</p>
+  <p class="section-lead">Soil data requests don't cluster in cities - they trace working lands. The map below shows cumulative the national soil viewer and SDA usage by state across all years on record. Select a metric to see where the demand is strongest.</p>
 
   <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap" class="reveal">
-    <button class="res-map-btn active" id="mapBtn-wss" onclick="showMap('wss')">WSS AOI Activity</button>
+    <button class="res-map-btn active" id="mapBtn-wss" onclick="showMap('wss')">the viewer AOI Activity</button>
     <button class="res-map-btn" id="mapBtn-sda" onclick="showMap('sda')">SDA API Requests</button>
   </div>
 
@@ -914,7 +914,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
       <div id="ch10Map" style="height:480px;display:none"></div>
     </div>
     <div>
-      <div class="chart-title" id="ch10RankTitle">Top States - WSS AOI Activity</div>
+      <div class="chart-title" id="ch10RankTitle">Top States - the viewer AOI Activity</div>
       <div class="chart-sub">Click a state on the map to highlight · All years on record</div>
       <div id="ch10RankList" style="margin-top:12px"></div>
     </div>
@@ -1046,7 +1046,7 @@ post(
 var metricEchart = null;
 var QNAME_LABELS = {
   SDA_Usage:'National Cooperative Soil Survey (SSURGO) Requests',
-  wss_ActivityCounts:'Web Soil Survey Activity',
+  wss_ActivityCounts:'National soil viewer activity',
   wss_AOIDefinition:'AOI Type - How Users Set Areas',
   wss_AOISizeRange:'AOI Size Range',
   wss_ExportCounts:'Data Downloads',
@@ -1283,7 +1283,7 @@ post(
       textStyle:{color:'#5a6490',fontSize:9}
     },
     series:[{
-      name:'WSS AOI', type:'heatmap', data:heatData,
+      name:'the viewer AOI', type:'heatmap', data:heatData,
       label:{show:false},
       emphasis:{itemStyle:{shadowBlur:4,shadowColor:'rgba(0,0,0,.5)'}}
     }]
@@ -1547,7 +1547,7 @@ function renderCh10Map(metric){
   if(!ch10MapInst)return;
   ch10ActiveMetric=metric;
   var data=metric==='wss'?ch10WSSData:ch10SDAData;
-  var label=metric==='wss'?'WSS AOI Activity':'SDA API Requests';
+  var label=metric==='wss'?'the viewer AOI Activity':'SDA API Requests';
   var color=metric==='wss'?['#1a2a0a','#7aaf6e','#c8a84b']:['#0a1a2a','#38bdf8','#a78bfa'];
 
   var mapData=Object.keys(data).map(function(abbr){

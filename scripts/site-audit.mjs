@@ -26,9 +26,11 @@ const SKIP_DIRS = new Set(["_next", "node_modules", "scripts", ".git", "assets"]
 // HARD = fail the build. WARN = report only.
 const HARD_PHRASES = [
   { re: /Soil Data Access/gi, label: 'banned phrase "Soil Data Access"' },
+  { re: /Web Soil Survey/gi, label: 'banned phrase "Web Soil Survey" (use "national soil viewer")' },
+  { re: /Soil Data Viewer/gi, label: 'banned phrase "Soil Data Viewer"' },
+  { re: /Soil Data Mart/gi, label: 'banned phrase "Soil Data Mart"' },
 ];
 const WARN_PHRASES = [
-  { re: /Web Soil Survey/g, label: '"Web Soil Survey" (often a factual stat — reframe by hand)' },
   { re: /\bSoil Health\b/g, label: '"Soil Health" (use "soil quality")' },
   { re: /\bUSDA\b/g, label: '"USDA"' },
   { re: /\bNRCS\b/g, label: '"NRCS"' },
