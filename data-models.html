@@ -6,15 +6,15 @@
 <link rel="canonical" href="https://lab10yr.com/data-models">
   <meta property="og:type"        content="website">
   <meta property="og:site_name"   content="Lab10YR">
-  <meta property="og:title"       content="SSURGO Data Model — Interactive ER Diagram & Schema Browser">
+  <meta property="og:title"       content="SSURGO Data Model - Interactive ER Diagram & Schema Browser">
   <meta property="og:description" content="Interactive D3 entity-relationship diagram for 134 SSURGO tables. Search columns live, explore relationships, and understand the full soil survey schema.">
   <meta property="og:url"         content="https://lab10yr.com/data-models.html">
   <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
   <meta name="twitter:card"        content="summary_large_image">
-  <meta name="twitter:title"       content="SSURGO Data Model — Interactive ER Diagram & Schema Browser">
+  <meta name="twitter:title"       content="SSURGO Data Model - Interactive ER Diagram & Schema Browser">
   <meta name="twitter:description" content="Interactive D3 entity-relationship diagram for 134 SSURGO tables. Search columns live, explore relationships, and understand the full soil survey schema.">
   <meta name="twitter:image"       content="https://lab10yr.com/assets/og-preview.png">
-<title>SSURGO Data Model — Soil Intelligence</title>
+<title>SSURGO Data Model - Soil Intelligence</title>
 <script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js"></script>
 <style>
 :root{
@@ -154,11 +154,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .ts-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(245,158,11,.09)}
 .ts-btn:hover:not(.active){border-color:var(--border2);color:var(--text)}
 
-/* Results layout — no fixed height, expands naturally */
+/* Results layout - no fixed height, expands naturally */
 #results-layout{display:grid;grid-template-columns:260px 1fr;gap:16px}
 @media(max-width:900px){#results-layout{grid-template-columns:1fr}}
 
-/* Table list — sticky within its scroll container */
+/* Table list - sticky within its scroll container */
 #table-list{background:var(--panel);border:1px solid var(--border);border-radius:8px;
             overflow-y:auto;height:calc(100vh - 280px);min-height:500px;position:sticky;top:62px}
 #table-list-count{padding:11px 16px;border-bottom:1px solid var(--border);
@@ -176,7 +176,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
           white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ti-count{font-size:11px;color:var(--dimmer);margin-top:2px}
 
-/* Table detail — no height cap, scrolls page */
+/* Table detail - no height cap, scrolls page */
 #table-detail{background:var(--panel);border:1px solid var(--border);border-radius:8px;min-height:500px}
 #td-header{padding:24px 28px;border-bottom:1px solid var(--border);position:sticky;top:46px;
            background:var(--panel);z-index:2;backdrop-filter:blur(8px)}
@@ -291,11 +291,11 @@ footer a:hover{color:var(--soil)}
     <h1 class="hero-h1">The Architecture of<br><em>American Soil Data</em></h1>
     <p class="hero-sub">134 tables. 78 foreign-key relationships. One database encoding the physical, chemical, and biological properties of every acre of mapped soil in the United States. This is how it connects.</p>
     <div class="hero-stats">
-      <div class="hs"><div class="hs-val" id="hs-tables">—</div><div class="hs-lbl">Tables</div></div>
-      <div class="hs"><div class="hs-val" id="hs-rels">—</div><div class="hs-lbl">Relationships</div></div>
-      <div class="hs"><div class="hs-val" id="hs-cols">—</div><div class="hs-lbl">Columns</div></div>
+      <div class="hs"><div class="hs-val" id="hs-tables"> - </div><div class="hs-lbl">Tables</div></div>
+      <div class="hs"><div class="hs-val" id="hs-rels"> - </div><div class="hs-lbl">Relationships</div></div>
+      <div class="hs"><div class="hs-val" id="hs-cols"> - </div><div class="hs-lbl">Columns</div></div>
       <div class="hs"><div class="hs-val">88</div><div class="hs-lbl">SDA Live Tables</div></div>
-      <div class="hs"><div class="hs-val" id="hs-groups">—</div><div class="hs-lbl">Table Groups</div></div>
+      <div class="hs"><div class="hs-val" id="hs-groups"> - </div><div class="hs-lbl">Table Groups</div></div>
     </div>
   </div>
 </section>
@@ -375,7 +375,7 @@ footer a:hover{color:var(--soil)}
   <div style="max-width:1400px;margin:0 auto;padding:60px 40px">
     <div class="section-label">Live Domain Decoder</div>
     <h2 class="section-h2">Decode Any<br><em>Coded Field Value</em></h2>
-    <p class="section-lead">SSURGO uses coded fields for many categorical values — drainage class, flooding frequency, HSG, soil moisture class. Enter any column name to see all valid domain values and their labels from the live SDA API.</p>
+    <p class="section-lead">SSURGO uses coded fields for many categorical values - drainage class, flooding frequency, HSG, soil moisture class. Enter any column name to see all valid domain values and their labels from the live SDA API.</p>
     <div style="display:grid;grid-template-columns:320px 1fr;gap:16px;max-width:1000px">
       <div>
         <div style="font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer);margin-bottom:8px">Column or Domain Name</div>
@@ -759,7 +759,7 @@ async function showTableDetail(t) {
     </div>
   </div>`;
 
-  // Full SDA MetadataColumn query — all available fields
+  // Full SDA MetadataColumn query - all available fields
   try {
     const sql = `SELECT ColumnOrdinalPosition, ColumnPhysicalName, ColumnLabel,
       ColumnLogicalDataType, ColumnPhysicalDataType, ColumnSize, PrecisionComponent,
@@ -809,7 +809,7 @@ function renderColumns(cols) {
     {key:'notNull',label:'Not Null?',     title:'Whether NULL values are allowed'},
     {key:'pk',     label:'PK',            title:'Primary key column'},
     {key:'units',  label:'Units',         title:'Units of measure'},
-    {key:'domain', label:'Domain',        title:'Coded-value domain name — click to look up values'},
+    {key:'domain', label:'Domain',        title:'Coded-value domain name - click to look up values'},
     {key:'desc',   label:'Description',   title:'Full column description from SSURGO metadata'},
   ];
 
@@ -835,14 +835,14 @@ function renderColumns(cols) {
         ${c.pk==='Yes'?'<span class="pk-badge">PK</span>':''}
       </td>
       <td><div class="col-label">${esc(c.label||'')}</div></td>
-      <td><span class="col-type-log">${esc(c.logType||'—')}</span></td>
-      <td><span class="col-type-phys">${esc(c.physType||'—')}</span></td>
-      <td class="col-size">${c.size?esc(String(c.size)):'—'}</td>
-      <td class="col-prec">${c.prec?esc(String(c.prec)):'—'}</td>
+      <td><span class="col-type-log">${esc(c.logType||' - ')}</span></td>
+      <td><span class="col-type-phys">${esc(c.physType||' - ')}</span></td>
+      <td class="col-size">${c.size?esc(String(c.size)):' - '}</td>
+      <td class="col-prec">${c.prec?esc(String(c.prec)):' - '}</td>
       <td>${c.notNull==='Yes'?'<span class="col-nn">NOT NULL</span>':'<span class="col-null">null ok</span>'}</td>
-      <td>${c.pk==='Yes'?'<span class="pk-badge">PK</span>':'<span style="color:var(--dimmer);font-size:11px">—</span>'}</td>
-      <td class="col-units">${c.units?esc(c.units):'—'}</td>
-      <td>${c.domain?`<span class="col-domain" onclick="event.stopPropagation();lookupDomainInline('${esc(c.domain)}')" title="Click to decode domain values">${esc(c.domain)}</span>`:'<span style="color:var(--dimmer);font-size:11px">—</span>'}</td>
+      <td>${c.pk==='Yes'?'<span class="pk-badge">PK</span>':'<span style="color:var(--dimmer);font-size:11px"> - </span>'}</td>
+      <td class="col-units">${c.units?esc(c.units):' - '}</td>
+      <td>${c.domain?`<span class="col-domain" onclick="event.stopPropagation();lookupDomainInline('${esc(c.domain)}')" title="Click to decode domain values">${esc(c.domain)}</span>`:'<span style="color:var(--dimmer);font-size:11px"> - </span>'}</td>
       <td><div class="col-desc">${esc((c.desc||'').slice(0,400))}</div></td>
     </tr>`).join('');
 
@@ -933,7 +933,7 @@ function doSearch() {
         <div><div class="sr-tbl">${hl(h.table)}</div>
              ${schema.tables.find(t=>t.name===h.table)?.label ? `<div style="font-size:11px;color:var(--dimmer);margin-top:3px">${esc(schema.tables.find(t=>t.name===h.table).label)}</div>` : ''}
         </div>
-        <div>${h.col ? `<div class="sr-col">${hl(h.col)}</div><div class="sr-type">${esc(h.colType)}</div>` : '<div style="font-size:11px;color:var(--dimmer)">— table match —</div>'}</div>
+        <div>${h.col ? `<div class="sr-col">${hl(h.col)}</div><div class="sr-type">${esc(h.colType)}</div>` : '<div style="font-size:11px;color:var(--dimmer)"> - table match - </div>'}</div>
         <div><div class="sr-desc">${hl((h.desc||h.label||'').slice(0,180))}</div></div>
       </div>`).join('')}
     ${hits.length>200?`<div style="padding:12px 18px;font-size:12px;color:var(--dim)">Showing 200 of ${hits.length} results</div>`:''}`;

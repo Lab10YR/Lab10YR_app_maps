@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GroundScore DCI — Data Center Siting App · Lab10YR</title>
-<meta name="description" content="The GroundScore DCI siting app: set your campus parameters, drop a point anywhere in the US, and get a GO / CAUTION / NO-GO verdict with an eight-criteria breakdown — ground, slope, power, water, fiber, land, hazard, climate — driven by the national soil survey.">
+<title>GroundScore DCI - Data Center Siting App · Lab10YR</title>
+<meta name="description" content="The GroundScore DCI siting app: set your campus parameters, drop a point anywhere in the US, and get a GO / CAUTION / NO-GO verdict with an eight-criteria breakdown - ground, slope, power, water, fiber, land, hazard, climate - driven by the national soil survey.">
 <link rel="canonical" href="https://lab10yr.com/data-center-app">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Lab10YR">
-<meta property="og:title" content="GroundScore DCI — Data Center Siting App">
+<meta property="og:title" content="GroundScore DCI - Data Center Siting App">
 <meta property="og:description" content="Set campus parameters, click a site, get a GO/CAUTION/NO-GO verdict with an eight-criteria DCI breakdown from the national soil survey.">
 <meta property="og:url" content="https://lab10yr.com/data-center-app">
 <meta property="og:image" content="https://lab10yr.com/assets/og-preview.png">
@@ -46,7 +46,7 @@ a{color:var(--accent);text-decoration:none}
 /* header buttons (layers menu) */
 .hdr-btn{background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:12px;font-weight:700;padding:8px 13px;border-radius:8px;cursor:pointer;white-space:nowrap;font-family:var(--font)}
 .hdr-btn:hover,.hdr-btn.active{border-color:var(--soil);color:var(--soil)}
-/* header overlay chips — inline right of the title (Jason directive 2026-06-12) */
+/* header overlay chips - inline right of the title (Jason directive 2026-06-12) */
 #hdr-chips{display:flex;align-items:center;gap:6px;margin-left:8px;min-width:0;overflow:hidden}
 .hchip{background:var(--bg);border:1px solid var(--border);color:var(--dim);font:700 10.5px var(--font);padding:5px 10px;border-radius:14px;cursor:pointer;white-space:nowrap;transition:color .2s ease,border-color .2s ease}
 .hchip:hover{color:var(--text)}
@@ -111,13 +111,13 @@ a{color:var(--accent);text-decoration:none}
 #rpanel{transition:transform .2s ease}
 #rpanel.hidden{transform:translateX(calc(100% + 24px));pointer-events:none}
 .rp-close{position:absolute;top:9px;right:11px;background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;z-index:2;line-height:1}.rp-close:hover{color:var(--text)}
-/* edge tab — the collapsed right panel peeks back in from the screen edge */
+/* edge tab - the collapsed right panel peeks back in from the screen edge */
 #rp-edge{position:fixed;right:0;top:46%;z-index:21;display:none;background:rgba(10,14,26,.97);border:1px solid var(--soil);border-right:none;color:var(--soil);font:800 11px var(--font);letter-spacing:.1em;text-transform:uppercase;padding:13px 8px;border-radius:9px 0 0 9px;cursor:pointer;writing-mode:vertical-rl;box-shadow:-6px 0 20px rgba(0,0,0,.4)}
 #rp-edge:hover{background:rgba(200,168,75,.12)}
 /* right panel drag-wide handle (left edge) */
 .rp-resize{position:absolute;top:0;left:-4px;width:9px;height:100%;cursor:ew-resize;z-index:4}
 .rp-resize:hover{background:linear-gradient(90deg,transparent,rgba(200,168,75,.35),transparent)}
-/* modern tooltip engine — every control explains itself (Jason 2026-06-12) */
+/* modern tooltip engine - every control explains itself (Jason 2026-06-12) */
 #tipbox{position:fixed;z-index:300;max-width:272px;background:linear-gradient(180deg,#161e36,#0c1222);border:1px solid #3a4668;border-radius:9px;padding:9px 12px;font:600 11.5px/1.5 var(--font);color:#dbe2f7;box-shadow:0 14px 40px rgba(0,0,0,.6);pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .15s ease,transform .15s ease}
 #tipbox.show{opacity:1;transform:none}
 /* numbered main steps in the left rail */
@@ -140,7 +140,7 @@ a{color:var(--accent);text-decoration:none}
 .skel{position:relative;overflow:hidden;background:#10182c;border-radius:7px}
 .skel::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);animation:shim 1.2s infinite}
 @keyframes shim{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
-/* tabular numerals — scores never jitter */
+/* tabular numerals - scores never jitter */
 .big,.sub-val,.lb-dci,.chip-v,.vbadge,.lb-rank{font-variant-numeric:tabular-nums}
 /* first-run coach marks */
 #coach{position:fixed;inset:0;z-index:90;background:rgba(2,4,9,.55);display:none}
@@ -288,7 +288,7 @@ select.inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-ima
 .lg-row{display:flex;align-items:center;gap:7px;margin-bottom:4px;color:#b7c0e0;font-size:11px}
 @media(max-width:900px){#rpanel{display:none}}
 .legend{position:fixed;right:14px;bottom:14px;z-index:15;background:rgba(7,9,16,.92);border:1px solid var(--border);border-radius:9px;padding:11px 13px;font-size:10.5px;display:none}
-/* visible model heartbeat — stamped by the one-button rebuild (model_meta.json) */
+/* visible model heartbeat - stamped by the one-button rebuild (model_meta.json) */
 #model-badge{position:fixed;left:14px;bottom:14px;z-index:15;background:rgba(7,9,16,.88);border:1px solid var(--border);border-radius:7px;padding:5px 10px;font:600 10px var(--font);color:var(--dim);cursor:help}
 @media(max-width:760px){#model-badge{display:none}}
 /* compare mode: pinned sites side-by-side (radars + pillar deltas) */
@@ -342,8 +342,8 @@ select.inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-ima
   <span class="bar-sep"></span>
   <span class="bar-title">GroundScore DCI siting app</span>
   <div id="hdr-chips">
-    <button class="hchip" id="hc-soil" onclick="chipToggle('soil')" title="Show/hide the GroundScore soil model — turn it off to see the basemap and draw an AOI">GroundScore soil</button>
-    <button class="hchip" id="hc-aoi" onclick="chipToggle('aoi')" title="Show/hide the clipped AOI screening — only the scored parcel" style="display:none">Clipped AOI</button>
+    <button class="hchip" id="hc-soil" onclick="chipToggle('soil')" title="Show/hide the GroundScore soil model - turn it off to see the basemap and draw an AOI">GroundScore soil</button>
+    <button class="hchip" id="hc-aoi" onclick="chipToggle('aoi')" title="Show/hide the clipped AOI screening - only the scored parcel" style="display:none">Clipped AOI</button>
     <span class="hchip-fill" title="GroundScore soil layer fill opacity"><span class="hf-lbl">Fill</span><input type="range" id="hdr-op-soil" min="0" max="100" value="42" style="--val:42%" oninput="setSoilOpacity(this.value)"><b id="hdr-op-val">42%</b></span>
     <button class="hchip" id="hc-states" onclick="chipToggle('states')" title="State boundary lines">State boundaries</button>
     <button class="hchip" id="hc-labels" onclick="chipToggle('labels')" title="Place-name labels">Labels</button>
@@ -354,7 +354,7 @@ select.inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-ima
     <button class="hchip" id="hc-mkt" onclick="chipToggle('mkt')" title="The 47 ranked data-center markets">Markets</button>
   </div>
   <div class="bar-spacer"></div>
-  <button class="hdr-btn" id="cb-3d" onclick="toggleTerrain(!_terrOn)" title="Tilt into 3D terrain — see the actual relief under a site (right-drag to orbit)"><span>&#9650;</span> 3D terrain</button>
+  <button class="hdr-btn" id="cb-3d" onclick="toggleTerrain(!_terrOn)" title="Tilt into 3D terrain - see the actual relief under a site (right-drag to orbit)"><span>&#9650;</span> 3D terrain</button>
   <button class="hdr-btn" id="btn-layers" onclick="toggleLayersCard()" title="Map overlays and transparency">&#9638; Layers</button>
   <a class="bar-link" href="data-center-suitability.html#pricing" style="margin-left:4px" title="Plans, per-AOI screening rates, and API access">Pricing &rarr;</a>
 </div>
@@ -362,41 +362,41 @@ select.inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-ima
 
 <div id="map"></div>
 
-<!-- About the model (one unified model write-up) — rendered INSIDE the right slide-in
+<!-- About the model (one unified model write-up) - rendered INSIDE the right slide-in
      (one panel system, Jason directive 2026-06-12); this template is moved there on load. -->
 <template id="about-tpl">
   <div class="ab-eyebrow" style="padding:0">GroundScore DCI &middot; the model</div>
   <h2>One score for the ground beneath a data center</h2>
   <p>GroundScore DCI is a single, unified site-suitability index. It is not two separate models stitched
   together; it is one composite that fuses the <b>soil and ground conditions</b> with the <b>infrastructure
-  realities</b> of a data-center campus, expressed as a single 0&ndash;100 score and a GO / CAUTION / NO-GO read.</p>
+  realities</b> of a data-center campus, expressed as a single 0-100 score and a GO / CAUTION / NO-GO read.</p>
   <h3>One fuzzy-logic system, end to end</h3>
-  <p>Every criterion &mdash; soil and site alike &mdash; is expressed as a fuzzy <b>limitation</b> from 0
+  <p>Every criterion - soil and site alike - is expressed as a fuzzy <b>limitation</b> from 0
   (no limitation) to 1 (fully limiting), exactly the way a soil-survey interpretation is built. All the
   criteria then enter <b>one weighted aggregation</b>: the soil survey's raw inputs flow in directly
-  &mdash; the engineering interpretations (commercial buildings, roads, shallow excavations), corrosion
+ - the engineering interpretations (commercial buildings, roads, shallow excavations), corrosion
   of buried steel and concrete, depth to bedrock, seasonal high water table, shrink-swell (linear
-  extensibility), drainage class, flooding and ponding, hydric (wetland) rating &mdash; alongside the
+  extensibility), drainage class, flooding and ponding, hydric (wetland) rating - alongside the
   site criteria measured at the exact point.</p>
   <h3>The eight criteria groups</h3>
   <ul class="ab-ul">
-    <li><b>Ground</b> &mdash; the SSURGO soil criteria above, at the survey's own weightings.</li>
-    <li><b>Slope</b> &mdash; USGS 3DEP LiDAR grade, through the same curve the soils use (2&ndash;15%).</li>
-    <li><b>Power</b> &mdash; high-voltage proximity and voltage, the <b>interconnection-queue wait</b> for the region's grid (the schedule-critical number), and grid carbon.</li>
-    <li><b>Water</b> &mdash; precipitation supply plus regional baseline water stress.</li>
-    <li><b>Fiber</b> &mdash; distance to the nearest long-haul / internet-exchange hub.</li>
-    <li><b>Land</b> &mdash; regional land-acquisition cost.</li>
-    <li><b>Hazard</b> &mdash; ASCE 7 seismic demand, tornado/hail climatology, wildfire potential, and karst (sinkhole) terrain.</li>
-    <li><b>Climate</b> &mdash; hot-day frequency; cooling load.</li>
+    <li><b>Ground</b> - the SSURGO soil criteria above, at the survey's own weightings.</li>
+    <li><b>Slope</b> - USGS 3DEP LiDAR grade, through the same curve the soils use (2-15%).</li>
+    <li><b>Power</b> - high-voltage proximity and voltage, the <b>interconnection-queue wait</b> for the region's grid (the schedule-critical number), and grid carbon.</li>
+    <li><b>Water</b> - precipitation supply plus regional baseline water stress.</li>
+    <li><b>Fiber</b> - distance to the nearest long-haul / internet-exchange hub.</li>
+    <li><b>Land</b> - regional land-acquisition cost.</li>
+    <li><b>Hazard</b> - ASCE 7 seismic demand, tornado/hail climatology, wildfire potential, and karst (sinkhole) terrain.</li>
+    <li><b>Climate</b> - hot-day frequency; cooling load.</li>
   </ul>
-  <p>The weights reflect what actually gates a data-center build &mdash; power and ground heaviest by
-  default &mdash; and re-tune live with your <b>persona, priorities, campus size and cooling</b>. A
-  <b>most-limiting</b> term rides on top: a single fatal flaw &mdash; frequent flooding, a hydric map
-  unit, no grid in reach &mdash; drags the site down rather than being averaged away. A campus is only
+  <p>The weights reflect what actually gates a data-center build - power and ground heaviest by
+  default - and re-tune live with your <b>persona, priorities, campus size and cooling</b>. A
+  <b>most-limiting</b> term rides on top: a single fatal flaw - frequent flooding, a hydric map
+  unit, no grid in reach - drags the site down rather than being averaged away. A campus is only
   as good as its worst constraint.</p>
   <h3>How to read it</h3>
-  <p><b>Prime 80+</b> &middot; <b>Favorable 65&ndash;80</b> &middot; <b>Guarded 50&ndash;65</b> &middot;
-  <b>Elevated 35&ndash;50</b> &middot; <b>Severe &lt;35</b>. Draw an area to screen every map unit in it and
+  <p><b>Prime 80+</b> &middot; <b>Favorable 65-80</b> &middot; <b>Guarded 50-65</b> &middot;
+  <b>Elevated 35-50</b> &middot; <b>Severe &lt;35</b>. Draw an area to screen every map unit in it and
   get a buildability distribution plus a written, pedologist-grade assessment. The whole model is
   validated against the siting record of 88 operating hyperscale campuses.</p>
   <p class="ab-disc">Desktop screening from the National Cooperative Soil Survey (SSURGO)
@@ -450,21 +450,21 @@ select.inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-ima
   <div class="panel-resize" id="panel-resize" title="Drag to resize"></div>
   <div class="panel-scroll">
     <div class="pp acc open" id="acc-finder" style="padding-bottom:14px;border-bottom:1px solid var(--border)">
-      <div class="pp-h" onclick="accToggle(this)" data-step="1" title="Step 1 — find where to look: search a place or describe your criteria and get ranked target sites">Site finder</div>
+      <div class="pp-h" onclick="accToggle(this)" data-step="1" title="Step 1 - find where to look: search a place or describe your criteria and get ranked target sites">Site finder</div>
       <div class="acc-body">
       <div class="fd-search">
         <input id="site-input" class="inp" placeholder="City, county, region, or lat,lng" title="A point scores that point; a city/county/region gets scanned and its best sites ranked" onkeydown="if(event.key==='Enter')findSite();">
-        <button class="bar-btn" onclick="findSite()" title="Locate and score — areas are grid-scanned, exact points scored directly">Find</button>
+        <button class="bar-btn" onclick="findSite()" title="Locate and score - areas are grid-scanned, exact points scored directly">Find</button>
       </div>
       <button class="fd-crit-toggle" id="fd-toggle" onclick="toggleFinder()" title="Open the criteria filters: minimum scores, water stress, emphasis, incentive states">Criteria &amp; filters &#9662;</button>
       <div id="finder">
-        <div class="fd-lbl" title="Plain English works — name a region and the finder scans it; name criteria and it filters the markets">Describe what you want</div>
+        <div class="fd-lbl" title="Plain English works - name a region and the finder scans it; name criteria and it filters the markets">Describe what you want</div>
         <textarea class="fd-ta" id="fd-describe" placeholder="Low-opposition Texas sites under medium-high water stress for a 400 MW AI cluster"></textarea>
         <div class="fd-row">
           <div title="Only return sites at or above this combined index"><div class="fd-slh">Min GroundScore DCI <b id="fd-minv">60</b></div><input type="range" class="crit-slider" id="fd-min" min="0" max="100" value="60" style="--val:60%" oninput="document.getElementById('fd-minv').textContent=this.value;this.style.setProperty('--val',this.value+'%')"></div>
           <div title="Only return sites whose GROUND (soil) pillar alone clears this bar"><div class="fd-slh">Min soil GroundScore <b id="fd-soilv">0</b></div><input type="range" class="crit-slider" id="fd-soil" min="0" max="100" value="0" style="--val:0%" oninput="document.getElementById('fd-soilv').textContent=this.value;this.style.setProperty('--val',this.value+'%')"></div>
         </div>
-        <div class="fd-lbl" title="Cap how water-stressed a market can be — cooling water is a headline siting risk">Max water stress</div>
+        <div class="fd-lbl" title="Cap how water-stressed a market can be - cooling water is a headline siting risk">Max water stress</div>
         <div class="pills" id="fd-water">
           <button class="pill active" data-w="9" onclick="pickPill('fd-water',this)">Any</button>
           <button class="pill" data-w="1" onclick="pickPill('fd-water',this)">Low</button>
@@ -481,12 +481,12 @@ select.inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-ima
           <button class="pill" data-p="risk_averse" onclick="pickPill('fd-emph',this);setProfile('risk_averse')">Risk-averse</button>
         </div>
         <label class="fd-chk" title="Limit results to states with active data-center tax-incentive programs"><input type="checkbox" id="fd-incentive"> Incentive-friendly states only</label>
-        <button class="fd-go" onclick="findTargets()" title="Run the criteria against the 47 ranked markets — or scan the region you described">Find target sites</button>
+        <button class="fd-go" onclick="findTargets()" title="Run the criteria against the 47 ranked markets - or scan the region you described">Find target sites</button>
       </div>
       </div>
     </div>
     <div class="pp acc" id="acc-aoi" style="padding-bottom:14px">
-      <div class="pp-h" onclick="accToggle(this)" data-step="2" title="Step 2 — screen a parcel: draw the candidate campus on the map and every map unit inside it gets scored">Area of interest</div>
+      <div class="pp-h" onclick="accToggle(this)" data-step="2" title="Step 2 - screen a parcel: draw the candidate campus on the map and every map unit inside it gets scored">Area of interest</div>
       <div class="acc-body">
       <div class="aoi-ctrls" id="aoi-ctrls">
         <button class="aoi-btn primary" id="aoi-draw" onclick="startDraw()" title="Click the map to drop corners around a candidate parcel; double-click or Finish to screen it">Draw an AOI</button>
@@ -495,7 +495,7 @@ select.inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-ima
       </div>
     </div>
     <div class="pp acc" id="acc-campus">
-      <div class="pp-h" onclick="accToggle(this)" data-step="3" title="Step 3 — make it YOUR campus: role, priorities, IT load and cooling re-tune the index live">Campus &amp; priorities</div>
+      <div class="pp-h" onclick="accToggle(this)" data-step="3" title="Step 3 - make it YOUR campus: role, priorities, IT load and cooling re-tune the index live">Campus &amp; priorities</div>
       <div class="acc-body">
       <label class="lab" style="margin-top:0">View as</label>
       <select id="in-persona" class="inp" onchange="onPersona()" style="margin-bottom:6px" title="Your role reweights the index toward what you optimize for">
@@ -506,40 +506,40 @@ select.inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-ima
         <option value="exec">Executive</option>
       </select>
       <div class="prio-pills" id="prio-pills">
-        <button class="pill active" data-p="balanced" onclick="setProfilePill(this)" title="Power-first default weighting — the all-around screen">Balanced</button>
+        <button class="pill active" data-p="balanced" onclick="setProfilePill(this)" title="Power-first default weighting - the all-around screen">Balanced</button>
         <button class="pill" data-p="hyperscale" onclick="setProfilePill(this)" title="Big-campus weighting: power and water dominate">Hyperscale</button>
         <button class="pill" data-p="ai_cluster" onclick="setProfilePill(this)" title="Dense-compute weighting: power heaviest, cooling load up">AI cluster</button>
         <button class="pill" data-p="cost" onclick="setProfilePill(this)" title="Build-cost weighting: ground and slope matter more">Cost</button>
-        <button class="pill" data-p="risk_averse" onclick="setProfilePill(this)" title="Defensive weighting: ground and seismic up — for lenders and insurers">Risk-averse</button>
+        <button class="pill" data-p="risk_averse" onclick="setProfilePill(this)" title="Defensive weighting: ground and seismic up - for lenders and insurers">Risk-averse</button>
       </div>
       <input type="hidden" id="in-profile" value="balanced">
       <div class="mw-h" title="Bigger campuses weight power harder and demand higher-voltage interconnection"><span class="lab" style="margin:0">Campus IT load</span><span class="v" id="mw-val">150 <small>MW</small></span></div>
-      <input type="range" class="crit-slider" id="in-mw" min="10" max="2000" value="150" style="--val:7%" title="Drag to your campus size — the index re-tunes live" oninput="onMW(this.value)">
+      <input type="range" class="crit-slider" id="in-mw" min="10" max="2000" value="150" style="--val:7%" title="Drag to your campus size - the index re-tunes live" oninput="onMW(this.value)">
       <div class="row2" style="margin-top:14px">
-        <div title="Evaporative is water-hungry, dry cooling trades water for power and heat sensitivity — the weights follow"><label class="lab">Cooling</label><select id="in-cooling" class="inp" onchange="rescore()"><option value="evaporative">Evaporative</option><option value="hybrid">Hybrid</option><option value="dry">Dry</option></select></div>
-        <div title="How long the written assessment runs — a deal-lead summary or full analyst detail"><label class="lab">Output</label><select id="in-depth" class="inp" onchange="rescore()"><option value="exec">Exec summary</option><option value="analyst">Analyst detail</option></select></div>
+        <div title="Evaporative is water-hungry, dry cooling trades water for power and heat sensitivity - the weights follow"><label class="lab">Cooling</label><select id="in-cooling" class="inp" onchange="rescore()"><option value="evaporative">Evaporative</option><option value="hybrid">Hybrid</option><option value="dry">Dry</option></select></div>
+        <div title="How long the written assessment runs - a deal-lead summary or full analyst detail"><label class="lab">Output</label><select id="in-depth" class="inp" onchange="rescore()"><option value="exec">Exec summary</option><option value="analyst">Analyst detail</option></select></div>
       </div>
-      <div class="presets" id="presets" title="One-click famous markets — fly there and score instantly"></div>
+      <div class="presets" id="presets" title="One-click famous markets - fly there and score instantly"></div>
       <div class="hint">Click the map to score a point, draw an AOI, or use the Site finder above for criteria-based search. Changing a priority re-tunes the index live.</div>
       </div>
     </div>
     <div class="pp" style="border-top:1px solid var(--border);padding-bottom:9px">
-      <button class="about-btn rp-toggle" id="rp-toggle" onclick="rpShowView('analysis')" title="Step 4 — the verdict: GO/CAUTION/NO-GO, the eight-criteria radar, the written assessment, and the PDF dossier"><span style="display:flex;align-items:center;gap:8px"><span class="step-badge">4</span>Analysis &amp; results</span><span>&rarr;</span></button>
+      <button class="about-btn rp-toggle" id="rp-toggle" onclick="rpShowView('analysis')" title="Step 4 - the verdict: GO/CAUTION/NO-GO, the eight-criteria radar, the written assessment, and the PDF dossier"><span style="display:flex;align-items:center;gap:8px"><span class="step-badge">4</span>Analysis &amp; results</span><span>&rarr;</span></button>
     </div>
     <div class="pp acc" id="acc-portfolio" style="padding-top:0;padding-bottom:9px">
-      <div class="pp-h" onclick="accToggle(this)" title="Power tool — batch-score a whole pipeline of candidate sites from a CSV">Portfolio screening</div>
+      <div class="pp-h" onclick="accToggle(this)" title="Power tool - batch-score a whole pipeline of candidate sites from a CSV">Portfolio screening</div>
       <div class="acc-body">
       <div class="aoi-ctrls">
-        <button class="aoi-btn primary" onclick="document.getElementById('pf-file').click()" title="CSV with lat,lng columns (optional name) — up to 60 sites, ranked + one merged PDF">&#8682; Upload CSV</button>
+        <button class="aoi-btn primary" onclick="document.getElementById('pf-file').click()" title="CSV with lat,lng columns (optional name) - up to 60 sites, ranked + one merged PDF">&#8682; Upload CSV</button>
         <input type="file" id="pf-file" accept=".csv,text/csv" style="display:none" onchange="portfolioUpload(this.files[0])">
       </div>
       <div class="hint">Batch-score a whole pipeline of candidate sites: a CSV with <b>lat,lng</b> columns (optional <b>name</b>; header row auto-detected, up to 60 rows) returns a ranked table and one merged portfolio report.</div>
       </div>
     </div>
     <div class="pp acc" id="acc-watch" style="padding-top:0;padding-bottom:9px">
-      <div class="pp-h" onclick="accToggle(this);loadWatchlist()" title="Power tool — saved sites re-score monthly on the newest model; movers get flagged">Watchlist</div>
+      <div class="pp-h" onclick="accToggle(this);loadWatchlist()" title="Power tool - saved sites re-score monthly on the newest model; movers get flagged">Watchlist</div>
       <div class="acc-body">
-      <div id="watch-list" class="hint" style="margin-top:0">No watched sites yet — score a site, then hit &#9734; Watch in the analysis bar.</div>
+      <div id="watch-list" class="hint" style="margin-top:0">No watched sites yet - score a site, then hit &#9734; Watch in the analysis bar.</div>
       </div>
     </div>
     <div class="pp" style="padding-top:0">
@@ -644,11 +644,11 @@ function sitingInputs(){const v=id=>{const e=document.getElementById(id);return 
   return {persona:v('in-persona'),profile:v('in-profile'),mw:Number(v('in-mw'))||150,cooling:v('in-cooling'),depth:v('in-depth')};}
 function rescore(){ if(_lastSite) scoreLatLng(_lastSite.lat,_lastSite.lng,_lastSite.label); }
 
-const PRESETS=[['Phoenix West, AZ',33.55478,-112.64171],['Loudoun (Data Center Alley), VA',39.0185,-77.4636],['Columbus, OH',39.9612,-82.9988],['Dallas–Fort Worth, TX',32.7767,-96.797],['Reno–Storey, NV',39.535,-119.45]];
+const PRESETS=[['Phoenix West, AZ',33.55478,-112.64171],['Loudoun (Data Center Alley), VA',39.0185,-77.4636],['Columbus, OH',39.9612,-82.9988],['Dallas-Fort Worth, TX',32.7767,-96.797],['Reno-Storey, NV',39.535,-119.45]];
 function renderPresets(){document.getElementById('presets').innerHTML=PRESETS.map((p,i)=>`<button class="preset" onclick="goPreset(${i})">${esc(p[0].split(',')[0])}</button>`).join('');}
 function goPreset(i){const[label,lat,lng]=PRESETS[i]; if(window._gmap){window._gmap.flyTo({center:[lng,lat],zoom:9,duration:1600});} scoreLatLng(lat,lng,label);}
 function goMarket(lng,lat,name){ if(window._gmap)window._gmap.flyTo({center:[lng,lat],zoom:9,duration:1400}); scoreLatLng(lat,lng,name); }
-// National leaderboard + summary metrics — the home view (Ben's leaderboard, our DCI).
+// National leaderboard + summary metrics - the home view (Ben's leaderboard, our DCI).
 async function renderLeaderboard(){
   let m=[]; try{ m=await fetch('data/dc_markets.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():[]); }catch(e){}
   m=(m||[]).filter(d=>d.dci!=null).sort((a,b)=>b.dci-a.dci);
@@ -771,7 +771,7 @@ function paintSoilState(m,st){
         'line-width':['interpolate',['linear'],['zoom'],12,0.5,14,1.0,16,1.4]}},before);
     }catch(e){return;} }
   // Color each map unit by DCI via a data-driven match on the tile's own `mukey`
-  // (same clean approach as the Regen Ag map). NO promoteId / feature-state — that
+  // (same clean approach as the Regen Ag map). NO promoteId / feature-state - that
   // path mis-tessellated the polygons into shards.
   const lookup=_dcsiCache[st]; if(!lookup)return;
   const expr=['match',['to-string',['get','mukey']]]; let any=false;
@@ -779,7 +779,7 @@ function paintSoilState(m,st){
   if(!any)return; expr.push('rgba(0,0,0,0)');
   try{ m.setPaintProperty('gs-fill-'+st,'fill-color',expr); }catch(e){} }
 async function refreshSoilLayer(){ const m=window._gmap; if(!m||!_soilOn||m.getZoom()<7)return;
-  if(_clipOn)return;  // in clipped-AOI mode the global soil stays hidden — don't repaint it on pan/zoom
+  if(_clipOn)return;  // in clipped-AOI mode the global soil stays hidden - don't repaint it on pan/zoom
   for(const st of visibleStatesApp(m)){ ensureMukeyLayer(m,st); await loadStateDcsi(st); paintSoilState(m,st); } }
 function _soilSrcCb(e){ if(_soilOn&&e.sourceId&&e.sourceId.indexOf('mk-')===0&&e.isSourceLoaded) refreshSoilLayer(); }
 function toggleSoilLayer(on){ _soilOn=on; const m=window._gmap; if(!m)return;
@@ -787,7 +787,7 @@ function toggleSoilLayer(on){ _soilOn=on; const m=window._gmap; if(!m)return;
   const cb=document.getElementById('ly-soil'); if(cb)cb.checked=on;
   syncChip('soil',on);
   document.getElementById('cb-soil')?.classList.toggle('active',on);
-  if(on){ refreshSoilLayer(); m.on('moveend',refreshSoilLayer); m.on('sourcedata',_soilSrcCb); const h=document.getElementById('ly-hint'); if(h)h.textContent='Each soil map unit shaded by GroundScore — the SSURGO HD model in detail (zoom in).'; }
+  if(on){ refreshSoilLayer(); m.on('moveend',refreshSoilLayer); m.on('sourcedata',_soilSrcCb); const h=document.getElementById('ly-hint'); if(h)h.textContent='Each soil map unit shaded by GroundScore - the SSURGO HD model in detail (zoom in).'; }
   else{ m.off('moveend',refreshSoilLayer); m.off('sourcedata',_soilSrcCb);
     // Remove EVERY gs-fill-*/gs-line-* in the style (not just _mkReg) so no state's soil persists.
     try{ (m.getStyle().layers||[]).forEach(l=>{ if(/^gs-(fill|line)-/.test(l.id)&&m.getLayer(l.id)) m.removeLayer(l.id); }); }catch(e){}
@@ -827,7 +827,7 @@ async function resolveSoil(lng,lat,fly=true){
     s_commercial:r.s_commercial,s_roads:r.s_roads,s_excavation:r.s_excavation,s_corr_steel:r.s_corr_steel,s_corr_concrete:r.s_corr_concrete,
     bedrock_cm:r.bedrock_cm,watertable_cm:r.watertable_cm,drainage:r.drainage,shrink_swell_lep:r.shrink_swell_lep,hydric_pct:r.hydric_pct}; }
 
-// Skeleton placeholder — the analysis pane sketches its own layout while scoring (no spinners).
+// Skeleton placeholder - the analysis pane sketches its own layout while scoring (no spinners).
 function skeletonHtml(label){
   return `<div class="r-loc">&#128205; ${esc(label||'')}</div>
     <div style="padding:12px 18px 0"><div class="skel" style="height:46px"></div></div>
@@ -851,7 +851,7 @@ function popupSoil(soil,label){
     <div style="font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#7a85ad;margin-bottom:6px">On the ground</div>
     <div style="font-weight:800;font-size:13px;color:#1a2233">${esc((soil.muname||'Soil map unit').split(',')[0])}</div>
     <div style="display:flex;align-items:center;gap:10px;margin-top:7px">
-      <span style="font-size:30px;font-weight:800;color:${c};line-height:1">${gs!=null?Math.round(gs):'&ndash;'}</span>
+      <span style="font-size:30px;font-weight:800;color:${c};line-height:1">${gs!=null?Math.round(gs):'-'}</span>
       <span style="font-size:9.5px;font-weight:800;color:#666;text-transform:uppercase;letter-spacing:.06em;line-height:1.3">${esc(soil.dcsi_class||'')}<br>GroundScore (soil)</span>
     </div>${flags}
     ${rows.length?`<table style="margin-top:9px;font-size:11px;color:#444;border-collapse:collapse">${rows.map(r=>`<tr><td style="padding:1px 10px 1px 0;color:#7a85ad">${r[0]}</td><td style="font-weight:700">${r[1]}</td></tr>`).join('')}</table>`:''}
@@ -859,31 +859,31 @@ function popupSoil(soil,label){
   </div>`;
 }
 async function scoreLatLng(lat,lng,label){
-  // Point click shows ONLY what's on the ground (soil) in the popup — instant, client-side, no
+  // Point click shows ONLY what's on the ground (soil) in the popup - instant, client-side, no
   // worker DCI call. The right sidebar is reserved for the AOI's overall analysis and is untouched.
   _lastSite={lat,lng,label}; _findMode=null;
   dropMarker(lat,lng);
   sitePopup(lat,lng,popMsg('Reading the ground&hellip;'));
   const soil=await resolveSoil(lng,lat);
-  if(!soil){ sitePopup(lat,lng,popMsg('Zoom in a little and click again — per-parcel soil loads at street scale.','#b45309')); return; }
+  if(!soil){ sitePopup(lat,lng,popMsg('Zoom in a little and click again - per-parcel soil loads at street scale.','#b45309')); return; }
   if(soil._nodata){ sitePopup(lat,lng,popMsg('No soil GroundScore here (open water, urban land, or an unsurveyed map unit).','#b91c1c')); return; }
   sitePopup(lat,lng,popupSoil(soil,label));
 }
 
 // ── verdict + ranks (v3: 8 display rollups of the ONE fuzzy aggregation) ──
 const DCI_PILLARS=[['ground','Ground'],['slope','Slope'],['power','Power'],['water','Water'],['fiber','Fiber'],['land','Land'],['hazard','Hazard'],['climate','Climate']];
-// Plain-English one-liners — every pillar number explains itself on hover (progressive disclosure).
+// Plain-English one-liners - every pillar number explains itself on hover (progressive disclosure).
 const PILLAR_TIP={
-  ground:v=>`Ground ${Math.round(v)} — SSURGO soil GroundScore at this exact map unit: foundations, excavation, corrosion of buried steel/concrete, water table, shrink-swell.`,
-  slope:v=>`Slope ${Math.round(v)} — USGS 3DEP LiDAR grade: ${v>=70?'flat pad, minimal grading.':v>=40?'moderate grading and engineered-fill cost.':'steep — major grading or retaining structures.'}`,
-  power:v=>`Power ${Math.round(v)} — proximity and voltage of the nearest high-voltage transmission: ${v>=70?'strong interconnection position.':v>=40?'workable; budget interconnection-study time.':'far from the grid — interconnection is the schedule risk.'}`,
-  water:v=>`Water ${Math.round(v)} — precipitation and cooling-water availability: ${v>=70?'comfortable supply.':v>=40?'plan hybrid or dry-cooling options.':'dry — water sourcing is a real constraint.'}`,
-  fiber:v=>`Fiber ${Math.round(v)} — distance to the nearest long-haul/IXP hub metro: ${v>=70?'strong connectivity position; latency routes are short.':v>=40?'workable; budget for a lateral build to long-haul routes.':'remote from the fiber backbone — connectivity is a real cost and timeline item.'}`,
-  land:v=>`Land ${Math.round(v)} — regional land-acquisition cost: ${v>=70?'inexpensive ground; the campus footprint is cheap to assemble.':v>=40?'moderate land costs.':'expensive market — acreage is a major budget line.'}`,
-  hazard:v=>`Hazard ${Math.round(v)} — seismic (ASCE 7) + tornado/hail + wildfire + karst terrain: ${v>=70?'low natural-hazard exposure; standard design and insurability.':v>=40?'moderate exposure — priceable design and insurance premiums.':'high hazard exposure — structural, insurance and karst-foundation risk.'}`,
-  climate:v=>`Climate ${Math.round(v)} — hot-day frequency and cooling load: ${v>=70?'mild; efficient free-cooling hours.':v>=40?'warm; higher summer PUE.':'hot — cooling capex/opex premium.'}`};
-const CHIP_TIP={'LiDAR slope':'Ground grade from USGS 3DEP LiDAR — drives grading and fill cost','Seismic Ss':'ASCE 7 short-period spectral response — structural design load','Days >95F':'Hot days per year — cooling load and summer PUE','Precip':'Annual precipitation — cooling-water supply signal','Nearest HV':'Distance to the nearest high-voltage transmission line','Max kV':'Highest line voltage nearby — interconnection capacity','Queue wait':'Typical interconnection request-to-energization for this grid region — usually the schedule-critical number','Fiber hub':'Distance to the nearest long-haul / internet-exchange metro','Water stress':'Regional baseline water stress — cooling-water sourcing risk'};
-const SOIL_TIP={'Foundations (commercial)':'SSURGO engineering interpretation for large commercial buildings','Excavation / trenching':'Ease and stability of shallow excavation for utilities and foundations','Corrosion of steel':'Soil corrosivity to buried uncoated steel — cathodic protection signal','Corrosion of concrete':'Soil chemistry attack on buried concrete','Shrink-swell (LEP)':'Linear extensibility — clay swelling that cracks slabs and foundations','Seasonal water table':'Depth to seasonal high water — dewatering and slab design','Depth to bedrock':'Shallow rock raises excavation cost','Drainage':'Natural drainage class of the map unit','Hydric (wetland)':'Share of the unit with hydric (wetland) soils — permitting risk'};
+  ground:v=>`Ground ${Math.round(v)} - SSURGO soil GroundScore at this exact map unit: foundations, excavation, corrosion of buried steel/concrete, water table, shrink-swell.`,
+  slope:v=>`Slope ${Math.round(v)} - USGS 3DEP LiDAR grade: ${v>=70?'flat pad, minimal grading.':v>=40?'moderate grading and engineered-fill cost.':'steep - major grading or retaining structures.'}`,
+  power:v=>`Power ${Math.round(v)} - proximity and voltage of the nearest high-voltage transmission: ${v>=70?'strong interconnection position.':v>=40?'workable; budget interconnection-study time.':'far from the grid - interconnection is the schedule risk.'}`,
+  water:v=>`Water ${Math.round(v)} - precipitation and cooling-water availability: ${v>=70?'comfortable supply.':v>=40?'plan hybrid or dry-cooling options.':'dry - water sourcing is a real constraint.'}`,
+  fiber:v=>`Fiber ${Math.round(v)} - distance to the nearest long-haul/IXP hub metro: ${v>=70?'strong connectivity position; latency routes are short.':v>=40?'workable; budget for a lateral build to long-haul routes.':'remote from the fiber backbone - connectivity is a real cost and timeline item.'}`,
+  land:v=>`Land ${Math.round(v)} - regional land-acquisition cost: ${v>=70?'inexpensive ground; the campus footprint is cheap to assemble.':v>=40?'moderate land costs.':'expensive market - acreage is a major budget line.'}`,
+  hazard:v=>`Hazard ${Math.round(v)} - seismic (ASCE 7) + tornado/hail + wildfire + karst terrain: ${v>=70?'low natural-hazard exposure; standard design and insurability.':v>=40?'moderate exposure - priceable design and insurance premiums.':'high hazard exposure - structural, insurance and karst-foundation risk.'}`,
+  climate:v=>`Climate ${Math.round(v)} - hot-day frequency and cooling load: ${v>=70?'mild; efficient free-cooling hours.':v>=40?'warm; higher summer PUE.':'hot - cooling capex/opex premium.'}`};
+const CHIP_TIP={'LiDAR slope':'Ground grade from USGS 3DEP LiDAR - drives grading and fill cost','Seismic Ss':'ASCE 7 short-period spectral response - structural design load','Days >95F':'Hot days per year - cooling load and summer PUE','Precip':'Annual precipitation - cooling-water supply signal','Nearest HV':'Distance to the nearest high-voltage transmission line','Max kV':'Highest line voltage nearby - interconnection capacity','Queue wait':'Typical interconnection request-to-energization for this grid region - usually the schedule-critical number','Fiber hub':'Distance to the nearest long-haul / internet-exchange metro','Water stress':'Regional baseline water stress - cooling-water sourcing risk'};
+const SOIL_TIP={'Foundations (commercial)':'SSURGO engineering interpretation for large commercial buildings','Excavation / trenching':'Ease and stability of shallow excavation for utilities and foundations','Corrosion of steel':'Soil corrosivity to buried uncoated steel - cathodic protection signal','Corrosion of concrete':'Soil chemistry attack on buried concrete','Shrink-swell (LEP)':'Linear extensibility - clay swelling that cracks slabs and foundations','Seasonal water table':'Depth to seasonal high water - dewatering and slab design','Depth to bedrock':'Shallow rock raises excavation cost','Drainage':'Natural drainage class of the map unit','Hydric (wetland)':'Share of the unit with hydric (wetland) soils - permitting risk'};
 function dciVerdict(dciV,pillars){
   const vals=DCI_PILLARS.map(p=>pillars[p[0]]).filter(v=>v!=null);
   const minP=vals.length?Math.min(...vals):100;
@@ -898,7 +898,7 @@ function pillarRanks(pillars){
 function verdictRationale(v,ranks){
   const r=(ranks.risks||[]).map(x=>`${x.k} (${Math.round(x.v)})`).join(' and ');
   if(v==='GO'){ const s=(ranks.strengths||[])[0]; return s?`Strong across all eight criteria; ${s.k} leads at ${Math.round(s.v)}. Standard site preparation.`:`Strong overall DCI. Standard site preparation.`; }
-  if(v==='NO-GO') return r?`${r} fall below buildable thresholds &mdash; treat as a hard constraint before committing land.`:`DCI below buildable threshold &mdash; evaluate site constraints before committing land.`;
+  if(v==='NO-GO') return r?`${r} fall below buildable thresholds - treat as a hard constraint before committing land.`:`DCI below buildable threshold - evaluate site constraints before committing land.`;
   return r?`Viable site; ${r} carry real risk and must be priced into the development budget.`:`Viable site; review soil constraints and price into the development budget.`;
 }
 
@@ -924,7 +924,7 @@ function buildRadar(host,pillars,color){
       .transition().delay(250).duration(650).ease(d3.easeCubicOut).attr('cx',x).attr('cy',y);});
 }
 // Render the model's markdown assessment as clean HTML (## headings, **bold**, paragraphs).
-// The soil/ground intelligence behind the "Ground" pillar — the layer Ben's tool does not have.
+// The soil/ground intelligence behind the "Ground" pillar - the layer Ben's tool does not have.
 function soilDetail(j){
   const f=j.factors||{};
   const lim=v=>v==null?'n/a':v<0.34?'Not limited':v<0.67?'Somewhat limited':'Very limited';
@@ -967,7 +967,7 @@ function renderPanel(j,label){
     const vd=dciVerdict(dciV,j.dci.pillars),ranks=pillarRanks(j.dci.pillars);
     verdictHtml=`<div class="verdict ${vd.cls}"><span class="vbadge">${vd.v}</span><span class="vrat">${verdictRationale(vd.v,ranks)}</span></div>`;
     const chip=x=>{const tip=PILLAR_TIP[x.k.toLowerCase()]?PILLAR_TIP[x.k.toLowerCase()](x.v):'';return `<span class="co-p" style="color:${buildableColor(x.v)};cursor:help" title="${esc(tip)}">${esc(x.k)} ${Math.round(x.v)}</span>`;};
-    calloutHtml=`<div class="callout"><span><span class="co-h">Top risks</span>${ranks.risks.map(chip).join('')}</span><span><span class="co-h">Strengths</span>${ranks.strengths.map(chip).join('')}</span><button class="maplink" onclick="siteReport()" title="Download the 6-page branded site dossier — cover, verdict, pillar reads, next steps">&#8595; PDF Report</button><button class="maplink" onclick="pinSite()" title="Pin this site — pin 2-3 and compare them side by side, pillar by pillar">&#8853; Pin</button><button class="maplink" id="share-btn" onclick="shareReport()" title="Create a read-only link you can forward — no login needed to view it">&#128279; Share</button><button class="maplink" id="watch-btn" onclick="watchSite()" title="Watch this site: it re-scores every month on the newest model and you get flagged when it moves">&#9734; Watch</button><button class="maplink" onclick="showOnMap()" title="Fly the map back to this site">&#9650; Map</button></div>`;
+    calloutHtml=`<div class="callout"><span><span class="co-h">Top risks</span>${ranks.risks.map(chip).join('')}</span><span><span class="co-h">Strengths</span>${ranks.strengths.map(chip).join('')}</span><button class="maplink" onclick="siteReport()" title="Download the 6-page branded site dossier - cover, verdict, pillar reads, next steps">&#8595; PDF Report</button><button class="maplink" onclick="pinSite()" title="Pin this site - pin 2-3 and compare them side by side, pillar by pillar">&#8853; Pin</button><button class="maplink" id="share-btn" onclick="shareReport()" title="Create a read-only link you can forward - no login needed to view it">&#128279; Share</button><button class="maplink" id="watch-btn" onclick="watchSite()" title="Watch this site: it re-scores every month on the newest model and you get flagged when it moves">&#9734; Watch</button><button class="maplink" onclick="showOnMap()" title="Fly the map back to this site">&#9650; Map</button></div>`;
     const r=j.dci.raw||{};
     const chips=[['LiDAR slope',r.slope_pct!=null?r.slope_pct+'%':'n/a'],['Seismic Ss',r.seismic_ss!=null?r.seismic_ss:'n/a'],['Days >95F',r.hot_days_95F!=null?r.hot_days_95F+'/yr':'n/a'],['Precip',r.precip_mm_yr!=null?r.precip_mm_yr+' mm':'n/a'],['Nearest HV',r.hv_line_mi!=null?'≤ '+r.hv_line_mi+' mi':'n/a'],['Max kV',r.hv_max_kv?r.hv_max_kv+' kV':'n/a'],['Queue wait',r.queue_wait_years!=null?'~'+r.queue_wait_years+' yr':'n/a'],['Fiber hub',r.fiber_hub_mi!=null?'<= '+r.fiber_hub_mi+' mi':'n/a'],['Water stress',r.water_stress!=null?Math.round(r.water_stress*100)+'%':'n/a']];
     // Verdict, score, radar and the written read live on TOP; the data tables collapse below.
@@ -1006,7 +1006,7 @@ function ensureAoiLayers(m){ if(_aoiInit)return;
   m.addSource('aoisoil',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
   m.addLayer({id:'aoisoil-fill',type:'fill',source:'aoisoil',paint:{'fill-color':['get','color'],'fill-opacity':_soilOpac()}});
   m.addLayer({id:'aoisoil-line',type:'line',source:'aoisoil',layout:{'line-join':'round'},paint:{'line-color':'#0c1220','line-opacity':0.7,'line-width':['interpolate',['linear'],['zoom'],12,0.5,14,1.0,16,1.4]}});
-  // AOI mask (LEGACY — kept only for the zoomed-out hex-overview fallback; soil mode now clips
+  // AOI mask (LEGACY - kept only for the zoomed-out hex-overview fallback; soil mode now clips
   // instead of darkening). world bbox MINUS the AOI ring, opaque dark fill.
   m.addSource('aoi-mask',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
   m.addLayer({id:'aoi-mask',type:'fill',source:'aoi-mask',layout:{visibility:'none'},paint:{'fill-color':'#04060c','fill-opacity':0.82}});
@@ -1025,7 +1025,7 @@ function aoiSetData(){ const m=window._gmap; if(!m)return; const pts=_aoiPts;
   m.getSource('aoi').setData(f?{type:'FeatureCollection',features:[f]}:{type:'FeatureCollection',features:[]});
   const vs=m.getSource('aoi-vert'); if(vs) vs.setData({type:'FeatureCollection',features:pts.map(p=>({type:'Feature',geometry:{type:'Point',coordinates:p}}))}); }
 // Build the "world minus AOI" mask polygon and show it. The outer ring is a world bbox (CW),
-// the inner ring is the AOI (the hole), so only the area OUTSIDE the parcel is darkened — the
+// the inner ring is the AOI (the hole), so only the area OUTSIDE the parcel is darkened - the
 // full SSURGO soil inside the AOI stays fully visible. Pass null/[] to clear+hide the mask.
 function setAoiMask(pts){ const m=window._gmap; if(!m||!m.getLayer('aoi-mask'))return;
   if(!pts||pts.length<3){ m.getSource('aoi-mask').setData({type:'FeatureCollection',features:[]}); m.setLayoutProperty('aoi-mask','visibility','none'); return; }
@@ -1046,7 +1046,7 @@ function setAoiMask(pts){ const m=window._gmap; if(!m||!m.getLayer('aoi-mask'))r
 // Clip the GroundScore soil to the AOI polygon and render ONLY the inside. soilFeats are the SSURGO
 // map-unit pieces (from the mkq query layer) that overlap the parcel; each is intersected with the
 // AOI via the vendored polygon-clipping lib (handles concave parcels). Everything outside the AOI is
-// left to the basemap/imagery/roads/labels — no soil, no darkening. Global gs-fill/gs-line stay
+// left to the basemap/imagery/roads/labels - no soil, no darkening. Global gs-fill/gs-line stay
 // hidden while clipped (see toggleClipAOI). Keeps the AOI outline + corner dots on top.
 let _aoiClipFC=null;
 function applyAoiClip(pts,soilFeats){ const m=window._gmap; if(!m)return; ensureAoiLayers(m);
@@ -1065,7 +1065,7 @@ function clearAoiClip(){ const m=window._gmap; if(!m)return; _aoiClipFC=null; _c
   const s=m.getSource('aoisoil'); if(s) s.setData({type:'FeatureCollection',features:[]});
   if(_clipOn) toggleClipAOI(false); }
 // Re-clip the soil on every zoom/pan so the parcel ALWAYS shows full SSURGO detail at the current
-// zoom (vector tiles load finer geometry as you zoom — re-querying keeps the clip HD, no re-screen).
+// zoom (vector tiles load finer geometry as you zoom - re-querying keeps the clip HD, no re-screen).
 let _clipAoiPts=null,_clipStates=null,_reclipWired=false;
 function _collectClipSoil(pts,states){ const m=window._gmap; if(!m)return [];
   const layers=(states||[]).map(st=>'mkq-'+st).filter(id=>m.getLayer(id)); if(!layers.length)return [];
@@ -1093,12 +1093,12 @@ function finishDraw(){ if(_aoiPts.length<3) return; _draw=false; const m=window.
 // spherical polygon area (km^2)
 function polyAreaKm2(pts){ const R=6371; let a=0; for(let i=0;i<pts.length;i++){const[x1,y1]=pts[i],[x2,y2]=pts[(i+1)%pts.length]; a+=(x2-x1)*Math.PI/180*(2+Math.sin(y1*Math.PI/180)+Math.sin(y2*Math.PI/180));} return Math.abs(a*R*R/2); }
 function pickRes(km2){ return km2>60?8: km2>6?9: 10; }
-// Overview DCI grid (national, coarse — ~1 point per county). Backs the zoomed-out hexagon
+// Overview DCI grid (national, coarse - ~1 point per county). Backs the zoomed-out hexagon
 // screen when an AOI is too large / the map too far out for SSURGO soil tiles to be loaded.
 let _gsGrid=null;
 async function loadGsGrid(){ if(_gsGrid)return _gsGrid; try{ _gsGrid=await fetch('data/groundscore_grid_dci.json').then(r=>r.json()); }catch(e){ _gsGrid=[]; } return _gsGrid; }
 function ptInPolyLL(px,py,poly){ let inside=false; for(let i=0,j=poly.length-1;i<poly.length;j=i++){const[xi,yi]=poly[i],[xj,yj]=poly[j]; if(((yi>py)!==(yj>py))&&px<(xj-xi)*(py-yi)/(yj-yi)+xi)inside=!inside;} return inside; }
-// Coarse hexagon screen from the national DCI grid — used when zoomed too far out for soil tiles.
+// Coarse hexagon screen from the national DCI grid - used when zoomed too far out for soil tiles.
 async function hexScreenAOI(pts,km2){
   const grid=await loadGsGrid(), res=pickRes(km2), cells={};
   grid.forEach(([lng,lat,dci])=>{ if(dci==null||!ptInPolyLL(lng,lat,pts))return; const c=h3.latLngToCell(lat,lng,res); (cells[c]=cells[c]||[]).push(+dci); });
@@ -1138,7 +1138,7 @@ async function screenAOI(pts){
     if(g.type==='Polygon')ring=g.coordinates[0];
     else if(g.type==='MultiPolygon')ring=g.coordinates[0][0];
     else return;
-    // Count a map unit if it OVERLAPS the AOI — not only when its centroid lands inside.
+    // Count a map unit if it OVERLAPS the AOI - not only when its centroid lands inside.
     // Full-res SSURGO map units are large/irregular: a unit can clearly cover the parcel yet have
     // its (clipped tile-piece) centroid outside it. A small AOI sitting entirely inside one big
     // map unit has zero soil centroids inside it and the unit's centroid far away → the old
@@ -1155,7 +1155,7 @@ async function screenAOI(pts){
 
   let results=Object.values(mukeyMap), mode='soil';
   if(results.length){
-    // State/county zoom: CLIP the SSURGO soil to the parcel — render only the soil inside the AOI,
+    // State/county zoom: CLIP the SSURGO soil to the parcel - render only the soil inside the AOI,
     // leave everything outside to the basemap/imagery/roads/labels (Jason 2026-06-16). soilFeats are
     // the overlapping map-unit pieces; applyAoiClip intersects them with the AOI. The mukey roll-up
     // still drives the panel aggregation.
@@ -1176,7 +1176,7 @@ async function screenAOI(pts){
   renderAoiPanel(agg);
   // The per-mukey soil cache has no slope/power/water/fiber/land/hazard/climate pillars (those are
   // location-specific), so the radar would be empty. Fill it from a light DCI score at the AOI
-  // centroid — location pillars are ~uniform across a parcel; ground stays the AOI's soil aggregate.
+  // centroid - location pillars are ~uniform across a parcel; ground stays the AOI's soil aggregate.
   (async()=>{ try{
     const cen=[pts.reduce((s,p)=>s+p[0],0)/pts.length, pts.reduce((s,p)=>s+p[1],0)/pts.length];
     const [csoil,cclim]=await Promise.all([resolveSoil(cen[0],cen[1],false),fetchClim(cen[1],cen[0])]);
@@ -1187,7 +1187,7 @@ async function screenAOI(pts){
     agg.pillars=pil; if(window._lastAoi) window._lastAoi.pillars=pil;
     const rh=document.getElementById('radar'); if(rh) buildRadar(rh,pil,buildableColor(agg.mean));
   }catch(e){} })();
-  // Soil renders inside the AOI under the mask, but the user is in CLIPPED-AOI mode — the overall
+  // Soil renders inside the AOI under the mask, but the user is in CLIPPED-AOI mode - the overall
   // "GroundScore soil" toggle reads OFF (Clipped AOI is the active layer).
   if(mode==='soil'){ _soilOn=true; syncChip('soil',false); document.getElementById('cb-soil')?.classList.toggle('active',false); const sc=document.getElementById('ly-soil'); if(sc)sc.checked=false; }
   else if(_soilOn) toggleSoilLayer(false);
@@ -1249,11 +1249,11 @@ function renderAoiPanel(a){
   setResult(`<div class="r-loc">&#9638; ${finding?'Site search &middot; '+esc((_findMode.label||'').split(',').slice(0,2).join(',')):'Area of interest'} &middot; ${a.count} ${unit(a.count)}${isHex?' &middot; overview':''}</div>
     <div class="verdict ${vd.cls}"><span class="vbadge">${vd.v}</span><span class="vrat">${verdictRationale(vd.v,ranks)}</span></div>
     <div class="aoi-head"><div><div class="kick">${finding?'Best area DCI':'Area GroundScore DCI'}</div><div class="big" style="color:${c}">${a.mean.toFixed(1)}</div><div class="band" style="color:${c}">${esc(a.band)}</div></div>
-      <div class="aoi-area">${a.acres.toFixed(0)} acres screened<br>range ${Math.round(a.min)}&ndash;${Math.round(a.max)} across the area<br>${isHex?`${a.count} ${unit(a.count)} &middot; coarse national grid`:`${a.mus.length} soil map unit${a.mus.length===1?'':'s'}`}</div></div>
+      <div class="aoi-area">${a.acres.toFixed(0)} acres screened<br>range ${Math.round(a.min)}-${Math.round(a.max)} across the area<br>${isHex?`${a.count} ${unit(a.count)} &middot; coarse national grid`:`${a.mus.length} soil map unit${a.mus.length===1?'':'s'}`}</div></div>
     <div class="aoi-dist">${bar}</div><div class="aoi-distleg">${leg}</div>
-    ${(a.top&&a.top.length)?`<div class="soil-sec"><div class="soil-h">${finding?'Best sites found &mdash; click to screen':'Strongest ground in the AOI'}</div><div class="lb-list" style="padding:0">${bestRows}</div></div>`:''}
+    ${(a.top&&a.top.length)?`<div class="soil-sec"><div class="soil-h">${finding?'Best sites found - click to screen':'Strongest ground in the AOI'}</div><div class="lb-list" style="padding:0">${bestRows}</div></div>`:''}
     <div class="callout"><span><span class="co-h">Top risks</span>${ranks.risks.map(chip).join('')}</span><span><span class="co-h">Strengths</span>${ranks.strengths.map(chip).join('')}</span></div>
-    <div style="padding:12px 18px 0"><button class="aoi-btn primary" style="width:100%" onclick="aoiReport()" title="Download the branded area dossier — cover, verdict, eight-criteria reads, distribution, next steps">&#8595; Download the AOI PDF report</button></div>
+    <div style="padding:12px 18px 0"><button class="aoi-btn primary" style="width:100%" onclick="aoiReport()" title="Download the branded area dossier - cover, verdict, eight-criteria reads, distribution, next steps">&#8595; Download the AOI PDF report</button></div>
     <div class="radar-wrap"><div id="radar"></div><div class="radar-cap">Area mean &middot; eight criteria &middot; one model</div></div>
     ${a.flags.length?`<div class="soil-sec"><div class="soil-h">Limiting factors in the AOI</div><div class="soil-flags">${esc(a.flags.join(' · '))}</div></div>`:''}
     <div class="soil-sec"><div class="soil-h">Overall assessment</div></div>
@@ -1281,7 +1281,7 @@ async function loadWatchlist(){
   try{
     const r=await fetch('/api/watchlist',{headers:dcHeaders()}).then(x=>x.json());
     if(!r||!r.ok){ host.textContent=(r&&r.upgrade)?'The watchlist is a Pro feature.':'Watchlist unavailable right now.'; return; }
-    if(!r.sites||!r.sites.length){ host.innerHTML='No watched sites yet — score a site, then hit &#9734; Watch in the analysis bar.'; return; }
+    if(!r.sites||!r.sites.length){ host.innerHTML='No watched sites yet - score a site, then hit &#9734; Watch in the analysis bar.'; return; }
     host.innerHTML=r.sites.map(s=>`<div class="lb-row" style="padding:7px 4px" onclick="gotoCell(${s.lat},${s.lng})" title="Fly to this site and re-score it now">
       <span class="lb-name" style="font-size:12px">${esc(s.label||'')}<span class="lb-soil">${s.updated?('re-scored '+esc(String(s.updated).slice(0,10))):'awaiting first monthly re-score'}${s.model_version?(' · model v'+esc(s.model_version)):''}</span></span>
       ${s.last_dci!=null?`<span class="lb-dci" style="font-size:15px;color:${buildableColor(s.last_dci)}">${Math.round(s.last_dci)}<span class="lb-band">${esc(s.last_band||'')}</span></span>`:''}
@@ -1372,11 +1372,11 @@ function portfolioReport(){
   const rows=ok.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${r.lat.toFixed(4)}, ${r.lng.toFixed(4)}</td><td>${esc((r.mu||'').split(',')[0])}</td><td>${r.soil??''}</td><td><b style="color:${buildableColor(r.dci)}">${Math.round(r.dci)}</b> ${esc(r.band||'')}</td></tr>`).join('');
   _reportShell('GroundScore DCI Portfolio Report',`
    <h1>Portfolio Screening</h1><div class="sub">${ok.length} sites ranked &middot; median DCI ${Math.round(med)} &middot; ${new Date().toLocaleDateString()}${meta.model_version?` &middot; Model v${meta.model_version}`:''}</div>
-   <div class="exec" style="font-size:13px;line-height:1.65">The strongest ground in this portfolio is <b>${esc(ok[0].name)}</b> at <b style="color:${buildableColor(ok[0].dci)}">${ok[0].dci} (${esc(ok[0].band||'')})</b>${ok.length>1?`; the spread runs ${Math.round(ok[ok.length-1].dci)}&ndash;${Math.round(ok[0].dci)} across the ${ok.length} screened sites`:''}. Shortlist from the top of this table; sites under 50 are carrying pillar risks that belong in the price or the pass pile.</div>
+   <div class="exec" style="font-size:13px;line-height:1.65">The strongest ground in this portfolio is <b>${esc(ok[0].name)}</b> at <b style="color:${buildableColor(ok[0].dci)}">${ok[0].dci} (${esc(ok[0].band||'')})</b>${ok.length>1?`; the spread runs ${Math.round(ok[ok.length-1].dci)}-${Math.round(ok[0].dci)} across the ${ok.length} screened sites`:''}. Shortlist from the top of this table; sites under 50 are carrying pillar risks that belong in the price or the pass pile.</div>
    <h3>Ranked sites</h3>
    <table><tr><th>#</th><th>Site</th><th>Coordinates</th><th>Soil map unit</th><th>Soil</th><th>DCI</th></tr>${rows}</table>
    ${skip.length?`<h3>Not scored</h3><div style="font-size:12px;color:#6b7280">${skip.map(s=>esc(s.name)+' ('+esc(s.err||'')+')').join(' · ')}</div>`:''}
-   <h3>Method</h3><div style="font-size:12px;color:#374151;line-height:1.6">Each site scored on the GroundScore DCI (soil GroundScore from the National Cooperative Soil Survey fused with power, water, seismic, slope and climate pillars) under your campus inputs. Screening signal — shortlist first, then run the full per-site dossier and geotechnical investigation on the finalists.</div>`);
+   <h3>Method</h3><div style="font-size:12px;color:#374151;line-height:1.6">Each site scored on the GroundScore DCI (soil GroundScore from the National Cooperative Soil Survey fused with power, water, seismic, slope and climate pillars) under your campus inputs. Screening signal - shortlist first, then run the full per-site dossier and geotechnical investigation on the finalists.</div>`);
 }
 
 // ── Compare mode: pin 2-3 scored sites -> side-by-side radars + pillar delta table ──
@@ -1411,7 +1411,7 @@ function renderCompare(){
   const rows=DCI_PILLARS.map(([k,nm])=>{
     const vals=P.map(p=>p.j.dci.pillars[k]);
     const best=Math.max(...vals.filter(v=>v!=null));
-    return `<tr><td title="${esc(PILLAR_TIP[k]?PILLAR_TIP[k](best):nm)}" style="cursor:help;color:var(--dim)">${nm}</td>${vals.map(v=>`<td class="v${v===best?' best':''}" style="color:${v!=null?buildableColor(v):'var(--dim)'}">${v!=null?Math.round(v):'–'}</td>`).join('')}</tr>`;
+    return `<tr><td title="${esc(PILLAR_TIP[k]?PILLAR_TIP[k](best):nm)}" style="cursor:help;color:var(--dim)">${nm}</td>${vals.map(v=>`<td class="v${v===best?' best':''}" style="color:${v!=null?buildableColor(v):'var(--dim)'}">${v!=null?Math.round(v):'-'}</td>`).join('')}</tr>`;
   }).join('');
   // headline: the biggest swings between the two strongest sites
   const top=[...P].sort((a,b)=>b.j.dci_value-a.j.dci_value), A=top[0], B=top[1];
@@ -1419,7 +1419,7 @@ function renderCompare(){
   const wins=deltas.filter(x=>x.d>3).slice(0,2).map(x=>`${x.nm.toLowerCase()} (+${Math.round(x.d)})`);
   const loses=deltas.filter(x=>x.d<-3).slice(0,2).map(x=>`${x.nm.toLowerCase()} (${Math.round(x.d)})`);
   const an=esc((A.label||'A').split(',')[0]), bn=esc((B.label||'B').split(',')[0]);
-  const line=`<b>${an}</b> leads at ${A.j.dci_value} vs ${B.j.dci_value}${wins.length?` — it wins on ${wins.join(' and ')}`:''}${loses.length?`, concedes ${loses.join(' and ')} to <b>${bn}</b>`:''}.`;
+  const line=`<b>${an}</b> leads at ${A.j.dci_value} vs ${B.j.dci_value}${wins.length?` - it wins on ${wins.join(' and ')}`:''}${loses.length?`, concedes ${loses.join(' and ')} to <b>${bn}</b>`:''}.`;
   setResult(`<div class="r-loc">&#8853; Side-by-side &middot; ${P.length} pinned sites</div>
     <div class="cmp-cols">${cols}</div>
     <table class="cmp-tbl"><tr><th>Pillar</th>${P.map(p=>`<th style="text-align:right">${esc((p.label||'').split(',')[0].slice(0,14))}</th>`).join('')}</tr>${rows}</table>
@@ -1448,11 +1448,11 @@ function pillarBar(v){const c=buildableColor(v);return `<div style="background:#
 const PILLAR_READ={
   ground:(v,j)=>`The soil GroundScore at this map unit is ${Math.round(v)}. ${v>=70?'The ground itself is an asset: standard shallow foundations, normal trenching, no special corrosion program implied by the survey data.':v>=40?'Workable ground with real line items: expect geotechnical findings to shape foundation design, and budget for the limiting factors flagged below.':'The ground is the problem to price: engineered foundations, dewatering or corrosion protection are likely, and the geotechnical investigation should come early, not late.'} ${j&&j.dcsi_flags?('The survey flags: '+j.dcsi_flags+'.'):''}`,
   slope:v=>`Slope scores ${Math.round(v)}. ${v>=70?'The terrain is effectively pad-ready; grading is a minor line item.':v>=40?'Moderate grading and engineered fill belong in the site budget.':'Steep ground: mass grading, retaining structures, or a smaller buildable envelope.'}`,
-  power:(v,j)=>{const r=j&&j.dci&&j.dci.raw||{};return `Power scores ${Math.round(v)}${r.hv_line_mi!=null?` with the nearest high-voltage line within ~${r.hv_line_mi} miles at up to ${r.hv_max_kv} kV`:''}. ${r.queue_wait_years!=null?`The schedule-critical number: a typical interconnection in ${r.iso} runs ~${r.queue_wait_years} years from request to energization — start the utility conversation before the land closes.`:'Confirm interconnection position with the serving utility early.'}`;},
+  power:(v,j)=>{const r=j&&j.dci&&j.dci.raw||{};return `Power scores ${Math.round(v)}${r.hv_line_mi!=null?` with the nearest high-voltage line within ~${r.hv_line_mi} miles at up to ${r.hv_max_kv} kV`:''}. ${r.queue_wait_years!=null?`The schedule-critical number: a typical interconnection in ${r.iso} runs ~${r.queue_wait_years} years from request to energization - start the utility conversation before the land closes.`:'Confirm interconnection position with the serving utility early.'}`;},
   water:v=>`Water scores ${Math.round(v)}. ${v>=70?'Precipitation and supply context support evaporative cooling options.':v>=40?'Plan hybrid or dry cooling alternatives and open the water-rights conversation early.':'Water is a defining constraint here: dry cooling and municipal negotiations are the realistic path.'}`,
-  hazard:(v,j)=>{const h=(j&&j.dci&&j.dci.raw&&j.dci.raw.hazard)||{};return `Hazard scores ${Math.round(v)} across seismic (ASCE 7), tornado/hail, wildfire and karst terrain. ${v>=70?'Low natural-hazard exposure: standard structural package and clean insurability.':v>=40?'Moderate exposure — design and insurance premiums are known and priceable.':'High exposure — structural premiums, insurance load, and karst-foundation risk belong in the budget.'}${h.karst>=0.5?' Karst terrain is present in this region — sinkhole/solution-cavity risk warrants geophysical screening.':''}`;},
+  hazard:(v,j)=>{const h=(j&&j.dci&&j.dci.raw&&j.dci.raw.hazard)||{};return `Hazard scores ${Math.round(v)} across seismic (ASCE 7), tornado/hail, wildfire and karst terrain. ${v>=70?'Low natural-hazard exposure: standard structural package and clean insurability.':v>=40?'Moderate exposure - design and insurance premiums are known and priceable.':'High exposure - structural premiums, insurance load, and karst-foundation risk belong in the budget.'}${h.karst>=0.5?' Karst terrain is present in this region - sinkhole/solution-cavity risk warrants geophysical screening.':''}`;},
   fiber:v=>`Fiber scores ${Math.round(v)}. ${v>=70?'Long-haul connectivity is close; latency routes and lit capacity are a procurement task, not a build.':v>=40?'A lateral build to long-haul routes belongs in the budget and timeline.':'Remote from the backbone: fiber construction is a major cost and schedule item.'}`,
-  land:v=>`Land scores ${Math.round(v)} on regional acquisition cost. ${v>=70?'Acreage is inexpensive to assemble here.':v>=40?'Moderate land costs for the campus footprint.':'An expensive land market — site assembly is a major budget line.'}`,
+  land:v=>`Land scores ${Math.round(v)} on regional acquisition cost. ${v>=70?'Acreage is inexpensive to assemble here.':v>=40?'Moderate land costs for the campus footprint.':'An expensive land market - site assembly is a major budget line.'}`,
   climate:v=>`Climate scores ${Math.round(v)} on cooling load. ${v>=70?'A mild profile with meaningful free-cooling hours and favorable PUE.':v>=40?'A warm profile; summer PUE and water/power interplay deserve modeling.':'A hot profile: cooling capex and opex carry a structural premium.'}`};
 
 // ── PDF report: open a clean printable site/AOI report (browser print -> PDF) ──
@@ -1497,19 +1497,19 @@ function siteReport(){
   const lim=v=>v==null?'n/a':v<0.34?'Not limited':v<0.67?'Somewhat limited':'Very limited', corr=v=>v==null?'n/a':v<0.34?'Low':v<0.67?'Moderate':'High';
   const sr=[['Foundations (commercial)',lim(f.s_commercial)],['Excavation / trenching',lim(f.s_excavation)],['Corrosion of steel',corr(f.s_corr_steel)],['Corrosion of concrete',corr(f.s_corr_concrete)],['Shrink-swell (LEP)',f.shrink_swell_lep!=null?Math.round(f.shrink_swell_lep*100)/100:'n/a'],['Seasonal water table',f.watertable_cm!=null?Math.round(f.watertable_cm)+' cm':'None in profile'],['Depth to bedrock',f.bedrock_cm!=null?Math.round(f.bedrock_cm)+' cm':'None in profile'],['Drainage',f.drainage||'n/a'],['Hydric (wetland)',f.hydric_pct!=null?Math.round(f.hydric_pct)+'%':'n/a']];
   const vbColor=vd.cls==='go'?'background:#16a34a;color:#fff':vd.cls==='caution'?'background:#f59e0b;color:#1a1206':'background:#ef4444;color:#fff';
-  // Executive summary, generated from the data — plain English a deal lead forwards unedited.
-  const exec=`This site screens <b style="color:${dc}">${j.dci_value} (${esc(j.dci_band||'')})</b> on the GroundScore DCI — a ${vd.v==='GO'?'proceed signal':vd.v==='CAUTION'?'proceed-with-diligence signal':'hard-stop signal'} at the desktop stage. `+
+  // Executive summary, generated from the data - plain English a deal lead forwards unedited.
+  const exec=`This site screens <b style="color:${dc}">${j.dci_value} (${esc(j.dci_band||'')})</b> on the GroundScore DCI - a ${vd.v==='GO'?'proceed signal':vd.v==='CAUTION'?'proceed-with-diligence signal':'hard-stop signal'} at the desktop stage. `+
     `The strongest pillars are ${ranks.strengths.map(x=>`${x.k.toLowerCase()} (${Math.round(x.v)})`).join(' and ')}; the screen's real risks are ${ranks.risks.map(x=>`${x.k.toLowerCase()} (${Math.round(x.v)})`).join(' and ')}. `+
-    `The ground itself — ${esc((j.muname||'this map unit').split(',')[0])} — carries a soil GroundScore of ${j.dcsi_value} (${esc(j.dcsi_class||'')}). `+
-    (raw.queue_wait_years!=null?`On schedule: a typical grid interconnection in ${esc(raw.iso)} runs about <b>${raw.queue_wait_years} years</b> from request to energization — usually the critical path. `:'')+
+    `The ground itself - ${esc((j.muname||'this map unit').split(',')[0])} - carries a soil GroundScore of ${j.dcsi_value} (${esc(j.dcsi_class||'')}). `+
+    (raw.queue_wait_years!=null?`On schedule: a typical grid interconnection in ${esc(raw.iso)} runs about <b>${raw.queue_wait_years} years</b> from request to energization - usually the critical path. `:'')+
     `Verdict rationale: ${verdictRationale(vd.v,ranks)}`;
-  // "What we'd investigate next" — rule-driven from the weakest pillars + flags (consulting setup).
+  // "What we'd investigate next" - rule-driven from the weakest pillars + flags (consulting setup).
   const nextSteps=[];
   if((j.dci.pillars.ground??100)<70||j.dcsi_flags) nextSteps.push('Commission the geotechnical investigation early; target the survey-flagged limitations ('+esc(j.dcsi_flags||'foundation and excavation behavior')+') with borings on the actual building pads.');
   if(raw.queue_wait_years!=null) nextSteps.push(`Open the interconnection conversation with the serving utility now (~${raw.queue_wait_years}-year typical ${esc(raw.iso)} queue); request a feasibility/system-impact study before closing on land.`);
   if((j.dci.pillars.water??100)<60) nextSteps.push('Engage the water utility / rights holder on cooling supply; model dry and hybrid cooling against the climate profile.');
   if((j.dci.pillars.slope??100)<60) nextSteps.push('Run a grading study off the LiDAR surface to size cut/fill and the realistic buildable envelope.');
-  if((f.hydric_pct??0)>0) nextSteps.push('Order a wetland delineation — the map unit shows hydric inclusions ('+f.hydric_pct+'%), a permitting-timeline risk.');
+  if((f.hydric_pct??0)>0) nextSteps.push('Order a wetland delineation - the map unit shows hydric inclusions ('+f.hydric_pct+'%), a permitting-timeline risk.');
   nextSteps.push('Validate the desktop screen with a Lab10YR site-specific consult: pedologist read of the full SSURGO stack plus the pillar data behind this dossier.');
   const meta=window._modelMeta||{};
   _reportShell('GroundScore DCI Site Dossier',`
@@ -1537,7 +1537,7 @@ function siteReport(){
    ${j.assessment?`<div class="pg"></div><h3>Site-acquisition assessment</h3><div class="assess">${assessHtml(j.assessment)}</div>`:''}
    <h3>What to investigate next</h3><ol class="next">${nextSteps.map(s=>`<li>${s}</li>`).join('')}</ol>
    <h3>Methodology &amp; data vintages</h3>
-   <div style="font-size:12px;line-height:1.6;color:#374151">The GroundScore DCI fuses a fuzzy-logic soil model computed per SSURGO map unit (National Cooperative Soil Survey engineering interpretations, corrosion attributes, hydrology) with live site pillars: USGS 3DEP LiDAR slope, HIFLD high-voltage transmission proximity, interconnection-queue timelines (LBNL Queued Up 2025), Open-Meteo climate normals (2014–2023), USGS ASCE 7 seismic design values, and EPA eGRID grid-carbon intensity. Pillars are weighted by your campus inputs and combined with a most-limiting blend — a site is only as good as its worst constraint.${meta.model_version?` Model v${meta.model_version}, rebuilt ${meta.built_at?new Date(meta.built_at).toLocaleDateString():''}.`:''} Validated against ${''}the siting record of 88 announced or operating US hyperscale campuses.</div>
+   <div style="font-size:12px;line-height:1.6;color:#374151">The GroundScore DCI fuses a fuzzy-logic soil model computed per SSURGO map unit (National Cooperative Soil Survey engineering interpretations, corrosion attributes, hydrology) with live site pillars: USGS 3DEP LiDAR slope, HIFLD high-voltage transmission proximity, interconnection-queue timelines (LBNL Queued Up 2025), Open-Meteo climate normals (2014-2023), USGS ASCE 7 seismic design values, and EPA eGRID grid-carbon intensity. Pillars are weighted by your campus inputs and combined with a most-limiting blend - a site is only as good as its worst constraint.${meta.model_version?` Model v${meta.model_version}, rebuilt ${meta.built_at?new Date(meta.built_at).toLocaleDateString():''}.`:''} Validated against ${''}the siting record of 88 announced or operating US hyperscale campuses.</div>
    <div style="margin-top:16px;font-size:12px"><b>Lab10YR</b> &middot; soil-first site intelligence &middot; lab10yr.com &middot; info@lab10yr.com</div>`);
 }
 function aoiReport(){
@@ -1549,13 +1549,13 @@ function aoiReport(){
   const dr=order.filter(b=>a.dist[b]).map(b=>`<tr><td>${b}</td><td>${a.dist[b]} ${unit(a.dist[b])} (${(a.dist[b]/total*100).toFixed(0)}%)</td></tr>`).join('');
   const vbColor=vd.cls==='go'?'background:#16a34a;color:#fff':vd.cls==='caution'?'background:#f59e0b;color:#1a1206':'background:#ef4444;color:#fff';
   const sevPct=((a.dist.Severe||0)+(a.dist.Elevated||0))/total;
-  const exec=`This area screens <b style="color:${dc}">${a.mean.toFixed(1)} (${esc(a.band)})</b> on the area-mean GroundScore DCI across ${a.count} ${unit(a.count)}${isHex?' (coarse national grid)':''} and ${a.acres.toFixed(0)} acres — a ${vd.v==='GO'?'proceed signal':vd.v==='CAUTION'?'proceed-with-diligence signal':'hard-stop signal'} at the desktop stage. `+
-    `DCI runs ${Math.round(a.min)} to ${Math.round(a.max)}${isHex?'':`, over ${a.mus.length} soil map unit${a.mus.length===1?'':'s'}`}${sevPct>0?`, with ${(sevPct*100).toFixed(0)}% of the area screening Elevated or Severe — siting the pads matters here`:''}. `+
+  const exec=`This area screens <b style="color:${dc}">${a.mean.toFixed(1)} (${esc(a.band)})</b> on the area-mean GroundScore DCI across ${a.count} ${unit(a.count)}${isHex?' (coarse national grid)':''} and ${a.acres.toFixed(0)} acres - a ${vd.v==='GO'?'proceed signal':vd.v==='CAUTION'?'proceed-with-diligence signal':'hard-stop signal'} at the desktop stage. `+
+    `DCI runs ${Math.round(a.min)} to ${Math.round(a.max)}${isHex?'':`, over ${a.mus.length} soil map unit${a.mus.length===1?'':'s'}`}${sevPct>0?`, with ${(sevPct*100).toFixed(0)}% of the area screening Elevated or Severe - siting the pads matters here`:''}. `+
     (ranks.strengths.length?`The strongest pillars are ${ranks.strengths.map(x=>`${x.k.toLowerCase()} (${Math.round(x.v)})`).join(' and ')}; the screen's real risks are ${ranks.risks.map(x=>`${x.k.toLowerCase()} (${Math.round(x.v)})`).join(' and ')}. `:'') +
     `Verdict rationale: ${verdictRationale(vd.v,ranks)}`;
   const bestRows=(a.top||[]).map((t,i)=>`<tr><td>${i+1}</td><td>${t.lat.toFixed(4)}, ${t.lng.toFixed(4)}</td><td>${esc((t.mu||'').split(',')[0])}</td><td><b style="color:${buildableColor(t.dci)}">${Math.round(t.dci)}</b> ${esc(t.band||'')}</td></tr>`).join('');
   const nextSteps=[];
-  if((a.pillars.ground??100)<70||a.flags.length) nextSteps.push('Commission the geotechnical investigation early, targeted at the survey-flagged limitations ('+esc(a.flags.length?a.flags.join('; '):'foundation and excavation behavior')+') — bore the actual pad locations, starting with the strongest ground above.');
+  if((a.pillars.ground??100)<70||a.flags.length) nextSteps.push('Commission the geotechnical investigation early, targeted at the survey-flagged limitations ('+esc(a.flags.length?a.flags.join('; '):'foundation and excavation behavior')+') - bore the actual pad locations, starting with the strongest ground above.');
   if(sevPct>0.15) nextSteps.push('Mask the Elevated/Severe ground out of the buildable envelope and re-run the campus layout on the remaining area.');
   if((a.pillars.power??100)<60) nextSteps.push('Open the interconnection conversation with the serving utility now; request a feasibility/system-impact study before closing on land.');
   if((a.pillars.water??100)<60) nextSteps.push('Engage the water utility / rights holder on cooling supply; model dry and hybrid cooling against the climate profile.');
@@ -1570,11 +1570,11 @@ function aoiReport(){
      <div class="band" style="color:${dc};font-size:15px">${esc(a.band)} &middot; Area-mean Data Center Index</div>
      <span class="vb" style="${vbColor}">${vd.v}</span>
      ${radarSvg(a.pillars,dc,340)}
-     <div style="font-size:11px;color:#6b7280">DCI range ${Math.round(a.min)}&ndash;${Math.round(a.max)} &middot; ${new Date().toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'})}${meta.model_version?` &middot; Model v${meta.model_version}`:''}</div>
+     <div style="font-size:11px;color:#6b7280">DCI range ${Math.round(a.min)}-${Math.round(a.max)} &middot; ${new Date().toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'})}${meta.model_version?` &middot; Model v${meta.model_version}`:''}</div>
    </div>
    <div class="pg"></div>
    <h3>Executive summary</h3><div class="exec">${exec}</div>
-   <h3>The eight criteria, read one at a time &mdash; area mean</h3>
+   <h3>The eight criteria, read one at a time - area mean</h3>
    ${DCI_PILLARS.map(([k,nm])=>{const v=a.pillars[k];if(v==null)return '';
      return `<div class="psec"><span class="pv" style="color:${buildableColor(v)}">${Math.round(v)}</span><h2>${nm}</h2>${pillarBar(v)}<p>${PILLAR_READ[k]?PILLAR_READ[k](v):''}</p></div>`;}).join('')}
    <div class="pg"></div>
@@ -1584,7 +1584,7 @@ function aoiReport(){
    ${a.assessment?`<h3>Overall assessment</h3><div class="assess">${assessHtml(a.assessment)}</div>`:''}
    <h3>What to investigate next</h3><ol class="next">${nextSteps.map(s=>`<li>${s}</li>`).join('')}</ol>
    <h3>Methodology &amp; data vintages</h3>
-   <div style="font-size:12px;line-height:1.6;color:#374151">${isHex?'Each overview cell is':'Every soil map unit in the parcel is'} scored on the GroundScore DCI: a fuzzy-logic soil model computed per SSURGO map unit (National Cooperative Soil Survey engineering interpretations, corrosion attributes, hydrology) fused with live site pillars — USGS 3DEP LiDAR slope, HIFLD high-voltage transmission proximity, interconnection-queue timelines, Open-Meteo climate normals, USGS ASCE 7 seismic design values, and EPA eGRID grid-carbon intensity — then rolled up to the area mean. Pillars are weighted by your campus inputs and combined with a most-limiting blend.${isHex?' This area was screened on the coarse national grid (zoomed out) — zoom to a state or county and re-draw for soil-map-unit detail.':''}${meta.model_version?` Model v${meta.model_version}, rebuilt ${meta.built_at?new Date(meta.built_at).toLocaleDateString():''}.`:''}</div>
+   <div style="font-size:12px;line-height:1.6;color:#374151">${isHex?'Each overview cell is':'Every soil map unit in the parcel is'} scored on the GroundScore DCI: a fuzzy-logic soil model computed per SSURGO map unit (National Cooperative Soil Survey engineering interpretations, corrosion attributes, hydrology) fused with live site pillars - USGS 3DEP LiDAR slope, HIFLD high-voltage transmission proximity, interconnection-queue timelines, Open-Meteo climate normals, USGS ASCE 7 seismic design values, and EPA eGRID grid-carbon intensity - then rolled up to the area mean. Pillars are weighted by your campus inputs and combined with a most-limiting blend.${isHex?' This area was screened on the coarse national grid (zoomed out) - zoom to a state or county and re-draw for soil-map-unit detail.':''}${meta.model_version?` Model v${meta.model_version}, rebuilt ${meta.built_at?new Date(meta.built_at).toLocaleDateString():''}.`:''}</div>
    <div style="margin-top:16px;font-size:12px"><b>Lab10YR</b> &middot; soil-first site intelligence &middot; lab10yr.com &middot; info@lab10yr.com</div>`);
 }
 
@@ -1600,7 +1600,7 @@ function addParcelState(map,st){ if(_pmStates[st])return; _pmStates[st]=true; co
   const col=['match',['get','dcsi_class']]; DCSI_ORDER.forEach(c=>col.push(c,DCSI_COLOR[c])); col.push('#3a4358');
   map.addLayer({id:'dcsi-fill-'+st,type:'fill',source:src,'source-layer':st,minzoom:7,paint:{'fill-color':col,'fill-opacity':0.72}});
   map.addLayer({id:'dcsi-line-'+st,type:'line',source:src,'source-layer':st,minzoom:9,paint:{'line-color':'#0a0e16','line-opacity':0.3,'line-width':['interpolate',['linear'],['zoom'],9,0.3,12,1.0]}});
-  map.on('error',e=>{ if(e.sourceId===src){/* gated tiles — ignore */} });
+  map.on('error',e=>{ if(e.sourceId===src){/* gated tiles - ignore */} });
 }catch(e){} }
 function refreshParcels(map){ if(map.getZoom()<7) return; registerPM(); visibleStates(map).forEach(st=>addParcelState(map,st)); }
 
@@ -1619,7 +1619,7 @@ function buildMap(){
   window._gmap=map;
   map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'bottom-right');
   map.on('load',()=>{ map.getCanvas().style.cursor='crosshair';
-    // Base raster layers — added once, hidden until toggled (lazy = fast initial load).
+    // Base raster layers - added once, hidden until toggled (lazy = fast initial load).
     map.addSource('imagery-src',{type:'raster',tileSize:256,tiles:[IMAGERY_T],attribution:'Esri'});
     map.addLayer({id:'imagery',type:'raster',source:'imagery-src',paint:{'raster-opacity':1},layout:{visibility:'none'}});
     map.addSource('roads-src',{type:'raster',tileSize:256,tiles:[ROADS_T],attribution:'Esri'});
@@ -1632,10 +1632,10 @@ function buildMap(){
     map.addSource('mk',{type:'geojson',data:{type:'FeatureCollection',features:mk}});
     map.addLayer({id:'mk',type:'circle',source:'mk',paint:{'circle-radius':5,'circle-color':'#c8a84b','circle-stroke-color':'#04060c','circle-stroke-width':2}});
   });
-  // Once an AOI exists, map clicks are SUPPRESSED — no point popup, no point score. The AOI's
+  // Once an AOI exists, map clicks are SUPPRESSED - no point popup, no point score. The AOI's
   // overall analysis is the active result and must stay. Clicks register only while drawing the AOI.
   // While drawing, a click adds a vertex. Otherwise a click drops the instant ground-only soil popup
-  // — allowed even when an AOI exists (Jason 2026-06-16): scoreLatLng is sidebar-safe (it never writes
+  // - allowed even when an AOI exists (Jason 2026-06-16): scoreLatLng is sidebar-safe (it never writes
   // the AOI analysis), so a point click inside the parcel inspects the ground without stealing the panel.
   map.on('click',e=>{ if(_draw){ addVertex(e.lngLat.lng,e.lngLat.lat); return; } scoreLatLng(e.lngLat.lat,e.lngLat.lng,`${e.lngLat.lat.toFixed(4)}, ${e.lngLat.lng.toFixed(4)}`); });
   map.on('dblclick',e=>{ if(_draw){ e.preventDefault(); finishDraw(); } });
@@ -1681,7 +1681,7 @@ function toggleClipAOI(on){ _clipOn=on; const m=window._gmap; if(!m)return;
     else toggleSoilLayer(true); }
   m.setLayoutProperty('aoi-mask','visibility','none'); // legacy darkening mask off in clip mode
   syncChip('aoi',on); }
-// Flat-map elevation relief — same DEM the 3D mode uses, no tilt (Jason 2026-06-12).
+// Flat-map elevation relief - same DEM the 3D mode uses, no tilt (Jason 2026-06-12).
 function toggleHillshade(on){ const m=window._gmap; if(!m)return;
   if(on){ if(!m.getSource('terrain-dem')) m.addSource('terrain-dem',{type:'raster-dem',tiles:['https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png'],maxzoom:15,tileSize:256,encoding:'terrarium'});
     if(!m.getLayer('hillshade-flat')){ try{ const before=(m.getStyle().layers.find(l=>/^(gs-fill-|mkq-|aoihex-fill|imagery)/.test(l.id))||{}).id; m.addLayer({id:'hillshade-flat',type:'hillshade',source:'terrain-dem',paint:{'hillshade-exaggeration':0.45,'hillshade-shadow-color':'#a9adb5','hillshade-highlight-color':'#f0f2f5','hillshade-accent-color':'#c4c8cf'}},before); }catch(e){} }
@@ -1718,10 +1718,10 @@ function popupSummary(j,label){
   return `<div style="font-family:Inter,system-ui,sans-serif;min-width:212px">
     <div style="font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#7a85ad;margin-bottom:7px">${esc((label||'Site').split('(')[0])}</div>
     <div style="display:flex;align-items:center;gap:11px">
-      <span style="font-size:32px;font-weight:800;color:${c};line-height:1">${v!=null?Math.round(v):'&ndash;'}</span>
+      <span style="font-size:32px;font-weight:800;color:${c};line-height:1">${v!=null?Math.round(v):'-'}</span>
       <span style="display:flex;flex-direction:column;gap:4px;align-items:flex-start">${badge}<span style="font-size:9.5px;font-weight:800;color:#666;text-transform:uppercase;letter-spacing:.07em">${esc(j.dci_band||j.dcsi_class||'')} &middot; GroundScore DCI</span></span>
     </div>
-    <div style="font-size:11.5px;color:#444;margin-top:7px">Soil GroundScore <b>${gs!=null?Math.round(gs):'&ndash;'}</b>${j.muname?' &middot; '+esc(j.muname.split(',')[0]):''}</div>
+    <div style="font-size:11.5px;color:#444;margin-top:7px">Soil GroundScore <b>${gs!=null?Math.round(gs):'-'}</b>${j.muname?' &middot; '+esc(j.muname.split(',')[0]):''}</div>
     <div style="display:flex;gap:7px;margin-top:10px">
       <button onclick="rpShow()" style="flex:1.2;background:#c8a84b;border:none;color:#1a1206;border-radius:6px;font:800 11.5px Inter,sans-serif;padding:8px;cursor:pointer">Full analysis &rarr;</button>${report}
     </div></div>`;
@@ -1825,9 +1825,9 @@ async function applyKey(){
 
 // ── first-run coach marks: 4 steps, skippable, runs once ──
 const COACH_STEPS=[
-  {sel:'#map',pos:'center',step:'1 / 4 · Score',txt:'Click anywhere on the map to score the ground — instant GO / CAUTION / NO-GO with the eight-criteria breakdown.'},
+  {sel:'#map',pos:'center',step:'1 / 4 · Score',txt:'Click anywhere on the map to score the ground - instant GO / CAUTION / NO-GO with the eight-criteria breakdown.'},
   {sel:'#hdr-chips',pos:'below',step:'2 / 4 · Map view',txt:'Tune the map up here: soil fill opacity, state boundaries, labels, roads, hydrology, imagery.'},
-  {sel:'#acc-finder',pos:'right',step:'3 / 4 · Site finder',txt:'Describe what you need — minimum DCI, water stress, incentive states — and the finder ranks target sites.'},
+  {sel:'#acc-finder',pos:'right',step:'3 / 4 · Site finder',txt:'Describe what you need - minimum DCI, water stress, incentive states - and the finder ranks target sites.'},
   {sel:'#rp-toggle',pos:'right',step:'4 / 4 · The verdict',txt:'The full analysis lives on the right: verdict, radar, written assessment, and the PDF report you can forward.'}];
 function coachMarks(force){
   try{ if(!force && localStorage.getItem('l10_tour')) return; }catch(_){ if(!force) return; }
@@ -1855,7 +1855,7 @@ function coachMarks(force){
 
 // ── Demo mode (?demo=1): a 60-second self-running flythrough for cold outreach ──
 // Scores Data Center Alley, pins it, scores Council Bluffs, and lands on the compare
-// view — the three wow beats (instant verdict, radar, side-by-side) with zero clicks.
+// view - the three wow beats (instant verdict, radar, side-by-side) with zero clicks.
 async function demoMode(){
   const note=document.createElement('div');
   note.id='demo-note';
@@ -1863,7 +1863,7 @@ async function demoMode(){
   document.body.appendChild(note);
   const say=t=>{note.textContent=t;};
   const wait=ms=>new Promise(r=>setTimeout(r,ms));
-  say('GroundScore DCI demo — scoring Data Center Alley…'); await wait(2200);
+  say('GroundScore DCI demo - scoring Data Center Alley…'); await wait(2200);
   await scoreLatLng(39.0185,-77.4636,'Loudoun (Data Center Alley), VA'); await wait(2600);
   if(window._lastReport){ pinSite(); say('Pinned. Now the strongest ground in the Midwest…'); }
   await wait(2200);
@@ -1875,7 +1875,7 @@ async function demoMode(){
 // ── init ──
 function afterUnlock(){
   if(window._unlocked) return; window._unlocked=true;
-  // GroundScore soil is OFF by default — users see the basemap first, then toggle soil on or draw an AOI.
+  // GroundScore soil is OFF by default - users see the basemap first, then toggle soil on or draw an AOI.
   document.getElementById('rp-toggle').style.display='flex';   // Analysis button in the left rail
   setTimeout(()=>coachMarks(new URLSearchParams(location.search).get('tour')==='1'),1200);   // first-run tour; ?tour=1 force-replays
   const q=new URLSearchParams(location.search), set=(id,val)=>{const e=document.getElementById(id);if(e&&val)e.value=val;};
@@ -1894,7 +1894,7 @@ function afterUnlock(){
     renderLeaderboard();   // pre-render the leaderboard into the (closed) panel; "Analysis →" opens it
   }
 }
-// Model heartbeat badge — model_meta.json is stamped by the one-button rebuild, so the
+// Model heartbeat badge - model_meta.json is stamped by the one-button rebuild, so the
 // visible version/date updates with zero page edits whenever the model or data changes.
 async function modelBadge(){
   try{ const m=await fetch('data/model_meta.json',{cache:'no-store'}).then(r=>r.ok?r.json():null); if(!m)return;

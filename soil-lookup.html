@@ -6,12 +6,12 @@
 <link rel="canonical" href="https://lab10yr.com/soil-lookup">
 <meta property="og:type"        content="website">
 <meta property="og:site_name"   content="Lab10YR">
-<meta property="og:title"       content="Site Soil Lookup — Soil Intelligence">
+<meta property="og:title"       content="Site Soil Lookup - Soil Intelligence">
 <meta property="og:description" content="Enter any coordinate or use your location and get the soil hazard profile at that exact point: drainage, wetland status, shrink-swell, corrosion, slope, and organic matter, live from the national soil survey.">
 <meta property="og:url"         content="https://lab10yr.com/soil-lookup.html">
 <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
 <meta name="twitter:card"        content="summary_large_image">
-<meta name="twitter:title"       content="Site Soil Lookup — Soil Intelligence">
+<meta name="twitter:title"       content="Site Soil Lookup - Soil Intelligence">
 <meta name="twitter:description" content="The soil hazard profile at any coordinate, live from the national soil survey via the National Cooperative Soil Survey (SSURGO).">
 <title>Site Soil Lookup &middot; Soil Intelligence</title>
 <style>
@@ -198,28 +198,28 @@ async function runLookup(lat,lng){
   const dom=rows[0]; // highest comppct_r
   const om=num(dom.om,1),lep=num(dom.lep,1),slope=num(dom.slope_r,0);
   const cards=[];
-  cards.push(metric("Dominant Soil",(dom.compname||"&mdash;")+' <small>'+(dom.comppct_r||0)+'%</small>',
+  cards.push(metric("Dominant Soil",(dom.compname||" - ")+' <small>'+(dom.comppct_r||0)+'%</small>',
     (dom.taxorder?dom.taxorder+'. ':'')+'The most extensive soil in this map unit.',null));
-  cards.push(metric("Drainage",dom.drainagecl||"&mdash;",
+  cards.push(metric("Drainage",dom.drainagecl||" - ",
     "How readily water moves through this soil. Drives wetness, trafficability, and septic suitability.",null));
   cards.push(metric("Wetland (Hydric)",dom.hydricrating==="Yes"?"Yes":(dom.hydricrating||"No"),
     "Whether this soil is rated hydric, which can trigger wetland regulation and permitting.",
     dom.hydricrating==="Yes"?["high","Hydric"]:["low","Not hydric"]));
-  cards.push(metric("Shrink-Swell (LEP)",lep!=null?lep:"&mdash;",
+  cards.push(metric("Shrink-Swell (LEP)",lep!=null?lep:" - ",
     "Surface linear extensibility. Above 6 means swelling clays that crack foundations, slabs, and pipes.",
     lep==null?null:(lep>=6?["high","High"]:lep>=3?["mid","Moderate"]:["low","Low"])));
-  cards.push(metric("Steel Corrosion",dom.corsteel||"&mdash;",
+  cards.push(metric("Steel Corrosion",dom.corsteel||" - ",
     "Corrosion rating to uncoated steel for buried utilities, pilings, and tanks.",
     !dom.corsteel?null:(dom.corsteel==="High"?["high","High"]:dom.corsteel==="Moderate"?["mid","Moderate"]:["low","Low"])));
-  cards.push(metric("Slope",slope!=null?slope+'<small>%</small>':"&mdash;",
+  cards.push(metric("Slope",slope!=null?slope+'<small>%</small>':" - ",
     "Representative slope of the dominant soil. Steeper ground means more erosion and runoff risk.",
     slope==null?null:(slope>=15?["high","Steep"]:slope>=6?["mid","Rolling"]:["low","Gentle"])));
-  cards.push(metric("Organic Matter",om!=null?om+'<small>%</small>':"&mdash;",
+  cards.push(metric("Organic Matter",om!=null?om+'<small>%</small>':" - ",
     "Surface-horizon organic matter: fertility, structure, and water-holding in the topsoil.",
     om==null?null:(om>=4?["low","Rich"]:om>=2?["mid","Moderate"]:["high","Depleted"])));
   const compRows=rows.map(r=>'<tr><td>'+(r.compname||"")+'</td><td class="num">'+(r.comppct_r||0)+'%</td><td>'+
-    (r.drainagecl||"")+'</td><td>'+(r.taxorder||"")+'</td><td class="num">'+(num(r.om,1)||"&mdash;")+'</td><td class="num">'+
-    (num(r.lep,1)||"&mdash;")+'</td><td>'+(r.hydricrating||"")+'</td></tr>').join("");
+    (r.drainagecl||"")+'</td><td>'+(r.taxorder||"")+'</td><td class="num">'+(num(r.om,1)||" - ")+'</td><td class="num">'+
+    (num(r.lep,1)||" - ")+'</td><td>'+(r.hydricrating||"")+'</td></tr>').join("");
   report.innerHTML=
     '<div class="print-only-head">LAB10YR &nbsp;&middot;&nbsp; SITE SOIL REPORT <span>&nbsp;&middot;&nbsp; '+new Date().toLocaleDateString()+'</span></div>'+
     '<div class="rpt-head"><div class="rpt-title">'+muname+'</div><div class="rpt-sym">'+lat.toFixed(4)+', '+lng.toFixed(4)+' &middot; mukey '+mukey+'</div><button class="pdf-btn" onclick="window.print()">Save PDF</button></div>'+

@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="canonical" href="https://lab10yr.com/kssl-lab-data">
-<meta property="og:title"       content="KSSL Lab Data — National Pedon Database">
+<meta property="og:title"       content="KSSL Lab Data - National Pedon Database">
 <meta property="og:description" content="Explore Kellogg Soil Survey Laboratory pedon data for every state and territory. Live lab reports, taxonomy, water retention, and soil profiles via the National Cooperative Soil Survey (SSURGO).">
 <meta property="og:url"         content="https://lab10yr.com/kssl-lab-data.html">
-<title>KSSL Lab Data — National Pedon Database</title>
+<title>KSSL Lab Data - National Pedon Database</title>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css">
 <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -154,7 +154,7 @@ td.num{font-family:monospace;color:var(--dim);font-size:.68rem}
     <div class="sb-hdr">
       <div class="sb-eyebrow">KSSL · NCSS Characterization Database</div>
       <div class="sb-title">KSSL Lab Data</div>
-      <div class="sb-sub">Kellogg Soil Survey Laboratory pedon reports — all states and territories, live via the National Cooperative Soil Survey (SSURGO).</div>
+      <div class="sb-sub">Kellogg Soil Survey Laboratory pedon reports - all states and territories, live via the National Cooperative Soil Survey (SSURGO).</div>
     </div>
 
     <div id="sb-body">
@@ -162,7 +162,7 @@ td.num{font-family:monospace;color:var(--dim);font-size:.68rem}
       <div class="ctrl-block">
         <span class="ctrl-lbl">Select State or Territory</span>
         <select id="selState" onchange="loadState(this.value)">
-          <option value="">— choose a state —</option>
+          <option value=""> - choose a state - </option>
         </select>
       </div>
 
@@ -173,15 +173,15 @@ td.num{font-family:monospace;color:var(--dim);font-size:.68rem}
 
       <div class="stat-row">
         <div class="sr-lbl">Pedons loaded</div>
-        <div class="sr-val" id="statCount">—</div>
+        <div class="sr-val" id="statCount"> - </div>
       </div>
       <div class="stat-row">
         <div class="sr-lbl">Unique soil series</div>
-        <div class="sr-val" id="statSeries">—</div>
+        <div class="sr-val" id="statSeries"> - </div>
       </div>
       <div class="stat-row">
         <div class="sr-lbl">Mapped locations</div>
-        <div class="sr-val" id="statMapped">—</div>
+        <div class="sr-val" id="statMapped"> - </div>
       </div>
 
       <div class="series-block" id="series-block" style="display:none">
@@ -380,19 +380,19 @@ function renderTable(rows) {
   rows.forEach(function(p) {
     var tr = document.createElement('tr');
     var link = function(url, label) {
-      return url ? '<a href="'+url+'" target="_blank" rel="noopener noreferrer">'+label+' ↗</a>' : '<span style="color:var(--dimmer)">—</span>';
+      return url ? '<a href="'+url+'" target="_blank" rel="noopener noreferrer">'+label+' ↗</a>' : '<span style="color:var(--dimmer)"> - </span>';
     };
     tr.innerHTML =
-      '<td style="font-weight:600;color:var(--soil)">' + (p.Series||'—') + '</td>' +
-      '<td>' + (p.User_pedon_ID||'—') + '</td>' +
-      '<td style="font-size:.67rem;max-width:200px;line-height:1.4">' + (p.Soil_Classification||'—') + '</td>' +
+      '<td style="font-weight:600;color:var(--soil)">' + (p.Series||' - ') + '</td>' +
+      '<td>' + (p.User_pedon_ID||' - ') + '</td>' +
+      '<td style="font-size:.67rem;max-width:200px;line-height:1.4">' + (p.Soil_Classification||' - ') + '</td>' +
       '<td>' + link(p.lab_url,'Lab') + '</td>' +
       '<td>' + link(p.tax_url,'Tax') + '</td>' +
       '<td>' + link(p.supp_url,'Supp') + '</td>' +
       '<td>' + link(p.wr_url,'WR') + '</td>' +
       '<td>' + link(p.profile_url,'Profile') + '</td>' +
-      '<td class="num">' + (p.lat?parseFloat(p.lat).toFixed(4):'—') + '</td>' +
-      '<td class="num">' + (p.long?parseFloat(p.long).toFixed(4):'—') + '</td>';
+      '<td class="num">' + (p.lat?parseFloat(p.lat).toFixed(4):' - ') + '</td>' +
+      '<td class="num">' + (p.long?parseFloat(p.long).toFixed(4):' - ') + '</td>';
     tbody.appendChild(tr);
   });
 

@@ -6,12 +6,12 @@
 <link rel="canonical" href="https://lab10yr.com/county-risk-leaderboard">
 <meta property="og:type"        content="website">
 <meta property="og:site_name"   content="Lab10YR">
-<meta property="og:title"       content="America's 100 Most At-Risk Counties — Soil Intelligence">
+<meta property="og:title"       content="America's 100 Most At-Risk Counties - Soil Intelligence">
 <meta property="og:description" content="The counties with the highest combined Fragile Soil Index and Organic Matter Depletion risk, ranked from 4,089 US soil survey areas.">
 <meta property="og:url"         content="https://lab10yr.com/county-risk-leaderboard.html">
 <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
 <meta name="twitter:card"        content="summary_large_image">
-<meta name="twitter:title"       content="America's 100 Most At-Risk Counties — Soil Intelligence">
+<meta name="twitter:title"       content="America's 100 Most At-Risk Counties - Soil Intelligence">
 <meta name="twitter:description" content="The counties with the highest combined Fragile Soil Index and Organic Matter Depletion risk, ranked from 4,089 US soil survey areas.">
 <title>America's 100 Most At-Risk Counties · Soil Intelligence</title>
 <style>
@@ -130,10 +130,10 @@ footer{text-align:center;padding:24px;color:var(--dimmer);font-size:11px;
   <h1>America's <em>100 Most At-Risk</em> Counties</h1>
   <p class="lead">Ranked by combined Fragile Soil Index and Organic Matter Depletion risk score from 967,000+ SSURGO map unit interpretations. Updated weekly from the National Cooperative Soil Survey (SSURGO).</p>
   <div class="hero-stats">
-    <div class="hstat"><div class="hstat-n" id="hs-counties">—</div><div class="hstat-l">Counties ranked</div></div>
-    <div class="hstat"><div class="hstat-n" id="hs-top-state">—</div><div class="hstat-l">Most at-risk state</div></div>
-    <div class="hstat"><div class="hstat-n" id="hs-avg-fsi">—</div><div class="hstat-l">Avg FSI (top 100)</div></div>
-    <div class="hstat"><div class="hstat-n" id="hs-avg-om">—</div><div class="hstat-l">Avg OM depletion</div></div>
+    <div class="hstat"><div class="hstat-n" id="hs-counties"> - </div><div class="hstat-l">Counties ranked</div></div>
+    <div class="hstat"><div class="hstat-n" id="hs-top-state"> - </div><div class="hstat-l">Most at-risk state</div></div>
+    <div class="hstat"><div class="hstat-n" id="hs-avg-fsi"> - </div><div class="hstat-l">Avg FSI (top 100)</div></div>
+    <div class="hstat"><div class="hstat-n" id="hs-avg-om"> - </div><div class="hstat-l">Avg OM depletion</div></div>
   </div>
 </div>
 
@@ -295,7 +295,7 @@ async function init() {
     const stateCounts = {};
     top100.forEach(c => stateCounts[c.state] = (stateCounts[c.state]||0)+1);
     const topState = Object.entries(stateCounts).sort((a,b)=>b[1]-a[1])[0];
-    document.getElementById('hs-top-state').textContent = topState ? `${topState[0]} (${topState[1]})` : '—';
+    document.getElementById('hs-top-state').textContent = topState ? `${topState[0]} (${topState[1]})` : ' - ';
     document.getElementById('hs-avg-fsi').textContent = (top100.reduce((s,c)=>s+c.fsi,0)/top100.length).toFixed(3);
     document.getElementById('hs-avg-om').textContent  = (top100.reduce((s,c)=>s+c.om,0)/top100.length).toFixed(3);
 

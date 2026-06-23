@@ -6,15 +6,15 @@
 <link rel="canonical" href="https://lab10yr.com/soil-atlas">
   <meta property="og:type"        content="website">
   <meta property="og:site_name"   content="Lab10YR">
-  <meta property="og:title"       content="Soil Intelligence Explorer — Soil Atlas">
+  <meta property="og:title"       content="Soil Intelligence Explorer - Soil Atlas">
   <meta property="og:description" content="Interactive soil atlas with live SDA integration, soil profile visualization, and seven story modes exploring the national SSURGO database.">
   <meta property="og:url"         content="https://lab10yr.com/soil-atlas.html">
   <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
   <meta name="twitter:card"        content="summary_large_image">
-  <meta name="twitter:title"       content="Soil Intelligence Explorer — Soil Atlas">
+  <meta name="twitter:title"       content="Soil Intelligence Explorer - Soil Atlas">
   <meta name="twitter:description" content="Interactive soil atlas with live SDA integration, soil profile visualization, and seven story modes exploring the national SSURGO database.">
   <meta name="twitter:image"       content="https://lab10yr.com/assets/og-preview.png">
-<title>Soil Intelligence Explorer — Soil Atlas</title>
+<title>Soil Intelligence Explorer - Soil Atlas</title>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css">
 <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
@@ -447,7 +447,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
   </div>
   <div class="hdr-sep"></div>
 
-  <div class="res-group" title="Soil pattern resolution — 900m/500m/100m shows SSURGO map unit polygons">
+  <div class="res-group" title="Soil pattern resolution - 900m/500m/100m shows SSURGO map unit polygons">
     <button class="res-btn active" id="res-county" onclick="setResolution('county')">County</button>
     <button class="res-btn" id="res-900" onclick="setResolution('900m')">900m</button>
     <button class="res-btn" id="res-500" onclick="setResolution('500m')">500m</button>
@@ -490,49 +490,49 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
           <span class="dc-icon"></span>
           <div class="dc-body">
             <div class="dc-title">Fragile Soil Crisis</div>
-            <div class="dc-sub">Nevada 0.50 · Arizona 0.48 · New Mexico 0.39 — the West's thin soils under siege</div>
+            <div class="dc-sub">Nevada 0.50 · Arizona 0.48 · New Mexico 0.39 - the West's thin soils under siege</div>
           </div>
         </div>
         <div class="disc-card" data-story="carbon" onclick="setStory(document.querySelector('[data-story=carbon].stab'),'carbon')">
           <span class="dc-icon"></span>
           <div class="dc-body">
             <div class="dc-title">Carbon Depletion Belt</div>
-            <div class="dc-sub">Arizona 88% · Texas 83% · Oklahoma 80% — OM vanishing faster than it forms</div>
+            <div class="dc-sub">Arizona 88% · Texas 83% · Oklahoma 80% - OM vanishing faster than it forms</div>
           </div>
         </div>
         <div class="disc-card" data-story="compound" onclick="setStory(document.querySelector('[data-story=compound].stab'),'compound')">
           <span class="dc-icon"></span>
           <div class="dc-body">
             <div class="dc-title">Crisis Index (FSI × OM)</div>
-            <div class="dc-sub">Where fragile structure meets carbon loss — the dual-threat crisis zone</div>
+            <div class="dc-sub">Where fragile structure meets carbon loss - the dual-threat crisis zone</div>
           </div>
         </div>
         <div class="disc-card" data-story="resilience" onclick="setStory(document.querySelector('[data-story=resilience].stab'),'resilience')">
           <span class="dc-icon"></span>
           <div class="dc-body">
             <div class="dc-title">Resilience Map</div>
-            <div class="dc-sub">Maine 0.10 · NH 0.16 · Alaska 0.12 — where soils still thrive</div>
+            <div class="dc-sub">Maine 0.10 · NH 0.16 · Alaska 0.12 - where soils still thrive</div>
           </div>
         </div>
         <div class="disc-card" data-story="opportunity" onclick="setStory(document.querySelector('[data-story=opportunity].stab'),'opportunity')">
           <span class="dc-icon"></span>
           <div class="dc-body">
             <div class="dc-title">Conservation Opportunity</div>
-            <div class="dc-sub">Iowa · Illinois · Indiana — high OM loss where cover crops hit hardest</div>
+            <div class="dc-sub">Iowa · Illinois · Indiana - high OM loss where cover crops hit hardest</div>
           </div>
         </div>
         <div class="disc-card" data-story="productivity" onclick="setStory(document.querySelector('[data-story=productivity].stab'),'productivity')">
           <span class="dc-icon"></span>
           <div class="dc-body">
             <div class="dc-title">Food Security (NCCPI)</div>
-            <div class="dc-sub">Red River Valley · Corn Belt Mollisols — where soils feed the world</div>
+            <div class="dc-sub">Red River Valley · Corn Belt Mollisols - where soils feed the world</div>
           </div>
         </div>
         <div class="disc-card" data-story="ecological" onclick="setStory(document.querySelector('[data-story=ecological].stab'),'ecological')">
           <span class="dc-icon"></span>
           <div class="dc-body">
             <div class="dc-title">Ecological & Special</div>
-            <div class="dc-sub">Forest soils · morel habitat · karst · hydric wetlands — nature's archive</div>
+            <div class="dc-sub">Forest soils · morel habitat · karst · hydric wetlands - nature's archive</div>
           </div>
         </div>
       </div>
@@ -540,14 +540,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
 
     <!-- Legend -->
     <div id="legend-wrap">
-      <div class="leg-title" id="leg-title">Fragile Soil Index — Dominant Condition</div>
+      <div class="leg-title" id="leg-title">Fragile Soil Index - Dominant Condition</div>
       <div id="leg-items"></div>
     </div>
 
     <!-- Stats -->
     <div class="stat-row">
       <div class="stat-box">
-        <div class="stat-val" id="stat-counties">—</div>
+        <div class="stat-val" id="stat-counties"> - </div>
         <div class="stat-lbl">Counties</div>
       </div>
       <div class="stat-box">
@@ -555,7 +555,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
         <div class="stat-lbl">Soil Series</div>
       </div>
       <div class="stat-box">
-        <div class="stat-val" id="stat-avg">—</div>
+        <div class="stat-val" id="stat-avg"> - </div>
         <div class="stat-lbl">Nat'l Mean</div>
       </div>
       <div class="stat-box">
@@ -588,12 +588,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
     <button class="mc-btn" onclick="zoomOut()" title="Zoom out">−</button>
     <button class="mc-btn" id="north-btn" onclick="resetNorth()" title="Reset north">⌖</button>
     <button class="mc-btn" id="loc-btn" onclick="geolocate()" title="My location">◎</button>
-    <button class="mc-btn" id="btn-style" onclick="toggleStylePanel()" title="Map style — boundaries">⚙</button>
+    <button class="mc-btn" id="btn-style" onclick="toggleStylePanel()" title="Map style - boundaries">⚙</button>
   </div>
 
   <!-- Map Style panel (live boundary tuning) -->
   <div id="style-panel">
-    <div class="sp-title">Map Style — Boundaries</div>
+    <div class="sp-title">Map Style - Boundaries</div>
 
     <div class="sp-group">
       <label class="sp-head">
@@ -636,7 +636,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
         <em id="st-county-opacity-val">0.45</em>
       </div>
     </div>
-    <div class="sp-note">Live preview — tune locally, then tell me the values to bake in.</div>
+    <div class="sp-note">Live preview - tune locally, then tell me the values to bake in.</div>
   </div>
 
   <!-- Bottom Ticker -->
@@ -677,7 +677,7 @@ const STATE_AGG = {"AK":{"fsi":0.118,"om":0.4519},"AL":{"fsi":0.2688,"om":0.7206
 // A county only has usable FSI/OM if it carries county-level values or its
 // state has an aggregate. When neither exists, return null so the computed
 // stories paint a neutral "Not rated" fill instead of fabricating a value
-// from hardcoded defaults (which made empty counties read as real data —
+// from hardcoded defaults (which made empty counties read as real data - 
 // e.g. a no-data county showing as "highly resilient" or top ecological).
 const NO_DATA_COLOR='#1a1a30';
 function countyFsiOm(f){
@@ -693,7 +693,7 @@ const STORIES = {
   fragile:{
     title:'Fragile Soil Index',
     desc:'Dominant condition fragility class per SSA',
-    legTitle:'Fragile Soil Index — Dominant Condition',
+    legTitle:'Fragile Soil Index - Dominant Condition',
     prop:'fsi_dominant',
     colorFn: f=>{
       const v=f.properties.fsi_dominant||'';
@@ -719,7 +719,7 @@ const STORIES = {
   carbon:{
     title:'Organic Matter Depletion Risk',
     desc:'Carbon loss risk under current management',
-    legTitle:'OM Depletion — Dominant Condition',
+    legTitle:'OM Depletion - Dominant Condition',
     prop:'om_dominant',
     colorFn: f=>{
       const v=f.properties.om_dominant||'';
@@ -741,7 +741,7 @@ const STORIES = {
   },
   compound:{
     title:'Compound Crisis Index',
-    desc:'County-level FSI × OM depletion risk — where fragility meets carbon loss',
+    desc:'County-level FSI × OM depletion risk - where fragility meets carbon loss',
     legTitle:'Compound Risk: FSI + OM Depletion (County-Level)',
     prop:'_compound',
     colorFn: f=>{
@@ -762,19 +762,19 @@ const STORIES = {
       return'#7b0007';
     },
     legend:[
-      {color:'#1b7837',label:'< 0.35 — Low compound risk'},
-      {color:'#78c679',label:'0.35–0.42'},
-      {color:'#fecc5c',label:'0.42–0.48'},
-      {color:'#fd8d3c',label:'0.48–0.55 — Elevated'},
-      {color:'#f03b20',label:'0.55–0.62 — High'},
-      {color:'#7b0007',label:'> 0.62 — Crisis zone',sub:'AZ, NV, NM — fragile + carbon-depleted'},
+      {color:'#1b7837',label:'< 0.35 - Low compound risk'},
+      {color:'#78c679',label:'0.35-0.42'},
+      {color:'#fecc5c',label:'0.42-0.48'},
+      {color:'#fd8d3c',label:'0.48-0.55 - Elevated'},
+      {color:'#f03b20',label:'0.55-0.62 - High'},
+      {color:'#7b0007',label:'> 0.62 - Crisis zone',sub:'AZ, NV, NM - fragile + carbon-depleted'},
     ],
     statHigh:'AZ',statAvg:'0.52'
   },
   resilience:{
     title:'Soil Resilience Score',
-    desc:'Inverse of compound risk — county-level, where soils are strongest',
-    legTitle:'Soil Resilience (1 − Compound Risk) — County-Level',
+    desc:'Inverse of compound risk - county-level, where soils are strongest',
+    legTitle:'Soil Resilience (1 − Compound Risk) - County-Level',
     prop:'_resilience',
     colorFn: f=>{
       const d=countyFsiOm(f);
@@ -788,12 +788,12 @@ const STORIES = {
       return'#ccece6';
     },
     legend:[
-      {color:'#005a32',label:'> 0.62 — Highly resilient',sub:'Maine, NH, VT, Alaska'},
-      {color:'#238b45',label:'0.55–0.62 — Resilient'},
-      {color:'#41ae76',label:'0.50–0.55'},
-      {color:'#66c2a4',label:'0.45–0.50'},
-      {color:'#99d8c9',label:'0.40–0.45 — Moderate'},
-      {color:'#ccece6',label:'< 0.40 — Low resilience'},
+      {color:'#005a32',label:'> 0.62 - Highly resilient',sub:'Maine, NH, VT, Alaska'},
+      {color:'#238b45',label:'0.55-0.62 - Resilient'},
+      {color:'#41ae76',label:'0.50-0.55'},
+      {color:'#66c2a4',label:'0.45-0.50'},
+      {color:'#99d8c9',label:'0.40-0.45 - Moderate'},
+      {color:'#ccece6',label:'< 0.40 - Low resilience'},
     ],
     statHigh:'ME',statAvg:'0.48'
   },
@@ -818,18 +818,18 @@ const STORIES = {
       return'#deebf7';
     },
     legend:[
-      {color:'#08306b',label:'Highest opportunity',sub:'IA, IL, TX — huge acreage × high OM loss'},
+      {color:'#08306b',label:'Highest opportunity',sub:'IA, IL, TX - huge acreage × high OM loss'},
       {color:'#2171b5',label:'Very high opportunity'},
       {color:'#4292c6',label:'High'},
       {color:'#6baed6',label:'Moderate'},
       {color:'#9ecae1',label:'Lower opportunity'},
       {color:'#deebf7',label:'Low / Not applicable'},
     ],
-    statHigh:'IA',statAvg:'—'
+    statHigh:'IA',statAvg:' - '
   },
   productivity:{
     title:'Food Security (NCCPI)',
-    desc:'Estimated crop productivity — low fragility + stable OM = prime farmland',
+    desc:'Estimated crop productivity - low fragility + stable OM = prime farmland',
     legTitle:'Crop Productivity Estimate (FSI + OM Proxy)',
     prop:'_productivity',
     colorFn:f=>{
@@ -845,17 +845,17 @@ const STORIES = {
     },
     legend:[
       {color:'#005a32',label:'Highest productivity',sub:'Red River Valley, Corn Belt Mollisols'},
-      {color:'#238b45',label:'High — prime farmland'},
+      {color:'#238b45',label:'High - prime farmland'},
       {color:'#41ae76',label:'Moderate-high'},
       {color:'#66c2a4',label:'Moderate'},
       {color:'#99d8c9',label:'Low-moderate'},
-      {color:'#ccece6',label:'Low — arid/rocky/shallow soils'},
+      {color:'#ccece6',label:'Low - arid/rocky/shallow soils'},
     ],
-    statHigh:'ND',statAvg:'—'
+    statHigh:'ND',statAvg:' - '
   },
   ecological:{
     title:'Ecological & Special',
-    desc:'Forest & wetland soils with high OM retention, low fragility — morel habitat, karst, hydric',
+    desc:'Forest & wetland soils with high OM retention, low fragility - morel habitat, karst, hydric',
     legTitle:'Ecological Interest Index',
     prop:'_ecological',
     colorFn:f=>{
@@ -870,34 +870,34 @@ const STORIES = {
       return'#1a1a30';
     },
     legend:[
-      {color:'#7c3aed',label:'Highest ecological interest',sub:'Maine, NH, AK — forest & wetland soils'},
-      {color:'#fcd34d',label:'High — hydric & forest'},
+      {color:'#7c3aed',label:'Highest ecological interest',sub:'Maine, NH, AK - forest & wetland soils'},
+      {color:'#fcd34d',label:'High - hydric & forest'},
       {color:'#c4b5fd',label:'Moderate-high'},
       {color:'#ddd6fe',label:'Moderate'},
       {color:'#ede9fe',label:'Lower ecological diversity'},
       {color:'#1a1a30',label:'Not rated'},
     ],
-    statHigh:'ME',statAvg:'—'
+    statHigh:'ME',statAvg:' - '
   },
 };
 
 // ── TICKER FACTS ────────────────────────────────────────────────────────
 const FACTS = [
-  {icon:'',text:'<strong>Morel mushrooms</strong> grow in soils with 30–80% sand, OM 2.8–5%, pH 6–7.5, well-drained — all queryable in SSURGO'},
-  {icon:'',text:'<strong>Baseball infield soil</strong> requires 60–65% sand, silt:clay ratio 0.75–1.0 — mapped across all US survey areas'},
+  {icon:'',text:'<strong>Morel mushrooms</strong> grow in soils with 30-80% sand, OM 2.8-5%, pH 6-7.5, well-drained - all queryable in SSURGO'},
+  {icon:'',text:'<strong>Baseball infield soil</strong> requires 60-65% sand, silt:clay ratio 0.75-1.0 - mapped across all US survey areas'},
   {icon:'',text:'<strong>Karst sinkholes</strong> probability = 0.5 when residuum from limestone; 1.0 for rock gypsum or halite parent material'},
-  {icon:'',text:'<strong>Fargo Clay (ND)</strong> scores 87 on the NCCPI food productivity index — highest in the nation; Arizona desert soils score 3'},
-  {icon:'',text:'<strong>Available Water Storage</strong> — a fine loam in the Corn Belt holds 10+ inches plant-available water to 150 cm depth'},
-  {icon:'',text:'<strong>Soil organic carbon</strong> in WI Dane County: Ap horizon alone holds 1,874 g/m² — computed from OM, bulk density, horizon thickness'},
-  {icon:'',text:'<strong>Mollisols</strong> — the great prairie soils — cover 22% of US cropland and account for the majority of grain production'},
-  {icon:'',text:'<strong>Hydric soils</strong> — saturated or flooded long enough to develop anaerobic conditions — indicate potential wetland boundaries'},
-  {icon:'',text:'<strong>Ecological Sites</strong> (ESD) encode the natural plant community for each soil — what should grow there without human disturbance'},
-  {icon:'',text:'<strong>KSSL lab data</strong> holds 800,000+ measured soil samples — pH, CEC, carbon, particle size — waiting to merge with SSURGO maps'},
-  {icon:'',text:'<strong>Soil temperature regimes</strong> range from Cryic (always cold) to Hyperthermic (always warm) — climate encoded in taxonomy'},
-  {icon:'',text:'<strong>Nevada</strong> has the nation\'s highest mean Fragile Soil Index at 0.50 — half the state\'s soils at the brink of degradation'},
-  {icon:'',text:'<strong>Cover Crop (Practice 340)</strong> sequesters ~0.18 t CO₂eq/acre/year — quantified from field-level conservation data'},
+  {icon:'',text:'<strong>Fargo Clay (ND)</strong> scores 87 on the NCCPI food productivity index - highest in the nation; Arizona desert soils score 3'},
+  {icon:'',text:'<strong>Available Water Storage</strong> - a fine loam in the Corn Belt holds 10+ inches plant-available water to 150 cm depth'},
+  {icon:'',text:'<strong>Soil organic carbon</strong> in WI Dane County: Ap horizon alone holds 1,874 g/m² - computed from OM, bulk density, horizon thickness'},
+  {icon:'',text:'<strong>Mollisols</strong> - the great prairie soils - cover 22% of US cropland and account for the majority of grain production'},
+  {icon:'',text:'<strong>Hydric soils</strong> - saturated or flooded long enough to develop anaerobic conditions - indicate potential wetland boundaries'},
+  {icon:'',text:'<strong>Ecological Sites</strong> (ESD) encode the natural plant community for each soil - what should grow there without human disturbance'},
+  {icon:'',text:'<strong>KSSL lab data</strong> holds 800,000+ measured soil samples - pH, CEC, carbon, particle size - waiting to merge with SSURGO maps'},
+  {icon:'',text:'<strong>Soil temperature regimes</strong> range from Cryic (always cold) to Hyperthermic (always warm) - climate encoded in taxonomy'},
+  {icon:'',text:'<strong>Nevada</strong> has the nation\'s highest mean Fragile Soil Index at 0.50 - half the state\'s soils at the brink of degradation'},
+  {icon:'',text:'<strong>Cover Crop (Practice 340)</strong> sequesters ~0.18 t CO₂eq/acre/year - quantified from field-level conservation data'},
   {icon:'',text:'<strong>No-Till (Practice 329)</strong> reduces net GHG by ~0.22 t CO₂eq/acre/year through soil carbon buildup and reduced fuel use'},
-  {icon:'',text:'<strong>Fragipan</strong> — a brittle, cemented subsoil layer found in many Midwestern soils — limits root depth and drainage when present'},
+  {icon:'',text:'<strong>Fragipan</strong> - a brittle, cemented subsoil layer found in many Midwestern soils - limits root depth and drainage when present'},
 ];
 
 // ── STATE ──────────────────────────────────────────────────────────────
@@ -910,7 +910,7 @@ const STYLE = {
   state: { on:true, color:'#ffffff', width:1.4, opacity:0.9 },
 };
 
-// Default framing — whole United States visible (zoomed out one level from the
+// Default framing - whole United States visible (zoomed out one level from the
 // old z4 county view so CONUS sits comfortably with margin).
 const CONUS_VIEW = { center:[-96,38], zoom:3.3 };
 let muLayersAdded=new Set(), muVisible=false;
@@ -980,21 +980,21 @@ async function loadData(){
     if(!r.ok) throw new Error('interp_data.json HTTP '+r.status);
     const interp=await r.json();
     const interpCount=Object.keys(interp).length;
-    SoilLog.info(tag,'Interp data loaded — '+interpCount+' entries');
+    SoilLog.info(tag,'Interp data loaded - '+interpCount+' entries');
 
     SoilLog.info(tag,'Loading county topology');
     const tr=await fetch(COUNTIES_CDN);
     if(!tr.ok) throw new Error('Counties CDN HTTP '+tr.status);
     const topo=await tr.json();
     geojsonData=topojson.feature(topo,topo.objects.counties);
-    SoilLog.info(tag,'Counties loaded — '+geojsonData.features.length+' features');
+    SoilLog.info(tag,'Counties loaded - '+geojsonData.features.length+' features');
 
-    // State boundaries ship in the same us-atlas topology — extract for the
+    // State boundaries ship in the same us-atlas topology - extract for the
     // white overlay line (no extra fetch).
     try{
       if(topo.objects&&topo.objects.states){
         statesData=topojson.feature(topo,topo.objects.states);
-        SoilLog.info(tag,'States loaded — '+statesData.features.length+' features');
+        SoilLog.info(tag,'States loaded - '+statesData.features.length+' features');
       }
     }catch(se){ SoilLog.warn&&SoilLog.warn(tag,'States extract failed: '+se.message); }
 
@@ -1036,21 +1036,21 @@ async function loadData(){
       }
     });
 
-    SoilLog.info(tag,'Data attached — direct:'+matched+' fallback:'+fallback+' unrated:'+unrated);
+    SoilLog.info(tag,'Data attached - direct:'+matched+' fallback:'+fallback+' unrated:'+unrated);
     buildMap();
     buildLegend(STORIES[activeStory]);
     updateStats();
     buildTicker();
     initStylePanel(); // wire the Map Style controls to the boundary layers
     initRasterLayers(); // check for 900m raster PMTiles (no-op if not built yet)
-    // Default to the county choropleth — the only resolution with data shipped.
+    // Default to the county choropleth - the only resolution with data shipped.
     // (900m/500m/100m need PMTiles under data/raster + per-state mapunit tiles,
     // which aren't built yet; auto-switching there blanked the map.)
     setTimeout(()=>setResolution('county'),400);
 
   }catch(e){
     SoilLog.error(tag,'loadData failed: '+e.message);
-    showApiError('Map data could not be loaded — showing outline only. ('+e.message+')');
+    showApiError('Map data could not be loaded - showing outline only. ('+e.message+')');
     buildMapFallback();
   }
 }
@@ -1061,7 +1061,7 @@ function buildMap(){
 
   // Build color expression using per-feature colorFn (works for all story types).
   // generateId:true assigns sequential IDs 0,1,2... matching array index, so we
-  // match ['id'] against pre-computed colors — avoids MapLibre string-property
+  // match ['id'] against pre-computed colors - avoids MapLibre string-property
   // evaluation issues with programmatically-set feature properties.
   function colorExprForStory(story){
     const stops=[];
@@ -1128,7 +1128,7 @@ function buildMap(){
 }
 
 async function buildMapFallback(){
-  // No interp data — color counties using state-level aggregated data
+  // No interp data - color counties using state-level aggregated data
   const tr=await fetch(COUNTIES_CDN);
   const topo=await tr.json();
   geojsonData=topojson.feature(topo,topo.objects.counties);
@@ -1270,7 +1270,7 @@ function buildLegend(story){
     row.innerHTML=`<span class="leg-swatch" style="background:${l.color}"></span>
       <span>
         <span class="leg-label">${l.label}</span>
-        ${l.sub?`<span class="leg-sub"> — ${l.sub}</span>`:''}
+        ${l.sub?`<span class="leg-sub"> - ${l.sub}</span>`:''}
       </span>`;
     container.appendChild(row);
   });
@@ -1372,7 +1372,7 @@ async function showDetail(props){
     renderDetail(content,props,comps,asy,aname,state);
   }catch(e){
     if(cancelled)return;
-    document.querySelector('.dp-loading').textContent='SDA query error — '+e.message;
+    document.querySelector('.dp-loading').textContent='SDA query error - '+e.message;
   }
 }
 
@@ -1421,7 +1421,7 @@ function renderDetail(content,props,comps,asy,aname,state){
 
     ${top&&top.horizons.length?`
     <div class="dp-section">
-      <div class="dp-sh">${top.compname} — Soil Profile</div>
+      <div class="dp-sh">${top.compname} - Soil Profile</div>
       <div id="hz-bars">${renderHorizons(top.horizons)}</div>
     </div>`:''}
 
@@ -1430,7 +1430,7 @@ function renderDetail(content,props,comps,asy,aname,state){
       <div class="dp-sh">Surface Texture</div>
       <div id="tri-wrap" class="tri-wrap">
         <canvas id="tri-canvas" width="220" height="190"></canvas>
-        <div class="tri-label" id="tri-text">Sand / Silt / Clay — % by weight</div>
+        <div class="tri-label" id="tri-text">Sand / Silt / Clay - % by weight</div>
       </div>
     </div>`:''}
 
@@ -1459,7 +1459,7 @@ function renderDetail(content,props,comps,asy,aname,state){
       <div class="dp-sh">NCSS Lab Samples (KSSL)</div>
       <div style="background:var(--panel2);border-radius:6px;padding:10px 12px;border:1px solid var(--border)">
         <div style="font-size:11px;color:var(--dim);margin-bottom:8px;line-height:1.6">
-          The Kellogg Soil Survey Lab holds 800,000+ measured samples — pH, organic carbon, CEC, texture, mineralogy. Search by survey area:
+          The Kellogg Soil Survey Lab holds 800,000+ measured samples - pH, organic carbon, CEC, texture, mineralogy. Search by survey area:
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <a href="https://ncsslabdatamart.sc.egov.usda.gov/querypage.aspx" target="_blank" rel="noopener noreferrer"
@@ -1517,7 +1517,7 @@ function renderHorizons(horizons){
     const pctClamp=Math.max(pct,4);
     const color=hzColor(h.name||'',parseFloat(h.om)||0);
     return`<div class="hz-row">
-      <div class="hz-depth">${h.top}–${h.bot}</div>
+      <div class="hz-depth">${h.top}-${h.bot}</div>
       <div class="hz-bar-outer">
         <div class="hz-bar-inner" data-w="${pctClamp}" style="background:${color}">
           <span class="hz-name">${h.name||'?'}</span>
@@ -1591,9 +1591,9 @@ function renderRecs(props){
 function scoreBox(cls,avg,label,color){
   const pct=avg!=null?Math.round(avg*100):null;
   return`<div class="dp-score-box">
-    <div class="val" style="color:${color}">${pct!=null?pct:'—'}</div>
+    <div class="val" style="color:${color}">${pct!=null?pct:' - '}</div>
     <div class="lbl">${label}</div>
-    <div class="cls" style="color:${color}">${cls||'—'}</div>
+    <div class="cls" style="color:${color}">${cls||' - '}</div>
   </div>`;
 }
 function fsiColor(cls){
@@ -1735,7 +1735,7 @@ async function initRasterLayers(){
       },'fill');
     });
     SoilLog.info('Atlas','900m raster PMTiles loaded');
-  }catch(_){/* raster files not yet built — silent */}
+  }catch(_){/* raster files not yet built - silent */}
 }
 
 function _updateRasterOpacity(z){
@@ -1782,7 +1782,7 @@ function setResolution(level){
     if(level==='900m') _setRasterVisible(true);
     else _setRasterVisible(false);
     const targetZ=RES_ZOOM[level]||7;
-    // Load tiles, then fly — zoom handler will update opacities
+    // Load tiles, then fly - zoom handler will update opacities
     loadMUTiles();
     // Set immediate opacity for already-loaded layers
     const muOp=Math.max(0,Math.min(0.85,0.85*(targetZ-5)/(7-5)));
@@ -1881,7 +1881,7 @@ async function querySDAFull(asy){
     const[,,...rows]=d.Table;
     const div=document.createElement('div');
     div.style.cssText='margin-top:8px;background:var(--panel2);border-radius:6px;padding:10px;overflow-x:auto';
-    div.innerHTML=`<div style="font-size:10px;font-weight:700;color:var(--dim);margin-bottom:6px">${asy} — ${rows.length} map units</div>
+    div.innerHTML=`<div style="font-size:10px;font-weight:700;color:var(--dim);margin-bottom:6px">${asy} - ${rows.length} map units</div>
       <table style="width:100%;border-collapse:collapse;font-size:10px;min-width:240px">
       <tr style="color:var(--dim)"><th style="text-align:left;padding:3px">Sym</th>
       <th style="text-align:left;padding:3px">Name</th>

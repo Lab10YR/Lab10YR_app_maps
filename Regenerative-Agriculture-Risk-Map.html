@@ -6,15 +6,15 @@
 <link rel="canonical" href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map">
   <meta property="og:type"        content="website">
   <meta property="og:site_name"   content="Lab10YR">
-  <meta property="og:title"       content="Regenerative Agriculture Risk Map — Fragile Soils & OM Depletion">
+  <meta property="og:title"       content="Regenerative Agriculture Risk Map - Fragile Soils & OM Depletion">
   <meta property="og:description" content="Dual-pane national map of Fragile Soil Index and Organic Matter Depletion risk for every US county and map unit, built from SSURGO national soil survey data.">
   <meta property="og:url"         content="https://lab10yr.com/Regenerative-Agriculture-Risk-Map.html">
   <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
   <meta name="twitter:card"        content="summary_large_image">
-  <meta name="twitter:title"       content="Regenerative Agriculture Risk Map — Fragile Soils & OM Depletion">
+  <meta name="twitter:title"       content="Regenerative Agriculture Risk Map - Fragile Soils & OM Depletion">
   <meta name="twitter:description" content="Dual-pane national map of Fragile Soil Index and Organic Matter Depletion risk for every US county and map unit, built from SSURGO national soil survey data.">
   <meta name="twitter:image"       content="https://lab10yr.com/assets/og-preview.png">
-<title>Regenerative Agriculture Risk Map — Fragile Soils &amp; Organic Matter Depletion</title>
+<title>Regenerative Agriculture Risk Map - Fragile Soils &amp; Organic Matter Depletion</title>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css">
 <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
@@ -328,9 +328,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
   transform:translate(-50%,-50%);color:var(--dim);font-size:18px;pointer-events:none
 }
 
-/* Attribution + scale bar — dark/muted, compact by default */
+/* Attribution + scale bar - dark/muted, compact by default */
 
-/* Compact "i" button — dim, small */
+/* Compact "i" button - dim, small */
 .maplibregl-ctrl-attrib.maplibregl-compact{
   background:rgba(8,8,16,0.45)!important;
   backdrop-filter:blur(4px)!important;
@@ -494,7 +494,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
       <input type="checkbox" id="chk-states" onchange="toggleStates(this.checked)"> State Boundaries
     </label>
 
-    <label class="layer-chk" id="chk-raster-wrap" title="National 900m soil raster — both maps" style="display:none">
+    <label class="layer-chk" id="chk-raster-wrap" title="National 900m soil raster - both maps" style="display:none">
       <input type="checkbox" id="chk-raster" onchange="toggleNationalRaster(this.checked)"> National Raster
     </label>
 
@@ -572,7 +572,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
       <div class="ip-swatch" style="background:#1b7837"></div>
       <div>
         <div class="ip-class-name">Not Fragile</div>
-        <div class="ip-class-range">Score 0.00 – 0.15</div>
+        <div class="ip-class-range">Score 0.00 - 0.15</div>
         <div class="ip-class-desc">Highly stable soils with strong aggregate structure, adequate organic matter, and favorable drainage. These soils absorb disturbance with minimal long-term consequence and support intensive use without structural decline.</div>
       </div>
     </div>
@@ -581,7 +581,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
       <div class="ip-swatch" style="background:#78c679"></div>
       <div>
         <div class="ip-class-name">Slightly Fragile</div>
-        <div class="ip-class-range">Score 0.15 – 0.30</div>
+        <div class="ip-class-range">Score 0.15 - 0.30</div>
         <div class="ip-class-desc">Generally resilient soils with minor susceptibility to compaction or aggregate disruption. Good management practices maintain productivity with few restrictions, but bare soil periods should be minimized.</div>
       </div>
     </div>
@@ -590,7 +590,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
       <div class="ip-swatch" style="background:#fecc5c"></div>
       <div>
         <div class="ip-class-name">Moderately Fragile</div>
-        <div class="ip-class-range">Score 0.30 – 0.50</div>
+        <div class="ip-class-range">Score 0.30 - 0.50</div>
         <div class="ip-class-desc">Soils showing meaningful sensitivity to tillage and compaction. Structural decline under repeated disturbance is measurable. Reduced-tillage systems, residue retention, and cover crops are strongly recommended to prevent irreversible loss.</div>
       </div>
     </div>
@@ -599,7 +599,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
       <div class="ip-swatch" style="background:#f03b20"></div>
       <div>
         <div class="ip-class-name">Highly Fragile</div>
-        <div class="ip-class-range">Score 0.50 – 0.70</div>
+        <div class="ip-class-range">Score 0.50 - 0.70</div>
         <div class="ip-class-desc">Soils prone to rapid structural collapse under conventional management. Regenerative land practices are essential. Any period of bare soil exposure or heavy equipment traffic poses a substantial risk of lasting degradation that is difficult and costly to reverse.</div>
       </div>
     </div>
@@ -608,7 +608,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
       <div class="ip-swatch" style="background:#7b0007"></div>
       <div>
         <div class="ip-class-name">Very Highly Fragile</div>
-        <div class="ip-class-range">Score 0.70 – 1.00</div>
+        <div class="ip-class-range">Score 0.70 - 1.00</div>
         <div class="ip-class-desc">The most vulnerable soils in the landscape. Even modest disturbance risks severe, potentially irreversible structural failure. These soils are best maintained in permanent vegetative cover, including native grass, woodland, or perennial systems, with the most conservative stewardship practices applied at every stage.</div>
       </div>
     </div>
@@ -657,7 +657,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
       <div>
         <div class="ip-class-name">Moderate Depletion</div>
         <div class="ip-class-range">Measurable loss under tillage</div>
-        <div class="ip-class-desc">Tillage and residue removal produce measurable organic matter reductions over a 5–10 year horizon. Cover crops, manure additions, and reduced-till systems are beneficial and often necessary to maintain soil quality indicators within productive ranges.</div>
+        <div class="ip-class-desc">Tillage and residue removal produce measurable organic matter reductions over a 5-10 year horizon. Cover crops, manure additions, and reduced-till systems are beneficial and often necessary to maintain soil quality indicators within productive ranges.</div>
       </div>
     </div>
 
@@ -785,7 +785,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
         <div style="font-size:11px;color:var(--dim);line-height:1.65">
           <p style="margin-bottom:6px">
             <strong style="color:var(--text)">Aggregation:</strong>
-            Dominant Condition — the rating class with the highest sum of major
+            Dominant Condition - the rating class with the highest sum of major
             component percents per map unit, then the most common class per county.
           </p>
           <p style="margin-bottom:6px">
@@ -917,7 +917,7 @@ const DEFINITIONS = {
   },
   'Fragile':{
     short:'Significant conservation concern',
-    full:'Soils with notable structural sensitivity to disturbance. Consistent use of regenerative land practices — cover crops, reduced tillage, and residue retention — is needed to prevent progressive degradation.',
+    full:'Soils with notable structural sensitivity to disturbance. Consistent use of regenerative land practices - cover crops, reduced tillage, and residue retention - is needed to prevent progressive degradation.',
   },
   'Highly fragile':{
     short:'High conservation priority',
@@ -1136,7 +1136,7 @@ function addLayers(){
     // ── Imagery basemap (inserted first so everything else draws on top) ──
     m.addSource(`imagery-src-${idx}`,{type:'raster',tileSize:256,
       tiles:[IMAGERY_TILES],
-      attribution:'Tiles © Esri — Source: Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS'});
+      attribution:'Tiles © Esri - Source: Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS'});
     m.addLayer({id:`imagery-${idx}`,type:'raster',source:`imagery-src-${idx}`,
       paint:{'raster-opacity':1.0},
       layout:{visibility:'none'}});
@@ -1181,7 +1181,7 @@ function addLayers(){
       paint:{'raster-opacity':0.7},
       layout:{visibility:layerState.hydro?'visible':'none'}});
 
-    // ── Watershed Boundary Dataset (USGS WBD WMS — HUC2/4/6/8) ──────────────
+    // ── Watershed Boundary Dataset (USGS WBD WMS - HUC2/4/6/8) ──────────────
     m.addSource(`watershed-src-${idx}`,{type:'raster',tileSize:256,
       tiles:[`${WBD_WMS}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=2,3,4,5&STYLES=&FORMAT=image/png&TRANSPARENT=true&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&BBOX={bbox-epsg-3857}`],
       attribution:'USGS WBD'});
@@ -1351,7 +1351,7 @@ function toggleFill(on){
   _eachMuFillLayer((m,id)=>m.setLayoutProperty(id,'visibility',on?'visible':'none'));
 }
 
-// County / mu fill opacity — accounts for imagery-on dimming
+// County / mu fill opacity - accounts for imagery-on dimming
 function setFillOpacity(val){
   val=+val;
   const pct=Math.round(val);
@@ -1407,12 +1407,12 @@ function setupHover(m,layerId,src,idx,sourceLayer=null){
     hovId[idx]=f.id;
     m.setFeatureState(fref(hovId[idx]),{hover:true});
     const p=f.properties;
-    const fc=p.fsi_dominant||'—', oc=p.om_dominant||'—';
+    const fc=p.fsi_dominant||' - ', oc=p.om_dominant||' - ';
     const isMu=!!p.mukey;
     tip.innerHTML=isMu?`
       <div class="tt-name">${p.muname||p.musym||p.mukey}</div>
-      <div class="tt-row"><span>Survey Area</span><span class="tt-val" style="color:var(--accent)">${p.areasymbol||'—'}</span></div>
-      <div class="tt-row"><span>Symbol</span><span class="tt-val">${p.musym||'—'}</span></div>
+      <div class="tt-row"><span>Survey Area</span><span class="tt-val" style="color:var(--accent)">${p.areasymbol||' - '}</span></div>
+      <div class="tt-row"><span>Symbol</span><span class="tt-val">${p.musym||' - '}</span></div>
       <div class="tt-row"><span>Fragile Soil Index</span>
         <span class="tt-val" style="color:${FSI_MAP[fc]||'#888'}">${fc}</span></div>
       <div class="tt-row"><span>OM Depletion</span>
@@ -1605,9 +1605,9 @@ function showInfo(p){
       <div style="font-weight:700;font-size:12px;margin-bottom:8px;padding-bottom:6px;
                   border-bottom:1px solid var(--border)">${p.muname||p.musym||p.mukey}</div>
       <div class="i-row"><span class="i-key">Soil Survey Area</span>
-        <span class="i-val" style="color:var(--accent)">${p.areasymbol||'—'}</span></div>
+        <span class="i-val" style="color:var(--accent)">${p.areasymbol||' - '}</span></div>
       <div class="i-row"><span class="i-key">Map Unit Symbol</span>
-        <span class="i-val">${p.musym||'—'}</span></div>
+        <span class="i-val">${p.musym||' - '}</span></div>
       <div class="i-row"><span class="i-key">Map Unit Key</span>
         <span class="i-val" style="color:var(--dim)">${p.mukey}</span></div>
       <div class="i-row"><span class="i-key">Fragile Soil Index</span>
@@ -1668,7 +1668,7 @@ async function querySDA(fips,areasymbol){
     };
     let t=`<div style="font-size:10px;font-weight:700;color:var(--dim);margin-top:10px;
               padding-bottom:3px;border-bottom:1px solid var(--border)">
-              ${areasymbol} — ${rows.length} map units</div>
+              ${areasymbol} - ${rows.length} map units</div>
             <div style="max-height:180px;overflow-y:auto;margin-top:4px">
             <table style="width:100%;border-collapse:collapse;font-size:10px">
             <tr style="color:var(--dim)">
@@ -1777,7 +1777,7 @@ function downloadMapImage(){
       [[0,'Fragile Soil Index','#4e9fff'],[cL.width,'Organic Matter Depletion','#a78bfa']].forEach(([x,lbl,col])=>{
         ctx.fillStyle='rgba(8,8,16,0.85)';ctx.fillRect(x,0,230*dpr,32*dpr);
         ctx.fillStyle=col;ctx.font=`700 ${12*dpr}px Inter,sans-serif`;
-        ctx.fillText('Regenerative Ag Risk — '+lbl,x+10*dpr,20*dpr);
+        ctx.fillText('Regenerative Ag Risk - '+lbl,x+10*dpr,20*dpr);
       });
       const a=document.createElement('a');
       a.download=`regen_ag_soil_risk_${new Date().toISOString().slice(0,10)}.png`;
@@ -1900,7 +1900,7 @@ function toggleStates(on){
 }
 
 // ── NATIONAL RASTER PMTiles (900m FSI + OM) ───────────────────────────────
-// mapL shows FSI raster; mapR shows OM raster — both at 900m national resolution.
+// mapL shows FSI raster; mapR shows OM raster - both at 900m national resolution.
 // The checkbox is hidden until the raster files are confirmed present.
 let _rasterNationalReady=false;
 
@@ -1946,7 +1946,7 @@ function toggleNationalRaster(on){
 }
 
 // ── MAP UNIT POLYGON LAYER ────────────────────────────────────────────────
-// PMTiles vector tiles — per-state files in data/pmtiles/{STATE}.pmtiles.
+// PMTiles vector tiles - per-state files in data/pmtiles/{STATE}.pmtiles.
 // tippecanoe builds these from the GeoJSON with layer name = state abbreviation.
 // MapLibre loads only the tiles needed for the current viewport via byte-range HTTP.
 // Displayed at zoom >= 8; zoom 7 tiles are too sparse due to tippecanoe feature-dropping.
@@ -2318,7 +2318,7 @@ async function loadData(){
   try{
     document.getElementById('loading-msg').textContent='Loading regenerative agriculture risk data…';
     const ir=await fetch(DATA_INTERP);
-    if(!ir.ok)throw new Error('interp_data.json not found — run: python scripts/fetch_soil_data.py');
+    if(!ir.ok)throw new Error('interp_data.json not found - run: python scripts/fetch_soil_data.py');
     const interpData=await ir.json();
 
     // mukey ratings for zoom-9 layer (non-fatal if missing)

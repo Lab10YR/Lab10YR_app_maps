@@ -6,15 +6,15 @@
 <link rel="canonical" href="https://lab10yr.com/carbon-risk-map">
 <meta property="og:type"        content="website">
 <meta property="og:site_name"   content="Lab10YR">
-<meta property="og:title"       content="Carbon Risk Map — Where Soil Carbon is Being Lost">
-<meta property="og:description" content="78% of US counties face significant soil carbon loss. See where organic matter depletion risk is highest — and where regenerative practices would have the most impact.">
+<meta property="og:title"       content="Carbon Risk Map - Where Soil Carbon is Being Lost">
+<meta property="og:description" content="78% of US counties face significant soil carbon loss. See where organic matter depletion risk is highest - and where regenerative practices would have the most impact.">
 <meta property="og:url"         content="https://lab10yr.com/carbon-risk-map.html">
 <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
 <meta name="twitter:card"        content="summary_large_image">
-<meta name="twitter:title"       content="Carbon Risk Map — Where Soil Carbon is Being Lost">
+<meta name="twitter:title"       content="Carbon Risk Map - Where Soil Carbon is Being Lost">
 <meta name="twitter:description" content="78% of US counties face significant soil carbon loss. Interactive national soil carbon risk map.">
 <meta name="twitter:image"       content="https://lab10yr.com/assets/og-preview.png">
-<title>Carbon Risk Map — Soil Organic Matter Depletion</title>
+<title>Carbon Risk Map - Soil Organic Matter Depletion</title>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css">
 <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
@@ -215,7 +215,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
     <div class="sb-hdr">
       <div class="sb-eyebrow">Soil Carbon · Organic Matter Depletion</div>
       <div class="sb-title">Carbon Risk Map</div>
-      <div class="sb-sub">Where soil carbon is being lost — and where regenerative practices would have the most impact.</div>
+      <div class="sb-sub">Where soil carbon is being lost - and where regenerative practices would have the most impact.</div>
     </div>
 
     <div id="layer-tabs">
@@ -230,7 +230,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
       <div class="stat-block">
         <div class="stat-row">
           <div class="sr-label">Counties at high or very high carbon risk</div>
-          <div class="sr-val risk" id="stat-high">—</div>
+          <div class="sr-val risk" id="stat-high"> - </div>
         </div>
         <div class="stat-row">
           <div class="sr-label">Counties with dual-threat (fragile + high OM loss)</div>
@@ -286,7 +286,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
     <!-- Detail panel -->
     <div id="dp">
       <div id="dp-hdr">
-        <span class="dp-title" id="dp-title">—</span>
+        <span class="dp-title" id="dp-title"> - </span>
         <button id="dp-close" onclick="document.getElementById('dp').style.display='none'">✕</button>
       </div>
       <div id="dp-body"></div>
@@ -421,7 +421,7 @@ async function loadData(){
     const r=await fetch(DATA_INTERP);
     if(!r.ok)throw new Error('interp_data HTTP '+r.status);
     const interp=await r.json();
-    SoilLog.info(tag,'Interp loaded — '+Object.keys(interp).length+' entries');
+    SoilLog.info(tag,'Interp loaded - '+Object.keys(interp).length+' entries');
 
     const tr=await fetch(COUNTIES_CDN);
     if(!tr.ok)throw new Error('Counties CDN HTTP '+tr.status);
@@ -463,7 +463,7 @@ async function loadData(){
       }
     });
 
-    SoilLog.info(tag,'Data attached — '+hiCount+' high-risk counties');
+    SoilLog.info(tag,'Data attached - '+hiCount+' high-risk counties');
     document.getElementById('stat-high').textContent=hiCount.toLocaleString();
 
     buildMap();
@@ -542,7 +542,7 @@ function buildLegend(){
   document.getElementById('leg-items').innerHTML=cfg.legend.map(l=>
     `<div class="leg-row">
       <div class="leg-swatch" style="background:${l.color}"></div>
-      <div class="leg-label">${l.desc?`<strong>${l.label}</strong><br><span style="font-size:.65rem;color:var(--dimmer)">${l.desc}</span>`:l.label||'—'}</div>
+      <div class="leg-label">${l.desc?`<strong>${l.label}</strong><br><span style="font-size:.65rem;color:var(--dimmer)">${l.desc}</span>`:l.label||' - '}</div>
     </div>`
   ).join('');
 }
@@ -610,12 +610,12 @@ function showDetail(props){
   const dualThreat=['OM depletion high','OM depletion moderately high'].includes(omC)&&
     ['Highly fragile','Fragile','Extremely fragile','Very highly fragile'].includes(fsiC);
 
-  const omVal=props.om_avg?(props.om_avg*100).toFixed(1)+'%':'—';
-  const fsiVal=props.fsi_avg?(props.fsi_avg*100).toFixed(1)+'%':'—';
+  const omVal=props.om_avg?(props.om_avg*100).toFixed(1)+'%':' - ';
+  const fsiVal=props.fsi_avg?(props.fsi_avg*100).toFixed(1)+'%':' - ';
 
   document.getElementById('dp-body').innerHTML=`
     ${dualThreat?`<div style="background:rgba(255,69,0,.12);border:1px solid rgba(255,69,0,.35);
-      border-radius:5px;padding:7px 10px;margin-bottom:8px;font-size:.72rem;color:#ff7043;font-weight:700">Dual-threat zone — fragile structure + high carbon loss
+      border-radius:5px;padding:7px 10px;margin-bottom:8px;font-size:.72rem;color:#ff7043;font-weight:700">Dual-threat zone - fragile structure + high carbon loss
     </div>`:''}
     <div class="dp-row">
       <div class="dp-key">OM Depletion Risk</div>
@@ -639,7 +639,7 @@ function showDetail(props){
     </div>
     <div class="dp-row">
       <div class="dp-key">Survey Area</div>
-      <div class="dp-val" style="color:var(--accent)">${props.areasymbol||'—'}</div>
+      <div class="dp-val" style="color:var(--accent)">${props.areasymbol||' - '}</div>
     </div>
     <div style="margin-top:10px">
       <a href="soil-data-visual-lab.html" style="display:flex;align-items:center;gap:8px;padding:8px 12px;

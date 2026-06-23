@@ -6,12 +6,12 @@
 <link rel="canonical" href="https://lab10yr.com/county-report">
 <meta property="og:type"        content="website">
 <meta property="og:site_name"   content="Lab10YR">
-<meta property="og:title"       content="County Soil Report — Soil Intelligence">
+<meta property="og:title"       content="County Soil Report - Soil Intelligence">
 <meta property="og:description" content="Pick any US county and get its measured soil profile: organic matter, shrink-swell, wetland extent, corrosion risk, drainage, and water storage, live from the national soil survey.">
 <meta property="og:url"         content="https://lab10yr.com/county-report.html">
 <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
 <meta name="twitter:card"        content="summary_large_image">
-<meta name="twitter:title"       content="County Soil Report — Soil Intelligence">
+<meta name="twitter:title"       content="County Soil Report - Soil Intelligence">
 <meta name="twitter:description" content="Measured soil profile for any US county, live from the national soil survey via the National Cooperative Soil Survey (SSURGO).">
 <title>County Soil Report &middot; Soil Intelligence</title>
 <link rel="stylesheet" href="assets/lab10yr-theme.css">
@@ -199,21 +199,21 @@ async function runReport(sym,name){
     const om=num(A0.om,2),lep=num(A0.lep,2),hydric=num(B0.hydric,1),corr=num(B0.corr,1),
           aws=num(D0.aws,1),drain=C0.drain||null,mus=B0.mus||0,comps=B0.comps||0;
     const cards=[];
-    cards.push(metric("Organic Matter (topsoil)",om!=null?om+'<small>%</small>':"&mdash;",
+    cards.push(metric("Organic Matter (topsoil)",om!=null?om+'<small>%</small>':" - ",
       "Carbon and fertility in the surface horizon. Higher means a richer, more resilient topsoil.",
       om==null?null:(om>=4?["low","Rich"]:om>=2?["mid","Moderate"]:["high","Depleted"])));
-    cards.push(metric("Shrink-Swell (LEP)",lep!=null?lep:"&mdash;",
+    cards.push(metric("Shrink-Swell (LEP)",lep!=null?lep:" - ",
       "Linear extensibility of the surface soil. Above 6 means clays that swell and crack, stressing foundations, roads, and pipes.",
       lep==null?null:(lep>=6?["high","High"]:lep>=3?["mid","Moderate"]:["low","Low"])));
-    cards.push(metric("Wetland (Hydric) Soils",hydric!=null?hydric+'<small>%</small>':"&mdash;",
+    cards.push(metric("Wetland (Hydric) Soils",hydric!=null?hydric+'<small>%</small>':" - ",
       "Share of the county's soils rated hydric: saturated long enough to develop wetland conditions and regulatory constraints.",
       hydric==null?null:(hydric>=30?["high","Extensive"]:hydric>=10?["mid","Notable"]:["low","Limited"])));
-    cards.push(metric("Steel Corrosion Risk",corr!=null?corr+'<small>%</small>':"&mdash;",
+    cards.push(metric("Steel Corrosion Risk",corr!=null?corr+'<small>%</small>':" - ",
       "Share of soils rated high-corrosion to uncoated steel. Matters for buried utilities, pilings, and tanks.",
       corr==null?null:(corr>=40?["high","High"]:corr>=15?["mid","Moderate"]:["low","Low"])));
-    cards.push(metric("Dominant Drainage",drain?drain:"&mdash;",
+    cards.push(metric("Dominant Drainage",drain?drain:" - ",
       "How water moves through the county's most extensive soils, from excessively drained to very poorly drained.",null));
-    cards.push(metric("Plant-Available Water",aws!=null?aws+'<small> cm</small>':"&mdash;",
+    cards.push(metric("Plant-Available Water",aws!=null?aws+'<small> cm</small>':" - ",
       "Water the soil can hold for plants in the top 100 cm. A higher number is a deeper drought buffer.",
       aws==null?null:(aws>=18?["low","Deep buffer"]:aws>=10?["mid","Moderate"]:["high","Thin buffer"])));
     report.innerHTML=

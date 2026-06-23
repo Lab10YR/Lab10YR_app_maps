@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Ground Beneath the Cloud — GroundScore · Lab10YR</title>
+<title>The Ground Beneath the Cloud - GroundScore · Lab10YR</title>
 <meta name="description" content="The AI build-out is racing for power and water. The thing that actually has to hold a hyperscale campus, the soil, has been mapped for decades, and it says the industry is building on some of the country's worst ground. A GroundScore investigation.">
 <link rel="canonical" href="https://lab10yr.com/articles/the-ground-beneath-the-cloud">
 <meta property="og:type" content="article">
@@ -211,7 +211,7 @@ footer a{color:var(--dim)}
     <div><div class="n" id="s1">39%</div><div class="l">of Data Center Alley (Loudoun, VA) is buildable ground</div></div>
     <div><div class="n">22</div><div class="l">GroundScore of Dulles silt loam, a signature Alley soil (Poor)</div></div>
     <div><div class="n">88</div><div class="l">GroundScore of Cipriano loam in the Buckeye, AZ corridor (Prime)</div></div>
-    <div><div class="n">0&ndash;100</div><div class="l">one fuzzy-logic score, every U.S. map unit</div></div>
+    <div><div class="n">0-100</div><div class="l">one fuzzy-logic score, every U.S. map unit</div></div>
   </div>
 
   <h2 class="sec">Two sites, two verdicts</h2>
@@ -339,7 +339,7 @@ function buildSwarm(host,agg){
   try{ agg=await fetch('../data/dcsi_state_agg.json?v=2',{cache:'no-store'}).then(r=>r.ok?r.json():{}); }catch(e){}
   try{ geo=await fetch('../data/us-states.geojson').then(r=>r.json()); }catch(e){}
   try{ mk=await fetch('../data/dc_markets.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():[]); }catch(e){}
-  // Same surface as the overview page: combined-DCI grid first, soil grid as fallback — one model everywhere.
+  // Same surface as the overview page: combined-DCI grid first, soil grid as fallback - one model everywhere.
   let grid=[]; try{ grid=await fetch('../data/groundscore_grid_dci.json?v=2',{cache:'no-store'}).then(r=>r.ok?r.json():[]); }catch(e){}
   if(!grid.length){ try{ grid=await fetch('../data/groundscore_grid.json?v=2',{cache:'no-store'}).then(r=>r.ok?r.json():[]); }catch(e){} }
   buildArticleMap(document.getElementById('heromap'),agg,geo,mk,grid);

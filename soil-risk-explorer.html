@@ -6,7 +6,7 @@
 <link rel="canonical" href="https://lab10yr.com/soil-risk-explorer">
 <meta property="og:type"        content="website">
 <meta property="og:site_name"   content="Lab10YR">
-<meta property="og:title"       content="Soil Risk Explorer — Linked Scatter & Map">
+<meta property="og:title"       content="Soil Risk Explorer - Linked Scatter & Map">
 <meta property="og:description" content="Brush the FSI × OM scatter plot to highlight matching counties on the national map. Find the crisis zone where fragile soils and organic matter loss collide.">
 <meta property="og:url"         content="https://lab10yr.com/soil-risk-explorer.html">
 <meta property="og:image"       content="https://lab10yr.com/assets/og-preview.png">
@@ -98,7 +98,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .quad-label{fill:var(--dimmer);font-size:9px;font-family:var(--font);font-weight:700;
             letter-spacing:.06em;text-transform:uppercase}
 
-/* Scatter legend — lives in header, never overlaps chart */
+/* Scatter legend - lives in header, never overlaps chart */
 #scatter-legend{
   margin-top:7px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center
 }
@@ -291,14 +291,14 @@ function addMapLayers() {
     if (hovId !== null) map.setFeatureState({source:'counties',id:hovId},{hover:false});
     hovId = f.id;
     const p = f.properties;
-    const fc = p.fsi_dominant || '—', oc = p.om_dominant || '—';
+    const fc = p.fsi_dominant || ' - ', oc = p.om_dominant || ' - ';
     tip.innerHTML = `
       <div class="tip-name">${p.areaname||p.areasymbol}</div>
       <div class="tip-row"><span>State</span><span class="tip-val">${p.state}</span></div>
       <div class="tip-row"><span>FSI class</span><span class="tip-val" style="color:${FSI_MAP[fc]||'#888'}">${fc}</span></div>
-      <div class="tip-row"><span>FSI avg</span><span class="tip-val">${p.fsi_avg!=null?(+p.fsi_avg).toFixed(3):'—'}</span></div>
+      <div class="tip-row"><span>FSI avg</span><span class="tip-val">${p.fsi_avg!=null?(+p.fsi_avg).toFixed(3):' - '}</span></div>
       <div class="tip-row"><span>OM class</span><span class="tip-val" style="color:${OM_MAP[oc]||'#888'}">${oc}</span></div>
-      <div class="tip-row"><span>OM avg</span><span class="tip-val">${p.om_avg!=null?(+p.om_avg).toFixed(3):'—'}</span></div>`;
+      <div class="tip-row"><span>OM avg</span><span class="tip-val">${p.om_avg!=null?(+p.om_avg).toFixed(3):' - '}</span></div>`;
     tip.style.display = 'block';
     tip.style.left = (e.originalEvent.clientX + 14) + 'px';
     tip.style.top  = (e.originalEvent.clientY - 10) + 'px';
@@ -397,10 +397,10 @@ async function loadData() {
   updateSelCount();
 }
 
-// Use topojson-client library (same approach as soil-atlas.html — known working)
+// Use topojson-client library (same approach as soil-atlas.html - known working)
 function topoToGeoJSON(topo, interp) {
   const TERRITORY_FALLBACK = new Set(['AK','HI','PR','VI','GU','AS','MP','PW','MH','FM']);
-  // topojson.feature() produces valid GeoJSON — no custom decoder needed
+  // topojson.feature() produces valid GeoJSON - no custom decoder needed
   const base = topojson.feature(topo, topo.objects.counties);
   base.features.forEach(f => {
     const fips = String(f.id).padStart(5,'0');
@@ -448,7 +448,7 @@ function buildScatter() {
   g.append('line').attr('class','quadrant-line').attr('x1',qx).attr('x2',qx).attr('y1',0).attr('y2',h);
   g.append('line').attr('class','quadrant-line').attr('x1',0).attr('x2',w).attr('y1',qy).attr('y2',qy);
 
-  // Quadrant labels — top pair uses 'hanging', bottom pair uses explicit baseline
+  // Quadrant labels - top pair uses 'hanging', bottom pair uses explicit baseline
   const ql = [
     [qx+6, 8,     'CRISIS ZONE', 'hanging'],
     [4,    8,     'OM LOSS',     'hanging'],
@@ -572,7 +572,7 @@ function clearSelection() {
 }
 
 function selectFromMap(fips, props) {
-  // Single county selection from map click — highlight its dot
+  // Single county selection from map click - highlight its dot
   if (selectedFips.size === 1 && selectedFips.has(fips)) {
     clearSelection();
     document.getElementById('county-info').style.display = 'none';
@@ -607,7 +607,7 @@ function selectFromScatter(fips) {
 }
 
 function showCountyInfo(p) {
-  const fc = p.fsi_dominant||'—', oc = p.om_dominant||'—';
+  const fc = p.fsi_dominant||' - ', oc = p.om_dominant||' - ';
   const fcCol = FSI_MAP[fc]||'#555566', ocCol = OM_MAP[oc]||'#555566';
   const panel = document.getElementById('county-info');
   panel.innerHTML = `
@@ -656,10 +656,10 @@ function showDotTip(event, d) {
   tip.innerHTML = `
     <div class="tip-name">${d.name}</div>
     <div class="tip-row"><span>State</span><span class="tip-val">${d.state}</span></div>
-    <div class="tip-row"><span>FSI</span><span class="tip-val" style="color:${FSI_MAP[d.fc]||'#888'}">${d.fc||'—'}</span></div>
-    <div class="tip-row"><span>FSI avg</span><span class="tip-val">${d.fsi!=null?d.fsi.toFixed(3):'—'}</span></div>
-    <div class="tip-row"><span>OM</span><span class="tip-val" style="color:${OM_MAP[d.oc]||'#888'}">${d.oc||'—'}</span></div>
-    <div class="tip-row"><span>OM avg</span><span class="tip-val">${d.om!=null?d.om.toFixed(3):'—'}</span></div>`;
+    <div class="tip-row"><span>FSI</span><span class="tip-val" style="color:${FSI_MAP[d.fc]||'#888'}">${d.fc||' - '}</span></div>
+    <div class="tip-row"><span>FSI avg</span><span class="tip-val">${d.fsi!=null?d.fsi.toFixed(3):' - '}</span></div>
+    <div class="tip-row"><span>OM</span><span class="tip-val" style="color:${OM_MAP[d.oc]||'#888'}">${d.oc||' - '}</span></div>
+    <div class="tip-row"><span>OM avg</span><span class="tip-val">${d.om!=null?d.om.toFixed(3):' - '}</span></div>`;
   tip.style.display = 'block';
   moveTip(event);
 }
