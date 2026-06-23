@@ -56,6 +56,44 @@
     wrap.appendChild(btn);
     wrap.appendChild(menu);
     document.body.appendChild(wrap);
+
+    fixLauncher();
+    window.addEventListener("resize", fixLauncher);
+    // some apps build their top bar from deferred scripts that run after us
+    setTimeout(fixLauncher, 400);
+    setTimeout(fixLauncher, 1400);
+  }
+
+  // The launcher is position:fixed at the top-right (see .l10-launch in
+  // lab10yr-theme.css). Some apps (e.g. the GroundScore DCI app) have a fixed
+  // full-width top bar whose right-aligned controls were laid out without
+  // leaving room for the launcher, so it covers them (z 99999 > the bar).
+  // Reserve room by padding the bar's right edge so its controls clear the
+  // launcher and it stays in the header row. Pure layout, idempotent, and a
+  // no-op for apps whose header already leaves space (overflow:auto bars that
+  // clip+scroll, or non-full-width bars) — we deliberately don't touch those.
+  function fixLauncher() {
+    var wrap = document.querySelector(".l10-launch");
+    if (!wrap) return;
+    var lw = wrap.offsetWidth;
+    if (!lw) return;
+    var vw = document.documentElement.clientWidth;
+    var launcherLeft = vw - 12 - lw;   // CSS pins the launcher at right:12
+    var need = Math.ceil(lw + 26);     // launcher width + breathing room
+
+    var nodes = document.body.getElementsByTagName("*");
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      if (el === wrap || wrap.contains(el)) continue;
+      var cs = getComputedStyle(el);
+      if (cs.position !== "fixed" && cs.position !== "sticky") continue;
+      if (el.scrollWidth > el.clientWidth + 2) continue; // bar already scrolls its own content: leave it
+      var r = el.getBoundingClientRect();
+      if (r.top > 6 || r.height > 96 || r.width < vw * 0.55) continue;    // top bars only
+      if (r.right < launcherLeft - 4) continue;                           // already clears the launcher
+      if (parseFloat(cs.paddingRight) >= need) continue;                  // already reserved
+      el.style.paddingRight = need + "px";
+    }
   }
 
   if (document.readyState === "loading")
