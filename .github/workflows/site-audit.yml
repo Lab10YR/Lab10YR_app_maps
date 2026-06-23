@@ -1,0 +1,24 @@
+name: Site guardrail audit
+
+# Enforces the Lab10YR language + design contract on every push/PR:
+# banned soil-data language ("Soil Data Access"), dead README links, and USDA
+# .aspx query-page links fail the build (HARD). Em-dashes / Web Soil Survey /
+# USDA / NRCS / raw GitHub links are reported as WARN (see scripts/site-audit.mjs).
+# This does not touch the GitHub Pages branch deploy; it is a separate signal.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Run site guardrail audit
+        run: node scripts/site-audit.mjs
