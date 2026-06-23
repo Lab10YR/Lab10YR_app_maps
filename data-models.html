@@ -280,7 +280,7 @@ footer a:hover{color:var(--soil)}
   <a class="nav-link" href="soil-data-stories.html">Data Stories</a>
   <a class="nav-link" href="https://lab10yr.com/articles/" target="_blank" rel="noopener noreferrer">Articles</a>
   <div class="nav-space"></div>
-  <a class="nav-link" href="https://sdmdataaccess.nrcs.usda.gov/QueryHelp.aspx" target="_blank" rel="noopener noreferrer" style="color:var(--soil)">QueryHelp</a>
+  <a class="nav-link" href="sql-explorer.html" target="_blank" rel="noopener noreferrer" style="color:var(--soil)">QueryHelp</a>
 </nav>
 
 <!-- HERO -->
@@ -424,8 +424,8 @@ footer a:hover{color:var(--soil)}
         <div class="nc-title">Live Query Interface</div>
         <div class="nc-desc">SDA exposes 88 SSURGO tables via a REST API and interactive query interface. POST SQL to receive JSON or tabular results. The same API powering the Soil Atlas, Regen Ag Map, and SQL Explorer.</div>
         <div class="nc-links">
-          <a class="nc-link" href="https://sdmdataaccess.nrcs.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer">Run Queries</a>
-          <a class="nc-link" href="https://sdmdataaccess.nrcs.usda.gov/QueryHelp.aspx" target="_blank" rel="noopener noreferrer">Query Help</a>
+          <a class="nc-link" href="sql-explorer.html" target="_blank" rel="noopener noreferrer">Run Queries</a>
+          <a class="nc-link" href="sql-explorer.html" target="_blank" rel="noopener noreferrer">Query Help</a>
           <a class="nc-link" href="sql-explorer.html">SQL Explorer</a>
         </div>
         <div class="nc-tables">Endpoint: sdmdataaccess.sc.egov.usda.gov<br>POST /Tabular/post.rest<br>Format: JSON+COLUMNNAME · XML · CSV</div>
@@ -460,7 +460,7 @@ footer a:hover{color:var(--soil)}
 
 <footer>
   SSURGO schema extracted from SDMOnlineSChema.xlsx · Table descriptions from SDA MetadataTable API ·
-  <a href="https://sdmdataaccess.nrcs.usda.gov/QueryHelp.aspx" target="_blank" rel="noopener noreferrer">SDA QueryHelp</a> ·
+  <a href="sql-explorer.html" target="_blank" rel="noopener noreferrer">SDA QueryHelp</a> ·
   <a href="https://ncsslabdatamart.sc.egov.usda.gov" target="_blank" rel="noopener noreferrer">NCSS Lab Data Mart</a> ·
   <a href="index.html">Soil Intelligence Home</a> ·
   <a href="https://jneme910.github.io/Soil-Data-Access-Training-Resources/soil-model.html" target="_blank" rel="noopener noreferrer">SDA SQL Training ↗</a>
@@ -998,7 +998,7 @@ async function lookupDomain() {
     const txt = await r.text();
     let d; try{ d=JSON.parse(txt); }catch(_){ d={}; }
     if (!d.Table || d.Table.length < 3) {
-      res.innerHTML = `<div style="color:var(--dim);padding:8px">No domain found for "<span style="color:var(--soil)">${esc(col)}</span>". Try a different column name or check <a href="https://sdmdataaccess.nrcs.usda.gov/QueryHelp.aspx" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">SDA QueryHelp</a>.</div>`;
+      res.innerHTML = `<div style="color:var(--dim);padding:8px">No domain found for "<span style="color:var(--soil)">${esc(col)}</span>". Try a different column name or check <a href="sql-explorer.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">SDA QueryHelp</a>.</div>`;
       return;
     }
     const [headers,,,...rows] = d.Table;

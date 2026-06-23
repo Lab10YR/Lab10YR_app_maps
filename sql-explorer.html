@@ -422,7 +422,7 @@ function openDetail(id){
     <div class="d-actions">
       <button class="btn-run" onclick="runQuery('${id}')" id="run-btn">Test on SDA</button>
       <button class="btn-dl" onclick="dlSQL('${id}')">⬇ Download</button>
-      <a class="btn-sda" href="https://sdmdataaccess.nrcs.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer">Open SDA</a>
+      <a class="btn-sda" href="sql-explorer.html" target="_blank" rel="noopener noreferrer">Open SDA</a>
     </div>
     <div id="r-area"></div>
     <div class="d-sec">Tags</div>
@@ -479,7 +479,7 @@ async function runQuery(id){
       const xmlMsg=(text.match(/<Message>([\s\S]*?)<\/Message>/i)||[])[1]||
                    (text.match(/<string[^>]*>([\s\S]*?)<\/string>/i)||[])[1]||
                    'SDA returned a non-JSON response';
-      ra.innerHTML=`<div class="r-err">✗ ${esc(xmlMsg.trim())}<br><small>Try using the <a href="https://sdmdataaccess.nrcs.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">SDA query interface</a> for complex queries with temp tables.</small></div>`;
+      ra.innerHTML=`<div class="r-err">✗ ${esc(xmlMsg.trim())}<br><small>Try using the <a href="sql-explorer.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">SDA query interface</a> for complex queries with temp tables.</small></div>`;
       return;
     }
     btn.disabled=false;btn.innerHTML='Test on SDA';
@@ -495,7 +495,7 @@ async function runQuery(id){
       ${rows.length>200?`<div class="rc">Showing 200 of ${rows.length} rows</div>`:''}`;
   }catch(e){
     btn.disabled=false;btn.innerHTML='Test on SDA';
-    ra.innerHTML=`<div class="r-err">✗ ${esc(e.message)}<br><small>Queries with temp tables require SSMS or the <a href="https://sdmdataaccess.nrcs.usda.gov/Query.aspx" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">SDA query interface</a>.</small></div>`;
+    ra.innerHTML=`<div class="r-err">✗ ${esc(e.message)}<br><small>Queries with temp tables require SSMS or the <a href="sql-explorer.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">SDA query interface</a>.</small></div>`;
   }
 }
 
