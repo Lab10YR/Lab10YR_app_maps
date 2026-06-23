@@ -16,17 +16,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" fetchpriority="high">
+<link rel="stylesheet" href="../assets/lab10yr-theme.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --gold:#c8973a;--gold2:#e8c46a;--bg:#0e0b08;--bg2:#13100d;--muted:#8a7a6a;
+  --gold:#f59e0b;--gold2:#fcd34d;--bg:#08080c;--bg2:#101018;--muted:#8b8b96;
   --ff-serif:'Playfair Display',Georgia,serif;--ff-mono:'DM Mono',monospace;
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:#f0ede8;font-family:Georgia,'Times New Roman',serif;line-height:1.7;min-height:100vh}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,11,8,.95);
-    backdrop-filter:blur(10px);border-bottom:1px solid #2a1e0f;
+    backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08);
     display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:56px}
 .nav-brand{font-family:var(--ff-serif);font-size:18px;font-weight:700;color:var(--gold2);text-decoration:none;letter-spacing:-.3px}
 .nav-brand span{color:#f0ede8}
@@ -42,17 +43,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,11,8,.95)
 .page-kicker::before{content:'';width:28px;height:1px;background:var(--gold)}
 .page-title{font-family:var(--ff-serif);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:400;margin-bottom:14px;letter-spacing:-.02em}
 .page-deck{color:#c8beb4;font-size:1.05rem;max-width:560px;line-height:1.6}
-.page-count{font-family:var(--ff-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:24px;padding-top:20px;border-top:1px solid #2a1e0f}
+.page-count{font-family:var(--ff-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.08)}
 
 .articles{max-width:900px;margin:0 auto;padding:0 40px 80px;display:grid;gap:2px}
 
-.card{background:var(--bg2);border:1px solid #1e1710;transition:border-color .2s}
-.card:hover{border-color:#3a2e20}
+.card{background:var(--bg2);border:1px solid rgba(255,255,255,.07);transition:border-color .2s}
+.card:hover{border-color:rgba(245,158,11,.35)}
 .card--lead{border-left:3px solid var(--gold)}
 .card-link{display:block;padding:32px;text-decoration:none;color:inherit}
 .card-meta{display:flex;gap:16px;align-items:center;margin-bottom:10px}
 .card-date{font-family:var(--ff-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.card-tag{font-family:var(--ff-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border:1px solid #3a2e20;padding:2px 8px;border-radius:2px}
+.card-tag{font-family:var(--ff-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(245,158,11,.35);padding:2px 8px;border-radius:2px}
 .card-read{font-family:var(--ff-mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-left:auto}
 .card-title{font-family:var(--ff-serif);font-size:1.55rem;font-weight:400;line-height:1.2;margin-bottom:10px;color:#f0ede8;transition:color .2s}
 .card:hover .card-title{color:var(--gold2)}
@@ -62,11 +63,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,11,8,.95)
 
 .empty{padding:80px 40px;max-width:900px;margin:0 auto;color:var(--muted);font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em}
 
-footer{border-top:1px solid #1e1710;padding:28px 40px;max-width:900px;margin:0 auto;
+footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 40px;max-width:900px;margin:0 auto;
        display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 footer a{font-family:var(--ff-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
 footer a:hover{color:var(--gold)}
-footer span{font-family:var(--ff-mono);font-size:9px;color:#2a1e0f}
+footer span{font-family:var(--ff-mono);font-size:9px;color:rgba(255,255,255,.08)}
 
 @media(max-width:700px){
   nav{padding:0 16px}
@@ -79,15 +80,7 @@ footer span{font-family:var(--ff-mono);font-size:9px;color:#2a1e0f}
 </head>
 <body>
 
-<nav>
-  <a href="https://lab10yr.com" class="nav-brand"><span>Lab</span>10<em style="font-style:normal;color:var(--gold2)">YR</em></a>
-  <div class="nav-links">
-    <a href="https://lab10yr.com/Regenerative-Agriculture-Risk-Map" rel="noopener noreferrer">Risk Map</a>
-    <a href="https://lab10yr.com/soil-data-stories" rel="noopener noreferrer">Data Stories</a>
-    <a href="https://lab10yr.com/articles/" rel="noopener noreferrer" style="color:#f0ede8">Articles</a>
-    <a href="https://lab10yr.com/#contact" class="nav-cta" rel="noopener noreferrer">Get in Touch</a>
-  </div>
-</nav>
+<nav id="nav"><a class="nav-link" href="/articles/" style="display:none">Articles</a></nav>
 
 <div class="page-header">
   <div class="page-kicker">Lab10YR &mdash; Research &amp; Analysis</div>
@@ -423,5 +416,6 @@ footer span{font-family:var(--ff-mono);font-size:9px;color:#2a1e0f}
   </div>
 </footer>
 
+<script src="../js/lab10yr-nav.js" defer></script>
 </body>
 </html>

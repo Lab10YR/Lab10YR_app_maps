@@ -299,6 +299,35 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
 .mc-btn:hover{background:var(--panel);border-color:var(--accent)}
 .mc-btn.active{background:var(--accent)22;border-color:var(--accent)}
 
+/* ── MAP STYLE PANEL ───────────────────────────────────────── */
+#style-panel{
+  position:absolute;right:52px;top:10px;z-index:350;width:228px;
+  background:rgba(10,12,24,.96);border:1px solid var(--border);border-radius:10px;
+  padding:13px 14px;box-shadow:var(--shadow);backdrop-filter:blur(14px);
+  display:none;
+}
+#style-panel.open{display:block}
+.sp-title{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+          color:var(--accent);margin-bottom:11px}
+.sp-group{padding-bottom:11px;margin-bottom:11px;border-bottom:1px solid var(--border)}
+.sp-group:last-of-type{border-bottom:none;padding-bottom:4px;margin-bottom:6px}
+.sp-head{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;
+         color:var(--text);cursor:pointer;margin-bottom:9px}
+.sp-head input{accent-color:var(--accent);width:14px;height:14px;cursor:pointer}
+.sp-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:10px;color:var(--dim)}
+.sp-row>span{flex:0 0 50px}
+.sp-row input[type=range]{flex:1;height:4px;-webkit-appearance:none;appearance:none;
+  background:var(--panel3);border-radius:3px;outline:none;cursor:pointer}
+.sp-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;
+  border-radius:50%;background:#fff;border:2px solid var(--accent);cursor:pointer}
+.sp-row input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+  background:#fff;border:2px solid var(--accent);cursor:pointer}
+.sp-row input[type=color]{flex:1;height:22px;padding:0;border:1px solid var(--border);
+  border-radius:4px;background:var(--panel2);cursor:pointer}
+.sp-row em{flex:0 0 30px;text-align:right;font-style:normal;color:var(--text);
+  font-variant-numeric:tabular-nums}
+.sp-note{font-size:9px;color:var(--dim);line-height:1.5;margin-top:4px}
+
 /* ── LOCATION INDICATOR ───────────────────────────────────── */
 #loc-bar{
   position:absolute;bottom:38px;left:50%;transform:translateX(-50%);
@@ -559,6 +588,55 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
     <button class="mc-btn" onclick="zoomOut()" title="Zoom out">−</button>
     <button class="mc-btn" id="north-btn" onclick="resetNorth()" title="Reset north">⌖</button>
     <button class="mc-btn" id="loc-btn" onclick="geolocate()" title="My location">◎</button>
+    <button class="mc-btn" id="btn-style" onclick="toggleStylePanel()" title="Map style — boundaries">⚙</button>
+  </div>
+
+  <!-- Map Style panel (live boundary tuning) -->
+  <div id="style-panel">
+    <div class="sp-title">Map Style — Boundaries</div>
+
+    <div class="sp-group">
+      <label class="sp-head">
+        <input type="checkbox" id="st-state-on" checked>
+        <span>State boundaries</span>
+      </label>
+      <div class="sp-row">
+        <span>Color</span>
+        <input type="color" id="st-state-color" value="#ffffff">
+      </div>
+      <div class="sp-row">
+        <span>Width</span>
+        <input type="range" id="st-state-width" min="0.2" max="4" step="0.1" value="1.4">
+        <em id="st-state-width-val">1.40</em>
+      </div>
+      <div class="sp-row">
+        <span>Opacity</span>
+        <input type="range" id="st-state-opacity" min="0" max="1" step="0.05" value="0.9">
+        <em id="st-state-opacity-val">0.90</em>
+      </div>
+    </div>
+
+    <div class="sp-group">
+      <label class="sp-head">
+        <input type="checkbox" id="st-county-on" checked>
+        <span>County boundaries</span>
+      </label>
+      <div class="sp-row">
+        <span>Color</span>
+        <input type="color" id="st-county-color" value="#5b564d">
+      </div>
+      <div class="sp-row">
+        <span>Width</span>
+        <input type="range" id="st-county-width" min="0.1" max="3" step="0.1" value="2.0">
+        <em id="st-county-width-val">2.00</em>
+      </div>
+      <div class="sp-row">
+        <span>Opacity</span>
+        <input type="range" id="st-county-opacity" min="0" max="1" step="0.05" value="0.45">
+        <em id="st-county-opacity-val">0.45</em>
+      </div>
+    </div>
+    <div class="sp-note">Live preview — tune locally, then tell me the values to bake in.</div>
   </div>
 
   <!-- Bottom Ticker -->
@@ -823,8 +901,18 @@ const FACTS = [
 ];
 
 // ── STATE ──────────────────────────────────────────────────────────────
-let map, geojsonData;
+let map, geojsonData, statesData=null;
 let activeStory='fragile', hoveredId=null;
+
+// Live-tunable boundary style (exposed via the Map Style panel for local testing)
+const STYLE = {
+  county:{ on:true, color:'#5b564d', width:2.0, opacity:0.45 },
+  state: { on:true, color:'#ffffff', width:1.4, opacity:0.9 },
+};
+
+// Default framing — whole United States visible (zoomed out one level from the
+// old z4 county view so CONUS sits comfortably with margin).
+const CONUS_VIEW = { center:[-96,38], zoom:3.3 };
 let muLayersAdded=new Set(), muVisible=false;
 let sidebarOpen=true;
 let _rasterReady=false; // true once 900m PMTiles confirmed present
@@ -837,8 +925,8 @@ maplibregl.addProtocol('pmtiles',_proto.tile.bind(_proto));
 map=new maplibregl.Map({
   container:'map',
   style:BASESTYLE,
-  center:[-96,38],
-  zoom:3.5,
+  center:CONUS_VIEW.center,
+  zoom:CONUS_VIEW.zoom,
   minZoom:2,maxZoom:16,
   attributionControl:false,
 });
@@ -901,6 +989,15 @@ async function loadData(){
     geojsonData=topojson.feature(topo,topo.objects.counties);
     SoilLog.info(tag,'Counties loaded — '+geojsonData.features.length+' features');
 
+    // State boundaries ship in the same us-atlas topology — extract for the
+    // white overlay line (no extra fetch).
+    try{
+      if(topo.objects&&topo.objects.states){
+        statesData=topojson.feature(topo,topo.objects.states);
+        SoilLog.info(tag,'States loaded — '+statesData.features.length+' features');
+      }
+    }catch(se){ SoilLog.warn&&SoilLog.warn(tag,'States extract failed: '+se.message); }
+
     let matched=0, fallback=0, unrated=0;
 
     geojsonData.features.forEach(f=>{
@@ -944,6 +1041,7 @@ async function loadData(){
     buildLegend(STORIES[activeStory]);
     updateStats();
     buildTicker();
+    initStylePanel(); // wire the Map Style controls to the boundary layers
     initRasterLayers(); // check for 900m raster PMTiles (no-op if not built yet)
     // Default to the county choropleth — the only resolution with data shipped.
     // (900m/500m/100m need PMTiles under data/raster + per-state mapunit tiles,
@@ -977,14 +1075,19 @@ function buildMap(){
     'fill-color':colorExprForStory(s),
     'fill-opacity':['case',['boolean',['feature-state','hover'],false],1,0.78],
   }});
-  map.addLayer({id:'outline',type:'line',source:'counties',paint:{
-    'line-color':'rgba(0,0,0,0.4)',
-    'line-width':['interpolate',['linear'],['zoom'],3,0.15,8,0.5,12,1],
-  }});
+  map.addLayer({id:'outline',type:'line',source:'counties',
+    layout:{visibility:STYLE.county.on?'visible':'none'},
+    paint:{
+      'line-color':STYLE.county.color,
+      'line-opacity':STYLE.county.opacity,
+      'line-width':countyWidthExpr(STYLE.county.width),
+    }});
   map.addLayer({id:'hover-line',type:'line',source:'counties',paint:{
     'line-color':['case',['boolean',['feature-state','hover'],false],'#f59e0b','transparent'],
     'line-width':2,'line-opacity':0.9,
   }});
+
+  buildStateLayer();
 
   // Hover
   map.on('mousemove','fill',e=>{
@@ -1043,6 +1146,78 @@ async function buildMapFallback(){
   buildMap();buildLegend(STORIES[activeStory]);updateStats();buildTicker();
   setTimeout(()=>setResolution('900m'),400);
 }
+
+// ── BOUNDARY LAYERS + STYLE PANEL ───────────────────────────────────────
+function countyWidthExpr(w){
+  return['interpolate',['linear'],['zoom'],3,w*0.3,8,w,12,w*2];
+}
+function stateWidthExpr(w){
+  return['interpolate',['linear'],['zoom'],3,w*0.7,6,w*1.2,10,w*1.8];
+}
+
+// White state outline drawn above the county fill/outline so it reads as the
+// structural skeleton on top of the choropleth. Toggle + tune via STYLE.state.
+function buildStateLayer(){
+  if(!statesData||map.getSource('states'))return;
+  map.addSource('states',{type:'geojson',data:statesData});
+  map.addLayer({id:'state-outline',type:'line',source:'states',
+    layout:{visibility:STYLE.state.on?'visible':'none',
+            'line-cap':'round','line-join':'round'},
+    paint:{
+      'line-color':STYLE.state.color,
+      'line-opacity':STYLE.state.opacity,
+      'line-width':stateWidthExpr(STYLE.state.width),
+    }});
+}
+
+// Re-apply a layer's paint/visibility from the STYLE object after a slider/toggle.
+function applyCountyStyle(){
+  if(!map.getLayer('outline'))return;
+  map.setLayoutProperty('outline','visibility',STYLE.county.on?'visible':'none');
+  map.setPaintProperty('outline','line-color',STYLE.county.color);
+  map.setPaintProperty('outline','line-opacity',+STYLE.county.opacity);
+  map.setPaintProperty('outline','line-width',countyWidthExpr(+STYLE.county.width));
+}
+function applyStateStyle(){
+  if(!map.getLayer('state-outline'))return;
+  map.setLayoutProperty('state-outline','visibility',STYLE.state.on?'visible':'none');
+  map.setPaintProperty('state-outline','line-color',STYLE.state.color);
+  map.setPaintProperty('state-outline','line-opacity',+STYLE.state.opacity);
+  map.setPaintProperty('state-outline','line-width',stateWidthExpr(+STYLE.state.width));
+}
+
+function toggleStylePanel(){
+  const p=document.getElementById('style-panel');
+  const open=p.classList.toggle('open');
+  document.getElementById('btn-style')?.classList.toggle('active',open);
+}
+
+// Wire the panel inputs to STYLE + the layers once.
+function initStylePanel(){
+  const bind=(id,group,key,after)=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    const ev=el.type==='checkbox'?'change':'input';
+    el.addEventListener(ev,()=>{
+      STYLE[group][key]=el.type==='checkbox'?el.checked:el.value;
+      const out=document.getElementById(id+'-val');
+      if(out)out.textContent=(+el.value).toFixed(2);
+      after();
+    });
+  };
+  bind('st-state-on','state','on',applyStateStyle);
+  bind('st-state-color','state','color',applyStateStyle);
+  bind('st-state-width','state','width',applyStateStyle);
+  bind('st-state-opacity','state','opacity',applyStateStyle);
+  bind('st-county-on','county','on',applyCountyStyle);
+  bind('st-county-color','county','color',applyCountyStyle);
+  bind('st-county-width','county','width',applyCountyStyle);
+  bind('st-county-opacity','county','opacity',applyCountyStyle);
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#style-panel')&&!e.target.closest('#btn-style'))
+    document.getElementById('style-panel')?.classList.remove('open');
+});
 
 // ── STORY SWITCHER ──────────────────────────────────────────────────────
 function setStory(tabEl,story){
@@ -1601,7 +1776,7 @@ function setResolution(level){
       if(map.getLayer('mu-fill-'+st))map.setLayoutProperty('mu-fill-'+st,'visibility','none');
       if(map.getLayer('mu-line-'+st))map.setLayoutProperty('mu-line-'+st,'visibility','none');
     });
-    map.flyTo({zoom:4,center:[-96,38],duration:800});
+    map.flyTo({zoom:CONUS_VIEW.zoom,center:CONUS_VIEW.center,duration:800});
   }else{
     muVisible=true;
     if(level==='900m') _setRasterVisible(true);
