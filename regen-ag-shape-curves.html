@@ -672,25 +672,19 @@ footer{
         <div style="color:#a78bfa;margin-left:32px;border-left:2px solid var(--border);padding-left:12px;margin-top:2px">③ <span style="color:var(--orange)">total_carbon_ncs</span> <span style="color:var(--dimmer)">-- total C, no CaCO3 data</span></div>
         <div style="color:#a78bfa;margin-left:48px;border-left:2px solid var(--border);padding-left:12px;margin-top:2px">④ <span style="color:var(--accent)">0.25 + walkley_black × 0.86</span> <span style="color:var(--dimmer)">-- WB correction</span></div>
       </div>
-      <p style="font-size:.7rem;color:var(--dimmer);margin-top:10px">SQL source: <a href="https://github.com/jneme910/NRCS-Soil-Data-Access/blob/master/sandbox/Top_Combined_Estimated_Organic_Carbon.sql" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">Top_Combined_Estimated_Organic_Carbon.sql ↗</a></p>
+      <p style="font-size:.7rem;color:var(--dimmer);margin-top:10px">SQL source: <span style="color:var(--accent)">Top_Combined_Estimated_Organic_Carbon.sql</span></p>
     </div>
     <div>
       <div style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:10px"><span style="display:block;width:22px;height:1px;background:var(--gold)"></span>SQL Reference Scripts</div>
       <div style="display:flex;flex-direction:column;gap:10px">
-        <a href="https://github.com/jneme910/NRCS-Soil-Data-Access/blob/master/sandbox/DSP_KSSL_SOC.sql" target="_blank" rel="noopener noreferrer" style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:14px 16px;text-decoration:none;display:block;transition:border-color .15s" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:14px 16px;display:block">
           <div style="font-size:.75rem;font-weight:700;color:#fff;margin-bottom:3px">KSSL_SOC_Characterization.sql</div>
           <div style="font-size:.68rem;color:var(--dim);line-height:1.5">Full KSSL SOC characterization query - joins lab tables and returns all SOC estimation fields for SHAPE scoring.</div>
-          <div style="font-size:.65rem;color:var(--green);margin-top:6px">View in repo ↗</div>
-        </a>
-        <a href="https://github.com/jneme910/NRCS-Soil-Data-Access/blob/master/sandbox/DSP_Point_SDA_intersect.sql" target="_blank" rel="noopener noreferrer" style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:14px 16px;text-decoration:none;display:block;transition:border-color .15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        </div>
+        <div style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:14px 16px;display:block">
           <div style="font-size:.75rem;font-weight:700;color:#fff;margin-bottom:3px">Point_SDA_Intersect.sql</div>
           <div style="font-size:.68rem;color:var(--dim);line-height:1.5">Given a lat/long point, intersects SSURGO polygons and returns SHAPE texture groups, suborder groups, surface texture, and dominant soil suborder.</div>
-          <div style="font-size:.65rem;color:var(--accent);margin-top:6px">View in repo ↗</div>
-        </a>
-        <a href="https://github.com/jneme910/NRCS-Soil-Data-Access/tree/master/sandbox" target="_blank" rel="noopener noreferrer" style="background:var(--panel3);border:1px solid var(--border);border-radius:6px;padding:12px 16px;text-decoration:none;display:block;text-align:center">
-          <div style="font-size:.72rem;font-weight:700;color:var(--soil)">All SQL Scripts →</div>
-          <div style="font-size:.65rem;color:var(--dimmer);margin-top:3px">SHAPE scoring, KSSL SOC, SDA intersects</div>
-        </a>
+        </div>
       </div>
     </div>
   </div>
