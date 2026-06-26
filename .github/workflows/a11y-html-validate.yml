@@ -1,0 +1,77 @@
+name: Accessibility and HTML validation
+
+# Advisory UI/UX signal for the live site (lab10yr.com static origin).
+# html-validate checks markup + WCAG markup rules; pa11y-ci runs WCAG checks
+# against a local server of the repo root. Both are continue-on-error so they
+# report without blocking PRs/deploys (mirrors the site-audit.yml posture).
+# Pages are served from the repo ROOT here (not docs/).
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 10 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  html-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install html-validate
+        run: npm install html-validate
+
+      - name: Run html-validate
+        run: >
+          npx html-validate --config htmlvalidate.json
+          "*.html"
+          "worlds/**/*.html"
+          "solutions/**/*.html"
+          "products/**/*.html"
+          "industries/**/*.html"
+          "services/**/*.html"
+        continue-on-error: true
+
+  accessibility:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install --save-dev pa11y-ci serve wait-on
+
+      - name: Start local server
+        run: npx serve . -p 8080 &
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:8080 --timeout 30000
+
+      - name: Run pa11y accessibility checks
+        run: npx pa11y-ci --config pa11y-ci.json
+        continue-on-error: true
+        id: pa11y
+
+      - name: Upload pa11y report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pa11y-report
+          path: pa11y-report.json
+          if-no-files-found: ignore
+
+      - name: Summarize results
+        run: |
+          echo "### Accessibility (pa11y)" >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.pa11y.outcome }}" = "failure" ]; then
+            echo ":warning: Accessibility issues found — download the pa11y-report artifact for details." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo ":white_check_mark: No accessibility issues detected." >> "$GITHUB_STEP_SUMMARY"
+          fi

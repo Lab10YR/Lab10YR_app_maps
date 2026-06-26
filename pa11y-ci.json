@@ -1,0 +1,15 @@
+{
+  "defaults": {
+    "timeout": 30000,
+    "wait": 1000,
+    "ignore": ["notice", "warning"]
+  },
+  "urls": [
+    "http://localhost:8080/index.html",
+    "http://localhost:8080/soil-data-stories.html",
+    "http://localhost:8080/sql-runner.html",
+    "http://localhost:8080/worlds/conservation/",
+    "http://localhost:8080/solutions/",
+    "http://localhost:8080/industries/"
+  ]
+}
