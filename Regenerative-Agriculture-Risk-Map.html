@@ -800,9 +800,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
             auto-refreshed weekly.
           </p>
           <p>
-            <a href="https://github.com/jneme910/NRCS-Soil-Data-Access"
-               target="_blank" rel="noopener noreferrer" style="color:var(--accent)">GitHub ↗</a>
-            &nbsp;·&nbsp;
             <a href="data/metadata-iso19115.xml" download
                style="color:var(--dim)" title="Download ISO 19115 metadata">ISO 19115 ⬇</a>
           </p>
@@ -1136,7 +1133,7 @@ function addLayers(){
     // ── Imagery basemap (inserted first so everything else draws on top) ──
     m.addSource(`imagery-src-${idx}`,{type:'raster',tileSize:256,
       tiles:[IMAGERY_TILES],
-      attribution:'Tiles © Esri - Source: Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS'});
+      attribution:'Tiles © Esri - Source: Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USGS'});
     m.addLayer({id:`imagery-${idx}`,type:'raster',source:`imagery-src-${idx}`,
       paint:{'raster-opacity':1.0},
       layout:{visibility:'none'}});
