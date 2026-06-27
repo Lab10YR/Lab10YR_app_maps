@@ -1715,6 +1715,11 @@ function getTexClass(sand,silt,clay){
 // Loaded on demand when docs/data/raster/fsi_900m.pmtiles is present.
 // Cross-fades into county layer at low zoom, fades out as vector MU takes over.
 async function initRasterLayers(){
+  // Optional national 900m raster overlay - not built yet, so skip the HEAD
+  // probe that otherwise 404s on data/raster/fsi_900m.pmtiles. Re-enable by
+  // flipping this flag (or removing the guard) once the raster pmtiles are in R2.
+  const RASTER_900M_BUILT=false;
+  if(!RASTER_900M_BUILT){return;}
   try{
     const r=await fetch('data/raster/fsi_900m.pmtiles',{method:'HEAD'});
     if(!r.ok){return;}
