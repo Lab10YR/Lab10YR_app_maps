@@ -2,7 +2,9 @@ name: Lighthouse CI
 
 # Runs Lighthouse against the LIVE site (lab10yr.com). app-maps has no
 # "Deploy Pages" workflow to chain from, so this runs on a weekly schedule
-# plus manual dispatch. Budget thresholds live in .github/lighthouse-budget.json.
+# plus manual dispatch. Form factor (desktop) + score thresholds live in
+# .github/lighthouserc.json — desktop is representative of the B2B audience;
+# the default mobile+4x-CPU+slow-4G throttle wildly inflated TBT/CLS on CI.
 
 on:
   schedule:
@@ -27,6 +29,6 @@ jobs:
             https://lab10yr.com/soil-data-stories.html
             https://lab10yr.com/sql-runner.html
             https://lab10yr.com/worlds/conservation/
-          budgetPath: .github/lighthouse-budget.json
+          configPath: .github/lighthouserc.json
           uploadArtifacts: true
           temporaryPublicStorage: true
