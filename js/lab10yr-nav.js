@@ -106,6 +106,9 @@
     bar.className = "l10-sitebar";
     bar.innerHTML = siteInnerHTML();
     document.body.insertBefore(bar, document.body.firstChild);
+    // Class hook so a page's own CSS can offset app chrome the generic
+    // rules below can't know about (e.g. data-center-app panels).
+    document.body.classList.add("l10-has-sitebar");
 
     var vh = document.documentElement.clientHeight;
     var barH = bar.offsetHeight || 52;
