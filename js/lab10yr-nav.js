@@ -61,21 +61,12 @@
       it.h + '"><span class="l10-i">' + it.i + "</span>" + esc(it.t) + "</a>";
   }
 
-  // ── (a) Landing header — replaces each page's legacy #nav contents in place ─
-  // Keeping the existing #nav element preserves the page's content offset; we
-  // only swap its contents + theme class so layout below the bar stays correct.
-  function buildSiteHeader() {
-    var nav = document.getElementById("nav");
-    if (!nav || !nav.querySelector(".nav-link") || nav.querySelector(".l10-top-inner")) return;
-
+  // Shared inner markup of the landing header (brand + site links + CTA).
+  function siteInnerHTML() {
     var bars = ["#1e1408", "#33240f", "#4d3717", "#6b4d20", "#8a6629", "#ab8232", "#cda23c", "#e6c14e"]
       .map(function (c) { return '<i style="background:' + c + '"></i>'; }).join("");
     var links = SITE.map(function (l) { return '<a href="' + l.h + '">' + esc(l.t) + "</a>"; }).join("");
-
-    nav.classList.add("l10-themed");
-    nav.style.overflow = "visible";
-    nav.innerHTML =
-      '<div class="l10-top-inner">' +
+    return '<div class="l10-top-inner">' +
         '<a class="l10-brand" href="/" aria-label="Lab10YR">' +
           '<span class="l10-brand-bars" aria-hidden="true">' + bars + "</span>" +
           '<span class="l10-brand-word">Lab<span>10</span>YR</span>' +
@@ -85,6 +76,59 @@
           '<a class="l10-getstarted" href="/contact/">Get started <span>&rarr;</span></a>' +
         "</div>" +
       "</div>";
+  }
+
+  // ── (a) Landing header — every page gets the amber site bar ────────────────
+  // Pages with a legacy #nav (.nav-link) get its contents swapped in place,
+  // preserving the page's own content offset. Pages without one get the bar
+  // INJECTED as the first body element, with layout compensation for fixed
+  // top bars, full-viewport containers, and 100vh app shells. Opt out with
+  // <body data-l10-no-sitebar> (spec'd app headers, retired pages).
+  function buildSiteHeader() {
+    if (document.querySelector(".l10-top-inner")) return;
+    var nav = document.getElementById("nav");
+    if (nav && nav.querySelector(".nav-link")) {
+      nav.classList.add("l10-themed");
+      nav.style.overflow = "visible";
+      nav.innerHTML = siteInnerHTML();
+      return;
+    }
+    if (document.body.hasAttribute("data-l10-no-sitebar")) return;
+    if (document.querySelector('meta[http-equiv="refresh" i]')) return; // redirect stub
+    injectSiteBar();
+  }
+
+  // Insert the amber bar as the first in-flow element, then shift the page's
+  // own pinned/viewport-sized chrome down by the bar height so nothing is
+  // covered or clipped (same measured-adjustment idiom as fixLauncher below).
+  function injectSiteBar() {
+    var bar = document.createElement("header");
+    bar.className = "l10-sitebar";
+    bar.innerHTML = siteInnerHTML();
+    document.body.insertBefore(bar, document.body.firstChild);
+
+    var vh = document.documentElement.clientHeight;
+    var barH = bar.offsetHeight || 52;
+    var kids = document.body.children;
+    // Only a body whose Y axis is clipped can cut content off at the bottom;
+    // "overflow: hidden auto" pages scroll vertically and must NOT be shortened.
+    var hiddenBody = getComputedStyle(document.body).overflowY === "hidden";
+    for (var i = 0; i < kids.length; i++) {
+      var el = kids[i];
+      if (el === bar || el.classList.contains("l10-launch")) continue;
+      var cs = getComputedStyle(el);
+      var r = el.getBoundingClientRect();
+      if ((cs.position === "fixed" || cs.position === "sticky") && r.top <= barH && r.height < 140) {
+        el.style.top = barH + "px";                      // pinned top bar → below ours
+      } else if ((cs.position === "fixed" || cs.position === "absolute") &&
+                 r.top <= 4 && r.height > vh * 0.7) {
+        el.style.top = barH + "px";                      // full-viewport container
+      } else if (hiddenBody && cs.position !== "fixed" && cs.position !== "absolute" &&
+                 r.height > vh * 0.5 && r.bottom > vh) {
+        // viewport-sized app shell in a clipped body — shorten by the overhang
+        el.style.height = Math.round(r.height - Math.min(r.bottom - vh, barH)) + "px";
+      }
+    }
   }
 
   // ── (b) Top-right "Lab10YR apps" launcher — grouped maps/tools menu ────────
@@ -151,9 +195,13 @@
       var r = el.getBoundingClientRect();
       if (r.top > 6 || r.height > 96 || r.width < vw * 0.55) continue;
       if (r.right < launcherLeft - 4) continue;
-      var reserved = parseFloat(cs.marginRight) || 0;
+      // The injected sitebar reserves with padding so its background stays
+      // full-width (a margin exposes the page bg at the right edge on light
+      // pages); legacy page bars keep the original margin approach.
+      var prop = el.classList.contains("l10-sitebar") ? "paddingRight" : "marginRight";
+      var reserved = parseFloat(prop === "paddingRight" ? cs.paddingRight : cs.marginRight) || 0;
       if (reserved >= need) continue;
-      el.style.marginRight = need + "px";
+      el.style[prop] = need + "px";
     }
   }
 

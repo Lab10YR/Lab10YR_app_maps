@@ -49,11 +49,19 @@
 
 /* ── Landing header (the lab10yr.com nav) applied on every page ──────────────
    Injected into the page's existing #nav by lab10yr-nav.js so the content
-   offset below the bar is preserved. Matches innovation-prototype Nav.tsx. */
+   offset below the bar is preserved. Matches innovation-prototype Nav.tsx.
+   Pages without a legacy #nav get a standalone .l10-sitebar injected as the
+   first body element instead (lab10yr-nav.js injectSiteBar). */
 #nav.l10-themed{background:rgba(8,8,12,.82)!important;
   border-bottom:1px solid rgba(255,255,255,.06)!important;
   backdrop-filter:blur(14px);display:flex!important;align-items:center;
   padding:0!important;gap:0!important}
+.l10-sitebar{position:sticky;top:0;z-index:9998;display:flex;align-items:center;
+  min-height:52px;background:rgba(8,8,12,.92);
+  border-bottom:1px solid rgba(255,255,255,.06);backdrop-filter:blur(14px);
+  font:500 13px/1.2 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  box-sizing:border-box}
+.l10-sitebar *{box-sizing:border-box}
 .l10-top-inner{display:flex;align-items:center;justify-content:space-between;
   gap:18px;width:100%;max-width:1200px;margin:0 auto;padding:0 22px}
 .l10-brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
