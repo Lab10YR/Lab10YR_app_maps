@@ -432,6 +432,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 #loading p{color:var(--dim);font-size:12px;max-width:300px;text-align:center}
 #loading .load-sub{font-size:10px;color:var(--dimmer)}
+
+/* ── MOBILE (≤640px): wrap the header rows, stack sidebar + maps ─────────── */
+@media(max-width:640px){
+  #hdr{height:auto}
+  #hdr-top{flex-wrap:wrap;height:auto;padding:6px 10px;row-gap:6px}
+  .logo small{display:none}
+  #search-wrap{flex:1 1 140px}
+  #hdr-bot{flex-wrap:wrap;height:auto;padding:6px 10px;row-gap:4px;overflow:visible}
+  #body{flex-direction:column}
+  #sidebar{width:100%;flex:0 0 auto;max-height:34vh;overflow-y:auto}
+  #sidebar.collapsed{display:none}
+  #maps-area{flex-direction:column}
+}
 </style>
 <link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260707">
 </head>

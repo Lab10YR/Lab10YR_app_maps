@@ -132,6 +132,21 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* Long unspaced tokens (query names/paths) in card metas must break at any
+       width - they overflowed 54px even on desktop. */
+    .meta {
+      overflow-wrap: anywhere;
+    }
+
+    /* Mobile: wrap the header nav */
+    @media (max-width: 640px) {
+      .navbar {
+        flex-wrap: wrap;
+        height: auto;
+        row-gap: 4px;
+      }
+    }
   </style>
 <link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260707">
 </head>
