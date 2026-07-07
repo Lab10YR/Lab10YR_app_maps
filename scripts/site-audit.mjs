@@ -88,6 +88,32 @@ for (const f of files) {
   if (em) { report.emDash[rel] = em; emTotal += em; }
 }
 
+// Nav-reachability guard: every page must keep a way back to the main site.
+// 1) The shared launcher's links must be root-absolute — relative hrefs 404
+//    from nested pages (/articles/* sent "Home" to /articles/index.html).
+const navJs = readFileSync(join(ROOT, "js", "lab10yr-nav.js"), "utf8");
+for (const m of navJs.matchAll(/\bh:\s*"([^"]+)"/g)) {
+  if (!m[1].startsWith("/")) {
+    (report.hard["js/lab10yr-nav.js"] ??= []).push({
+      label: `relative launcher link "${m[1]}" (breaks on nested pages)`,
+      line: lineOf(navJs, m.index),
+    });
+    hardTotal++;
+  }
+}
+// 2) Every article page carries the shared nav (redirect stubs exempt).
+for (const f of files) {
+  const rel = relative(ROOT, f).split(sep).join("/");
+  if (!rel.startsWith("articles/")) continue;
+  const text = readFileSync(f, "utf8");
+  if (/http-equiv="refresh"/i.test(text) || /lab10yr-nav\.js/.test(text)) continue;
+  (report.hard[rel] ??= []).push({
+    label: "missing shared nav include (lab10yr-nav.js) — no way back to main",
+    line: 1,
+  });
+  hardTotal++;
+}
+
 if (process.argv.includes("--json")) {
   console.log(JSON.stringify({ ...report, hardTotal, warnTotal, emTotal }, null, 2));
   process.exit(hardTotal ? 1 : 0);
