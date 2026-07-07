@@ -358,6 +358,17 @@ input[type=range]::-moz-range-progress{height:6px;border-radius:4px;background:#
 /* ── STATE RISK CHART CUSTOM ─────────────── */
 .risk-chart-wrap{overflow-x:auto;padding-bottom:8px}
 .risk-chart-wrap canvas{min-width:600px}
+
+/* Mobile: topnav scrolls its own links; wide flex/story blocks stay in-viewport */
+@media(max-width:640px){
+  .topnav{overflow-x:auto}
+  .story-body,.reveal-left,.reveal-right{max-width:100%}
+  .reveal-left,.reveal-right{flex-wrap:wrap}
+  .aws-visual{overflow-x:auto;justify-content:flex-start;max-width:100%}
+  /* clip residual content overflow at the section level so nothing widens the page
+     (charts keep their own internal overflow-x:auto scroll) */
+  .hero,.story-section{overflow-x:hidden}
+}
 </style>
 </head>
 <body>
