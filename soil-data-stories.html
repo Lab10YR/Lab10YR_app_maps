@@ -369,6 +369,13 @@ input[type=range]::-moz-range-progress{height:6px;border-radius:4px;background:#
      (charts keep their own internal overflow-x:auto scroll) */
   .hero,.story-section{overflow-x:hidden}
 }
+@media(max-width:700px){
+  /* The horizon-layer collage is absolutely positioned over the right 55% and
+     overlaps the headline on narrow screens. Drop it so the first screen reads. */
+  #hero{padding:88px 22px 60px}
+  .hero-layers{display:none}
+  .hero-content{max-width:100%}
+}
 </style>
 </head>
 <body>

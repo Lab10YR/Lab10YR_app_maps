@@ -6,7 +6,7 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://lab10yr.com/about</loc>
+    <loc>https://lab10yr.com/about/</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
@@ -226,6 +226,11 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
+    <loc>https://lab10yr.com/methodology/</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
     <loc>https://lab10yr.com/pricing/</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
@@ -437,6 +442,11 @@
   </url>
   <url>
     <loc>https://lab10yr.com/sql-explorer</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://lab10yr.com/walkthrough/</loc>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>

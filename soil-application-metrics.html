@@ -221,6 +221,15 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--font);overflo
   border-top-color:var(--soil);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
+.metric-empty{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;gap:7px;padding:44px 24px;min-height:180px;
+  border:1px dashed var(--border);border-radius:8px;background:rgba(255,255,255,.015);
+}
+.metric-empty .me-eyebrow{font-size:10px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--soil)}
+.metric-empty .me-main{font-size:.95rem;font-weight:600;color:var(--text)}
+.metric-empty .me-sub{font-size:.76rem;color:var(--dim);max-width:44ch;line-height:1.6}
 
 /* ── LIVE BADGE ──────────────────────────────────────── */
 .live-badge{
@@ -880,7 +889,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
       </div>
     </div>
 
-    <div class="chart-wrap">
+    <div class="chart-wrap" id="ch9ChartWrap">
       <div class="chart-title">Top 20 States - Cumulative the viewer AOI Activity</div>
       <div class="chart-sub">Total AOIs by state · All years on record · wss_ActivityCounts AOI · M frequency · Live SDA data</div>
       <div id="stateSpinner" class="chart-spinner">Loading live data</div>
@@ -890,7 +899,7 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
 </section>
 
 <!-- ═══ CHAPTER 10: USAGE MAP ═══ -->
-<section class="section">
+<section class="section" id="ch10Section">
   <div class="chapter-mark reveal">
     <div class="ch-num">10</div>
     <div>
@@ -903,12 +912,12 @@ footer{background:#020408;border-top:1px solid var(--border);padding:48px min(6v
   <h2 class="section-h2">Every county.<br><em>Every decision.</em></h2>
   <p class="section-lead">Soil data requests don't cluster in cities - they trace working lands. The map below shows cumulative the national soil viewer and SDA usage by state across all years on record. Select a metric to see where the demand is strongest.</p>
 
-  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap" class="reveal">
+  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap" class="reveal" id="ch10MapBtns">
     <button class="res-map-btn active" id="mapBtn-wss" onclick="showMap('wss')">the viewer AOI Activity</button>
     <button class="res-map-btn" id="mapBtn-sda" onclick="showMap('sda')">SDA API Requests</button>
   </div>
 
-  <div class="two-col reveal" style="gap:24px;align-items:start">
+  <div class="two-col reveal" style="gap:24px;align-items:start" id="ch10Grid">
     <div>
       <div id="ch10MapSpinner" class="chart-spinner">Loading map data…</div>
       <div id="ch10Map" style="height:480px;display:none"></div>
@@ -1426,6 +1435,20 @@ post(
   }).fail(function(){document.getElementById('seasonSpinner2').style.display='none';});
 })();
 
+/* Styled placeholder for metrics that have no state-level rows published yet.
+   Hides the given (empty) containers and drops a readable note in their place. */
+function showMetricEmpty(containerId, hideIds){
+  (hideIds||[]).forEach(function(id){var e=document.getElementById(id);if(e)e.style.display='none';});
+  var c=document.getElementById(containerId);
+  if(!c||c.querySelector('.metric-empty'))return;
+  var d=document.createElement('div');
+  d.className='metric-empty';
+  d.innerHTML='<div class="me-eyebrow">Not yet published</div>'+
+    '<div class="me-main">State-level data is not yet published for this metric</div>'+
+    '<div class="me-sub">A per-state breakdown for this series has not been released in the published metrics feed yet.</div>';
+  c.appendChild(d);
+}
+
 /* ── CH9: TOP STATES ─────────────────────────────────── */
 (function(){
   post(
@@ -1437,7 +1460,7 @@ post(
     " AND LEN(LTRIM(RTRIM([state])))>0" +
     " GROUP BY [state] ORDER BY total_aoi DESC"
   ).done(function(d){
-    if(!d.Table||d.Table.length<2){document.getElementById('stateSpinner').style.display='none';return;}
+    if(!d.Table||d.Table.length<2){showMetricEmpty('ch9ChartWrap',['stateSpinner','stateEchart']);return;}
     var cols=d.Table[0],rows=d.Table.slice(1);
     var sts=[],tots=[];
     rows.forEach(function(r){var o={};cols.forEach(function(c,i){o[c]=r[i];});sts.push(o.state);tots.push(+o.total_aoi||0);});
@@ -1515,6 +1538,11 @@ var STATE_ABBR={
     if(sd[0].Table&&sd[0].Table.length>1){
       var cols=sd[0].Table[0],rows=sd[0].Table.slice(1);
       rows.forEach(function(r){var o={};cols.forEach(function(c,i){o[c]=r[i];});if(o.state)ch10SDAData[o.state]=+o.total_sda||0;});
+    }
+    // No state rows for either metric: show a note instead of an empty map
+    if(Object.keys(ch10WSSData).length===0 && Object.keys(ch10SDAData).length===0){
+      showMetricEmpty('ch10Section',['ch10MapSpinner','ch10MapBtns','ch10Grid']);
+      return;
     }
     // Load US states GeoJSON
     fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(function(r){return r.json();}).then(function(topo){

@@ -514,6 +514,15 @@ footer{
           <div id="calcScoreLbl" style="font-size:.72rem;color:var(--dimmer);margin-top:4px"></div>
           <div id="calcScoreN" style="font-size:.68rem;color:var(--dimmer);margin-top:8px"></div>
         </div>
+
+        <!-- BRIDGE: from a raw percentile to a real interpreted report -->
+        <div id="calcBridge" style="display:none;padding-top:16px;margin-top:2px;border-top:1px solid var(--border)">
+          <div style="font-size:.74rem;color:var(--dim);line-height:1.6;margin-bottom:12px">A percentile is a starting point. A pedologist reads your full soil profile and writes what it means for your ground.</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <a href="/report/" style="display:block;text-align:center;background:rgba(200,168,75,.15);border:1px solid var(--soil);color:var(--soil);padding:11px 16px;border-radius:6px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;transition:all .18s" onmouseover="this.style.background='rgba(200,168,75,.3)'" onmouseout="this.style.background='rgba(200,168,75,.15)'">Turn this into a pedologist-written report</a>
+            <a href="/contact/" style="display:block;text-align:center;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.35);color:#22c55e;padding:11px 16px;border-radius:6px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;transition:all .18s" onmouseover="this.style.background='rgba(34,197,94,.2)'" onmouseout="this.style.background='rgba(34,197,94,.1)'">Talk to a pedologist</a>
+          </div>
+        </div>
       </div>
 
       <!-- CHART -->
@@ -861,6 +870,7 @@ function runSHAPECalc() {
   document.getElementById('calcSpinner').style.display = 'block';
   document.getElementById('calcBox').style.display = 'none';
   document.getElementById('calcScore').style.display = 'none';
+  document.getElementById('calcBridge').style.display = 'none';
   document.getElementById('calcNoData').style.display = 'none';
 
   var codes = textureCodes[tgrp];
@@ -1003,6 +1013,7 @@ function runSHAPECalc() {
     document.getElementById('calcScoreLbl').textContent = scoreLbl;
     document.getElementById('calcScoreN').textContent = 'Compared against ' + n + ' KSSL lab-measured pedons · ' + textureLabels[tgrp];
     document.getElementById('calcScore').style.display = 'block';
+    document.getElementById('calcBridge').style.display = 'block';
 
   }).fail(function(){
     document.getElementById('calcBtn').disabled = false;

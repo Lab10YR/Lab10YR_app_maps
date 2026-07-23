@@ -236,6 +236,14 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
   #grid-wrap{padding:10px}
   #script-grid{grid-template-columns:1fr}
   #detail{position:fixed;inset:0;width:100%;z-index:300}
+  /* The shared apps launcher (z-index 99999) and the sticky site header
+     (.l10-sitebar, z-index 9998) both paint over the detail pane's close
+     button. The detail pane is a fullscreen takeover on mobile, so hide both
+     while it is open, and enlarge the close button so it is comfortably tappable. */
+  body.detail-open .l10-launch,
+  body.detail-open .l10-sitebar{display:none!important}
+  #d-close{top:10px;right:10px;width:44px;height:44px;font-size:20px;z-index:400;
+           background:var(--panel2);border:1px solid var(--border)}
 }
 </style>
 <link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260722">
@@ -267,6 +275,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
   <a class="tb-link" href="soil-data-stories.html">Stories</a>
   <a class="tb-link" href="https://lab10yr.com/articles/" target="_blank" rel="noopener noreferrer">Articles</a>
   <a class="tb-link" href="data-models.html">Data Models</a>
+  <a class="tb-link" href="/pricing/">Pricing</a>
+  <a class="tb-link" href="/contact/">Contact</a>
   <a class="tb-link" href="index.html">Home</a>
 </div>
 
@@ -445,13 +455,20 @@ function openDetail(id){
       Size: ${((s.charCount||0)/1000).toFixed(1)} KB
     </div>`;
   document.getElementById('detail').classList.add('open');
+  document.body.classList.add('detail-open');
 }
 
 function closeDetail(){
   document.getElementById('detail').classList.remove('open');
+  document.body.classList.remove('detail-open');
   activeId=null;
   document.querySelectorAll('.sc').forEach(c=>c.classList.remove('sel'));
 }
+
+// Escape closes the detail pane (mobile has no visible chrome around it).
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&document.getElementById('detail').classList.contains('open')) closeDetail();
+});
 
 function extractParams(sql){
   const out=[],seen=new Set();

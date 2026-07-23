@@ -294,7 +294,7 @@
           const runnerHref = `sql-explorer.html?script=${encodeURIComponent(script.path || "")}`;
           return `
             <li>
-              <a href="../${script.path}" target="_blank" rel="noopener noreferrer">${escapeHtml(script.commonName || script.fileName || script.path)}</a>
+              <span>${escapeHtml(script.commonName || script.fileName || script.path)}</span>
               <span class="meta"> (${escapeHtml(script.fileName || "")})</span>
               <span class="meta"> • <a href="${runnerHref}">run</a></span>
               ${familyCount > 1 ? `<span class="chip">${familyCount} related</span>` : ""}
@@ -303,7 +303,7 @@
         }).join("");
 
         return `
-          <article class="example-card reveal">
+          <article class="example-card">
             <h3>${escapeHtml(groupName)}</h3>
             <p class="meta">${scripts.length} script(s) in this purpose category.</p>
             <ul>${rows}</ul>

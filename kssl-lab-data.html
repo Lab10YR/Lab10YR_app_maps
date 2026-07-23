@@ -281,6 +281,9 @@ map.on('load', () => {
   });
   map.on('mouseenter', 'pedon-circle', () => map.getCanvas().style.cursor = 'pointer');
   map.on('mouseleave', 'pedon-circle', () => map.getCanvas().style.cursor = '');
+
+  // If the pedon query resolved before this 'load' fired, apply the stashed rows now.
+  if (_pendingMapRows) { const rows = _pendingMapRows; _pendingMapRows = null; renderMap(rows); }
 });
 
 /* ── LOAD STATE LIST ──────────────────────────────────── */
@@ -400,7 +403,11 @@ function renderTable(rows) {
 }
 
 /* ── MAP MARKERS ──────────────────────────────────────── */
+var _pendingMapRows = null;
 function renderMap(rows) {
+  // Guard the race: if data arrives before the map 'load' event created the
+  // source, stash it and let the load handler apply it.
+  if (!map.getSource('pedons')) { _pendingMapRows = rows; return; }
   var features = [];
   var lats = [], lngs = [];
   rows.forEach(function(p) {
