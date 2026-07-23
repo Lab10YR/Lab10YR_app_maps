@@ -225,8 +225,20 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
   border-radius:5px;padding:5px 14px;font-size:11px;cursor:pointer;font-family:var(--font)}
 .ai-copy-btn:hover{color:var(--text);border-color:var(--accent)}
 #ai-status{font-size:11px;color:var(--dim);margin-top:2px;min-height:14px}
+
+/* MOBILE (<=768px): sidebar becomes a full-width collapsible band above the
+   results; script cards and the detail pane go full-width. */
+@media(max-width:768px){
+  #main{flex-direction:column}
+  #sidebar{width:100%;flex:0 0 auto;max-height:32vh;overflow-y:auto;
+           border-right:none;border-bottom:1px solid var(--border)}
+  .cat-item{min-height:44px}
+  #grid-wrap{padding:10px}
+  #script-grid{grid-template-columns:1fr}
+  #detail{position:fixed;inset:0;width:100%;z-index:300}
+}
 </style>
-<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260707">
+<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260722">
 </head>
 <body>
 <div id="shell">
@@ -659,6 +671,6 @@ function copyAiSql() {
   });
 }
 </script>
-<script src="js/lab10yr-nav.js?v=20260707" defer></script>
+<script src="js/lab10yr-nav.js?v=20260722" defer></script>
 </body>
 </html>

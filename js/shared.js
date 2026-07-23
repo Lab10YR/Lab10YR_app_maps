@@ -292,7 +292,9 @@
     SoilLog.info("BOOT", "Page: " + window.location.pathname);
     SoilLog.debug("BOOT", "UA: " + navigator.userAgent.slice(0, 80));
     if (typeof $ === "undefined") {
-      SoilLog.error("BOOT", "jQuery not found — sdaPost will not work");
+      // Not an error: sdaPost falls back to the native fetch API when jQuery
+      // is absent (see the fetch branch in sdaPost above).
+      SoilLog.info("BOOT", "jQuery not present; sdaPost using native fetch");
     }
     if (typeof maplibregl !== "undefined") {
       SoilLog.info("BOOT", "MapLibre GL " + (maplibregl.version || "?"));
