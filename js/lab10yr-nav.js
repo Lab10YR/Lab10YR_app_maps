@@ -119,7 +119,7 @@
     document.body.classList.add("l10-has-sitebar");
 
     var vh = document.documentElement.clientHeight;
-    var barH = bar.offsetHeight || 52;
+    var barH = bar.offsetHeight || 64;
     var kids = document.body.children;
     // Only a body whose Y axis is clipped can cut content off at the bottom;
     // "overflow: hidden auto" pages scroll vertically and must NOT be shortened.
