@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 20 Aug 2026 01:51:22 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 20 Aug 2026 02:04:12 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,7 +17,7 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Thu, 20 Aug 2026 01:51:22 GMT</pubDate>
+    <pubDate>Thu, 20 Aug 2026 02:04:12 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
   </item>
   <item>
@@ -26,6 +26,13 @@
     <guid isPermaLink="true">https://lab10yr.com/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1787190678707</guid>
     <pubDate>Thu, 20 Aug 2026 00:00:00 GMT</pubDate>
     <description>Convolutional neural networks now classify the National Cooperative Soil Survey soil texture from field photos with high accuracy, using KSSL data and offering rapid, consistent field assessments for agriculture and engineering.</description>
+  </item>
+  <item>
+    <title>Computer Vision Is Now Classifying Soil Texture From Field Photos</title>
+    <link>https://lab10yr.com/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1787191450147</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1787191450147</guid>
+    <pubDate>Thu, 20 Aug 2026 00:00:00 GMT</pubDate>
+    <description>Computer vision models are now classifying soil texture from field photos with high accuracy, using the extensive KSSL database and advanced deep learning techniques to offer rapid, consistent soil assessment.</description>
   </item>
   <item>
     <title>Soil Depth Prediction From LiDAR: What the Terrain Tells You Before You Dig</title>
