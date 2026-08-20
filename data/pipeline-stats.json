@@ -1,7 +1,385 @@
 {
-  "totalArticles": 30,
-  "lastUpdated": "2026-06-12T16:16:24.824Z",
+  "totalArticles": 72,
+  "lastUpdated": "2026-08-20T01:51:22.174Z",
   "articles": [
+    {
+      "title": "Computer Vision Is Now Classifying Soil Texture From Field Photos",
+      "angle": "computer vision",
+      "format": "short",
+      "wordCount": 395,
+      "generatedAt": "2026-08-20T01:51:18.707Z",
+      "topicIndex": 40,
+      "url": "https://lab10yr.com/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1787190678707"
+    },
+    {
+      "title": "Computer Vision Is Now Classifying Soil Texture From Field Photos",
+      "angle": "computer vision",
+      "format": "long",
+      "wordCount": 1626,
+      "generatedAt": "2026-08-20T01:47:54.877Z",
+      "topicIndex": 40,
+      "url": "https://lab10yr.com/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1787190474877"
+    },
+    {
+      "title": "Soil Depth Prediction From LiDAR: What the Terrain Tells You Before You Dig",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 495,
+      "generatedAt": "2026-08-19T13:43:35.507Z",
+      "topicIndex": 39,
+      "url": "https://lab10yr.com/articles/soil-depth-prediction-from-lidar-what-the-terrain-tells-you--1787147015507"
+    },
+    {
+      "title": "Soil Depth Prediction From LiDAR: What the Terrain Tells You Before You Dig",
+      "angle": "terrain analysis",
+      "format": "long",
+      "wordCount": 1872,
+      "generatedAt": "2026-08-18T14:42:32.748Z",
+      "topicIndex": 39,
+      "url": "https://lab10yr.com/articles/soil-depth-prediction-from-lidar-what-the-terrain-tells-you--1787064152748"
+    },
+    {
+      "title": "Soil Depth Prediction From LiDAR: What the Terrain Tells You Before You Dig",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 680,
+      "generatedAt": "2026-08-17T13:36:37.326Z",
+      "topicIndex": 39,
+      "url": "https://lab10yr.com/articles/soil-depth-prediction-from-lidar-what-the-terrain-tells-you--1786973797326"
+    },
+    {
+      "title": "Soil Depth Prediction From LiDAR: What the Terrain Tells You Before You Dig",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 384,
+      "generatedAt": "2026-08-14T14:14:38.312Z",
+      "topicIndex": 39,
+      "url": "https://lab10yr.com/articles/soil-depth-prediction-from-lidar-what-the-terrain-tells-you--1786716878312"
+    },
+    {
+      "title": "Soil Depth Prediction From LiDAR: What the Terrain Tells You Before You Dig",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 434,
+      "generatedAt": "2026-08-13T14:21:59.686Z",
+      "topicIndex": 39,
+      "url": "https://lab10yr.com/articles/soil-depth-prediction-from-lidar-what-the-terrain-tells-you--1786630919686"
+    },
+    {
+      "title": "Topographic Wetness Index: The Terrain Derivative That Predicts Soil Drainage",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 527,
+      "generatedAt": "2026-08-12T14:19:49.690Z",
+      "topicIndex": 38,
+      "url": "https://lab10yr.com/articles/topographic-wetness-index-the-terrain-derivative-that-predic-1786544389690"
+    },
+    {
+      "title": "Mining and Reclamation: Why the Soil Survey Matters After the Ore Is Gone",
+      "angle": "conservation",
+      "format": "short",
+      "wordCount": 417,
+      "generatedAt": "2026-08-11T15:07:49.251Z",
+      "topicIndex": 28,
+      "url": "https://lab10yr.com/articles/mining-and-reclamation-why-the-soil-survey-matters-after-the-1786460869251"
+    },
+    {
+      "title": "The Drought Tolerance Map the Agriculture Sector Is Missing",
+      "angle": "land finance",
+      "format": "short",
+      "wordCount": 456,
+      "generatedAt": "2026-08-10T14:23:47.755Z",
+      "topicIndex": 27,
+      "url": "https://lab10yr.com/articles/the-drought-tolerance-map-the-agriculture-sector-is-missing-1786371827755"
+    },
+    {
+      "title": "Coastal Soil Subsidence Is Happening Faster Than Sea Level Is Rising",
+      "angle": "geospatial",
+      "format": "short",
+      "wordCount": 647,
+      "generatedAt": "2026-08-07T14:11:11.038Z",
+      "topicIndex": 26,
+      "url": "https://lab10yr.com/articles/coastal-soil-subsidence-is-happening-faster-than-sea-level-i-1786111871038"
+    },
+    {
+      "title": "Nitrate Leaching Risk Is Already Mapped. Most Farmers Have Never Seen the Map.",
+      "angle": "conservation",
+      "format": "short",
+      "wordCount": 472,
+      "generatedAt": "2026-08-06T15:12:03.187Z",
+      "topicIndex": 25,
+      "url": "https://lab10yr.com/articles/nitrate-leaching-risk-is-already-mapped-most-farmers-have-ne-1786029123187"
+    },
+    {
+      "title": "What Wildfire Does to Soil and Why the Risk Does Not End When the Flames Do",
+      "angle": "geospatial",
+      "format": "short",
+      "wordCount": 985,
+      "generatedAt": "2026-08-05T15:12:52.013Z",
+      "topicIndex": 24,
+      "url": "https://lab10yr.com/articles/what-wildfire-does-to-soil-and-why-the-risk-does-not-end-whe-1785942772013"
+    },
+    {
+      "title": "Data-Driven Land Management Starts With Knowing Your Soil Type",
+      "angle": "conservation",
+      "format": "short",
+      "wordCount": 702,
+      "generatedAt": "2026-08-04T16:19:05.706Z",
+      "topicIndex": 23,
+      "url": "https://lab10yr.com/articles/data-driven-land-management-starts-with-knowing-your-soil-ty-1785860345706"
+    },
+    {
+      "title": "Carbon Credits Require Soil Credibility",
+      "angle": "conservation",
+      "format": "short",
+      "wordCount": 447,
+      "generatedAt": "2026-08-03T15:41:50.381Z",
+      "topicIndex": 22,
+      "url": "https://lab10yr.com/articles/carbon-credits-require-soil-credibility-1785771710381"
+    },
+    {
+      "title": "The Soil Profile Beneath America's Fastest-Shrinking Cities",
+      "angle": "geospatial",
+      "format": "short",
+      "wordCount": 462,
+      "generatedAt": "2026-07-31T15:20:38.297Z",
+      "topicIndex": 21,
+      "url": "https://lab10yr.com/articles/the-soil-profile-beneath-america-s-fastest-shrinking-cities-1785511238297"
+    },
+    {
+      "title": "Reading the Land: What Map Unit Symbols Tell a Practiced Eye",
+      "angle": "technical",
+      "format": "short",
+      "wordCount": 564,
+      "generatedAt": "2026-07-30T15:08:54.020Z",
+      "topicIndex": 20,
+      "url": "https://lab10yr.com/articles/reading-the-land-what-map-unit-symbols-tell-a-practiced-eye-1785424134020"
+    },
+    {
+      "title": "Urban Heat Islands Start Underground",
+      "angle": "geospatial",
+      "format": "short",
+      "wordCount": 500,
+      "generatedAt": "2026-07-29T15:08:43.812Z",
+      "topicIndex": 15,
+      "url": "https://lab10yr.com/articles/urban-heat-islands-start-underground-1785337723812"
+    },
+    {
+      "title": "Mapping Methane: How Soil Saturation Predicts Pipeline Risk",
+      "angle": "infrastructure",
+      "format": "short",
+      "wordCount": 564,
+      "generatedAt": "2026-07-28T16:09:59.277Z",
+      "topicIndex": 14,
+      "url": "https://lab10yr.com/articles/mapping-methane-how-soil-saturation-predicts-pipeline-risk-1785254999277"
+    },
+    {
+      "title": "Agricultural Land Rents Are Hiding a Soil Quality Problem",
+      "angle": "land finance",
+      "format": "short",
+      "wordCount": 496,
+      "generatedAt": "2026-07-24T14:52:19.548Z",
+      "topicIndex": 13,
+      "url": "https://lab10yr.com/articles/agricultural-land-rents-are-hiding-a-soil-quality-problem-1784904739548"
+    },
+    {
+      "title": "The KSSL Lab: 60 Years of Soil Measurements No One Is Using",
+      "angle": "technical",
+      "format": "short",
+      "wordCount": 373,
+      "generatedAt": "2026-07-23T15:06:37.036Z",
+      "topicIndex": 12,
+      "url": "https://lab10yr.com/articles/the-kssl-lab-60-years-of-soil-measurements-no-one-is-using-1784819197036"
+    },
+    {
+      "title": "Why Soil Science Should Drive EV Charging Infrastructure Siting",
+      "angle": "energy",
+      "format": "short",
+      "wordCount": 506,
+      "generatedAt": "2026-07-22T15:03:11.594Z",
+      "topicIndex": 11,
+      "url": "https://lab10yr.com/articles/why-soil-science-should-drive-ev-charging-infrastructure-sit-1784732591594"
+    },
+    {
+      "title": "Before the Flood: What Soil Drainage Classes Predict About Damage",
+      "angle": "insurance",
+      "format": "short",
+      "wordCount": 401,
+      "generatedAt": "2026-07-21T15:49:50.058Z",
+      "topicIndex": 10,
+      "url": "https://lab10yr.com/articles/before-the-flood-what-soil-drainage-classes-predict-about-da-1784648990058"
+    },
+    {
+      "title": "The Soil Carbon Inventory Problem and How to Solve It",
+      "angle": "conservation",
+      "format": "short",
+      "wordCount": 485,
+      "generatedAt": "2026-07-20T15:09:15.729Z",
+      "topicIndex": 7,
+      "url": "https://lab10yr.com/articles/the-soil-carbon-inventory-problem-and-how-to-solve-it-1784560155729"
+    },
+    {
+      "title": "Ground Deformation Monitoring Without Satellites",
+      "angle": "geospatial",
+      "format": "short",
+      "wordCount": 708,
+      "generatedAt": "2026-07-17T14:31:29.062Z",
+      "topicIndex": 6,
+      "url": "https://lab10yr.com/articles/ground-deformation-monitoring-without-satellites-1784298689062"
+    },
+    {
+      "title": "Terrain Intelligence Is the Missing Layer in Land Due Diligence",
+      "angle": "land finance",
+      "format": "short",
+      "wordCount": 387,
+      "generatedAt": "2026-07-16T14:58:37.236Z",
+      "topicIndex": 5,
+      "url": "https://lab10yr.com/articles/terrain-intelligence-is-the-missing-layer-in-land-due-dilige-1784213917236"
+    },
+    {
+      "title": "The Hidden Soil Risk in Your Insurance Portfolio",
+      "angle": "insurance",
+      "format": "short",
+      "wordCount": 379,
+      "generatedAt": "2026-07-15T14:47:12.608Z",
+      "topicIndex": 2,
+      "url": "https://lab10yr.com/articles/the-hidden-soil-risk-in-your-insurance-portfolio-1784126832608"
+    },
+    {
+      "title": "Renewable Energy Siting Is a Soil Problem First",
+      "angle": "energy",
+      "format": "short",
+      "wordCount": 494,
+      "generatedAt": "2026-07-14T15:38:40.052Z",
+      "topicIndex": 1,
+      "url": "https://lab10yr.com/articles/renewable-energy-siting-is-a-soil-problem-first-1784043520052"
+    },
+    {
+      "title": "Soil Salinity Mapping From Satellite: The Invisible Threat to Western Irrigated Agriculture",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 637,
+      "generatedAt": "2026-07-13T15:46:37.463Z",
+      "topicIndex": 54,
+      "url": "https://lab10yr.com/articles/soil-salinity-mapping-from-satellite-the-invisible-threat-to-1783957597463"
+    },
+    {
+      "title": "Object-Based Image Analysis for Soil Surface Classification",
+      "angle": "computer vision",
+      "format": "short",
+      "wordCount": 377,
+      "generatedAt": "2026-07-10T15:31:13.210Z",
+      "topicIndex": 53,
+      "url": "https://lab10yr.com/articles/object-based-image-analysis-for-soil-surface-classification-1783697473210"
+    },
+    {
+      "title": "The Canopy Architecture Signal in Soil: What Tree Structure Tells Pedologists",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 1727,
+      "generatedAt": "2026-07-09T15:56:32.749Z",
+      "topicIndex": 52,
+      "url": "https://lab10yr.com/articles/the-canopy-architecture-signal-in-soil-what-tree-structure-t-1783612592749"
+    },
+    {
+      "title": "Soil Moisture from Space: Combining SAR and SSURGO for Field-Scale Intelligence",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 408,
+      "generatedAt": "2026-07-08T15:18:25.209Z",
+      "topicIndex": 51,
+      "url": "https://lab10yr.com/articles/soil-moisture-from-space-combining-sar-and-ssurgo-for-field--1783523905209"
+    },
+    {
+      "title": "How Terrain Derivatives Outperform Expert Soil Mapping in Complex Terrain",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 4010,
+      "generatedAt": "2026-07-07T16:43:41.283Z",
+      "topicIndex": 50,
+      "url": "https://lab10yr.com/articles/how-terrain-derivatives-outperform-expert-soil-mapping-in-co-1783442621283"
+    },
+    {
+      "title": "Google Earth Engine and the Soil Carbon Monitoring Problem",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 329,
+      "generatedAt": "2026-07-06T16:19:02.409Z",
+      "topicIndex": 49,
+      "url": "https://lab10yr.com/articles/google-earth-engine-and-the-soil-carbon-monitoring-problem-1783354742409"
+    },
+    {
+      "title": "Soil Mapping at the Edge: What Satellite Imagery Misses That LiDAR Finds",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 524,
+      "generatedAt": "2026-07-03T15:08:49.462Z",
+      "topicIndex": 48,
+      "url": "https://lab10yr.com/articles/soil-mapping-at-the-edge-what-satellite-imagery-misses-that--1783091329462"
+    },
+    {
+      "title": "UAV Photogrammetry for Post-Disturbance Soil Monitoring",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 322,
+      "generatedAt": "2026-07-01T15:40:22.029Z",
+      "topicIndex": 47,
+      "url": "https://lab10yr.com/articles/uav-photogrammetry-for-post-disturbance-soil-monitoring-1782920422029"
+    },
+    {
+      "title": "LiDAR-Derived Slope Position Changes How We Assign Soil Series",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 369,
+      "generatedAt": "2026-06-30T16:28:15.448Z",
+      "topicIndex": 46,
+      "url": "https://lab10yr.com/articles/lidar-derived-slope-position-changes-how-we-assign-soil-seri-1782836895448"
+    },
+    {
+      "title": "The Soil Spectral Library That Holds 70 Years of American Soil Science",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 432,
+      "generatedAt": "2026-06-29T16:38:51.897Z",
+      "topicIndex": 45,
+      "url": "https://lab10yr.com/articles/the-soil-spectral-library-that-holds-70-years-of-american-so-1782751131897"
+    },
+    {
+      "title": "Stream Power Index as a Soil Erosion Predictor: Why Slope Alone Is Not Enough",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 449,
+      "generatedAt": "2026-06-25T15:39:54.459Z",
+      "topicIndex": 44,
+      "url": "https://lab10yr.com/articles/stream-power-index-as-a-soil-erosion-predictor-why-slope-alo-1782401994459"
+    },
+    {
+      "title": "SAR Backscatter and Soil Moisture: What Radar Sees That Optical Satellites Can't",
+      "angle": "remote sensing",
+      "format": "long",
+      "wordCount": 1768,
+      "generatedAt": "2026-06-24T14:28:00.877Z",
+      "topicIndex": 43,
+      "url": "https://lab10yr.com/articles/sar-backscatter-and-soil-moisture-what-radar-sees-that-optic-1782311280877"
+    },
+    {
+      "title": "Digital Soil Mapping With Machine Learning: How Terrain Beats Traditional Survey",
+      "angle": "terrain analysis",
+      "format": "long",
+      "wordCount": 2335,
+      "generatedAt": "2026-06-24T14:15:26.049Z",
+      "topicIndex": 42,
+      "url": "https://lab10yr.com/articles/digital-soil-mapping-with-machine-learning-how-terrain-beats-1782310526049"
+    },
+    {
+      "title": "Hyperspectral Remote Sensing and the Soil Carbon Map Nobody Has Built Yet",
+      "angle": "remote sensing",
+      "format": "long",
+      "wordCount": 1956,
+      "generatedAt": "2026-06-24T13:39:46.689Z",
+      "topicIndex": 41,
+      "url": "https://lab10yr.com/articles/hyperspectral-remote-sensing-and-the-soil-carbon-map-nobody--1782308386689"
+    },
     {
       "title": "Computer Vision Is Now Classifying Soil Texture From Field Photos",
       "angle": "computer vision",
