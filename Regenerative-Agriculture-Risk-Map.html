@@ -446,7 +446,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
   #maps-area{flex-direction:column}
 }
 </style>
-<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260707">
+<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260723b">
 </head>
 <body>
 
@@ -465,7 +465,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
       <div id="search-results"></div>
     </div>
     <span id="live-sda-hint" style="display:none;font-size:10px;color:var(--accent);padding:0 6px;animation:pulse 1s infinite">⟳ Loading exact soil lines…</span>
-    <div style="margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0">
+    <div style="margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:100%">
       <button class="hdr-btn" id="btn-mysoil" onclick="findMySoil()" title="Show soil data for your current location">My Soil</button>
       <button class="hdr-btn" id="btn-share" onclick="shareMap()" title="Copy shareable link to this map view">⤴ Share</button>
       <button class="hdr-btn" onclick="downloadCSV()">⬇ CSV</button>
@@ -818,6 +818,24 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
           </p>
         </div>
       </div>
+
+      <div class="sb-sec" id="sb-cta">
+        <div class="sb-hd">Next step</div>
+        <a href="/report/"
+           style="display:flex;align-items:center;min-height:44px;margin-bottom:8px;
+                  padding:9px 12px;border:1px solid var(--accent);border-radius:6px;
+                  color:var(--accent);font-size:11.5px;font-weight:700;line-height:1.4;
+                  text-decoration:none;letter-spacing:.02em">
+          Get the interpreted, defensible report for your site
+        </a>
+        <a href="/contact/"
+           style="display:flex;align-items:center;min-height:44px;
+                  padding:9px 12px;border:1px solid var(--border);border-radius:6px;
+                  color:var(--text);font-size:11.5px;font-weight:600;line-height:1.4;
+                  text-decoration:none;letter-spacing:.02em">
+          Talk to a pedologist
+        </a>
+      </div>
     </div>
 
     <div id="info-panel">
@@ -1016,7 +1034,8 @@ async function _lookupMySoil(lat,lng){
     if(!resp.ok) throw new Error('SDA HTTP '+resp.status);
     const d=await resp.json();
     SoilLog.info('MYSOIL','OK '+Math.round(performance.now()-t0)+'ms');
-    const rows=d.Table?d.Table.slice(2):[];
+    // SDA JSON+COLUMNNAME returns column names at index 0, data rows from index 1.
+    const rows=d.Table?d.Table.slice(1):[];
     if(!rows.length){
       document.getElementById('mysoil-content').innerHTML=
         '<div style="color:var(--dim);font-size:12px;padding:10px 0">No SSURGO data at this location.<br><small style="color:var(--dimmer)">May be outside the soil survey extent.</small></div>';
@@ -1695,8 +1714,11 @@ async function querySDA(fips,areasymbol){
         <td style="padding:2px;text-align:center;color:${oc};font-size:9px;font-weight:700">${ab[r[4]]||'?'}</td>
       </tr>`;
     });
+    // Stash rows for the CSV download rather than inlining JSON into the
+    // onclick attribute (embedded quotes broke the handler with a SyntaxError).
+    _lastCountyRows=rows; _lastCountySym=areasymbol;
     t+=`</table></div>
-      <button onclick="dlCounty('${areasymbol}',${JSON.stringify(rows)})"
+      <button onclick="dlCounty()"
         style="width:100%;margin-top:6px;padding:4px;background:var(--panel);
                border:1px solid var(--border);color:var(--accent2);border-radius:4px;
                cursor:pointer;font-size:10px;font-weight:600">⬇ ${areasymbol} CSV</button>`;
@@ -1708,7 +1730,10 @@ async function querySDA(fips,areasymbol){
   }
 }
 
-function dlCounty(sym,rows){
+let _lastCountyRows=[], _lastCountySym='';
+function dlCounty(){
+  const sym=_lastCountySym, rows=_lastCountyRows;
+  if(!rows.length)return;
   const hdr='mukey,musym,muname,fsi_class,om_class';
   const lines=[hdr,...rows.map(r=>r.map(v=>`"${v??''}"`).join(','))];
   dlFile(lines.join('\n'),`soil_${sym}.csv`,'text/csv');
@@ -2365,6 +2390,6 @@ if('serviceWorker' in navigator){
     .catch(()=>{});
 }
 </script>
-<script src="js/lab10yr-nav.js?v=20260707" defer></script>
+<script src="js/lab10yr-nav.js?v=20260723b" defer></script>
 </body>
 </html>

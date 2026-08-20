@@ -20,7 +20,7 @@
 <script src="https://unpkg.com/pmtiles@3.2.0/dist/pmtiles.js"></script>
 <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
 <script src="js/shared.js"></script>
-<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260707">
+<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260723b">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -653,11 +653,13 @@ function showDetail(props){
 }
 
 /* ── SOIL PATTERN (PMTiles) ──────────────────────────── */
-const MU_OM_EXPR=['match',['get','om_class'],
+// PMTiles MU features carry fsi_dominant / om_dominant (see data/mu/*.geojson);
+// matching on *_class fell through to the default color = near-black polygons.
+const MU_OM_EXPR=['match',['get','om_dominant'],
   'OM depletion low','#1b7837','OM depletion moderately low','#78c679',
   'OM depletion moderate','#fecc5c','OM depletion moderately high','#f03b20',
   'OM depletion high','#7b0007','#1a1a30'];
-const MU_FSI_EXPR=['match',['get','fsi_class'],
+const MU_FSI_EXPR=['match',['get','fsi_dominant'],
   'Not fragile','#1b7837','Slightly fragile','#78c679',
   'Moderately fragile','#fecc5c','Fragile','#fd8d3c',
   'Highly fragile','#f03b20','Extremely fragile','#bd0026','#1a1a30'];
@@ -711,6 +713,6 @@ function addMULayer(state){
     layout:{visibility:muVisible?'visible':'none'}});
 }
 </script>
-<script src="js/lab10yr-nav.js?v=20260707" defer></script>
+<script src="js/lab10yr-nav.js?v=20260723b" defer></script>
 </body>
 </html>

@@ -266,7 +266,7 @@ footer{background:#020408;border-top:1px solid var(--border);
 footer a{color:var(--dim);text-decoration:none}
 footer a:hover{color:var(--soil)}
 </style>
-<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260707">
+<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260723b">
 </head>
 <body>
 
@@ -755,39 +755,41 @@ async function showTableDetail(t) {
   <div id="td-body">
     <div style="padding:20px;color:var(--dim);font-size:13px;display:flex;align-items:center;gap:8px">
       <span style="animation:spin .7s linear infinite;display:inline-block;font-size:16px">⟳</span>
-      Loading column definitions from SDA MetadataColumn…
+      Loading column definitions…
     </div>
   </div>`;
 
-  // Full SDA MetadataColumn query - all available fields
-  try {
-    const sql = `SELECT ColumnOrdinalPosition, ColumnPhysicalName, ColumnLabel,
-      ColumnLogicalDataType, ColumnPhysicalDataType, ColumnSize, PrecisionComponent,
-      NotNullFlag, PrimaryKeyFlag, ColumnUnitsOfMeasure, DomainName, ColumnDescription
-      FROM MetadataColumn WHERE TablePhysicalName='${t.name}' ORDER BY ColumnOrdinalPosition`;
-    const body = new URLSearchParams({query:sql,'format':'JSON+COLUMNNAME'});
-    const resp = await fetch(SDA, {method:'POST', body});
-    const text = await resp.text();
-    let data; try{ data=JSON.parse(text); }catch(_){ data={}; }
-    if (data.Table && data.Table.length >= 3) {
-      const [,,...rows] = data.Table;
-      _lastCols = rows.map(r=>({
-        ord:r[0], name:r[1], label:r[2], logType:r[3], physType:r[4],
-        size:r[5], prec:r[6], notNull:r[7], pk:r[8],
-        units:r[9], domain:r[10], desc:r[11]
-      }));
-      renderColumns(_lastCols);
-      return;
-    }
-  } catch(_) {}
-
-  // Fallback to xlsx columns (fewer fields)
+  // Render immediately from the embedded SSURGO schema (extracted from
+  // SDMOnlineSChema.xlsx). SDA does not expose the mdstat* column dictionary,
+  // so the xlsx-derived schema is the authoritative source for the full column set.
   _lastCols = t.columns.map((c,i)=>({
     ord:i+1, name:c.name, label:c.label||c.name,
     logType:c.type||'', physType:'', size:c.size||'', prec:'',
     notNull:'', pk:c.pk?'Yes':'', units:'', domain:'', desc:c.desc||''
   }));
   renderColumns(_lastCols);
+
+  // Enrich with live SDA metadata where available. sdvattribute is the SDA
+  // metadata table that IS exposed: it carries friendly names and full
+  // descriptions for the columns surfaced as soil attributes.
+  try {
+    const sql = `SELECT attributecolumnname, attributename, attributedescription
+      FROM sdvattribute WHERE attributetablename='${t.name}'`;
+    const body = new URLSearchParams({query:sql, format:'JSON+COLUMNNAME'});
+    const resp = await fetch(SDA, {method:'POST', body});
+    const text = await resp.text();
+    let data; try{ data=JSON.parse(text); }catch(_){ data={}; }
+    if (data.Table && data.Table.length >= 2) {
+      const [,...rows] = data.Table;
+      const meta = {};
+      rows.forEach(r => { if (r[0] && !meta[r[0]]) meta[r[0]] = {label:r[1], desc:r[2]}; });
+      _lastCols = _lastCols.map(c => {
+        const m = meta[c.name];
+        return m ? {...c, label:m.label||c.label, desc:c.desc||m.desc||''} : c;
+      });
+      renderColumns(_lastCols);
+    }
+  } catch(_) {}
 }
 
 function renderColumns(cols) {
@@ -984,53 +986,51 @@ async function lookupDomain() {
   const col = (document.getElementById('domain-input').value || '').trim();
   const res = document.getElementById('domain-result');
   if (!col) { res.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--dim)">Enter a column name first</div>'; return; }
-  res.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--accent)"><span style="animation:spin .7s linear infinite;display:inline-block">⟳</span> Querying SDA domain metadata…</div>';
+  res.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--accent)"><span style="animation:spin .7s linear infinite;display:inline-block">⟳</span> Querying SDA domain values…</div>';
 
-  // Try two approaches: MetadataDomainDetail and also direct domain from column
-  const sql = `SELECT dm.DomainName, dd.ChoiceLabel, dd.ChoiceName, dd.ChoiceSequence
-    FROM MetadataDomainMaster dm
-    INNER JOIN MetadataDomainDetail dd ON dm.DomainID = dd.DomainID
-    WHERE dm.DomainName = '${col}' OR dm.DomainName LIKE '%${col}%'
-    ORDER BY dm.DomainName, dd.ChoiceSequence`;
+  // SDA does not expose the mdstat* / Metadata* domain dictionary. It DOES expose
+  // sdvattribute (column -> table + friendly name + description) and the data
+  // tables themselves, so resolve the column to its table, then read the real
+  // distinct coded values straight from the data.
   try {
-    const body = new URLSearchParams({query: sql, format: 'JSON+COLUMNNAME'});
-    const r = await fetch(SDA, {method: 'POST', body});
-    const txt = await r.text();
-    let d; try{ d=JSON.parse(txt); }catch(_){ d={}; }
-    if (!d.Table || d.Table.length < 3) {
-      res.innerHTML = `<div style="color:var(--dim);padding:8px">No domain found for "<span style="color:var(--soil)">${esc(col)}</span>". Try a different column name or check <a href="sql-explorer.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">SDA QueryHelp</a>.</div>`;
+    const mapSql = `SELECT attributename, attributetablename, attributecolumnname, attributedescription
+      FROM sdvattribute WHERE attributecolumnname = '${col}'`;
+    const mapR = await fetch(SDA, {method:'POST', body:new URLSearchParams({query:mapSql, format:'JSON+COLUMNNAME'})});
+    let mapD; try{ mapD=JSON.parse(await mapR.text()); }catch(_){ mapD={}; }
+    if (!mapD.Table || mapD.Table.length < 2) {
+      res.innerHTML = `<div style="color:var(--dim);padding:8px">No coded domain found for "<span style="color:var(--soil)">${esc(col)}</span>". Try a column with a value list, e.g. drainagecl, hydgrp, flodfreqcl.</div>`;
       return;
     }
-    const [headers,,,...rows] = d.Table;
-    // Group by domain name
-    const groups = {};
-    rows.forEach(r => {
-      const g = r[0] || col;
-      if (!groups[g]) groups[g] = [];
-      groups[g].push({label: r[1], name: r[2], seq: r[3]});
-    });
-    let html = '';
-    Object.entries(groups).forEach(([gname, vals]) => {
-      html += `<div style="margin-bottom:12px">
-        <div style="font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
-                    color:var(--soil);margin-bottom:6px">${esc(gname)}</div>
-        <table style="width:100%;border-collapse:collapse;font-size:12px">
-          <tr><th style="text-align:left;padding:6px 10px;background:var(--panel3);color:var(--dim);border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;letter-spacing:.08em">Code / Label</th>
-              <th style="text-align:left;padding:6px 10px;background:var(--panel3);color:var(--dim);border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;letter-spacing:.08em">Display Name</th></tr>
-          ${vals.map(v => `<tr>
-            <td style="padding:4px 8px;border-bottom:1px solid var(--border);color:var(--accent);font-family:Courier New,monospace">${esc(v.label||'')}</td>
-            <td style="padding:4px 8px;border-bottom:1px solid var(--border);color:var(--text)">${esc(v.name||'')}</td>
-          </tr>`).join('')}
-        </table>
-      </div>`;
-    });
-    res.innerHTML = `<div style="font-size:10px;color:var(--green);margin-bottom:10px">✓ ${rows.length} domain values for "${esc(col)}"</div>${html}`;
+    const [, first] = mapD.Table;
+    const friendly = first[0] || col, tbl = first[1], colName = first[2] || col, desc = first[3] || '';
+
+    const valSql = `SELECT DISTINCT ${colName} FROM ${tbl} WHERE ${colName} IS NOT NULL ORDER BY ${colName}`;
+    const valR = await fetch(SDA, {method:'POST', body:new URLSearchParams({query:valSql, format:'JSON'})});
+    let valD; try{ valD=JSON.parse(await valR.text()); }catch(_){ valD={}; }
+    const vals = (valD.Table || []).map(r => r[0]).filter(v => v !== null && v !== '');
+    if (!vals.length) {
+      res.innerHTML = `<div style="color:var(--dim);padding:8px">"<span style="color:var(--soil)">${esc(col)}</span>" is a free-form or numeric field with no fixed value list.</div>`;
+      return;
+    }
+
+    const descHtml = desc ? `<div style="font-size:11px;color:var(--dim);line-height:1.5;margin-bottom:10px">${esc(desc.length>320?desc.slice(0,320)+'…':desc)}</div>` : '';
+    const html = `<div style="margin-bottom:12px">
+      <div style="font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--soil);margin-bottom:6px">${esc(friendly)} · ${esc(tbl)}.${esc(colName)}</div>
+      ${descHtml}
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <tr><th style="text-align:left;padding:6px 10px;background:var(--panel3);color:var(--dim);border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;letter-spacing:.08em">Value</th></tr>
+        ${vals.map(v => `<tr>
+          <td style="padding:4px 8px;border-bottom:1px solid var(--border);color:var(--accent);font-family:Courier New,monospace">${esc(v)}</td>
+        </tr>`).join('')}
+      </table>
+    </div>`;
+    res.innerHTML = `<div style="font-size:10px;color:var(--green);margin-bottom:10px">✓ ${vals.length} distinct values for "${esc(col)}"</div>${html}`;
   } catch(e) {
     res.innerHTML = `<div style="color:var(--red);font-size:11px">Error: ${esc(e.message)}</div>`;
   }
 }
 </script>
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
-<script src="js/lab10yr-nav.js?v=20260707" defer></script>
+<script src="js/lab10yr-nav.js?v=20260723b" defer></script>
 </body>
 </html>

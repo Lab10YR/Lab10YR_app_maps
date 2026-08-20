@@ -21,7 +21,7 @@
 <script src="https://unpkg.com/wellknown@0.5.0/wellknown.js"></script>
 <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
 <script src="js/shared.js"></script>
-<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260707">
+<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260723b">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -46,11 +46,17 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
   background:rgba(6,8,16,.97);border-bottom:1px solid var(--border);
   display:flex;align-items:center;padding:0 12px;gap:8px;
   backdrop-filter:blur(14px);overflow-x:auto;overflow-y:visible;
+  scrollbar-gutter:stable;
   /* leave room at the right so the fixed Lab10YR apps launcher
      (position:fixed; top:12px; right:12px, ~150px wide) never overlaps
      header buttons */
   margin-right:178px;
 }
+/* visible horizontal-scroll affordance so the 3D button + cross-links
+   stay reachable when the header row overflows (1440px and below) */
+#hdr::-webkit-scrollbar{height:6px}
+#hdr::-webkit-scrollbar-thumb{background:var(--border2,#3a3f52);border-radius:3px}
+#hdr::-webkit-scrollbar-track{background:transparent}
 .logo{font-size:13px;font-weight:800;color:#fff;white-space:nowrap;
       display:flex;align-items:center;gap:6px;flex-shrink:0}
 .logo .dot{width:8px;height:8px;border-radius:50%;
@@ -389,6 +395,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
 /* ── MOBILE ───────────────────────────────────────────────── */
 @media(max-width:700px){
   #sidebar{display:none}
+  #sidebar-toggle{display:none}
   #detail-panel{width:100%;bottom:34px}
   :root{--hdr:44px}
   #story-tabs .stab span:not(.dot){display:none}
@@ -958,9 +965,6 @@ async function init(){
     tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
     encoding:'terrarium',tileSize:256});
   map.setTerrain({source:'terrain-src',exaggeration:1.5});
-  map.addLayer({id:'sky',type:'sky',paint:{
-    'sky-type':'atmosphere','sky-atmosphere-sun':[0,90],'sky-atmosphere-sun-intensity':15
-  }});
 
   // Labels
   map.addSource('labels-src',{type:'raster',tileSize:256,
@@ -1017,7 +1021,7 @@ async function loadData(){
                        sa.fsi>0.22?'Moderately fragile':sa.fsi>0.15?'Slightly fragile':'Not fragile';
         const omClass=sa.om>0.75?'OM depletion high':sa.om>0.65?'OM depletion moderately high':
                       sa.om>0.55?'OM depletion moderate':sa.om>0.45?'OM depletion moderately low':'OM depletion low';
-        ip={fsi_dominant:fsiClass,om_dominant:omClass,fsi_avg:sa.fsi,om_avg:sa.om,areasymbol:st,areaname:st};
+        ip={fsi_dominant:fsiClass,om_dominant:omClass,fsi_avg:sa.fsi,om_avg:sa.om,areaname:st};
         fallback++;
       }
 
@@ -1026,7 +1030,9 @@ async function loadData(){
         f.properties.om_dominant=ip.oc||ip.om_dominant||'Not rated';
         f.properties.fsi_avg=+(ip.fv||ip.fsi_avg)||0;
         f.properties.om_avg=+(ip.ov||ip.om_avg)||0;
-        f.properties.areasymbol=ip.areasymbol||'';
+        // interp_data records carry no areasymbol; SDA legend.areasymbol is
+        // per-survey-area (e.g. 'IA169'), so derive it from state + county FIPS.
+        f.properties.areasymbol=ip.areasymbol||(st?st+fips.slice(2):'');
         f.properties.areaname=ip.name||ip.areaname||'';
         if(ip.fc||ip.fsi_dominant) matched++;
       } else {
@@ -1113,8 +1119,11 @@ function buildMap(){
     const z=map.getZoom();
     if(muVisible){
       if(z>=5) loadMUTiles();
-      // Cross-fade: county fades out as polygon layer fades in (z5→z7)
-      const countyOp=Math.max(0, Math.min(0.78, 0.78*(7-z)/(7-5)));
+      // Cross-fade: county fades out as polygon layer fades in (z5→z7),
+      // but only once a higher-res raster layer is actually ready to take
+      // over (same guard setResolution uses). Otherwise county fill would
+      // fade to nothing over blank space and the map goes empty.
+      const countyOp=_rasterReady?Math.max(0, Math.min(0.78, 0.78*(7-z)/(7-5))):0.78;
       const muOp=Math.max(0, Math.min(0.85, 0.85*(z-5)/(7-5)));
       if(map.getLayer('fill')) map.setPaintProperty('fill','fill-opacity',
         ['case',['boolean',['feature-state','hover'],false],1,countyOp]);
@@ -1391,6 +1400,11 @@ function renderDetail(content,props,comps,asy,aname,state){
       ${scoreBox(props.om_dominant,props.om_avg,'OM Depletion',omColor(props.om_dominant))}
     </div>
 
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 4px">
+      <a href="/county-report.html" class="hdr-btn" style="text-decoration:none;flex:1;text-align:center">Full county report</a>
+      <a href="/contact/" class="hdr-btn" style="text-decoration:none;flex:1;text-align:center;color:var(--accent2)">Talk to a pedologist</a>
+    </div>
+
     ${nccpiVal!=null?`
     <div class="dp-section">
       <div class="dp-sh">Crop Productivity (NCCPI)</div>
@@ -1504,7 +1518,8 @@ function renderDetail(content,props,comps,asy,aname,state){
   // Draw texture triangle
   const surf=top&&top.horizons[0];
   if(surf&&(surf.sand||surf.silt||surf.clay)){
-    setTimeout(()=>drawTexTri(surf.sand||0,surf.silt||0,surf.clay||0),200);
+    // SDA returns numeric columns as strings; coerce so .toFixed works.
+    setTimeout(()=>drawTexTri(+surf.sand||0,+surf.silt||0,+surf.clay||0),200);
   }
 }
 
@@ -1988,6 +2003,6 @@ function geolocate(){
   });
 }
 </script>
-<script src="js/lab10yr-nav.js?v=20260707" defer></script>
+<script src="js/lab10yr-nav.js?v=20260723b" defer></script>
 </body>
 </html>

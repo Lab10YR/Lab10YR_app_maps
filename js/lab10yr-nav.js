@@ -9,46 +9,54 @@
   // Root-absolute so they resolve from any depth (incl. /articles/*) on the
   // production worker that serves lab10yr.com at the root.
   var SITE = [
+    { h: "/",            t: "Home" },
     { h: "/solutions/",  t: "Solutions" },
     { h: "/industries/", t: "Industries" },
     { h: "/explore/",    t: "Explore" },
     { h: "/learn/",      t: "Learn" },
-    { h: "/pricing/",    t: "Pricing" }
+    { h: "/pricing/",    t: "Pricing" },
+    { h: "/contact/",    t: "Contact" }
   ];
 
-  // Apps launcher contents (the maps/tools), grouped. Root-absolute like SITE,
+  // Apps launcher contents — the complete live-app catalog (same manifest as
+  // /explore/), categorized with plain-English names. Root-absolute like SITE,
   // so they resolve from any depth — relative hrefs 404'd from /articles/*
   // ("Home" went to /articles/index.html, tools to /articles/<tool>.html).
   var HOME = { h: "/index.html", t: "Home", i: "⌂" };
   var NAV = [
-    { group: "Maps", items: [
-      { h: "/soil-atlas.html",                        t: "Soil Atlas",         i: "◉" },
-      { h: "/carbon-risk-map.html",                   t: "Carbon Risk Map",    i: "◈" },
-      { h: "/Regenerative-Agriculture-Risk-Map.html", t: "Regen Ag Map",       i: "❧" },
-      { h: "/data-center-app.html",                   t: "Data Center DCI",    i: "◆" },
-      { h: "/soil-risk-explorer.html",                t: "Soil Risk Explorer", i: "◇" }
+    { group: "Maps & scores", items: [
+      { h: "/soil-atlas.html",                        t: "Soil atlas",               i: "◉" },
+      { h: "/Regenerative-Agriculture-Risk-Map.html", t: "Regenerative ag risk map", i: "❧" },
+      { h: "/carbon-risk-map.html",                   t: "Carbon risk map",          i: "◈" },
+      { h: "/soil-risk-explorer.html",                t: "Soil risk explorer",       i: "◇" },
+      { h: "/county-risk-leaderboard.html",           t: "County risk leaderboard",  i: "☰" },
+      { h: "/data-center-app.html",                   t: "GroundScore DCI",          i: "◆" }
     ] },
-    { group: "Reports & Data", items: [
-      { h: "/county-report.html",                     t: "County Report",      i: "▤" },
-      { h: "/county-risk-leaderboard.html",           t: "Risk Leaderboard",   i: "☰" },
-      { h: "/data-models.html",                       t: "Data Models",        i: "⊞" },
-      { h: "/soil-application-metrics.html",          t: "Soil Metrics",       i: "▦" }
+    { group: "Reports & data", items: [
+      { h: "/county-report.html",                     t: "County report",            i: "▤" },
+      { h: "/wisconsin-forage-suitability-report.html", t: "Wisconsin forage report", i: "▧" },
+      { h: "/analyze.html",                           t: "AOI analyzer",             i: "⊙" },
+      { h: "/soil-lookup.html",                       t: "Soil lookup",              i: "⌕" },
+      { h: "/interpretations.html",                   t: "Interpretations",          i: "≡" },
+      { h: "/kssl-lab-data.html",                     t: "KSSL lab data",            i: "⚗" },
+      { h: "/soil-application-metrics.html",          t: "Application metrics",      i: "▦" }
     ] },
-    { group: "Tools", items: [
-      { h: "/soil-data-visual-lab.html",              t: "Visual Lab",         i: "⊿" },
-      { h: "/sql-explorer.html",                      t: "SQL Explorer",       i: "⌗" },
-      { h: "/regen-ag-shape-curves.html",             t: "SHAPE Curves",       i: "∿" },
-      { h: "/kssl-lab-data.html",                     t: "KSSL Lab Data",      i: "⚗" }
+    { group: "Developer tools", items: [
+      { h: "/sql-explorer.html",                      t: "SQL explorer",             i: "⌗" },
+      { h: "/data-models.html",                       t: "Data models",              i: "⊞" },
+      { h: "/examples.html",                          t: "Query examples",           i: "❯" },
+      { h: "/soil-data-visual-lab.html",              t: "Visual lab",               i: "⊿" }
     ] },
-    { group: "Read", items: [
-      { h: "/soil-data-stories.html",                 t: "Data Stories",       i: "✎" },
-      { h: "/articles/",                              t: "Articles",           i: "❡" }
+    { group: "Stories & research", items: [
+      { h: "/soil-data-stories.html",                 t: "Soil data stories",        i: "✎" },
+      { h: "/regen-ag-shape-curves.html",             t: "SHAPE curves",             i: "∿" },
+      { h: "/articles/",                              t: "Articles",                 i: "❡" }
     ] },
     { group: "Company", items: [
-      { h: "/services.html",                          t: "Services",           i: "→" },
-      { h: "/dci-pricing.html",                       t: "Pricing & API",      i: "$" },
-      { h: "/about.html",                             t: "About",              i: "ℹ" },
-      { h: "/admin",                                  t: "Admin",              i: "⚷" }
+      { h: "/explore/",                               t: "Explore all apps",         i: "✳" },
+      { h: "/pricing/",                               t: "Pricing",                  i: "$" },
+      { h: "/contact/",                               t: "Contact",                  i: "✉" },
+      { h: "/about.html",                             t: "About",                    i: "ℹ" }
     ] }
   ];
 
@@ -111,7 +119,7 @@
     document.body.classList.add("l10-has-sitebar");
 
     var vh = document.documentElement.clientHeight;
-    var barH = bar.offsetHeight || 52;
+    var barH = bar.offsetHeight || 64;
     var kids = document.body.children;
     // Only a body whose Y axis is clipped can cut content off at the bottom;
     // "overflow: hidden auto" pages scroll vertically and must NOT be shortened.

@@ -148,7 +148,7 @@
       }
     }
   </style>
-<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260707">
+<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260723b">
 </head>
 <body>
   <header class="header" id="top">
@@ -294,7 +294,7 @@
           const runnerHref = `sql-explorer.html?script=${encodeURIComponent(script.path || "")}`;
           return `
             <li>
-              <a href="../${script.path}" target="_blank" rel="noopener noreferrer">${escapeHtml(script.commonName || script.fileName || script.path)}</a>
+              <span>${escapeHtml(script.commonName || script.fileName || script.path)}</span>
               <span class="meta"> (${escapeHtml(script.fileName || "")})</span>
               <span class="meta"> • <a href="${runnerHref}">run</a></span>
               ${familyCount > 1 ? `<span class="chip">${familyCount} related</span>` : ""}
@@ -303,7 +303,7 @@
         }).join("");
 
         return `
-          <article class="example-card reveal">
+          <article class="example-card">
             <h3>${escapeHtml(groupName)}</h3>
             <p class="meta">${scripts.length} script(s) in this purpose category.</p>
             <ul>${rows}</ul>
@@ -366,6 +366,6 @@
     }
   </script>
   <script src="assets/theme-advanced.js" defer></script>
-<script src="js/lab10yr-nav.js?v=20260707" defer></script>
+<script src="js/lab10yr-nav.js?v=20260723b" defer></script>
 </body>
 </html>

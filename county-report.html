@@ -14,7 +14,7 @@
 <meta name="twitter:title"       content="County Soil Report - Soil Intelligence">
 <meta name="twitter:description" content="Measured soil profile for any US county, live from the national soil survey via the National Cooperative Soil Survey (SSURGO).">
 <title>County Soil Report &middot; Soil Intelligence</title>
-<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260707">
+<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260723b">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -146,6 +146,7 @@ footer{border-top:1px solid var(--border);padding:24px;text-align:center;color:v
 </footer>
 
 <script>
+const STATE_ABBR={"Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA","Colorado":"CO","Connecticut":"CT","Delaware":"DE","District of Columbia":"DC","Florida":"FL","Georgia":"GA","Hawaii":"HI","Idaho":"ID","Illinois":"IL","Indiana":"IN","Iowa":"IA","Kansas":"KS","Kentucky":"KY","Louisiana":"LA","Maine":"ME","Maryland":"MD","Massachusetts":"MA","Michigan":"MI","Minnesota":"MN","Mississippi":"MS","Missouri":"MO","Montana":"MT","Nebraska":"NE","Nevada":"NV","New Hampshire":"NH","New Jersey":"NJ","New Mexico":"NM","New York":"NY","North Carolina":"NC","North Dakota":"ND","Ohio":"OH","Oklahoma":"OK","Oregon":"OR","Pennsylvania":"PA","Rhode Island":"RI","South Carolina":"SC","South Dakota":"SD","Tennessee":"TN","Texas":"TX","Utah":"UT","Vermont":"VT","Virginia":"VA","Washington":"WA","West Virginia":"WV","Wisconsin":"WI","Wyoming":"WY"};
 const STATES=["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
 const $=s=>document.querySelector(s);
 const stateSel=$("#state"),countySel=$("#county"),report=$("#report");
@@ -165,19 +166,39 @@ async function sda(query){
 const esc=s=>String(s).replace(/'/g,"''");
 const num=(v,d)=>{const n=parseFloat(v);return isFinite(n)?n.toFixed(d==null?1:d):null;};
 
-stateSel.onchange=async()=>{
-  const st=stateSel.value;
+async function loadCounties(st){
   countySel.innerHTML='<option value="">Loading counties...</option>';countySel.disabled=true;
   report.innerHTML='<div class="status">Pick a county to generate its soil report.</div>';
   if(!st) return;
   try{
-    const rows=await sda("SELECT areasymbol, areaname FROM legend WHERE areaname LIKE '%, "+esc(st)+"' ORDER BY areaname");
+    // Filter by the areasymbol state prefix, not the areaname suffix: many survey
+    // areas have trailing text after the state (e.g. "..., Utah, Parts of ...") so
+    // "LIKE '%, Utah'" silently drops them. UT001, UT610, etc. all start with 'UT'.
+    const ab=STATE_ABBR[st]||"";
+    const rows=await sda("SELECT areasymbol, areaname FROM legend WHERE areasymbol LIKE '"+esc(ab)+"%' ORDER BY areaname");
     if(!rows.length){countySel.innerHTML='<option value="">No survey areas found</option>';return;}
     countySel.innerHTML='<option value="">Select a county...</option>'+
       rows.map(r=>'<option value="'+r.areasymbol+'" data-name="'+(r.areaname||"").replace(/"/g,"")+'">'+(r.areaname||r.areasymbol).replace(/, .*$/,"")+'</option>').join("");
     countySel.disabled=false;
   }catch(e){countySel.innerHTML='<option value="">Could not load counties</option>';report.innerHTML='<div class="status">'+e.message+'</div>';}
-};
+}
+stateSel.onchange=()=>loadCounties(stateSel.value);
+
+// Deep-link support: ?state=<full name>&county=<name> (used by the risk leaderboard).
+(async function initFromQuery(){
+  const p=new URLSearchParams(location.search);
+  const st=p.get('state'), cty=(p.get('county')||'').trim().toLowerCase();
+  if(!st||!STATE_ABBR[st]) return;
+  stateSel.value=st;
+  await loadCounties(st);
+  if(cty){
+    const opt=[...countySel.options].find(o=>{
+      const nm=(o.getAttribute('data-name')||o.textContent||'').toLowerCase();
+      return nm.includes(cty)||cty.includes(o.textContent.trim().toLowerCase());
+    });
+    if(opt){countySel.value=opt.value;countySel.onchange();}
+  }
+})();
 
 countySel.onchange=()=>{
   const sym=countySel.value;if(!sym)return;
@@ -235,6 +256,6 @@ function metric(label,value,desc,lvl){
     (lvl?tag(lvl[0],lvl[1]):'')+'</div>';
 }
 </script>
-<script src="js/lab10yr-nav.js?v=20260707" defer></script>
+<script src="js/lab10yr-nav.js?v=20260723b" defer></script>
 </body>
 </html>

@@ -16,7 +16,7 @@
   <meta name="twitter:image"       content="https://lab10yr.com/assets/og-preview.png">
 <title>The World Beneath: What Soil Data Tells Us - the National Cooperative Soil Survey (SSURGO)</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260707">
+<link rel="stylesheet" href="assets/lab10yr-theme.css?v=20260723b">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -368,6 +368,13 @@ input[type=range]::-moz-range-progress{height:6px;border-radius:4px;background:#
   /* clip residual content overflow at the section level so nothing widens the page
      (charts keep their own internal overflow-x:auto scroll) */
   .hero,.story-section{overflow-x:hidden}
+}
+@media(max-width:700px){
+  /* The horizon-layer collage is absolutely positioned over the right 55% and
+     overlaps the headline on narrow screens. Drop it so the first screen reads. */
+  #hero{padding:88px 22px 60px}
+  .hero-layers{display:none}
+  .hero-content{max-width:100%}
 }
 </style>
 </head>
@@ -1024,6 +1031,6 @@ const healthObs = new IntersectionObserver(entries => {
 const healthWrap = document.getElementById('healthScoreWrap');
 if (healthWrap) healthObs.observe(healthWrap);
 </script>
-<script src="js/lab10yr-nav.js?v=20260707" defer></script>
+<script src="js/lab10yr-nav.js?v=20260723b" defer></script>
 </body>
 </html>
