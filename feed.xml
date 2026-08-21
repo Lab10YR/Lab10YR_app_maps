@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 20 Aug 2026 13:42:05 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 21 Aug 2026 13:40:58 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Thu, 20 Aug 2026 13:42:05 GMT</pubDate>
+    <pubDate>Fri, 21 Aug 2026 13:40:58 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>Computer Vision Is Now Classifying Soil Texture From Field Photos</title>
+    <link>https://lab10yr.com/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1787319655163</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1787319655163</guid>
+    <pubDate>Fri, 21 Aug 2026 00:00:00 GMT</pubDate>
+    <description>New computer vision models, trained on the National Cooperative Soil Survey&apos;s KSSL database, achieve 74-81% accuracy in classifying the National Cooperative Soil Survey soil texture from smartphone photos, accelerating field analysis and improving data consistency.</description>
   </item>
   <item>
     <title>Computer Vision Is Now Classifying Soil Texture From Field Photos</title>
