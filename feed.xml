@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 21 Aug 2026 13:40:58 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 24 Aug 2026 13:46:01 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Fri, 21 Aug 2026 13:40:58 GMT</pubDate>
+    <pubDate>Mon, 24 Aug 2026 13:46:01 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>Computer Vision Is Now Classifying Soil Texture From Field Photos</title>
+    <link>https://lab10yr.com/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1787579158618</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1787579158618</guid>
+    <pubDate>Mon, 24 Aug 2026 00:00:00 GMT</pubDate>
+    <description>Convolutional neural networks (CNNs) are now classifying the National Cooperative Soil Survey soil texture class with impressive accuracy directly from smartphone photographs of soil profiles. Deep learning soil classification research indi</description>
   </item>
   <item>
     <title>Computer Vision Is Now Classifying Soil Texture From Field Photos</title>
