@@ -1,7 +1,16 @@
 {
-  "totalArticles": 77,
-  "lastUpdated": "2026-08-25T14:53:12.052Z",
+  "totalArticles": 78,
+  "lastUpdated": "2026-08-26T13:50:37.876Z",
   "articles": [
+    {
+      "title": "Computer Vision Is Now Classifying Soil Texture From Field Photos",
+      "angle": "computer vision",
+      "format": "short",
+      "wordCount": 435,
+      "generatedAt": "2026-08-26T13:50:35.483Z",
+      "topicIndex": 40,
+      "url": "https://lab10yr.com/articles/computer-vision-is-now-classifying-soil-texture-from-field-p-1787752235483"
+    },
     {
       "title": "Computer Vision Is Now Classifying Soil Texture From Field Photos",
       "angle": "computer vision",
