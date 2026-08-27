@@ -1,7 +1,16 @@
 {
-  "totalArticles": 78,
-  "lastUpdated": "2026-08-26T13:50:37.876Z",
+  "totalArticles": 79,
+  "lastUpdated": "2026-08-27T22:44:21.765Z",
   "articles": [
+    {
+      "title": "Hyperspectral Remote Sensing and the Soil Carbon Map Nobody Has Built Yet",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 644,
+      "generatedAt": "2026-08-27T22:44:19.215Z",
+      "topicIndex": 41,
+      "url": "https://lab10yr.com/articles/hyperspectral-remote-sensing-and-the-soil-carbon-map-nobody--1787870659215"
+    },
     {
       "title": "Computer Vision Is Now Classifying Soil Texture From Field Photos",
       "angle": "computer vision",
