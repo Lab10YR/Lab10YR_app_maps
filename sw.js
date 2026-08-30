@@ -4,7 +4,7 @@
  * Enables offline map viewing for NRCS field staff with cached tiles.
  */
 
-const VERSION = "soil-v3";
+const VERSION = "soil-v4";
 const CACHE = `soil-cache-${VERSION}`;
 const DATA_CACHE = "soil-data-v1";
 
