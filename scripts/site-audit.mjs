@@ -25,12 +25,14 @@ const SKIP_DIRS = new Set(["_next", "node_modules", "scripts", ".git", "assets"]
 
 // HARD = fail the build. WARN = report only.
 const HARD_PHRASES = [
-  { re: /Soil Data Access/gi, label: 'banned phrase "Soil Data Access"' },
   { re: /Web Soil Survey/gi, label: 'banned phrase "Web Soil Survey" (use "national soil viewer")' },
   { re: /Soil Data Viewer/gi, label: 'banned phrase "Soil Data Viewer"' },
   { re: /Soil Data Mart/gi, label: 'banned phrase "Soil Data Mart"' },
 ];
 const WARN_PHRASES = [
+  // "Soil Data Access (SDA)" is an ALLOWED dataset attribution (see repo CLAUDE.md
+  // word rules); warn for awareness only, do not fail the build on it.
+  { re: /Soil Data Access/gi, label: '"Soil Data Access" (allowed as SDA attribution; check context)' },
   { re: /\bSoil Health\b/g, label: '"Soil Health" (use "soil quality")' },
   { re: /\bUSDA\b/g, label: '"USDA"' },
   { re: /\bNRCS\b/g, label: '"NRCS"' },
