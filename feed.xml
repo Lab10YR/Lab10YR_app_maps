@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 31 Aug 2026 15:21:09 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 31 Aug 2026 15:23:54 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,7 +17,7 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Mon, 31 Aug 2026 15:21:09 GMT</pubDate>
+    <pubDate>Mon, 31 Aug 2026 15:23:54 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
   </item>
   <item>
@@ -474,6 +474,13 @@
     <guid isPermaLink="true">https://lab10yr.com/articles/karst-country-mapping-sinkhole-risk-before-you-build-1780604636008</guid>
     <pubDate>Thu, 04 Jun 2026 00:00:00 GMT</pubDate>
     <description>Karst geology underlies 20 percent of the United States. Every square kilometer is marked in your soil survey data. Sinkholes can appear suddenly. They swallow buildings, a major concern for infrastructure projects. </description>
+  </item>
+  <item>
+    <title>Soil Data Is the Cheapest Form of Geotechnical Intelligence</title>
+    <link>https://lab10yr.com/articles/soil-data-is-the-cheapest-form-of-geotechnical-intelligence-1780580882361</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/soil-data-is-the-cheapest-form-of-geotechnical-intelligence-1780580882361</guid>
+    <pubDate>Thu, 04 Jun 2026 00:00:00 GMT</pubDate>
+    <description>A Phase I environmental site assessment costs thousands of dollars. A SSURGO query costs nothing and runs in seconds. This disparity in cost and time is a stark reminder of the inefficiencies in land finance and development. SSURGO, the Soi</description>
   </item>
   <item>
     <title>Soil Data Is the Cheapest Form of Geotechnical Intelligence</title>
