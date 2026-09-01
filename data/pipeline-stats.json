@@ -1,7 +1,16 @@
 {
-  "totalArticles": 80,
-  "lastUpdated": "2026-09-01T00:10:35.178Z",
+  "totalArticles": 81,
+  "lastUpdated": "2026-09-01T17:46:32.387Z",
   "articles": [
+    {
+      "title": "Hyperspectral Remote Sensing and the Soil Carbon Map Nobody Has Built Yet",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 881,
+      "generatedAt": "2026-09-01T17:46:28.364Z",
+      "topicIndex": 41,
+      "url": "https://lab10yr.com/articles/hyperspectral-remote-sensing-and-the-soil-carbon-map-nobody--1788284788364"
+    },
     {
       "title": "Hyperspectral Remote Sensing and the Soil Carbon Map Nobody Has Built Yet",
       "angle": "remote sensing",
