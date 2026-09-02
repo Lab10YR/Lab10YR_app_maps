@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 01 Sep 2026 17:46:32 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 02 Sep 2026 16:58:02 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Tue, 01 Sep 2026 17:46:32 GMT</pubDate>
+    <pubDate>Wed, 02 Sep 2026 16:58:02 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>Hyperspectral Remote Sensing and the Soil Carbon Map Nobody Has Built Yet</title>
+    <link>https://lab10yr.com/articles/hyperspectral-remote-sensing-and-the-soil-carbon-map-nobody--1788368277515</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/hyperspectral-remote-sensing-and-the-soil-carbon-map-nobody--1788368277515</guid>
+    <pubDate>Wed, 02 Sep 2026 00:00:00 GMT</pubDate>
+    <description>A national soil organic carbon map could be built using KSSL&apos;s vast spectral library and remote sensing data, but this critical resource remains unbuilt, limiting progress in carbon markets and environmental stewardship.</description>
   </item>
   <item>
     <title>Hyperspectral Remote Sensing and the Soil Carbon Map Nobody Has Built Yet</title>
