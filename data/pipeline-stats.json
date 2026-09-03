@@ -1,7 +1,16 @@
 {
-  "totalArticles": 82,
-  "lastUpdated": "2026-09-02T16:58:02.372Z",
+  "totalArticles": 83,
+  "lastUpdated": "2026-09-03T16:51:59.095Z",
   "articles": [
+    {
+      "title": "Digital Soil Mapping With Machine Learning: How Terrain Beats Traditional Survey",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 362,
+      "generatedAt": "2026-09-03T16:51:54.923Z",
+      "topicIndex": 42,
+      "url": "https://lab10yr.com/articles/digital-soil-mapping-with-machine-learning-how-terrain-beats-1788454314923"
+    },
     {
       "title": "Hyperspectral Remote Sensing and the Soil Carbon Map Nobody Has Built Yet",
       "angle": "remote sensing",
