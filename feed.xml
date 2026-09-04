@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 03 Sep 2026 16:51:59 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 04 Sep 2026 16:42:30 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Thu, 03 Sep 2026 16:51:59 GMT</pubDate>
+    <pubDate>Fri, 04 Sep 2026 16:42:30 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>Digital Soil Mapping With Machine Learning: How Terrain Beats Traditional Survey</title>
+    <link>https://lab10yr.com/articles/digital-soil-mapping-with-machine-learning-how-terrain-beats-1788540146278</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/digital-soil-mapping-with-machine-learning-how-terrain-beats-1788540146278</guid>
+    <pubDate>Fri, 04 Sep 2026 00:00:00 GMT</pubDate>
+    <description>Machine learning models, using LiDAR terrain data and other geospatial inputs, are achieving 72-88% accuracy in predicting soil series, outperforming traditional maps in complex terrain and offering unprecedented detail for land management decisions.</description>
   </item>
   <item>
     <title>Digital Soil Mapping With Machine Learning: How Terrain Beats Traditional Survey</title>
