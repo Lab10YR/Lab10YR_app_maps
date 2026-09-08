@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Sep 2026 18:03:20 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 08 Sep 2026 17:52:26 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Mon, 07 Sep 2026 18:03:20 GMT</pubDate>
+    <pubDate>Tue, 08 Sep 2026 17:52:26 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>Digital Soil Mapping With Machine Learning: How Terrain Beats Traditional Survey</title>
+    <link>https://lab10yr.com/articles/digital-soil-mapping-with-machine-learning-how-terrain-beats-1788889941899</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/digital-soil-mapping-with-machine-learning-how-terrain-beats-1788889941899</guid>
+    <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+    <description>Machine learning models are generating highly accurate digital soil maps, outperforming traditional surveys in regions like the Rocky Mountains, by integrating LiDAR terrain data with climate and parent material information.</description>
   </item>
   <item>
     <title>Digital Soil Mapping With Machine Learning: How Terrain Beats Traditional Survey</title>
