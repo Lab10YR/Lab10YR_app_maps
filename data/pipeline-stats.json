@@ -1,7 +1,16 @@
 {
-  "totalArticles": 86,
-  "lastUpdated": "2026-09-08T17:52:26.022Z",
+  "totalArticles": 87,
+  "lastUpdated": "2026-09-09T16:59:40.885Z",
   "articles": [
+    {
+      "title": "Digital Soil Mapping With Machine Learning: How Terrain Beats Traditional Survey",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 429,
+      "generatedAt": "2026-09-09T16:59:35.924Z",
+      "topicIndex": 42,
+      "url": "https://lab10yr.com/articles/digital-soil-mapping-with-machine-learning-how-terrain-beats-1788973175924"
+    },
     {
       "title": "Digital Soil Mapping With Machine Learning: How Terrain Beats Traditional Survey",
       "angle": "terrain analysis",
