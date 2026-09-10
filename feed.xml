@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 09 Sep 2026 16:59:40 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 10 Sep 2026 16:51:53 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Wed, 09 Sep 2026 16:59:40 GMT</pubDate>
+    <pubDate>Thu, 10 Sep 2026 16:51:53 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>SAR Backscatter and Soil Moisture: What Radar Sees That Optical Satellites Can&apos;t</title>
+    <link>https://lab10yr.com/articles/sar-backscatter-and-soil-moisture-what-radar-sees-that-optic-1789059108520</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/sar-backscatter-and-soil-moisture-what-radar-sees-that-optic-1789059108520</guid>
+    <pubDate>Thu, 10 Sep 2026 00:00:00 GMT</pubDate>
+    <description>Sentinel-1 SAR backscatter provides early detection of crop water stress by measuring surface soil moisture under any weather condition, offering critical lead time for irrigation and risk management compared to optical methods.</description>
   </item>
   <item>
     <title>Digital Soil Mapping With Machine Learning: How Terrain Beats Traditional Survey</title>
