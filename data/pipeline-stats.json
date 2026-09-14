@@ -1,7 +1,16 @@
 {
-  "totalArticles": 89,
-  "lastUpdated": "2026-09-11T16:51:23.705Z",
+  "totalArticles": 90,
+  "lastUpdated": "2026-09-14T18:19:10.591Z",
   "articles": [
+    {
+      "title": "SAR Backscatter and Soil Moisture: What Radar Sees That Optical Satellites Can't",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 501,
+      "generatedAt": "2026-09-14T18:19:06.237Z",
+      "topicIndex": 43,
+      "url": "https://lab10yr.com/articles/sar-backscatter-and-soil-moisture-what-radar-sees-that-optic-1789409946237"
+    },
     {
       "title": "SAR Backscatter and Soil Moisture: What Radar Sees That Optical Satellites Can't",
       "angle": "remote sensing",
