@@ -1,7 +1,16 @@
 {
-  "totalArticles": 90,
-  "lastUpdated": "2026-09-14T18:19:10.591Z",
+  "totalArticles": 91,
+  "lastUpdated": "2026-09-17T17:25:50.871Z",
   "articles": [
+    {
+      "title": "Stream Power Index as a Soil Erosion Predictor: Why Slope Alone Is Not Enough",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 392,
+      "generatedAt": "2026-09-17T17:25:47.158Z",
+      "topicIndex": 44,
+      "url": "https://lab10yr.com/articles/stream-power-index-as-a-soil-erosion-predictor-why-slope-alo-1789665947158"
+    },
     {
       "title": "SAR Backscatter and Soil Moisture: What Radar Sees That Optical Satellites Can't",
       "angle": "remote sensing",
