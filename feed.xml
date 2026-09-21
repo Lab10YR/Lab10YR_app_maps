@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 18 Sep 2026 16:53:48 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 21 Sep 2026 18:26:10 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Fri, 18 Sep 2026 16:53:48 GMT</pubDate>
+    <pubDate>Mon, 21 Sep 2026 18:26:10 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>Stream Power Index as a Soil Erosion Predictor: Why Slope Alone Is Not Enough</title>
+    <link>https://lab10yr.com/articles/stream-power-index-as-a-soil-erosion-predictor-why-slope-alo-1790015165465</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/stream-power-index-as-a-soil-erosion-predictor-why-slope-alo-1790015165465</guid>
+    <pubDate>Mon, 21 Sep 2026 00:00:00 GMT</pubDate>
+    <description>The Iowa Loess Hills, with their steep, unconsolidated soils, are a critical laboratory for understanding erosion. Here, the Stream Power Index (SPI), a geospatial metric derived from high-resolution elevation data, proves significantly mor</description>
   </item>
   <item>
     <title>Stream Power Index as a Soil Erosion Predictor: Why Slope Alone Is Not Enough</title>
