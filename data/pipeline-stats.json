@@ -1,7 +1,16 @@
 {
-  "totalArticles": 95,
-  "lastUpdated": "2026-09-23T17:39:50.475Z",
+  "totalArticles": 96,
+  "lastUpdated": "2026-09-24T17:42:59.762Z",
   "articles": [
+    {
+      "title": "The Soil Spectral Library That Holds 70 Years of American Soil Science",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 419,
+      "generatedAt": "2026-09-24T17:42:55.264Z",
+      "topicIndex": 45,
+      "url": "https://lab10yr.com/articles/the-soil-spectral-library-that-holds-70-years-of-american-so-1790271775264"
+    },
     {
       "title": "Stream Power Index as a Soil Erosion Predictor: Why Slope Alone Is Not Enough",
       "angle": "terrain analysis",
