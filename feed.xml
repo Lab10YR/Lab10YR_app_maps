@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 24 Sep 2026 17:42:59 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 28 Sep 2026 19:57:52 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Thu, 24 Sep 2026 17:42:59 GMT</pubDate>
+    <pubDate>Mon, 28 Sep 2026 19:57:52 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>The Soil Spectral Library That Holds 70 Years of American Soil Science</title>
+    <link>https://lab10yr.com/articles/the-soil-spectral-library-that-holds-70-years-of-american-so-1790625467540</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/the-soil-spectral-library-that-holds-70-years-of-american-so-1790625467540</guid>
+    <pubDate>Mon, 28 Sep 2026 00:00:00 GMT</pubDate>
+    <description>The Kellogg Soil Survey Laboratory (KSSL) spectral library, the world&apos;s largest public soil spectral dataset, offers critical calibration data for remote sensing models, enabling precise and cost-effective prediction of soil organic carbon for carbon projects and precision agriculture.</description>
   </item>
   <item>
     <title>The Soil Spectral Library That Holds 70 Years of American Soil Science</title>
