@@ -1,7 +1,16 @@
 {
-  "totalArticles": 99,
-  "lastUpdated": "2026-09-30T18:14:43.289Z",
+  "totalArticles": 100,
+  "lastUpdated": "2026-10-01T18:40:25.684Z",
   "articles": [
+    {
+      "title": "LiDAR-Derived Slope Position Changes How We Assign Soil Series",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 408,
+      "generatedAt": "2026-10-01T18:40:21.699Z",
+      "topicIndex": 46,
+      "url": "https://lab10yr.com/articles/lidar-derived-slope-position-changes-how-we-assign-soil-seri-1790880021699"
+    },
     {
       "title": "The Soil Spectral Library That Holds 70 Years of American Soil Science",
       "angle": "remote sensing",

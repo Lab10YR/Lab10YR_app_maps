@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 30 Sep 2026 18:14:43 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 01 Oct 2026 18:40:25 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Wed, 30 Sep 2026 18:14:43 GMT</pubDate>
+    <pubDate>Thu, 01 Oct 2026 18:40:25 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>LiDAR-Derived Slope Position Changes How We Assign Soil Series</title>
+    <link>https://lab10yr.com/articles/lidar-derived-slope-position-changes-how-we-assign-soil-seri-1790880021699</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/lidar-derived-slope-position-changes-how-we-assign-soil-seri-1790880021699</guid>
+    <pubDate>Thu, 01 Oct 2026 00:00:00 GMT</pubDate>
+    <description>A 1-meter LiDAR geomorphon analysis precisely classifies landform elements, directly enhancing soil series assignment and predicting drainage and organic matter content with greater accuracy than field observations, improving land-use planning.</description>
   </item>
   <item>
     <title>The Soil Spectral Library That Holds 70 Years of American Soil Science</title>
