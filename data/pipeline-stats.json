@@ -1,7 +1,16 @@
 {
-  "totalArticles": 100,
-  "lastUpdated": "2026-10-01T18:40:25.684Z",
+  "totalArticles": 101,
+  "lastUpdated": "2026-10-02T18:10:46.277Z",
   "articles": [
+    {
+      "title": "LiDAR-Derived Slope Position Changes How We Assign Soil Series",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 503,
+      "generatedAt": "2026-10-02T18:10:42.124Z",
+      "topicIndex": 46,
+      "url": "https://lab10yr.com/articles/lidar-derived-slope-position-changes-how-we-assign-soil-seri-1790964642124"
+    },
     {
       "title": "LiDAR-Derived Slope Position Changes How We Assign Soil Series",
       "angle": "terrain analysis",
