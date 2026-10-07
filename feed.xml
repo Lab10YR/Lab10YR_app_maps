@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 02 Oct 2026 18:10:46 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 07 Oct 2026 19:10:52 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Fri, 02 Oct 2026 18:10:46 GMT</pubDate>
+    <pubDate>Wed, 07 Oct 2026 19:10:52 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>LiDAR-Derived Slope Position Changes How We Assign Soil Series</title>
+    <link>https://lab10yr.com/articles/lidar-derived-slope-position-changes-how-we-assign-soil-seri-1791400248461</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/lidar-derived-slope-position-changes-how-we-assign-soil-seri-1791400248461</guid>
+    <pubDate>Wed, 07 Oct 2026 00:00:00 GMT</pubDate>
+    <description>LiDAR-derived geomorphon analysis and terrain derivatives provide highly accurate predictions of soil drainage, organic matter, and restrictive layers, significantly refining soil series assignment and land management decisions. This digital approach improves upon traditional field observations by precisely mapping terrain elements and their influence on soil properties along a catena.</description>
   </item>
   <item>
     <title>LiDAR-Derived Slope Position Changes How We Assign Soil Series</title>
