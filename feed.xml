@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 07 Oct 2026 19:10:52 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 08 Oct 2026 19:07:06 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Wed, 07 Oct 2026 19:10:52 GMT</pubDate>
+    <pubDate>Thu, 08 Oct 2026 19:07:06 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>UAV Photogrammetry for Post-Disturbance Soil Monitoring</title>
+    <link>https://lab10yr.com/articles/uav-photogrammetry-for-post-disturbance-soil-monitoring-1791486421572</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/uav-photogrammetry-for-post-disturbance-soil-monitoring-1791486421572</guid>
+    <pubDate>Thu, 08 Oct 2026 00:00:00 GMT</pubDate>
+    <description>UAV photogrammetry enables sub-centimeter detection of soil surface change, offering significant cost savings for post-disturbance monitoring in mine reclamation and wildfire recovery. This geospatial technique, combined with SSURGO and KSSL soil data, provides critical insights into erosion, soil organic matter, and moisture for targeted land management decisions.</description>
   </item>
   <item>
     <title>LiDAR-Derived Slope Position Changes How We Assign Soil Series</title>

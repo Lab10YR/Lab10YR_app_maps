@@ -1,7 +1,16 @@
 {
-  "totalArticles": 102,
-  "lastUpdated": "2026-10-07T19:10:52.860Z",
+  "totalArticles": 103,
+  "lastUpdated": "2026-10-08T19:07:06.055Z",
   "articles": [
+    {
+      "title": "UAV Photogrammetry for Post-Disturbance Soil Monitoring",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 427,
+      "generatedAt": "2026-10-08T19:07:01.572Z",
+      "topicIndex": 47,
+      "url": "https://lab10yr.com/articles/uav-photogrammetry-for-post-disturbance-soil-monitoring-1791486421572"
+    },
     {
       "title": "LiDAR-Derived Slope Position Changes How We Assign Soil Series",
       "angle": "terrain analysis",
