@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 08 Oct 2026 19:07:06 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 09 Oct 2026 18:37:46 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Thu, 08 Oct 2026 19:07:06 GMT</pubDate>
+    <pubDate>Fri, 09 Oct 2026 18:37:46 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>UAV Photogrammetry for Post-Disturbance Soil Monitoring</title>
+    <link>https://lab10yr.com/articles/uav-photogrammetry-for-post-disturbance-soil-monitoring-1791571061870</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/uav-photogrammetry-for-post-disturbance-soil-monitoring-1791571061870</guid>
+    <pubDate>Fri, 09 Oct 2026 00:00:00 GMT</pubDate>
+    <description>Sub-centimeter change detection from UAV photogrammetry is revolutionizing post-disturbance soil monitoring, replacing expensive ground surveys. Integrating this precise topographic data with spectral insights into soil organic matter and SAR-derived moisture mapping provides a holistic view for proactive land management.</description>
   </item>
   <item>
     <title>UAV Photogrammetry for Post-Disturbance Soil Monitoring</title>
