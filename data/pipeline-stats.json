@@ -1,7 +1,16 @@
 {
-  "totalArticles": 104,
-  "lastUpdated": "2026-10-09T18:37:46.004Z",
+  "totalArticles": 105,
+  "lastUpdated": "2026-10-12T21:31:16.457Z",
   "articles": [
+    {
+      "title": "UAV Photogrammetry for Post-Disturbance Soil Monitoring",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 505,
+      "generatedAt": "2026-10-12T21:31:11.831Z",
+      "topicIndex": 47,
+      "url": "https://lab10yr.com/articles/uav-photogrammetry-for-post-disturbance-soil-monitoring-1791840671831"
+    },
     {
       "title": "UAV Photogrammetry for Post-Disturbance Soil Monitoring",
       "angle": "remote sensing",
