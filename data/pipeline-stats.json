@@ -1,7 +1,16 @@
 {
-  "totalArticles": 109,
-  "lastUpdated": "2026-10-19T18:57:24.035Z",
+  "totalArticles": 110,
+  "lastUpdated": "2026-10-20T18:25:35.919Z",
   "articles": [
+    {
+      "title": "Soil Mapping at the Edge: What Satellite Imagery Misses That LiDAR Finds",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 496,
+      "generatedAt": "2026-10-20T18:25:29.428Z",
+      "topicIndex": 48,
+      "url": "https://lab10yr.com/articles/soil-mapping-at-the-edge-what-satellite-imagery-misses-that--1792520729428"
+    },
     {
       "title": "Soil Mapping at the Edge: What Satellite Imagery Misses That LiDAR Finds",
       "angle": "terrain analysis",

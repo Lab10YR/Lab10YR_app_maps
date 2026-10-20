@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 19 Oct 2026 18:57:24 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 20 Oct 2026 18:25:35 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Mon, 19 Oct 2026 18:57:24 GMT</pubDate>
+    <pubDate>Tue, 20 Oct 2026 18:25:35 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>Soil Mapping at the Edge: What Satellite Imagery Misses That LiDAR Finds</title>
+    <link>https://lab10yr.com/articles/soil-mapping-at-the-edge-what-satellite-imagery-misses-that--1792520729428</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/soil-mapping-at-the-edge-what-satellite-imagery-misses-that--1792520729428</guid>
+    <pubDate>Tue, 20 Oct 2026 00:00:00 GMT</pubDate>
+    <description>LiDAR reveals critical microtopographic features like gilgai and playa basins, which 30-meter satellite imagery misses, leading to significantly more accurate soil series identification and drainage class predictions.</description>
   </item>
   <item>
     <title>Soil Mapping at the Edge: What Satellite Imagery Misses That LiDAR Finds</title>
