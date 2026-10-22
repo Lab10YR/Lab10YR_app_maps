@@ -1,7 +1,16 @@
 {
-  "totalArticles": 111,
-  "lastUpdated": "2026-10-21T17:50:41.532Z",
+  "totalArticles": 112,
+  "lastUpdated": "2026-10-22T17:49:58.252Z",
   "articles": [
+    {
+      "title": "Google Earth Engine and the Soil Carbon Monitoring Problem",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 1755,
+      "generatedAt": "2026-10-22T17:49:52.898Z",
+      "topicIndex": 49,
+      "url": "https://lab10yr.com/articles/google-earth-engine-and-the-soil-carbon-monitoring-problem-1792691392898"
+    },
     {
       "title": "Soil Mapping at the Edge: What Satellite Imagery Misses That LiDAR Finds",
       "angle": "terrain analysis",
