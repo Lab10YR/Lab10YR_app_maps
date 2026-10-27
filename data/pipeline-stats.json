@@ -1,7 +1,16 @@
 {
-  "totalArticles": 114,
-  "lastUpdated": "2026-10-26T18:59:41.969Z",
+  "totalArticles": 115,
+  "lastUpdated": "2026-10-27T19:19:56.205Z",
   "articles": [
+    {
+      "title": "Google Earth Engine and the Soil Carbon Monitoring Problem",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 1881,
+      "generatedAt": "2026-10-27T19:19:51.612Z",
+      "topicIndex": 49,
+      "url": "https://lab10yr.com/articles/google-earth-engine-and-the-soil-carbon-monitoring-problem-1793128791612"
+    },
     {
       "title": "Google Earth Engine and the Soil Carbon Monitoring Problem",
       "angle": "remote sensing",
