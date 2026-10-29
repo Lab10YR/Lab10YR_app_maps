@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 28 Oct 2026 18:38:03 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 29 Oct 2026 18:46:31 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Wed, 28 Oct 2026 18:38:03 GMT</pubDate>
+    <pubDate>Thu, 29 Oct 2026 18:46:31 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>How Terrain Derivatives Outperform Expert Soil Mapping in Complex Terrain</title>
+    <link>https://lab10yr.com/articles/how-terrain-derivatives-outperform-expert-soil-mapping-in-co-1793299586644</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/how-terrain-derivatives-outperform-expert-soil-mapping-in-co-1793299586644</guid>
+    <pubDate>Thu, 29 Oct 2026 00:00:00 GMT</pubDate>
+    <description>In the Blue Ridge and Cascade ranges, random forest models using LiDAR curvature, aspect, and Topographic Wetness Index predict soil drainage class more accurately than the legacy SSURGO polygons drawn by surveyors in the 1970s. The terrain</description>
   </item>
   <item>
     <title>Google Earth Engine and the Soil Carbon Monitoring Problem</title>

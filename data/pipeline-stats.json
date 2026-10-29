@@ -1,7 +1,16 @@
 {
-  "totalArticles": 116,
-  "lastUpdated": "2026-10-28T18:38:03.502Z",
+  "totalArticles": 117,
+  "lastUpdated": "2026-10-29T18:46:31.512Z",
   "articles": [
+    {
+      "title": "How Terrain Derivatives Outperform Expert Soil Mapping in Complex Terrain",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 709,
+      "generatedAt": "2026-10-29T18:46:26.644Z",
+      "topicIndex": 50,
+      "url": "https://lab10yr.com/articles/how-terrain-derivatives-outperform-expert-soil-mapping-in-co-1793299586644"
+    },
     {
       "title": "Google Earth Engine and the Soil Carbon Monitoring Problem",
       "angle": "remote sensing",
