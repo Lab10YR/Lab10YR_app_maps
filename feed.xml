@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 29 Oct 2026 18:46:31 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 30 Oct 2026 18:22:33 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Thu, 29 Oct 2026 18:46:31 GMT</pubDate>
+    <pubDate>Fri, 30 Oct 2026 18:22:33 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>How Terrain Derivatives Outperform Expert Soil Mapping in Complex Terrain</title>
+    <link>https://lab10yr.com/articles/how-terrain-derivatives-outperform-expert-soil-mapping-in-co-1793384549197</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/how-terrain-derivatives-outperform-expert-soil-mapping-in-co-1793384549197</guid>
+    <pubDate>Fri, 30 Oct 2026 00:00:00 GMT</pubDate>
+    <description>High-resolution terrain derivatives from LiDAR outperform legacy soil maps in predicting drainage class and soil series, offering critical precision for infrastructure and environmental management.</description>
   </item>
   <item>
     <title>How Terrain Derivatives Outperform Expert Soil Mapping in Complex Terrain</title>
