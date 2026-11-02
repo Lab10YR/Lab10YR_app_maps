@@ -1,7 +1,16 @@
 {
-  "totalArticles": 118,
-  "lastUpdated": "2026-10-30T18:22:32.952Z",
+  "totalArticles": 119,
+  "lastUpdated": "2026-11-02T22:04:31.453Z",
   "articles": [
+    {
+      "title": "How Terrain Derivatives Outperform Expert Soil Mapping in Complex Terrain",
+      "angle": "terrain analysis",
+      "format": "short",
+      "wordCount": 521,
+      "generatedAt": "2026-11-02T22:04:28.303Z",
+      "topicIndex": 50,
+      "url": "https://lab10yr.com/articles/how-terrain-derivatives-outperform-expert-soil-mapping-in-co-1793657068303"
+    },
     {
       "title": "How Terrain Derivatives Outperform Expert Soil Mapping in Complex Terrain",
       "angle": "terrain analysis",
