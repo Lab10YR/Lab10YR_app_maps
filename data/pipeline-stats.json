@@ -1,7 +1,16 @@
 {
-  "totalArticles": 120,
-  "lastUpdated": "2026-11-03T20:28:33.846Z",
+  "totalArticles": 121,
+  "lastUpdated": "2026-11-05T20:27:19.778Z",
   "articles": [
+    {
+      "title": "Soil Moisture from Space: Combining SAR and SSURGO for Field-Scale Intelligence",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 2316,
+      "generatedAt": "2026-11-05T20:27:16.804Z",
+      "topicIndex": 51,
+      "url": "https://lab10yr.com/articles/soil-moisture-from-space-combining-sar-and-ssurgo-for-field--1793910436804"
+    },
     {
       "title": "How Terrain Derivatives Outperform Expert Soil Mapping in Complex Terrain",
       "angle": "terrain analysis",
