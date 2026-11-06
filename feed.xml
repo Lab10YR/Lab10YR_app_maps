@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 05 Nov 2026 20:27:19 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 06 Nov 2026 19:49:26 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Thu, 05 Nov 2026 20:27:19 GMT</pubDate>
+    <pubDate>Fri, 06 Nov 2026 19:49:26 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>Soil Moisture from Space: Combining SAR and SSURGO for Field-Scale Intelligence</title>
+    <link>https://lab10yr.com/articles/soil-moisture-from-space-combining-sar-and-ssurgo-for-field--1793994564396</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/soil-moisture-from-space-combining-sar-and-ssurgo-for-field--1793994564396</guid>
+    <pubDate>Fri, 06 Nov 2026 00:00:00 GMT</pubDate>
+    <description>Across vast agricultural expanses, a precise understanding of the soil water deficit, the gap between current soil moisture and the soil&apos;s capacity to hold water for plants, remains elusive for many operations. Yet, by combining real-time s</description>
   </item>
   <item>
     <title>Soil Moisture from Space: Combining SAR and SSURGO for Field-Scale Intelligence</title>
