@@ -1,7 +1,16 @@
 {
-  "totalArticles": 122,
-  "lastUpdated": "2026-11-06T19:49:26.658Z",
+  "totalArticles": 123,
+  "lastUpdated": "2026-11-09T22:50:44.598Z",
   "articles": [
+    {
+      "title": "Soil Moisture from Space: Combining SAR and SSURGO for Field-Scale Intelligence",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 2034,
+      "generatedAt": "2026-11-09T22:50:41.743Z",
+      "topicIndex": 51,
+      "url": "https://lab10yr.com/articles/soil-moisture-from-space-combining-sar-and-ssurgo-for-field--1794264641743"
+    },
     {
       "title": "Soil Moisture from Space: Combining SAR and SSURGO for Field-Scale Intelligence",
       "angle": "remote sensing",
