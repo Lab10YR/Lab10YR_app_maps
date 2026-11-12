@@ -1,7 +1,16 @@
 {
-  "totalArticles": 125,
-  "lastUpdated": "2026-11-11T19:58:21.567Z",
+  "totalArticles": 126,
+  "lastUpdated": "2026-11-12T20:37:18.726Z",
   "articles": [
+    {
+      "title": "The Canopy Architecture Signal in Soil: What Tree Structure Tells Pedologists",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 1782,
+      "generatedAt": "2026-11-12T20:37:08.939Z",
+      "topicIndex": 52,
+      "url": "https://lab10yr.com/articles/the-canopy-architecture-signal-in-soil-what-tree-structure-t-1794515828939"
+    },
     {
       "title": "Soil Moisture from Space: Combining SAR and SSURGO for Field-Scale Intelligence",
       "angle": "remote sensing",
