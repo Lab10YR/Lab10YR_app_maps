@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 13 Nov 2026 20:15:55 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 16 Nov 2026 22:42:35 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Fri, 13 Nov 2026 20:15:55 GMT</pubDate>
+    <pubDate>Mon, 16 Nov 2026 22:42:35 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>The Canopy Architecture Signal in Soil: What Tree Structure Tells Pedologists</title>
+    <link>https://lab10yr.com/articles/the-canopy-architecture-signal-in-soil-what-tree-structure-t-1794868952382</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/the-canopy-architecture-signal-in-soil-what-tree-structure-t-1794868952382</guid>
+    <pubDate>Mon, 16 Nov 2026 00:00:00 GMT</pubDate>
+    <description>LiDAR-derived canopy structure provides an early warning for changes in soil organic matter, preceding satellite NDVI signals by years, which is critical for forest carbon projects and land management decisions.</description>
   </item>
   <item>
     <title>The Canopy Architecture Signal in Soil: What Tree Structure Tells Pedologists</title>
