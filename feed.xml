@@ -6,7 +6,7 @@
     <link>https://lab10yr.com</link>
     <description>Data-driven articles on soil science, infrastructure risk, fragile soils, and land intelligence — built on SSURGO national soil data.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 18 Nov 2026 21:03:38 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 19 Nov 2026 21:08:24 GMT</lastBuildDate>
     <atom:link href="https://lab10yr.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://lab10yr.com/landing/png_logo/lab10yr_logo_dark.png</url>
@@ -17,8 +17,15 @@
     <title>The Ground Beneath the Cloud</title>
     <link>https://lab10yr.com/articles/the-ground-beneath-the-cloud</link>
     <guid isPermaLink="true">https://lab10yr.com/articles/the-ground-beneath-the-cloud</guid>
-    <pubDate>Wed, 18 Nov 2026 21:03:38 GMT</pubDate>
+    <pubDate>Thu, 19 Nov 2026 21:08:24 GMT</pubDate>
     <description>A soil map the country has had for decades quietly decides where the AI build-out can actually happen. GroundScore reads it.</description>
+  </item>
+  <item>
+    <title>Object-Based Image Analysis for Soil Surface Classification</title>
+    <link>https://lab10yr.com/articles/object-based-image-analysis-for-soil-surface-classification-1795122501640</link>
+    <guid isPermaLink="true">https://lab10yr.com/articles/object-based-image-analysis-for-soil-surface-classification-1795122501640</guid>
+    <pubDate>Thu, 19 Nov 2026 00:00:00 GMT</pubDate>
+    <description>Object-based image analysis of high-resolution aerial imagery significantly streamlines soil mapping, delineating soil surface units that align with SSURGO map unit boundaries with 73-79% accuracy, drastically reducing the manual effort for professionals.</description>
   </item>
   <item>
     <title>The Canopy Architecture Signal in Soil: What Tree Structure Tells Pedologists</title>

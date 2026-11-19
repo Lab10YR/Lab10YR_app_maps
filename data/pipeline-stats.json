@@ -1,7 +1,16 @@
 {
-  "totalArticles": 130,
-  "lastUpdated": "2026-11-18T21:03:37.984Z",
+  "totalArticles": 131,
+  "lastUpdated": "2026-11-19T21:08:24.177Z",
   "articles": [
+    {
+      "title": "Object-Based Image Analysis for Soil Surface Classification",
+      "angle": "computer vision",
+      "format": "short",
+      "wordCount": 459,
+      "generatedAt": "2026-11-19T21:08:21.640Z",
+      "topicIndex": 53,
+      "url": "https://lab10yr.com/articles/object-based-image-analysis-for-soil-surface-classification-1795122501640"
+    },
     {
       "title": "The Canopy Architecture Signal in Soil: What Tree Structure Tells Pedologists",
       "angle": "remote sensing",
