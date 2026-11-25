@@ -1,7 +1,16 @@
 {
-  "totalArticles": 134,
-  "lastUpdated": "2026-11-24T23:27:11.217Z",
+  "totalArticles": 135,
+  "lastUpdated": "2026-11-25T22:06:08.130Z",
   "articles": [
+    {
+      "title": "Object-Based Image Analysis for Soil Surface Classification",
+      "angle": "computer vision",
+      "format": "short",
+      "wordCount": 759,
+      "generatedAt": "2026-11-25T22:06:05.331Z",
+      "topicIndex": 53,
+      "url": "https://lab10yr.com/articles/object-based-image-analysis-for-soil-surface-classification-1795644365331"
+    },
     {
       "title": "Object-Based Image Analysis for Soil Surface Classification",
       "angle": "computer vision",
