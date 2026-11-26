@@ -1,7 +1,16 @@
 {
-  "totalArticles": 135,
-  "lastUpdated": "2026-11-25T22:06:08.130Z",
+  "totalArticles": 136,
+  "lastUpdated": "2026-11-26T22:04:39.818Z",
   "articles": [
+    {
+      "title": "Soil Salinity Mapping From Satellite: The Invisible Threat to Western Irrigated Agriculture",
+      "angle": "remote sensing",
+      "format": "short",
+      "wordCount": 505,
+      "generatedAt": "2026-11-26T22:04:36.890Z",
+      "topicIndex": 54,
+      "url": "https://lab10yr.com/articles/soil-salinity-mapping-from-satellite-the-invisible-threat-to-1795730676890"
+    },
     {
       "title": "Object-Based Image Analysis for Soil Surface Classification",
       "angle": "computer vision",
